@@ -1,0 +1,335 @@
+{
+  "menu": [
+    {
+      "menuHeader": "MAIN"
+    },
+    {
+      "name": "خدمات الإدارة العليا",
+      "icon": "menu-icon icon-base bx bx-briefcase-alt-2",
+      "slug": "senior-management",
+      "submenu": [
+        {
+          "url": "/",
+          "name": "لوحة المتابعة العامة",
+          "slug": "dashboard-analytics"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "التقارير التنفيذية",
+          "slug": "executive-reports"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "مؤشرات الأداء (KPIs)",
+          "slug": "kpis"
+        }
+      ]
+    },
+    {
+      "name": "إدارة الحضانات",
+      "icon": "menu-icon icon-base bx bx-home-heart",
+      "slug": "nurseries",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "قائمة الفروع والحضانات",
+          "slug": "nurseries-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الصفوف والقاعات",
+          "slug": "nurseries-classes"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "السعة الاستيعابية",
+          "slug": "nurseries-capacity"
+        }
+      ]
+    },
+    {
+      "name": "الإدارة الأكاديمية",
+      "icon": "menu-icon icon-base bx bxs-graduation",
+      "slug": "academic",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "المراحل الدراسية",
+          "slug": "academic-stages"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "المناهج والخطط الشهرية",
+          "slug": "academic-plans"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الدروس والواجبات",
+          "slug": "academic-lessons"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "التقييمات والشهادات",
+          "slug": "academic-evaluations"
+        }
+      ]
+    },
+    {
+      "name": "الرسوم والباقات",
+      "icon": "menu-icon icon-base bx bx-credit-card",
+      "slug": "fees-packages",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "باقات الاشتراك",
+          "slug": "packages-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "هيكل الرسوم والمصروفات",
+          "slug": "fees-structure"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الخصومات والمنح",
+          "slug": "discounts"
+        }
+      ]
+    },
+    {
+      "name": "إدارة المستخدمين",
+      "icon": "menu-icon icon-base bx bx-group",
+      "slug": "users-management",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "قائمة المستخدمين",
+          "slug": "users-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الأدوار والصلاحيات",
+          "slug": "roles-permissions"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "سجلات الدخول والنشاط",
+          "slug": "activity-logs"
+        }
+      ]
+    },
+    {
+      "name": "شؤون الطلاب",
+      "icon": "menu-icon icon-base bx bx-id-card",
+      "slug": "students",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "دليل وملفات الطلاب",
+          "slug": "students-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "طلبات التسجيل والقبول",
+          "slug": "admissions"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "حضور وغياب الطلاب",
+          "slug": "students-attendance"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "السجلات الطبية والملاحظات",
+          "slug": "medical-records"
+        }
+      ]
+    },
+    {
+      "name": "الجداول والفعاليات",
+      "icon": "menu-icon icon-base bx bx-calendar-event",
+      "slug": "events-schedules",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "الجدول الأسبوعي",
+          "slug": "weekly-schedule"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "التقويم والفعاليات",
+          "slug": "events-calendar"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الرحلات والأنشطة",
+          "slug": "activities"
+        }
+      ]
+    },
+    {
+      "name": "التواصل",
+      "icon": "menu-icon icon-base bx bx-message-square-dots",
+      "slug": "communication",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "الرسائل المباشرة",
+          "slug": "chat-messages"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الإشعارات الجماعية (Broadcast)",
+          "slug": "notifications-broadcast"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الاستبيانات والملاحظات",
+          "slug": "surveys-feedback"
+        }
+      ]
+    },
+    {
+      "name": "محتوى التطبيق",
+      "icon": "menu-icon icon-base bx bx-grid-alt",
+      "slug": "app-content",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "البانرات الإعلانية",
+          "slug": "app-banners"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "المقالات والأخبار",
+          "slug": "app-news"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "معرض الصور والفيديوهات",
+          "slug": "app-gallery"
+        }
+      ]
+    },
+    {
+      "name": "المتجر والطلبات",
+      "icon": "menu-icon icon-base bx bx-shopping-bag",
+      "slug": "store-orders",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "المنتجات والأدوات",
+          "slug": "store-products"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "إدارة الطلبات",
+          "slug": "store-orders-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "المخزون والمستودع",
+          "slug": "store-inventory"
+        }
+      ]
+    },
+    {
+      "name": "إدارة علاقات العملاء",
+      "icon": "menu-icon icon-base bx bx-headphone",
+      "slug": "crm-leads",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "العملاء المحتملين (Leads)",
+          "slug": "leads-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "المتابعات والمهام",
+          "slug": "follow-ups"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "تذاكر الدعم والشكاوى",
+          "slug": "tickets-complaints"
+        }
+      ]
+    },
+    {
+      "name": "إدارة النظام",
+      "icon": "menu-icon icon-base bx bx-cog",
+      "slug": "system-admin",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "إعدادات التطبيق العامة",
+          "slug": "app-settings"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "بيانات الفروع والاتصال",
+          "slug": "branches-info"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "النسخ الاحتياطي والصيانة",
+          "slug": "backups"
+        }
+      ]
+    },
+    {
+      "name": "نظام الإدارة المالية",
+      "icon": "menu-icon icon-base bx bx-building-house",
+      "slug": "financial-system",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "دليل الحسابات وقيود اليومية",
+          "slug": "financial-accounts"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "المدفوعات والمتحصلات",
+          "slug": "payments-receipts"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "فواتير وأقساط الطلاب",
+          "slug": "student-invoices"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "التقارير المالية والأرباح",
+          "slug": "financial-reports"
+        }
+      ]
+    },
+    {
+      "name": "الموارد البشرية",
+      "icon": "menu-icon icon-base bx bx-user-plus",
+      "slug": "human-resources",
+      "submenu": [
+        {
+          "url": "javascript:void(0);",
+          "name": "دليل الموظفين والمعلمات",
+          "slug": "employees-list"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الحضور والانصراف",
+          "slug": "employees-attendance"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "مسير الرواتب والأجور",
+          "slug": "payroll"
+        },
+        {
+          "url": "javascript:void(0);",
+          "name": "الإجازات والبدلات",
+          "slug": "leaves-allowances"
+        }
+      ]
+    }
+  ]
+}

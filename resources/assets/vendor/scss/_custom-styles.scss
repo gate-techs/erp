@@ -1,0 +1,413 @@
+// Custom Styles & RTL / Astro Leaders Theme Enhancements
+// *******************************************************************************
+
+// 1. Typography & Global Font
+html[lang="ar"],
+html[dir="rtl"],
+html[dir="rtl"] body {
+  font-family: "Cairo", "Tajawal", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 2. Sidebar Aesthetics Matching Astro Leaders Theme
+.menu-vertical {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 15px 0 rgba(34, 41, 47, 0.05) !important;
+
+  .app-brand {
+    .app-brand-text {
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      font-family: "Cairo", "Tajawal", sans-serif !important;
+    }
+  }
+
+  .menu-header {
+    margin-top: 1rem !important;
+    margin-bottom: 0.25rem !important;
+    padding: 0.5rem 1.5rem 0.25rem !important;
+
+    .menu-header-text {
+      font-size: 0.725rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.06em !important;
+      color: #94a3b8 !important;
+      text-transform: uppercase;
+    }
+  }
+
+  .menu-inner {
+    > .menu-item {
+      margin: 2px 10px !important;
+
+      // Remove the default right vertical border bar on active item
+      &.active::before {
+        display: none !important;
+      }
+
+      .menu-link {
+        border-radius: 8px !important;
+        padding: 0.65rem 0.95rem !important;
+        font-size: 0.925rem !important;
+        font-weight: 500 !important;
+        color: #5d6d7e !important;
+        transition: all 0.2s ease-in-out !important;
+
+        .menu-icon {
+          font-size: 1.25rem !important;
+          color: #8c9ba5 !important;
+          margin-inline-end: 0.75rem !important;
+          transition: all 0.2s ease-in-out !important;
+        }
+
+        &:hover {
+          background-color: #f8fafc !important;
+          color: #1e293b !important;
+
+          .menu-icon {
+            color: #1e293b !important;
+          }
+        }
+      }
+
+      // Active state styling matching screenshot (Clean soft grey pill)
+      &.active > .menu-link {
+        background-color: #f1f3f7 !important;
+        color: #1e293b !important;
+        font-weight: 600 !important;
+
+        .menu-icon {
+          color: #1e293b !important;
+        }
+      }
+
+      // Open submenu parent state
+      &.open > .menu-link.menu-toggle {
+        background-color: transparent !important;
+        color: #1e293b !important;
+      }
+    }
+  }
+
+  // Submenu items
+  .menu-sub {
+    padding-inline-start: 1rem !important;
+
+    .menu-item .menu-link {
+      padding-block: 0.5rem !important;
+      font-size: 0.875rem !important;
+      color: #64748b !important;
+
+      &:hover {
+        color: #1e293b !important;
+      }
+    }
+
+    .menu-item.active > .menu-link {
+      color: #1e293b !important;
+      font-weight: 600 !important;
+      background-color: #f1f3f7 !important;
+    }
+  }
+}
+
+// 3. Navbar Custom Icons & Controls (Sun, Translation 文A, Avatar)
+.btn-nav-circle {
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background-color: #f1f3f7 !important;
+  color: #5d6d7e !important;
+  padding: 0 !important;
+  transition: all 0.2s ease-in-out !important;
+
+  &:hover {
+    background-color: #e2e8f0 !important;
+    color: #1e293b !important;
+    transform: scale(1.05);
+  }
+
+  .nav-icon-svg {
+    stroke: currentColor;
+  }
+}
+
+.avatar-online::after {
+  background-color: #10b981 !important; // Clean emerald green online indicator
+  box-shadow: 0 0 0 2px #ffffff !important;
+}
+
+// 4. Directional Arrows and RTL Specific Rules
+html[dir="rtl"] {
+  // Arrow Chevrons in RTL
+  .menu-vertical .menu-item:not(.open) > .menu-link.menu-toggle::after {
+    border-color: #94a3b8 !important;
+    transform: translateY(-50%) rotate(-135deg) !important;
+  }
+
+  .menu-vertical .menu-item.open:not(.menu-item-closing) > .menu-link.menu-toggle::after {
+    border-color: #94a3b8 !important;
+    transform: translateY(-50%) rotate(-45deg) !important;
+  }
+
+  // Dropdowns text alignment
+  .dropdown-menu {
+    text-align: right;
+  }
+
+  .dropdown-language .dropdown-menu {
+    min-width: 140px;
+  }
+
+  // Breadcrumbs
+  .breadcrumb-item + .breadcrumb-item::before {
+    float: right;
+    padding-left: var(--bs-breadcrumb-item-padding-x);
+    padding-right: 0;
+  }
+
+  // Input groups
+  .input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-right: -1px;
+    margin-left: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+// ==============================================================================
+// 5. PRO DARK MODE PALETTE & STYLES (MATCHING SCREENSHOT)
+// ==============================================================================
+
+[data-bs-theme="dark"] {
+  // CSS Variables
+  --bs-body-bg: #212631;
+  --bs-body-bg-rgb: 33, 38, 49;
+  --bs-body-color: #cbd5e1;
+  --bs-body-color-rgb: 203, 213, 225;
+  --bs-heading-color: #f1f5f9;
+  --bs-secondary-color: #94a3b8;
+  --bs-tertiary-color: #64748b;
+  --bs-paper-bg: #282e3d;
+  --bs-paper-bg-rgb: 40, 46, 61;
+  --bs-card-bg: #282e3d;
+  --bs-card-border-color: #363d4f;
+  --bs-border-color: #363d4f;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.08);
+
+  background-color: #212631 !important;
+  color: #cbd5e1 !important;
+
+  // Body & Layout
+  body, .layout-wrapper, .layout-container, .layout-page, .content-wrapper {
+    background-color: #212631 !important;
+    color: #cbd5e1 !important;
+  }
+
+  // Sidebar in Dark Mode
+  .menu-vertical {
+    background-color: #1e222d !important;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.35) !important;
+    border-inline-end: 1px solid #2d3444 !important;
+
+    .app-brand {
+      .app-brand-text {
+        color: #f1f5f9 !important;
+      }
+    }
+
+    .menu-header .menu-header-text {
+      color: #64748b !important;
+    }
+
+    .menu-inner > .menu-item {
+      .menu-link {
+        color: #94a3b8 !important;
+
+        .menu-icon {
+          color: #828d99 !important;
+        }
+
+        &:hover {
+          background-color: #282e3d !important;
+          color: #f1f5f9 !important;
+
+          .menu-icon {
+            color: #f1f5f9 !important;
+          }
+        }
+      }
+
+      // Active Item in Dark Mode (Rich Deep Blue Pill from Screenshot)
+      &.active > .menu-link {
+        background-color: #004b87 !important;
+        color: #ffffff !important;
+
+        .menu-icon {
+          color: #ffffff !important;
+        }
+      }
+
+      &.open > .menu-link.menu-toggle {
+        background-color: transparent !important;
+        color: #f1f5f9 !important;
+      }
+    }
+
+    .menu-sub {
+      .menu-item .menu-link {
+        color: #94a3b8 !important;
+
+        &:hover {
+          color: #f1f5f9 !important;
+          background-color: #282e3d !important;
+        }
+      }
+
+      .menu-item.active > .menu-link {
+        color: #ffffff !important;
+        background-color: #004b87 !important;
+      }
+    }
+  }
+
+  // Navbar in Dark Mode
+  .layout-navbar, .navbar {
+    background-color: #282e3d !important;
+    border: 1px solid #363d4f !important;
+    color: #cbd5e1 !important;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25) !important;
+
+    .form-control {
+      background-color: #212631 !important;
+      border: 1px solid #363d4f !important;
+      color: #cbd5e1 !important;
+      &::placeholder {
+        color: #64748b !important;
+      }
+    }
+  }
+
+  // Navbar circle buttons in Dark Mode
+  .btn-nav-circle {
+    background-color: #343c4e !important;
+    color: #cbd5e1 !important;
+
+    &:hover {
+      background-color: #3e485c !important;
+      color: #ffffff !important;
+    }
+  }
+
+  // Cards, Modals, Offcanvas, Surfaces
+  .card, .modal-content, .offcanvas {
+    background-color: #282e3d !important;
+    border-color: #363d4f !important;
+    color: #cbd5e1 !important;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25) !important;
+
+    .card-header, .card-footer, .modal-header, .modal-footer {
+      border-color: #363d4f !important;
+      background-color: transparent !important;
+    }
+
+    .card-title, .modal-title, h1, h2, h3, h4, h5, h6 {
+      color: #f1f5f9 !important;
+    }
+  }
+
+  // Tables
+  .table {
+    --bs-table-bg: #282e3d;
+    --bs-table-striped-bg: #252b39;
+    --bs-table-hover-bg: #2f3647;
+    --bs-table-border-color: #363d4f;
+    color: #cbd5e1 !important;
+    border-color: #363d4f !important;
+
+    thead th {
+      background-color: #232733 !important;
+      color: #94a3b8 !important;
+      border-color: #363d4f !important;
+    }
+
+    tbody td, tbody th {
+      border-color: #363d4f !important;
+      color: #cbd5e1 !important;
+    }
+  }
+
+  // Forms, Inputs, Selects
+  .form-control, .form-select, .input-group-text {
+    background-color: #212631 !important;
+    border-color: #363d4f !important;
+    color: #cbd5e1 !important;
+
+    &:focus {
+      border-color: #005088 !important;
+      box-shadow: 0 0 0 0.2rem rgba(0, 80, 136, 0.25) !important;
+      color: #ffffff !important;
+    }
+  }
+
+  .form-label {
+    color: #cbd5e1 !important;
+  }
+
+  // Dropdown menus
+  .dropdown-menu {
+    background-color: #282e3d !important;
+    border-color: #363d4f !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+
+    .dropdown-item {
+      color: #cbd5e1 !important;
+
+      &:hover, &:focus {
+        background-color: #343c4e !important;
+        color: #ffffff !important;
+      }
+
+      &.active {
+        background-color: #004b87 !important;
+        color: #ffffff !important;
+      }
+    }
+
+    .dropdown-divider {
+      border-color: #363d4f !important;
+    }
+  }
+
+  // Footer
+  .content-footer {
+    background-color: transparent !important;
+    color: #64748b !important;
+    border-color: #363d4f !important;
+
+    .footer-link {
+      color: #94a3b8 !important;
+      &:hover {
+        color: #f1f5f9 !important;
+      }
+    }
+  }
+
+  // Primary Buttons
+  .btn-primary {
+    background-color: #005088 !important;
+    border-color: #005088 !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background-color: #003e6b !important;
+      border-color: #003e6b !important;
+    }
+  }
+}
+

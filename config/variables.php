@@ -1,0 +1,32 @@
+<?php
+// Variables
+return [
+  "creatorName" => "ThemeSelection",
+  "creatorUrl" => "https://gatetechs.com/en/",
+  "templateName" => "GateTech",
+  "templateSuffix" => "GateTech",
+  "templateVersion" => "2.0.0",
+  "templateFree" => true,
+  "templateDescription" => "Most Powerful & Comprehensive Bootstrap 5 + Laravel HTML Admin Dashboard Template built for developers!",
+  "templateKeyword" => "dashboard, bootstrap 5 dashboard, bootstrap 5 design, bootstrap 5",
+  "licenseUrl" => "https://gatetechs.com/en/",
+  "livePreview" => "https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template-free/demo/",
+  "productPage" => "https://gatetechs.com/en/",
+  "support" => "https://gatetechs.com/en/",
+  "adminTemplates" => "https://gatetechs.com/en/",
+  "bootstrapDashboard" => "https://gatetechs.com/en/",
+  "ogTitle" => "Sneat Bootstrap 5 HTML + Laravel Admin Template by ThemeSelection",
+  "ogImage" => "https://gatetechs.com/en/storage/settings/September2026/gWnSw2WpM6lW9Rj1v5Wb.png",
+  "ogType" => "product",
+  "documentation" => "https://gatetechs.com/en/",
+  "repository" => "https://gatetechs.com/en/",
+  "gitRepo" => "https://gatetechs.com/en/",
+  "gitRepoAccess" => "https://gatetechs.com/en/",
+  "githubFreeUrl" => "https://gatetechs.com/en/",
+  "facebookUrl" => "https://gatetechs.com/en/",
+  "twitterUrl" => "https://gatetechs.com/en/",
+  "githubUrl" => "https://gatetechs.com/en/",
+  "dribbbleUrl" => "https://gatetechs.com/en/",
+  "instagramUrl" => "https://gatetechs.com/en/",
+  "instagramUrl" => "https://gatetechs.com/en/"
+];
