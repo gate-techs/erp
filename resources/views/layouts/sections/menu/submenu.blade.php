@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
     @php
       $activeClass = null;
       $active = 'active open';
-      $currentRouteName = Route::currentRouteName();
+      $currentRouteName = Route::currentRouteName() ?? '';
 
       if ($currentRouteName === $submenu->slug) {
           $activeClass = 'active';

@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
     <!-- ! Hide app brand if navbar-full -->
     <div class="app-brand demo">
         <a href="{{url('/')}}" class="app-brand-link">
-            <span class="app-brand-logo demo">@include('_partials.macros')</span>
-            <span class="app-brand-text demo menu-text fw-bold ms-2">{{config('variables.templateName')}}</span>
+            <span class="app-brand-logo demo">
+                <img src="{{ $globalSetting?->favicon_url ?? asset('assets/img/favicon/favicon.ico') }}" alt="{{ $globalSetting?->site_name ?? config('variables.templateName') }}" style="max-height: 60px; max-width: 60px; object-fit: contain;">
+            </span>
+            <span class="app-brand-text demo menu-text fw-bold ms-2">{{ $globalSetting?->site_name ?? config('variables.templateName') }}</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -33,7 +35,7 @@ use Illuminate\Support\Facades\Route;
         {{-- active menu method --}}
         @php
         $activeClass = null;
-        $currentRouteName = Route::currentRouteName();
+        $currentRouteName = Route::currentRouteName() ?? '';
 
         if ($currentRouteName === $menu->slug) {
         $activeClass = 'active';

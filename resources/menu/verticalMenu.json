@@ -1,10 +1,29 @@
 {
   "menu": [
     {
-      "name": "لوحة التحكم",
+      "name": "Dashboard",
       "icon": "menu-icon icon-base bx bx-home-circle",
       "slug": "dashboard-analytics",
       "url": "/"
+    },
+    {
+      "name": "System Settings",
+      "icon": "menu-icon icon-base bx bx-cog",
+      "slug": "settings",
+      "submenu": [
+        {
+          "name": "Company Settings",
+          "icon": "menu-icon icon-base bx bx-building",
+          "slug": "settings.index",
+          "url": "/settings"
+        },
+        {
+          "name": "Translation Manager",
+          "icon": "menu-icon icon-base bx bx-globe",
+          "slug": "settings.translations.index",
+          "url": "/settings/translations"
+        }
+      ]
     }
   ]
 }
