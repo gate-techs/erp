@@ -11,7 +11,7 @@
 @vite(['resources/assets/vendor/scss/core.scss', 'resources/assets/css/demo.css'])
 
 <!-- Vendor Styles -->
-@vite('resources/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.scss')
+@vite(['resources/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.scss', 'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss'])
 @yield('vendor-style')
 
 <!-- Page Styles -->

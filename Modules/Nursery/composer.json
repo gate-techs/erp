@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/nursery",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Nursery\\": "app/",
+            "Modules\\Nursery\\Database\\Factories\\": "database/factories/",
+            "Modules\\Nursery\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Nursery\\Tests\\": "tests/"
+        }
+    }
+}

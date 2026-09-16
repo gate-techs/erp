@@ -11,6 +11,9 @@ class HRDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+        $this->call([
+            DepartmentSeeder::class,
+            JobTitleSeeder::class,
+        ]);
     }
 }

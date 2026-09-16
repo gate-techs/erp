@@ -1,0 +1,310 @@
+@import 'select2/dist/css/select2.min.css';
+@import 'select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css';
+
+/* ==========================================================================
+   Sneat Custom Select2 Theme Integration
+   ========================================================================== */
+
+.select2-container--bootstrap-5 {
+    width: 100% !important;
+
+    /* ── Selection Box ── */
+    .select2-selection {
+        font-family: inherit !important;
+        font-size: 0.875rem !important;
+        font-weight: 400 !important;
+        line-height: 1.5 !important;
+        color: #4b5563 !important;
+        background-color: #ffffff !important;
+        /* Kill the theme's SVG background arrow */
+        background-image: none !important;
+        border: 1px solid #d9dee3 !important;
+        border-radius: 0.375rem !important;
+        min-height: 38px !important;
+        /* LTR: padding-right leaves room for our custom arrow */
+        padding: 0.4375rem 2.5rem 0.4375rem 0.875rem !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+        display: flex !important;
+        align-items: center !important;
+        position: relative !important;
+    }
+
+    /* ── Single Select ── */
+    .select2-selection--single {
+        /* Kill the theme's SVG background-image caret arrow completely */
+        background-image: none !important;
+
+        .select2-selection__rendered {
+            color: #4b5563 !important;
+            padding: 0 !important;
+            line-height: inherit !important;
+            font-size: 0.875rem !important;
+            flex: 1 !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        .select2-selection__placeholder {
+            color: #b4bdc6 !important;
+            font-size: 0.875rem !important;
+        }
+
+        /* ── Our custom CSS chevron arrow ── */
+        .select2-selection__arrow {
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            right: 0.75rem !important;
+            left: auto !important;
+            width: 20px !important;
+            height: 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            /* No background on the arrow container itself */
+            background: none !important;
+
+            /* Hide the old <b> triangle from select2 core */
+            b {
+                display: none !important;
+                border: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+
+            /* Custom CSS chevron-down icon */
+            &::after {
+                content: '' !important;
+                display: block !important;
+                width: 9px !important;
+                height: 9px !important;
+                border-right: 2px solid #6c757d !important;
+                border-bottom: 2px solid #6c757d !important;
+                transform: rotate(45deg) translateY(-2px) !important;
+                transition: transform 0.2s ease !important;
+                flex-shrink: 0 !important;
+            }
+        }
+    }
+
+    /* Rotate chevron up when open */
+    &.select2-container--open .select2-selection--single .select2-selection__arrow::after {
+        transform: rotate(225deg) translateY(3px) !important;
+    }
+
+    /* ── Clear Button (X) ── */
+    .select2-selection__clear {
+        position: absolute !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        /* LTR: just to the left of the arrow */
+        right: 2.1rem !important;
+        left: auto !important;
+        width: 17px !important;
+        height: 17px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #adb5bd !important;
+        color: #fff !important;
+        border-radius: 50% !important;
+        cursor: pointer !important;
+        transition: background-color 0.15s ease !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        /* Override any default font size / line-height */
+        font-size: 0 !important;
+
+        /* Hide default "×" text */
+        span {
+            display: none !important;
+        }
+
+        /* Clean × icon */
+        &::after {
+            content: '✕' !important;
+            font-size: 0.55rem !important;
+            line-height: 1 !important;
+            color: #fff !important;
+        }
+
+        &:hover {
+            background-color: #dc3545 !important;
+        }
+    }
+
+    /* ── Focus / Open State ── */
+    &.select2-container--focus .select2-selection,
+    &.select2-container--open .select2-selection {
+        border-color: #0b284e !important;
+        box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.15) !important;
+    }
+
+    /* ── Dropdown Panel ── */
+    .select2-dropdown {
+        border: 1px solid rgba(67, 89, 113, 0.15) !important;
+        border-radius: 0.375rem !important;
+        box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45) !important;
+        background-color: #ffffff !important;
+        z-index: 1150 !important;
+        padding: 0.35rem 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* ── Search Input ── */
+    .select2-search--dropdown {
+        padding: 0.5rem 0.75rem !important;
+
+        .select2-search__field {
+            font-family: inherit !important;
+            font-size: 0.875rem !important;
+            padding: 0.45rem 0.75rem !important;
+            border: 1px solid #d9dee3 !important;
+            border-radius: 0.375rem !important;
+            background-color: #ffffff !important;
+            color: #4b5563 !important;
+            outline: none !important;
+            width: 100% !important;
+
+            &:focus {
+                border-color: #0b284e !important;
+                box-shadow: 0 0 0 0.15rem rgba(11, 40, 78, 0.12) !important;
+            }
+        }
+    }
+
+    /* ── Results List ── */
+    .select2-results__options {
+        max-height: 220px !important;
+        padding: 0 0.35rem !important;
+    }
+
+    .select2-results__option {
+        font-family: inherit !important;
+        font-size: 0.875rem !important;
+        padding: 0.5rem 0.85rem !important;
+        border-radius: 0.375rem !important;
+        margin: 2px 0 !important;
+        color: #4b5563 !important;
+        transition: background-color 0.12s ease-in-out, color 0.12s ease-in-out !important;
+
+        &--highlighted[aria-selected] {
+            background-color: #0b284e !important;
+            color: #ffffff !important;
+        }
+
+        &--selected {
+            background-color: rgba(11, 40, 78, 0.08) !important;
+            color: #0b284e !important;
+            font-weight: 600 !important;
+        }
+    }
+}
+
+/* ==========================================================================
+   Small variant (.select2-sm)
+   ========================================================================== */
+.select2-sm + .select2-container--bootstrap-5 {
+    .select2-selection {
+        min-height: 32px !important;
+        padding: 0.25rem 2.25rem 0.25rem 0.65rem !important;
+        font-size: 0.8125rem !important;
+    }
+    .select2-selection__rendered {
+        font-size: 0.8125rem !important;
+    }
+}
+
+/* ==========================================================================
+   RTL – Arrow moves to LEFT, X moves just to its RIGHT
+   ========================================================================== */
+[dir="rtl"] .select2-container--bootstrap-5,
+html[lang="ar"] .select2-container--bootstrap-5,
+body[dir="rtl"] .select2-container--bootstrap-5 {
+    text-align: right !important;
+
+    /* Flip padding: leave room on the LEFT for the arrow */
+    .select2-selection {
+        padding: 0.4375rem 0.875rem 0.4375rem 2.5rem !important;
+    }
+
+    /* Arrow on the LEFT */
+    .select2-selection--single .select2-selection__arrow {
+        right: auto !important;
+        left: 0.75rem !important;
+    }
+
+    /* X button just to the RIGHT of the arrow (which is on the left) */
+    .select2-selection__clear {
+        right: auto !important;
+        left: 2.1rem !important;
+    }
+
+    /* Search field */
+    .select2-search--dropdown .select2-search__field {
+        direction: rtl !important;
+        text-align: right !important;
+    }
+
+    .select2-results__option {
+        text-align: right !important;
+    }
+}
+
+/* ==========================================================================
+   Dark Mode
+   ========================================================================== */
+[data-bs-theme="dark"] .select2-container--bootstrap-5 {
+    .select2-selection {
+        background-color: #2b2c40 !important;
+        border-color: #444564 !important;
+        color: #cfd3ec !important;
+    }
+
+    .select2-selection--single {
+        .select2-selection__rendered {
+            color: #cfd3ec !important;
+        }
+
+        .select2-selection__arrow::after {
+            border-color: #a3a6c8 !important;
+        }
+    }
+
+    .select2-selection__clear {
+        background-color: #6c757d !important;
+
+        &:hover {
+            background-color: #dc3545 !important;
+        }
+    }
+
+    .select2-dropdown {
+        background-color: #2b2c40 !important;
+        border-color: #444564 !important;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .select2-search--dropdown .select2-search__field {
+        background-color: #32344d !important;
+        border-color: #444564 !important;
+        color: #cfd3ec !important;
+    }
+
+    .select2-results__option {
+        color: #cfd3ec !important;
+
+        &--highlighted[aria-selected] {
+            background-color: #4f5279 !important;
+            color: #ffffff !important;
+        }
+
+        &--selected {
+            background-color: rgba(110, 107, 240, 0.16) !important;
+            color: #a3a6e8 !important;
+        }
+    }
+}
+
+

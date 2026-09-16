@@ -1,3 +1,579 @@
+/* ==========================================================================
+   Global Responsive Layout & Overflow Containment
+   ========================================================================== */
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+
+.layout-wrapper,
+.layout-container,
+.layout-page,
+.content-wrapper {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* ==========================================================================
+   RTL Mobile & Small Screen Sidebar Fix (< 1200px / xl)
+   ========================================================================== */
+@media (max-width: 1199.98px) {
+    html[dir="rtl"] .layout-menu,
+    [dir="rtl"] .layout-menu,
+    body[dir="rtl"] .layout-menu {
+        right: 0 !important;
+        left: auto !important;
+        transform: translate3d(100%, 0, 0) !important;
+        -webkit-transform: translate3d(100%, 0, 0) !important;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
+    html[dir="rtl"].layout-menu-expanded .layout-menu,
+    [dir="rtl"].layout-menu-expanded .layout-menu,
+    .layout-menu-expanded html[dir="rtl"] .layout-menu,
+    .layout-menu-expanded [dir="rtl"] .layout-menu {
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+    }
+
+    /* Drag target in RTL */
+    html[dir="rtl"] .drag-target,
+    [dir="rtl"] .drag-target {
+        right: 0 !important;
+        left: auto !important;
+    }
+}
+
 .menu-vertical .menu-inner > .menu-item {
     margin: 2px 10px !important;
 }
+
+/* ==========================================================================
+   DataTables Custom Theme: Wide Search & Swapped Footer Layout (Responsive)
+   ========================================================================== */
+
+/* 1. Sleek Length Select without surrounding text */
+div.dt-length,
+.dataTables_wrapper .dataTables_length {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+}
+
+div.dt-length label,
+.dataTables_wrapper .dataTables_length label {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    font-size: 0 !important;
+    color: transparent !important;
+}
+
+div.dt-length select,
+div.dt-length select.dt-input,
+.dataTables_wrapper .dataTables_length select {
+    display: inline-block !important;
+    height: 42px !important;
+    min-width: 76px !important;
+    padding: 0.45rem 1.85rem 0.45rem 0.85rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #4b5563 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #d9dee3 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+div.dt-length select:focus,
+.dataTables_wrapper .dataTables_length select:focus {
+    border-color: #0b284e !important;
+    box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.15) !important;
+    outline: 0 !important;
+}
+
+/* 2. Top Header Controls Row (DT1 & DT2) */
+.card-datatable .dt-container > .row:first-child,
+.card-datatable .dataTables_wrapper > .row:first-child {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 1.25rem 1.5rem 1rem 1.5rem !important;
+    margin: 0 !important;
+    row-gap: 0.75rem !important;
+}
+
+.card-datatable .dt-container > .row:first-child > [class*="col-"],
+.card-datatable .dataTables_wrapper > .row:first-child > [class*="col-"] {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+}
+
+/* Wide Search Input */
+div.dt-search,
+div.dataTables_wrapper div.dataTables_filter,
+.dataTables_wrapper .dataTables_filter {
+    width: 100% !important;
+    text-align: inherit !important;
+    margin: 0 !important;
+}
+
+div.dt-search label,
+div.dataTables_wrapper div.dataTables_filter label,
+.dataTables_wrapper .dataTables_filter label {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+div.dt-search input,
+div.dt-search input.dt-input,
+#dt-search-0,
+div.dataTables_wrapper div.dataTables_filter input,
+.dataTables_wrapper .dataTables_filter input,
+.card-datatable .dataTables_filter input {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 520px !important;
+    height: 42px !important;
+    font-size: 0.875rem !important;
+    padding: 0.5rem 1.25rem !important;
+    border-radius: 8px !important;
+    border: 1px solid #d9dee3 !important;
+    background-color: #ffffff !important;
+    margin: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+@media (min-width: 768px) {
+    div.dt-search input,
+    div.dt-search input.dt-input,
+    #dt-search-0,
+    div.dataTables_wrapper div.dataTables_filter input,
+    .dataTables_wrapper .dataTables_filter input,
+    .card-datatable .dataTables_filter input {
+        min-width: 320px !important;
+    }
+}
+
+div.dt-search input:focus,
+#dt-search-0:focus,
+div.dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #0b284e !important;
+    box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.15) !important;
+    outline: 0 !important;
+}
+
+/* Responsive adjustments for Header Controls on Mobile */
+@media (max-width: 576px) {
+    .card-datatable .dt-container > .row:first-child,
+    .card-datatable .dataTables_wrapper > .row:first-child {
+        flex-direction: column-reverse !important;
+        align-items: stretch !important;
+        padding: 1rem !important;
+        gap: 0.75rem !important;
+    }
+
+    .card-datatable .dt-container > .row:first-child > [class*="col-"],
+    .card-datatable .dataTables_wrapper > .row:first-child > [class*="col-"] {
+        width: 100% !important;
+    }
+
+    div.dt-search,
+    div.dt-search label,
+    div.dt-search input,
+    #dt-search-0 {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    div.dt-length {
+        display: flex !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+    }
+}
+
+/* 3. Middle Table Row: Scoped Horizontal Scroll */
+.card-datatable {
+    width: 100% !important;
+    position: relative !important;
+}
+
+.card-datatable .dt-container > .row:nth-child(2),
+.card-datatable .dataTables_wrapper > .row:nth-child(2) {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.card-datatable .dt-container > .row:nth-child(2) > [class*="col-"],
+.card-datatable .dataTables_wrapper > .row:nth-child(2) > [class*="col-"] {
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: relative !important;
+}
+
+/* 4. Footer Container: Info on the LEFT, Pagination on the RIGHT */
+.card-datatable .dt-container > .row:last-child,
+.card-datatable .dataTables_wrapper > .row:last-child,
+.dataTables_wrapper > .row:last-child {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 1rem 1.5rem !important;
+    margin: 0 !important;
+    border-top: 1px solid #f0f2f5 !important;
+    row-gap: 0.75rem !important;
+    width: 100% !important;
+}
+
+.card-datatable .dt-container > .row:last-child > [class*="col-"],
+.card-datatable .dataTables_wrapper > .row:last-child > [class*="col-"],
+.dataTables_wrapper > .row:last-child > [class*="col-"] {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+}
+
+/* Info text on the LEFT */
+div.dt-info,
+.dataTables_wrapper .dataTables_info {
+    text-align: left !important;
+    font-size: 0.85rem !important;
+    color: #6c757d !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-weight: 500 !important;
+}
+
+/* Pagination container on the RIGHT */
+div.dt-paging,
+.dataTables_wrapper .dataTables_paginate {
+    display: flex !important;
+    justify-content: flex-end !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Pagination sequence: < then [ 1 ] then > */
+div.dt-paging .pagination,
+.dataTables_wrapper .pagination,
+.dataTables_wrapper div.dataTables_paginate ul.pagination,
+.card-datatable .pagination {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+/* Strict rounded-square buttons matching screenshot */
+div.dt-paging .pagination .page-item .page-link,
+div.dt-paging button.dt-paging-button,
+.dataTables_wrapper .pagination .page-item .page-link,
+.dataTables_wrapper .pagination .page-item > a,
+.dataTables_wrapper ul.pagination li.page-item a.page-link,
+.card-datatable .pagination .page-item .page-link,
+.card-datatable ul.pagination li a {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    padding: 0 8px !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    background-color: #f1f2f4 !important;
+    color: #4b5563 !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease-in-out !important;
+}
+
+div.dt-paging .pagination .page-item .page-link i,
+.dataTables_wrapper .pagination .page-item .page-link i,
+.dataTables_wrapper .pagination .page-item .page-link .icon-base {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+}
+
+/* Hover state */
+div.dt-paging .pagination .page-item:not(.active):not(.disabled) .page-link:hover,
+div.dt-paging button.dt-paging-button:not(.current):not(.disabled):hover,
+.dataTables_wrapper .pagination .page-item:not(.active):not(.disabled) .page-link:hover,
+.card-datatable .pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+    background-color: #e4e7eb !important;
+    color: #111827 !important;
+}
+
+/* Active page button (Dark Navy #0b284e) */
+div.dt-paging .pagination .page-item.active .page-link,
+div.dt-paging button.dt-paging-button.current,
+.dataTables_wrapper .pagination .page-item.active .page-link,
+.card-datatable .pagination .page-item.active .page-link {
+    background-color: #0b284e !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+}
+
+/* Disabled button (e.g. right arrow > on page 1) */
+div.dt-paging .pagination .page-item.disabled .page-link,
+div.dt-paging button.dt-paging-button.disabled,
+.dataTables_wrapper .pagination .page-item.disabled .page-link,
+.card-datatable .pagination .page-item.disabled .page-link {
+    background-color: #f8f9fa !important;
+    color: #c4c8ce !important;
+    cursor: not-allowed !important;
+    opacity: 0.65 !important;
+}
+
+/* Ellipsis item */
+div.dt-paging .pagination .page-item.disabled span.page-link,
+.dataTables_wrapper .pagination .page-item.disabled span.page-link,
+.card-datatable .pagination .page-item.disabled span.page-link {
+    background-color: #f1f2f4 !important;
+    color: #6b7280 !important;
+}
+
+/* Responsive Footer on Mobile */
+@media (max-width: 576px) {
+    .card-datatable .dt-container > .row:last-child,
+    .card-datatable .dataTables_wrapper > .row:last-child,
+    .dataTables_wrapper > .row:last-child {
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem !important;
+        gap: 0.75rem !important;
+    }
+
+    .card-datatable .dt-container > .row:last-child > [class*="col-"],
+    .card-datatable .dataTables_wrapper > .row:last-child > [class*="col-"],
+    .dataTables_wrapper > .row:last-child > [class*="col-"] {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    div.dt-info,
+    .dataTables_wrapper .dataTables_info {
+        text-align: center !important;
+    }
+
+    div.dt-paging,
+    .dataTables_wrapper .dataTables_paginate {
+        justify-content: center !important;
+    }
+}
+
+/* ==========================================================================
+   Linear Loading Progress Bar directly under thead (replacing dt-processing)
+   ========================================================================== */
+
+div.dt-processing,
+.dataTables_wrapper .dataTables_processing {
+    position: absolute !important;
+    top: var(--dt-thead-height, 44px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 3px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: #eef0f3 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    z-index: 50 !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    transform: none !important;
+}
+
+/* Hide native child spinner/dots and text inside dt-processing */
+div.dt-processing > *,
+div.dt-processing > div {
+    display: none !important;
+}
+
+/* Moving indeterminate pulse bar */
+div.dt-processing::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 35% !important;
+    background: #38434f !important;
+    border-radius: 2px !important;
+    animation: dt-linear-progress-anim 1.2s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite !important;
+}
+
+@keyframes dt-linear-progress-anim {
+    0% {
+        left: -35%;
+        width: 35%;
+    }
+    50% {
+        left: 25%;
+        width: 55%;
+    }
+    100% {
+        left: 100%;
+        width: 35%;
+    }
+}
+
+/* Dim table body during reload */
+.card-datatable:has(div.dt-processing[style*="display: block"]) table tbody,
+.card-datatable:has(div.dt-processing:not([style*="display: none"])) table tbody,
+.table-responsive:has(div.dt-processing[style*="display: block"]) table tbody,
+.table-responsive:has(div.dt-processing:not([style*="display: none"])) table tbody,
+table.is-loading-data tbody {
+    opacity: 0.35 !important;
+    filter: blur(0.2px);
+    transition: opacity 0.2s ease-in-out !important;
+    pointer-events: none !important;
+}
+
+table.dataTable tbody {
+    transition: opacity 0.2s ease-in-out !important;
+}
+
+/* ==========================================================================
+   Mobile Top Navbar & Action Bar Enhancements
+   ========================================================================== */
+@media (max-width: 576px) {
+    #navbar-collapse .nav-item .form-control {
+        max-width: 130px !important;
+    }
+    .layout-navbar .navbar-nav-right {
+        gap: 0.35rem !important;
+    }
+    .layout-navbar {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+}
+
+/* ==========================================================================
+   Universal General Alignment for DataTables Headers (th) and Data Cells (td)
+   ========================================================================== */
+
+/* 1. Universal Vertical Alignment for all table elements */
+table.dataTable th,
+table.dataTable td,
+.card-datatable table th,
+.card-datatable table td,
+.table-responsive table th,
+.table-responsive table td {
+    vertical-align: middle !important;
+}
+
+/* 2. Universal Horizontal Alignment - Start aligned by default (Right in RTL, Left in LTR) */
+table.dataTable thead th,
+table.dataTable tbody td,
+table.dataTable tfoot th,
+table.dataTable tfoot td,
+.card-datatable table thead th,
+.card-datatable table tbody td {
+    text-align: start !important;
+}
+
+[dir="rtl"] table.dataTable thead th,
+[dir="rtl"] table.dataTable tbody td,
+html[lang="ar"] table.dataTable thead th,
+html[lang="ar"] table.dataTable tbody td,
+body[dir="rtl"] table.dataTable thead th,
+body[dir="rtl"] table.dataTable tbody td {
+    text-align: right !important;
+}
+
+/* 3. Universal Identical Padding across all cells and headers */
+table.dataTable thead th,
+table.dataTable tbody td,
+.card-datatable table thead th,
+.card-datatable table tbody td {
+    padding-top: 0.85rem !important;
+    padding-bottom: 0.85rem !important;
+    padding-left: 1.15rem !important;
+    padding-right: 1.15rem !important;
+}
+
+/* 4. Center-Aligned columns (like # index and Actions) */
+table.dataTable thead th.text-center,
+table.dataTable tbody td.text-center,
+table.dataTable thead th:first-child,
+table.dataTable tbody td:first-child,
+table.dataTable thead th:last-child,
+table.dataTable tbody td:last-child,
+.card-datatable table thead th.text-center,
+.card-datatable table tbody td.text-center {
+    text-align: center !important;
+}
+
+/* 5. End-Aligned columns */
+table.dataTable thead th.text-end,
+table.dataTable tbody td.text-end,
+.card-datatable table thead th.text-end,
+.card-datatable table tbody td.text-end {
+    text-align: end !important;
+}
+
+/* 6. RTL DataTables Sorting Icons Position Fix */
+/* In RTL, sorting icons must be on the left, so they don't push the right-aligned header text away from the data cells! */
+[dir="rtl"] table.dataTable thead > tr > th.sorting,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_asc,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_desc,
+html[lang="ar"] table.dataTable thead > tr > th.sorting,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_asc,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_desc,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_asc,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_desc {
+    padding-right: 1.15rem !important;
+    padding-left: 2.25rem !important;
+}
+
+[dir="rtl"] table.dataTable thead > tr > th.sorting::before,
+[dir="rtl"] table.dataTable thead > tr > th.sorting::after,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_asc::before,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_asc::after,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_desc::before,
+[dir="rtl"] table.dataTable thead > tr > th.sorting_desc::after,
+html[lang="ar"] table.dataTable thead > tr > th.sorting::before,
+html[lang="ar"] table.dataTable thead > tr > th.sorting::after,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_asc::before,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_asc::after,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_desc::before,
+html[lang="ar"] table.dataTable thead > tr > th.sorting_desc::after,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting::before,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting::after,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_asc::before,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_asc::after,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_desc::before,
+body[dir="rtl"] table.dataTable thead > tr > th.sorting_desc::after {
+    right: auto !important;
+    left: 0.75rem !important;
+}
+
+

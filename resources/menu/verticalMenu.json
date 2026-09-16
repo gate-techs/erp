@@ -7,6 +7,38 @@
       "url": "/"
     },
     {
+      "name": "Nurseries",
+      "icon": "menu-icon icon-base bx bx-buildings",
+      "slug": "nursery",
+      "submenu": [
+        {
+          "name": "Nurseries List",
+          "icon": "menu-icon icon-base bx bx-list-ul",
+          "slug": "nursery.index",
+          "url": "/nurseries"
+        },
+        {
+          "name": "Nursery Branches",
+          "icon": "menu-icon icon-base bx bx-git-branch",
+          "slug": "nursery.branches.index",
+          "url": "/nursery-branches"
+        }
+      ]
+    },
+    {
+      "name": "Human Resources",
+      "icon": "menu-icon icon-base bx bx-user-pin",
+      "slug": "hr",
+      "submenu": [
+        {
+          "name": "HR Settings",
+          "icon": "menu-icon icon-base bx bx-slider-alt",
+          "slug": "hr.settings",
+          "url": "/hr/settings"
+        }
+      ]
+    },
+    {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "settings",
@@ -16,6 +48,12 @@
           "icon": "menu-icon icon-base bx bx-building",
           "slug": "settings.index",
           "url": "/settings"
+        },
+        {
+          "name": "General Settings",
+          "icon": "menu-icon icon-base bx bx-slider-alt",
+          "slug": "settings.general",
+          "url": "/settings/general"
         },
         {
           "name": "Translation Manager",

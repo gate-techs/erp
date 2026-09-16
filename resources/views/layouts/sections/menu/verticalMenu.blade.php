@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
             <span class="app-brand-text demo menu-text fw-bold ms-2">{{ $globalSetting?->site_name ?? config('variables.templateName') }}</span>
         </a>
 
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-            <i class="icon-base bx bx-chevron-left icon-sm d-flex align-items-center justify-content-center"></i>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none" aria-label="Close menu">
+            <i class="icon-base bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-right' : 'bx-chevron-left' }} icon-sm d-flex align-items-center justify-content-center"></i>
         </a>
     </div>
 

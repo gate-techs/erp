@@ -35,12 +35,31 @@ class HRServiceProvider extends ModuleServiceProvider
     ];
 
     /**
-     * Define module schedules.
-     * 
-     * @param $schedule
+     * Register services and interface bindings.
      */
-    // protected function configureSchedules(Schedule $schedule): void
-    // {
-    //     $schedule->command('inspire')->hourly();
-    // }
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\DepartmentRepositoryInterface::class,
+            \Modules\HR\Repositories\DepartmentRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\JobTitleRepositoryInterface::class,
+            \Modules\HR\Repositories\JobTitleRepository::class
+        );
+    }
+
+    //======================
+    /**
+     * Boot the application events.
+     */
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../../lang');
+    }
 }

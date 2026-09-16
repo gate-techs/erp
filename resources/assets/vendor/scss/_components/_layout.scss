@@ -695,7 +695,15 @@ html:not(.layout-footer-fixed) .content-wrapper {
     will-change:
       transform,
       -webkit-transform;
-    .layout-menu-expanded & {
+
+    [dir='rtl'] &,
+    html[dir='rtl'] & {
+      transform: translate3d(100%, 0, 0);
+    }
+
+    .layout-menu-expanded &,
+    html[dir='rtl'].layout-menu-expanded &,
+    [dir='rtl'].layout-menu-expanded & {
       transform: translate3d(0, 0, 0) !important;
     }
   }

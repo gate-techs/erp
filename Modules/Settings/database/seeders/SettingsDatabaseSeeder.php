@@ -55,5 +55,7 @@ class SettingsDatabaseSeeder extends Seeder
                 ],
             ]
         );
+
+        $this->call(GeneralSettingDatabaseSeeder::class);
     }
 }

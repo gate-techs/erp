@@ -1,0 +1,11 @@
+{
+    "name": "Nursery",
+    "alias": "nursery",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Nursery\\Providers\\NurseryServiceProvider"
+    ],
+    "files": []
+}
