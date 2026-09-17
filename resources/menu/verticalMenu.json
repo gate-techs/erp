@@ -31,6 +31,12 @@
       "slug": "hr",
       "submenu": [
         {
+          "name": "Employees",
+          "icon": "menu-icon icon-base bx bx-id-card",
+          "slug": "hr.employees.index",
+          "url": "/hr/employees"
+        },
+        {
           "name": "HR Settings",
           "icon": "menu-icon icon-base bx bx-slider-alt",
           "slug": "hr.settings",

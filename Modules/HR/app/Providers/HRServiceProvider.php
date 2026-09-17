@@ -50,6 +50,31 @@ class HRServiceProvider extends ModuleServiceProvider
             \Modules\HR\Repositories\Contracts\JobTitleRepositoryInterface::class,
             \Modules\HR\Repositories\JobTitleRepository::class
         );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\HrSettingRepositoryInterface::class,
+            \Modules\HR\Repositories\HrSettingRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\ShiftRepositoryInterface::class,
+            \Modules\HR\Repositories\ShiftRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\WorkScheduleRepositoryInterface::class,
+            \Modules\HR\Repositories\WorkScheduleRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\OfficialHolidayRepositoryInterface::class,
+            \Modules\HR\Repositories\OfficialHolidayRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\EmployeeRepositoryInterface::class,
+            \Modules\HR\Repositories\EmployeeRepository::class
+        );
     }
 
     //======================

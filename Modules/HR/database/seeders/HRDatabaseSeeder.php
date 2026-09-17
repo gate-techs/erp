@@ -14,6 +14,10 @@ class HRDatabaseSeeder extends Seeder
         $this->call([
             DepartmentSeeder::class,
             JobTitleSeeder::class,
+            ShiftSeeder::class,
+            WorkScheduleSeeder::class,
+            OfficialHolidaySeeder::class,
+            EmployeeSeeder::class,
         ]);
     }
 }

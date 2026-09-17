@@ -15,7 +15,7 @@
     "laravel/tinker": "^2.10.1",
     "nwidart/laravel-modules": "^12.0",
     "wikimedia/composer-merge-plugin": "^2.1",
-    "yajra/laravel-datatables-oracle": "^12.7"
+    "yajra/laravel-datatables-oracle": "12.7"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
@@ -31,6 +31,7 @@
       "App\\": "app/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
+
     },
     "files": [
       "app/Helpers/helpers.php"

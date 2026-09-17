@@ -25,6 +25,11 @@ export function initSelect2(container = document) {
       return; // Already initialized
     }
 
+    // Never initialize Select2 on DataTables length menu dropdown
+    if ($el.closest('.dt-length, .dataTables_length').length || $el.hasClass('dt-input') || ($el.attr('name') && $el.attr('name').includes('_length'))) {
+      return;
+    }
+
     // Modal or Offcanvas parent to prevent focus trap issue
     const $parentModal = $el.closest('.modal, .offcanvas');
     const dropdownParent = $parentModal.length ? $parentModal : null;

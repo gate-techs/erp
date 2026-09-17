@@ -110,7 +110,7 @@
             <!-- 2. Responsible Employee Dropdown -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold">{{ __('Responsible Employee') }} <span class="text-danger">*</span></label>
-                <select name="employee_id" class="form-select form-select-lg" required>
+                <select name="employee_id" class="select2 form-select" data-placeholder="{{ __('Select Responsible Employee') }}" required>
                     <option value="" selected disabled>{{ __('Select Responsible Employee') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->email }})</option>
@@ -133,7 +133,7 @@
             <!-- 5. Government Dropdown -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">{{ __('Government') }}</label>
-                <select name="government_id" class="form-select">
+                <select name="government_id" class="select2 form-select" data-placeholder="{{ __('Select Government') }}" data-allow-clear="true">
                     <option value="" selected>{{ __('Select Government') }}</option>
                     @foreach ($governments as $gov)
                         <option value="{{ $gov->id }}">{{ $gov->name }}</option>
@@ -186,7 +186,7 @@
             <!-- 10. Status -->
             <div class="mb-4">
                 <label class="form-label fw-semibold required">{{ __('Status') }}</label>
-                <select name="status" class="form-select" required>
+                <select name="status" class="select2 form-select" data-placeholder="{{ __('Select Status') }}" required>
                     <option value="active" selected>{{ __('Active') }}</option>
                     <option value="inactive">{{ __('Inactive') }}</option>
                 </select>
@@ -311,7 +311,7 @@
             <!-- Responsible Employee -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold">{{ __('Responsible Employee') }} <span class="text-danger">*</span></label>
-                <select id="edit_employee_id" name="employee_id" class="form-select form-select-lg" required>
+                <select id="edit_employee_id" name="employee_id" class="select2 form-select" data-placeholder="{{ __('Select Responsible Employee') }}" required>
                     <option value="" disabled>{{ __('Select Responsible Employee') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->email }})</option>
@@ -334,7 +334,7 @@
             <!-- Government -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">{{ __('Government') }}</label>
-                <select id="edit_government_id" name="government_id" class="form-select">
+                <select id="edit_government_id" name="government_id" class="select2 form-select" data-placeholder="{{ __('Select Government') }}" data-allow-clear="true">
                     <option value="">{{ __('Select Government') }}</option>
                     @foreach ($governments as $gov)
                         <option value="{{ $gov->id }}">{{ $gov->name }}</option>
@@ -387,7 +387,7 @@
             <!-- Status -->
             <div class="mb-4">
                 <label class="form-label fw-semibold required">{{ __('Status') }}</label>
-                <select id="edit_status" name="status" class="form-select" required>
+                <select id="edit_status" name="status" class="select2 form-select" data-placeholder="{{ __('Select Status') }}" required>
                     <option value="active">{{ __('Active') }}</option>
                     <option value="inactive">{{ __('Inactive') }}</option>
                 </select>
@@ -576,13 +576,13 @@ window.addEventListener('load', function () {
         document.getElementById('edit_name_en').value = $(this).data('name-en') || '';
         document.getElementById('edit_description_ar').value = $(this).data('desc-ar') || '';
         document.getElementById('edit_description_en').value = $(this).data('desc-en') || '';
-        document.getElementById('edit_employee_id').value = $(this).data('employee-id') || '';
-        document.getElementById('edit_government_id').value = $(this).data('gov-id') || '';
+        $('#edit_employee_id').val($(this).data('employee-id') || '').trigger('change');
+        $('#edit_government_id').val($(this).data('gov-id') || '').trigger('change');
         document.getElementById('edit_whatsapp').value = $(this).data('whatsapp') || '';
         document.getElementById('edit_email').value = $(this).data('email') || '';
         document.getElementById('edit_lat').value = $(this).data('lat') || '';
         document.getElementById('edit_lng').value = $(this).data('lng') || '';
-        document.getElementById('edit_status').value = $(this).data('status') || 'active';
+        $('#edit_status').val($(this).data('status') || 'active').trigger('change');
 
         const img = $(this).data('image');
         const previewImg = document.getElementById('edit_image_preview');
@@ -640,6 +640,30 @@ window.addEventListener('load', function () {
                 btn.prop('disabled', false);
             }
         });
+    });
+
+    // Initialize Select2 in page and offcanvases
+    function setupSelect2(container = document) {
+        if (typeof window.initSelect2 === 'function') {
+            window.initSelect2(container);
+        } else if ($.fn.select2) {
+            $(container).find('.select2').each(function () {
+                if (!$(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2({
+                        placeholder: $(this).data('placeholder') || '',
+                        allowClear: $(this).data('allow-clear') !== false,
+                        width: '100%',
+                        dropdownParent: $(this).closest('.offcanvas').length ? $(this).closest('.offcanvas') : $(document.body)
+                    });
+                }
+            });
+        }
+    }
+
+    setupSelect2();
+
+    $(document).on('shown.bs.offcanvas', function (e) {
+        setupSelect2(e.target);
     });
 });
 </script>

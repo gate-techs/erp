@@ -117,7 +117,7 @@
                 <div class="mb-3">
                     <label class="form-label required fw-semibold">{{ __('Status') }} <span
                             class="text-danger">*</span></label>
-                    <select class="form-select" name="status" required>
+                    <select class="form-select select2" name="status" id="add_status" data-placeholder="{{ __('Select Status') }}" required>
                         @foreach($statuses as $status)
                             <option value="{{ $status->value }}" {{ $status->value === 'active' ? 'selected' : '' }}>
                                 {{ $status->label() }}
@@ -206,7 +206,7 @@
                 <div class="mb-3">
                     <label class="form-label required fw-semibold">{{ __('Status') }} <span
                             class="text-danger">*</span></label>
-                    <select class="form-select" id="edit_status" name="status" required>
+                    <select class="form-select select2" id="edit_status" name="status" data-placeholder="{{ __('Select Status') }}" required>
                         @foreach($statuses as $status)
                             <option value="{{ $status->value }}">
                                 {{ $status->label() }}
@@ -346,7 +346,7 @@
                 $('#edit_description_en').val(descEn);
                 $('#edit_code').val(code);
                 $('#edit_department_id').val(departmentId).trigger('change');
-                $('#edit_status').val(status);
+                $('#edit_status').val(status).trigger('change');
 
                 if (editOffcanvasEl) {
                     const editOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(editOffcanvasEl);

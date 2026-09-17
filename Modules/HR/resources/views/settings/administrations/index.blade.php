@@ -319,6 +319,30 @@ window.addEventListener('load', function () {
         deleteTargetName.textContent = $(this).data('name') || '';
         if (deleteModal) deleteModal.show();
     });
+
+    // Initialize Select2 in page and offcanvases
+    function setupSelect2(container = document) {
+        if (typeof window.initSelect2 === 'function') {
+            window.initSelect2(container);
+        } else if ($.fn.select2) {
+            $(container).find('.select2').each(function () {
+                if (!$(this).hasClass('select2-hidden-accessible')) {
+                    $(this).select2({
+                        placeholder: $(this).data('placeholder') || '',
+                        allowClear: $(this).data('allow-clear') !== false,
+                        width: '100%',
+                        dropdownParent: $(this).closest('.offcanvas').length ? $(this).closest('.offcanvas') : $(document.body)
+                    });
+                }
+            });
+        }
+    }
+
+    setupSelect2();
+
+    $(document).on('shown.bs.offcanvas', function (e) {
+        setupSelect2(e.target);
+    });
 });
 </script>
 @endsection

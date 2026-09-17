@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="femaleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7B7EFE"/>
+      <stop offset="100%" stop-color="#5558EB"/>
+    </linearGradient>
+
+    <!-- Subtle Radial Glow -->
+    <radialGradient id="femaleGlow" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Silhouette Linear Gradient -->
+    <linearGradient id="femaleFigure" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EEF2FF"/>
+    </linearGradient>
+
+    <!-- Secondary Depth Tone -->
+    <linearGradient id="femaleDepth" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0E7FF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#C7D2FE" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#2D2882" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Circular Base -->
+  <circle cx="80" cy="80" r="78" fill="url(#femaleBg)"/>
+  <circle cx="80" cy="80" r="78" fill="url(#femaleGlow)"/>
+  
+  <!-- Outer Ring Accent -->
+  <circle cx="80" cy="80" r="76" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.25"/>
+
+  <!-- Clip Path to keep silhouette contained in circle -->
+  <clipPath id="circleClipFemale">
+    <circle cx="80" cy="80" r="78"/>
+  </clipPath>
+
+  <g clip-path="url(#circleClipFemale)" filter="url(#softShadow)">
+    <!-- Shoulders & Torso (Modest Professional Blazer / Abaya Contour) -->
+    <path d="M28 152 C 30 120, 50 106, 80 106 C 110 106, 130 120, 132 152 Z" fill="url(#femaleFigure)"/>
+    
+    <!-- Inner Neckline / Lapel Detail -->
+    <path d="M66 112 L80 128 L94 112 L80 106 Z" fill="url(#femaleDepth)" opacity="0.6"/>
+
+    <!-- Modest Hijab / Head Contour (Dignified & Professional) -->
+    <path d="M46 72 C 46 44, 58 30, 80 30 C 102 30, 114 44, 114 72 C 114 94, 102 108, 80 108 C 58 108, 46 94, 46 72 Z" fill="url(#femaleFigure)"/>
+
+    <!-- Hijab Drapery / Elegant Fold Line -->
+    <path d="M54 78 C 60 92, 70 98, 80 98 C 90 98, 100 92, 106 78 C 102 88, 92 94, 80 94 C 68 94, 58 88, 54 78 Z" fill="url(#femaleDepth)"/>
+
+    <!-- Face Silhouette Inset (Subtle, Clean & Respectful) -->
+    <path d="M62 60 C 62 48, 69 42, 80 42 C 91 42, 98 48, 98 60 C 98 72, 91 78, 80 78 C 69 78, 62 72, 62 60 Z" fill="url(#femaleDepth)" opacity="0.4"/>
+  </g>
+</svg>

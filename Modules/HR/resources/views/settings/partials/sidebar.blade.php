@@ -3,6 +3,11 @@
         'administrations' => \Modules\HR\Models\Department::whereNull('parent_id')->count(),
         'departments'     => \Modules\HR\Models\Department::whereNotNull('parent_id')->count(),
         'job_titles'      => \Modules\HR\Models\JobTitle::count(),
+        'allowance_types' => \Modules\HR\Models\HrSetting::where('type', 'allowance-types')->count(),
+        'document_types'  => \Modules\HR\Models\HrSetting::where('type', 'document-types')->count(),
+        'shifts'          => \Modules\HR\Models\Shift::count(),
+        'work_schedules'   => \Modules\HR\Models\WorkSchedule::count(),
+        'official_holidays'=> \Modules\HR\Models\OfficialHoliday::count(),
     ];
 @endphp
 
@@ -48,6 +53,66 @@
                 </div>
                 <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.job-titles.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
                     {{ $counts['job_titles'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 4- أنواع البدلات -->
+            <a href="{{ route('hr.settings.allowance-types.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.allowance-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-wallet {{ request()->routeIs('hr.settings.allowance-types.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Allowance Types') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.allowance-types.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['allowance_types'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 5- أنواع المستندات -->
+            <a href="{{ route('hr.settings.document-types.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.document-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-file {{ request()->routeIs('hr.settings.document-types.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Document Types') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.document-types.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['document_types'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 6- الورديات -->
+            <a href="{{ route('hr.settings.shifts.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.shifts.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-time-five {{ request()->routeIs('hr.settings.shifts.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Shifts') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.shifts.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['shifts'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 7- جداول العمل -->
+            <a href="{{ route('hr.settings.work-schedules.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.work-schedules.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-calendar-event {{ request()->routeIs('hr.settings.work-schedules.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Work Schedules') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.work-schedules.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['work_schedules'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 8- العطلات الرسمية -->
+            <a href="{{ route('hr.settings.official-holidays.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.official-holidays.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-sun {{ request()->routeIs('hr.settings.official-holidays.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Official Holidays') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.official-holidays.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['official_holidays'] ?? 0 }}
                 </span>
             </a>
         </div>

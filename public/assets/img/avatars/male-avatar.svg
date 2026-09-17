@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="maleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#696CFF"/>
+      <stop offset="100%" stop-color="#4346D8"/>
+    </linearGradient>
+
+    <!-- Subtle Radial Glow -->
+    <radialGradient id="maleGlow" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Silhouette Linear Gradient -->
+    <linearGradient id="maleFigure" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EEF2FF"/>
+    </linearGradient>
+
+    <!-- Secondary Depth Tone -->
+    <linearGradient id="maleDepth" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0E7FF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#C7D2FE" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="softShadowMale" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#1E1B68" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Circular Base -->
+  <circle cx="80" cy="80" r="78" fill="url(#maleBg)"/>
+  <circle cx="80" cy="80" r="78" fill="url(#maleGlow)"/>
+  
+  <!-- Outer Ring Accent -->
+  <circle cx="80" cy="80" r="76" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.25"/>
+
+  <!-- Clip Path to keep silhouette contained in circle -->
+  <clipPath id="circleClipMale">
+    <circle cx="80" cy="80" r="78"/>
+  </clipPath>
+
+  <g clip-path="url(#circleClipMale)" filter="url(#softShadowMale)">
+    <!-- Shoulders & Torso (Corporate Business Suit Silhouette) -->
+    <path d="M26 152 C 28 118, 48 104, 80 104 C 112 104, 132 118, 134 152 Z" fill="url(#maleFigure)"/>
+    
+    <!-- Suit Blazer Lapels (V-Shape Cut) -->
+    <path d="M60 108 L80 134 L100 108 L90 104 L80 118 L70 104 Z" fill="url(#maleDepth)" opacity="0.6"/>
+
+    <!-- Tie Contour -->
+    <path d="M77 116 L83 116 L84 122 L80 125 L76 122 Z" fill="url(#maleBg)"/>
+    <path d="M77 124 L83 124 L85 148 L80 152 L75 148 Z" fill="url(#maleBg)"/>
+
+    <!-- Neck -->
+    <rect x="73" y="86" width="14" height="18" rx="4" fill="url(#maleFigure)"/>
+
+    <!-- Head & Hair Silhouette (Clean Business Cut) -->
+    <path d="M52 64 C 52 42, 64 30, 80 30 C 96 30, 108 42, 108 64 C 108 80, 96 90, 80 90 C 64 90, 52 80, 52 64 Z" fill="url(#maleFigure)"/>
+
+    <!-- Professional Hair Style Contour (Subtle Depth) -->
+    <path d="M52 56 C 54 38, 66 30, 80 30 C 94 30, 106 38, 108 56 C 102 44, 92 40, 80 40 C 68 40, 58 44, 52 56 Z" fill="url(#maleDepth)"/>
+  </g>
+</svg>
