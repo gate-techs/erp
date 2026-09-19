@@ -205,7 +205,7 @@
                             @if ($maritalStatuses->isNotEmpty())
                                 @foreach ($maritalStatuses as $ms)
                                     @php
-                                        $msName = $ms->translate('ar')?->name ?? $ms->translate('en')?->name ?? $ms->name ?? $ms->value;
+                                        $msName = $ms->translate(app()->getLocale())?->name ?? $ms->translate('ar')?->name ?? $ms->translate('en')?->name ?? $ms->name ?? $ms->value;
                                         $msVal = $ms->value ?? $msName;
                                     @endphp
                                     <option value="{{ $msVal }}" {{ old('marital_status', $isEdit ? $employee->marital_status : '') == $msVal ? 'selected' : '' }}>
@@ -229,7 +229,7 @@
                             @if ($nationalities->isNotEmpty())
                                 @foreach ($nationalities as $nat)
                                     @php
-                                        $natName = $nat->translate('ar')?->name ?? $nat->translate('en')?->name ?? $nat->name ?? $nat->value;
+                                        $natName = $nat->translate(app()->getLocale())?->name ?? $nat->translate('ar')?->name ?? $nat->translate('en')?->name ?? $nat->name ?? $nat->value;
                                         $natVal = $nat->value ?? $natName;
                                     @endphp
                                     <option value="{{ $natVal }}" {{ old('nationality', $isEdit ? $employee->nationality : 'KWT') == $natVal || old('nationality', $isEdit ? $employee->nationality : '') == $natName ? 'selected' : '' }}>
@@ -252,7 +252,7 @@
                             @if ($religions->isNotEmpty())
                                 @foreach ($religions as $rel)
                                     @php
-                                        $relName = $rel->translate('ar')?->name ?? $rel->translate('en')?->name ?? $rel->name ?? $rel->value;
+                                        $relName = $rel->translate(app()->getLocale())?->name ?? $rel->translate('ar')?->name ?? $rel->translate('en')?->name ?? $rel->name ?? $rel->value;
                                         $relVal = $rel->value ?? $relName;
                                     @endphp
                                     <option value="{{ $relVal }}" {{ old('religion', $isEdit ? $employee->religion : 'ISLAM') == $relVal || old('religion', $isEdit ? $employee->religion : '') == $relName ? 'selected' : '' }}>
@@ -290,7 +290,7 @@
                             @if ($bloodTypes->isNotEmpty())
                                 @foreach ($bloodTypes as $bt)
                                     @php
-                                        $btName = $bt->translate('ar')?->name ?? $bt->translate('en')?->name ?? $bt->name ?? $bt->value;
+                                        $btName = $bt->translate(app()->getLocale())?->name ?? $bt->translate('ar')?->name ?? $bt->translate('en')?->name ?? $bt->name ?? $bt->value;
                                         $btVal = $bt->value ?? $btName;
                                     @endphp
                                     <option value="{{ $btVal }}" {{ old('blood_type', $isEdit ? $employee->blood_type : '') == $btVal ? 'selected' : '' }}>
@@ -335,7 +335,7 @@
                                         <option value=""></option>
                                         @foreach ($visaTypes as $vt)
                                             <option value="{{ $vt->id }}" {{ old('visa_type_id', $isEdit ? $employee->visa_type_id : '') == $vt->id ? 'selected' : '' }}>
-                                                {{ $vt->translate('ar')?->name ?? $vt->name }}
+                                                {{ $vt->translate(app()->getLocale())?->name ?? $vt->translate('ar')?->name ?? $vt->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -369,7 +369,7 @@
                             <option value=""></option>
                             @foreach ($branches as $branch)
                                 <option value="{{ $branch->id }}" {{ old('primary_branch_id', $isEdit ? $employee->primary_branch_id : '') == $branch->id ? 'selected' : '' }}>
-                                    {{ $branch->translate('ar')?->name ?? $branch->name }}
+                                    {{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -382,7 +382,7 @@
                         <select name="branches[]" class="form-select select2" data-control="select2" multiple data-placeholder="{{ __('Select additional branches...') }}">
                             @foreach ($branches as $branch)
                                 <option value="{{ $branch->id }}" {{ in_array($branch->id, old('branches', $assignedBranchIds)) ? 'selected' : '' }}>
-                                    {{ $branch->translate('ar')?->name ?? $branch->name }}
+                                    {{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -395,7 +395,7 @@
                             <option value=""></option>
                             @foreach ($administrations as $admin)
                                 <option value="{{ $admin->id }}" {{ old('administration_id', $currentAdminId) == $admin->id ? 'selected' : '' }}>
-                                    {{ $admin->translate('ar')?->name ?? $admin->name }}
+                                    {{ $admin->translate(app()->getLocale())?->name ?? $admin->translate('ar')?->name ?? $admin->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -410,7 +410,7 @@
                                 <option value="{{ $dept->id }}" 
                                         data-parent-id="{{ $dept->parent_id ?? '' }}"
                                         {{ old('department_id', $isEdit ? $employee->department_id : '') == $dept->id ? 'selected' : '' }}>
-                                    {{ $dept->translate('ar')?->name ?? $dept->name }}
+                                    {{ $dept->translate(app()->getLocale())?->name ?? $dept->translate('ar')?->name ?? $dept->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -423,7 +423,7 @@
                             <option value=""></option>
                             @foreach ($jobTitles as $title)
                                 <option value="{{ $title->id }}" {{ old('job_title_id', $isEdit ? $employee->job_title_id : '') == $title->id ? 'selected' : '' }}>
-                                    {{ $title->translate('ar')?->name ?? $title->name }}
+                                    {{ $title->translate(app()->getLocale())?->name ?? $title->translate('ar')?->name ?? $title->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -451,7 +451,7 @@
                             <option value=""></option>
                             @foreach ($workSchedules as $schedule)
                                 <option value="{{ $schedule->id }}" {{ old('work_schedule_id', $isEdit ? $employee->work_schedule_id : '') == $schedule->id ? 'selected' : '' }}>
-                                    {{ $schedule->translate('ar')?->name ?? $schedule->name }} ({{ $schedule->working_days_count }} {{ __('days/week') }})
+                                    {{ $schedule->translate(app()->getLocale())?->name ?? $schedule->translate('ar')?->name ?? $schedule->name }} ({{ $schedule->working_days_count }} {{ __('days/week') }})
                                 </option>
                             @endforeach
                         </select>
@@ -464,7 +464,7 @@
                             <option value=""></option>
                             @foreach ($shifts as $shift)
                                 <option value="{{ $shift->id }}" {{ old('shift_id', $isEdit ? $employee->shift_id : '') == $shift->id ? 'selected' : '' }}>
-                                    {{ $shift->translate('ar')?->name ?? $shift->name }} ({{ $shift->start_time }} - {{ $shift->end_time }})
+                                    {{ $shift->translate(app()->getLocale())?->name ?? $shift->translate('ar')?->name ?? $shift->name }} ({{ $shift->start_time }} - {{ $shift->end_time }})
                                 </option>
                             @endforeach
                         </select>
@@ -538,7 +538,7 @@
                             <option value=""></option>
                             @foreach ($governorates as $gov)
                                 <option value="{{ $gov->id }}" {{ old('governorate_id', $isEdit ? $employee->governorate_id : '') == $gov->id ? 'selected' : '' }}>
-                                    {{ $gov->translate('ar')?->name ?? $gov->name }}
+                                    {{ $gov->translate(app()->getLocale())?->name ?? $gov->translate('ar')?->name ?? $gov->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -551,7 +551,7 @@
                             <option value=""></option>
                             @foreach ($cities as $city)
                                 @php
-                                    $cityName = $city->translate('ar')?->name ?? $city->translate('en')?->name ?? $city->name ?? $city->value;
+                                    $cityName = $city->translate(app()->getLocale())?->name ?? $city->translate('ar')?->name ?? $city->translate('en')?->name ?? $city->name ?? $city->value;
                                 @endphp
                                 <option value="{{ $cityName }}" 
                                         data-parent-id="{{ $city->parent_id ?? '' }}"
@@ -606,7 +606,7 @@
                                         @if ($relationships->isNotEmpty())
                                             @foreach ($relationships as $rel)
                                                 @php
-                                                    $relName = $rel->translate('ar')?->name ?? $rel->translate('en')?->name ?? $rel->name ?? $rel->value;
+                                                    $relName = $rel->translate(app()->getLocale())?->name ?? $rel->translate('ar')?->name ?? $rel->translate('en')?->name ?? $rel->name ?? $rel->value;
                                                     $relVal = $rel->value ?? $relName;
                                                 @endphp
                                                 <option value="{{ $relVal }}" {{ old('emergency_contact_relation', $isEdit ? $employee->emergency_contact_relation : '') == $relVal ? 'selected' : '' }}>
@@ -675,7 +675,7 @@
                             <option value=""></option>
                             @foreach ($banks as $b)
                                 <option value="{{ $b->id }}" {{ old('bank_id', $isEdit ? $employee->bank_id : '') == $b->id ? 'selected' : '' }}>
-                                    {{ $b->translate('ar')?->name ?? $b->name }}
+                                    {{ $b->translate(app()->getLocale())?->name ?? $b->translate('ar')?->name ?? $b->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -690,7 +690,7 @@
                                 <option value="{{ $bb->id }}" 
                                         data-parent-id="{{ $bb->parent_id ?? '' }}"
                                         {{ old('bank_branch_id', $isEdit ? $employee->bank_branch_id : '') == $bb->id ? 'selected' : '' }}>
-                                    {{ $bb->translate('ar')?->name ?? $bb->name }}
+                                    {{ $bb->translate(app()->getLocale())?->name ?? $bb->translate('ar')?->name ?? $bb->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -770,7 +770,7 @@
                                                 <option value=""></option>
                                                 @foreach ($allowanceTypes as $at)
                                                     <option value="{{ $at->id }}" {{ (isset($allowance['allowance_type_id']) && $allowance['allowance_type_id'] == $at->id) ? 'selected' : '' }}>
-                                                        {{ $at->translate('ar')?->name ?? $at->name }}
+                                                        {{ $at->translate(app()->getLocale())?->name ?? $at->translate('ar')?->name ?? $at->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -850,7 +850,7 @@
                                             <option value=""></option>
                                             @foreach ($documentTypes as $dt)
                                                 <option value="{{ $dt->id }}" {{ (isset($doc['document_type_id']) && $doc['document_type_id'] == $dt->id) ? 'selected' : '' }}>
-                                                    {{ $dt->translate('ar')?->name ?? $dt->name }}
+                                                    {{ $dt->translate(app()->getLocale())?->name ?? $dt->translate('ar')?->name ?? $dt->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -942,7 +942,7 @@
             <select name="allowances[__INDEX__][allowance_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Allowance Type...') }}" required>
                 <option value=""></option>
                 @foreach ($allowanceTypes as $at)
-                    <option value="{{ $at->id }}">{{ $at->translate('ar')?->name ?? $at->name }}</option>
+                    <option value="{{ $at->id }}">{{ $at->translate(app()->getLocale())?->name ?? $at->translate('ar')?->name ?? $at->name }}</option>
                 @endforeach
             </select>
         </td>
@@ -993,7 +993,7 @@
                 <select name="documents[__INDEX__][document_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Document Type...') }}" required>
                     <option value=""></option>
                     @foreach ($documentTypes as $dt)
-                        <option value="{{ $dt->id }}">{{ $dt->translate('ar')?->name ?? $dt->name }}</option>
+                        <option value="{{ $dt->id }}">{{ $dt->translate(app()->getLocale())?->name ?? $dt->translate('ar')?->name ?? $dt->name }}</option>
                     @endforeach
                 </select>
             </div>

@@ -532,23 +532,7 @@ window.addEventListener('load', function () {
                 className: 'text-center'
             }
         ],
-        order: [[10, 'desc']],
-        language: {
-            search: "{{ __('Search:') }}",
-            searchPlaceholder: "{{ __('Search schedules...') }}",
-            lengthMenu: "{{ __('Show _MENU_ entries') }}",
-            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-            infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
-            emptyTable: "{{ __('No work schedules available in table') }}",
-            zeroRecords: "{{ __('No matching schedules found') }}",
-            processing: "{{ __('Processing...') }}",
-            paginate: {
-                first: "{{ __('First') }}",
-                last: "{{ __('Last') }}",
-                next: "{{ __('Next') }}",
-                previous: "{{ __('Previous') }}"
-            }
-        }
+        order: [[10, 'desc']]
     });
 
     // Handle Weekend switch toggling in both Add and Edit offcanvases

@@ -1,14 +1,18 @@
 @php
-    $counts = $counts ?? [
-        'administrations' => \Modules\HR\Models\Department::whereNull('parent_id')->count(),
-        'departments'     => \Modules\HR\Models\Department::whereNotNull('parent_id')->count(),
-        'job_titles'      => \Modules\HR\Models\JobTitle::count(),
-        'allowance_types' => \Modules\HR\Models\HrSetting::where('type', 'allowance-types')->count(),
-        'document_types'  => \Modules\HR\Models\HrSetting::where('type', 'document-types')->count(),
-        'shifts'          => \Modules\HR\Models\Shift::count(),
-        'work_schedules'   => \Modules\HR\Models\WorkSchedule::count(),
-        'official_holidays'=> \Modules\HR\Models\OfficialHoliday::count(),
+    $defaultCounts = [
+        'administrations'   => \Modules\HR\Models\Department::whereNull('parent_id')->count(),
+        'departments'       => \Modules\HR\Models\Department::whereNotNull('parent_id')->count(),
+        'job_titles'        => \Modules\HR\Models\JobTitle::count(),
+        'allowance_types'   => \Modules\HR\Models\HrSetting::where('type', 'allowance-types')->count(),
+        'document_types'    => \Modules\HR\Models\HrSetting::where('type', 'document-types')->count(),
+        'reward_types'      => \Modules\HR\Models\HrSetting::where('type', 'reward-types')->count(),
+        'penalty_types'     => \Modules\HR\Models\HrSetting::where('type', 'penalty-types')->count(),
+        'shifts'            => \Modules\HR\Models\Shift::count(),
+        'work_schedules'    => \Modules\HR\Models\WorkSchedule::count(),
+        'official_holidays' => \Modules\HR\Models\OfficialHoliday::count(),
+        'policies'          => \Modules\HR\Models\HrWorkPolicy::count(),
     ];
+    $counts = array_merge($defaultCounts, $counts ?? []);
 @endphp
 
 <div class="card shadow-sm border-0 mb-3 mb-md-0">
@@ -80,6 +84,30 @@
                 </span>
             </a>
 
+            <!-- 5.1- أنواع المكافآت -->
+            <a href="{{ route('hr.settings.reward-types.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.reward-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-gift {{ request()->routeIs('hr.settings.reward-types.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Reward Types') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.reward-types.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['reward_types'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 5.2- أنواع الجزاءات والمخالفات -->
+            <a href="{{ route('hr.settings.penalty-types.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.penalty-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-error-circle {{ request()->routeIs('hr.settings.penalty-types.*') ? 'text-white' : 'text-danger' }} font-18"></i>
+                    <span>{{ __('Penalty Types') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.penalty-types.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['penalty_types'] ?? 0 }}
+                </span>
+            </a>
+
             <!-- 6- الورديات -->
             <a href="{{ route('hr.settings.shifts.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.shifts.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
@@ -113,6 +141,18 @@
                 </div>
                 <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.official-holidays.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
                     {{ $counts['official_holidays'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 9- سياسات العمل واللوائح -->
+            <a href="{{ route('hr.settings.policies.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.policies.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-book-content {{ request()->routeIs('hr.settings.policies.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Work Policies & Rules') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('hr.settings.policies.*') ? 'bg-white text-primary' : 'bg-label-info' }}">
+                    <i class="bx bx-check font-12"></i>
                 </span>
             </a>
         </div>

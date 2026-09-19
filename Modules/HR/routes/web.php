@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\HR\Http\Controllers\AttendanceController;
 use Modules\HR\Http\Controllers\EmployeeController;
 use Modules\HR\Http\Controllers\HRSettingController;
 use Modules\HR\Http\Controllers\HrGeneralSettingController;
@@ -8,11 +9,102 @@ use Modules\HR\Http\Controllers\JobTitleController;
 use Modules\HR\Http\Controllers\ShiftController;
 use Modules\HR\Http\Controllers\WorkScheduleController;
 use Modules\HR\Http\Controllers\OfficialHolidayController;
+use Modules\HR\Http\Controllers\WorkPolicyController;
+use Modules\HR\Http\Controllers\LeaveRequestController;
+use Modules\HR\Http\Controllers\PermissionRequestController;
+use Modules\HR\Http\Controllers\LoanController;
+use Modules\HR\Http\Controllers\RewardController;
+use Modules\HR\Http\Controllers\PenaltyController;
+use Modules\HR\Http\Controllers\PayrollController;
+use Modules\HR\Http\Controllers\WorkforcePlanController;
+use Modules\HR\Http\Controllers\JobRequisitionController;
 
 Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(function () {
+    // Payroll & Wage Management (إدارة مسير الرواتب والأجور)
+    Route::get('payrolls/data', [PayrollController::class, 'data'])->name('payrolls.data');
+    Route::get('payrolls/{id}/items-data', [PayrollController::class, 'itemsData'])->name('payrolls.items-data');
+    Route::get('payrolls/{id}/items/{itemId}', [PayrollController::class, 'getItem'])->name('payrolls.items.get');
+    Route::put('payrolls/{id}/items/{itemId}', [PayrollController::class, 'updateItem'])->name('payrolls.items.update');
+    Route::get('payrolls/{id}/items/{itemId}/payslip', [PayrollController::class, 'payslip'])->name('payrolls.items.payslip');
+    Route::post('payrolls/{id}/recalculate', [PayrollController::class, 'recalculate'])->name('payrolls.recalculate');
+    Route::post('payrolls/{id}/approve', [PayrollController::class, 'approve'])->name('payrolls.approve');
+    Route::post('payrolls/{id}/disburse', [PayrollController::class, 'disburse'])->name('payrolls.disburse');
+    Route::post('payrolls/{id}/cancel', [PayrollController::class, 'cancel'])->name('payrolls.cancel');
+    Route::get('payrolls/{id}/export-wps', [PayrollController::class, 'exportWps'])->name('payrolls.export-wps');
+    Route::resource('payrolls', PayrollController::class)->except(['create', 'edit', 'update']);
+
+    // Rewards & Incentives Management (إدارة المكافآت والحوافز)
+    Route::get('rewards/data', [RewardController::class, 'data'])->name('rewards.data');
+    Route::get('rewards/calculate', [RewardController::class, 'calculate'])->name('rewards.calculate');
+    Route::post('rewards/{id}/approve', [RewardController::class, 'approve'])->name('rewards.approve');
+    Route::post('rewards/{id}/pay', [RewardController::class, 'pay'])->name('rewards.pay');
+    Route::post('rewards/{id}/reject', [RewardController::class, 'reject'])->name('rewards.reject');
+    Route::resource('rewards', RewardController::class)->except(['create', 'edit']);
+
+    // Penalties & Disciplinary Actions Management (إدارة الجزاءات والمخالفات)
+    Route::get('penalties/data', [PenaltyController::class, 'data'])->name('penalties.data');
+    Route::get('penalties/calculate', [PenaltyController::class, 'calculate'])->name('penalties.calculate');
+    Route::post('penalties/{id}/approve', [PenaltyController::class, 'approve'])->name('penalties.approve');
+    Route::post('penalties/{id}/deduct', [PenaltyController::class, 'deduct'])->name('penalties.deduct');
+    Route::post('penalties/{id}/cancel', [PenaltyController::class, 'cancel'])->name('penalties.cancel');
+    Route::resource('penalties', PenaltyController::class)->except(['create', 'edit']);
+
+    // Loans & Advances Management (إدارة السلف والقروض)
+    Route::get('loans/data', [LoanController::class, 'data'])->name('loans.data');
+    Route::get('loans/check-eligibility', [LoanController::class, 'checkEligibility'])->name('loans.check-eligibility');
+    Route::get('loans/preview-schedule', [LoanController::class, 'previewSchedule'])->name('loans.preview-schedule');
+    Route::post('loans/{id}/approve', [LoanController::class, 'approve'])->name('loans.approve');
+    Route::post('loans/{id}/disburse', [LoanController::class, 'disburse'])->name('loans.disburse');
+    Route::post('loans/{id}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+    Route::post('loans/installments/{id}/postpone', [LoanController::class, 'postponeInstallment'])->name('loans.installments.postpone');
+    Route::post('loans/installments/{id}/pay', [LoanController::class, 'payInstallment'])->name('loans.installments.pay');
+    Route::resource('loans', LoanController::class)->except(['create', 'edit']);
+
+    // Permission Requests Management (إدارة طلبات الأذونات والمغادرات)
+    Route::get('permissions/data', [PermissionRequestController::class, 'data'])->name('permissions.data');
+    Route::get('permissions/check-balance', [PermissionRequestController::class, 'checkBalance'])->name('permissions.check-balance');
+    Route::post('permissions/{id}/approve', [PermissionRequestController::class, 'approve'])->name('permissions.approve');
+    Route::post('permissions/{id}/reject', [PermissionRequestController::class, 'reject'])->name('permissions.reject');
+    Route::resource('permissions', PermissionRequestController::class)->except(['create', 'edit']);
+
+    // Leave Requests Management (إدارة طلبات الإجازات)
+    Route::get('leaves/data', [LeaveRequestController::class, 'data'])->name('leaves.data');
+    Route::get('leaves/check-balance', [LeaveRequestController::class, 'checkBalance'])->name('leaves.check-balance');
+    Route::post('leaves/{id}/approve', [LeaveRequestController::class, 'approve'])->name('leaves.approve');
+    Route::post('leaves/{id}/reject', [LeaveRequestController::class, 'reject'])->name('leaves.reject');
+    Route::resource('leaves', LeaveRequestController::class)->except(['create', 'edit']);
+
+    // Attendance & Absence Management (إدارة الحضور والإنصراف)
+    Route::get('attendances/data', [AttendanceController::class, 'data'])->name('attendances.data');
+    Route::get('attendances/matrix-data', [AttendanceController::class, 'matrixData'])->name('attendances.matrix-data');
+    Route::post('attendances/record-punch', [AttendanceController::class, 'recordPunch'])->name('attendances.record-punch');
+    Route::post('attendances/import-excel', [AttendanceController::class, 'importExcel'])->name('attendances.import-excel');
+    Route::get('attendances/download-template', [AttendanceController::class, 'downloadTemplate'])->name('attendances.download-template');
+    Route::resource('attendances', AttendanceController::class)->only(['index', 'store', 'update', 'destroy']);
+
     // Employees Management (إدارة الموظفين)
     Route::get('employees/data', [EmployeeController::class, 'data'])->name('employees.data');
     Route::resource('employees', EmployeeController::class);
+
+    // Workforce Planning (تخطيط القوى العاملة)
+    Route::get('workforce-plans/data', [WorkforcePlanController::class, 'data'])->name('workforce-plans.data');
+    Route::get('workforce-plans/live-headcount', [WorkforcePlanController::class, 'getLiveHeadcount'])->name('workforce-plans.live-headcount');
+    Route::post('workforce-plans/{id}/submit', [WorkforcePlanController::class, 'submit'])->name('workforce-plans.submit');
+    Route::post('workforce-plans/{id}/approve', [WorkforcePlanController::class, 'approve'])->name('workforce-plans.approve');
+    Route::post('workforce-plans/{id}/activate', [WorkforcePlanController::class, 'activate'])->name('workforce-plans.activate');
+    Route::post('workforce-plans/{id}/close', [WorkforcePlanController::class, 'close'])->name('workforce-plans.close');
+    Route::post('workforce-plans/{id}/recalculate', [WorkforcePlanController::class, 'recalculateHeadcount'])->name('workforce-plans.recalculate');
+    Route::resource('workforce-plans', WorkforcePlanController::class);
+
+    // Job Requisitions (طلبات التوظيف من الأقسام)
+    Route::get('job-requisitions/data', [JobRequisitionController::class, 'data'])->name('job-requisitions.data');
+    Route::get('job-requisitions/plan-items', [JobRequisitionController::class, 'getPlanItems'])->name('job-requisitions.plan-items');
+    Route::post('job-requisitions/{id}/submit', [JobRequisitionController::class, 'submit'])->name('job-requisitions.submit');
+    Route::post('job-requisitions/{id}/approve', [JobRequisitionController::class, 'approve'])->name('job-requisitions.approve');
+    Route::post('job-requisitions/{id}/reject', [JobRequisitionController::class, 'reject'])->name('job-requisitions.reject');
+    Route::post('job-requisitions/{id}/start-recruitment', [JobRequisitionController::class, 'startRecruitment'])->name('job-requisitions.start-recruitment');
+    Route::post('job-requisitions/{id}/cancel', [JobRequisitionController::class, 'cancel'])->name('job-requisitions.cancel');
+    Route::resource('job-requisitions', JobRequisitionController::class);
 
     // HR Settings Root (Redirects to administrations)
     Route::get('settings', [HRSettingController::class, 'index'])->name('settings');
@@ -53,6 +145,20 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
         Route::put('document-types/{id}', [HrGeneralSettingController::class, 'updateDocumentType'])->name('document-types.update');
         Route::delete('document-types/{id}', [HrGeneralSettingController::class, 'destroyDocumentType'])->name('document-types.destroy');
 
+        // 5.1 Reward Types (أنواع المكافآت والحوافز)
+        Route::get('reward-types/data', [HrGeneralSettingController::class, 'rewardTypesData'])->name('reward-types.data');
+        Route::get('reward-types', [HrGeneralSettingController::class, 'rewardTypes'])->name('reward-types.index');
+        Route::post('reward-types', [HrGeneralSettingController::class, 'storeRewardType'])->name('reward-types.store');
+        Route::put('reward-types/{id}', [HrGeneralSettingController::class, 'updateRewardType'])->name('reward-types.update');
+        Route::delete('reward-types/{id}', [HrGeneralSettingController::class, 'destroyRewardType'])->name('reward-types.destroy');
+
+        // 5.2 Penalty Types (أنواع الجزاءات والمخالفات)
+        Route::get('penalty-types/data', [HrGeneralSettingController::class, 'penaltyTypesData'])->name('penalty-types.data');
+        Route::get('penalty-types', [HrGeneralSettingController::class, 'penaltyTypes'])->name('penalty-types.index');
+        Route::post('penalty-types', [HrGeneralSettingController::class, 'storePenaltyType'])->name('penalty-types.store');
+        Route::put('penalty-types/{id}', [HrGeneralSettingController::class, 'updatePenaltyType'])->name('penalty-types.update');
+        Route::delete('penalty-types/{id}', [HrGeneralSettingController::class, 'destroyPenaltyType'])->name('penalty-types.destroy');
+
         // 6. Shifts (الورديات)
         Route::get('shifts/data', [ShiftController::class, 'data'])->name('shifts.data');
         Route::get('shifts', [ShiftController::class, 'index'])->name('shifts.index');
@@ -73,5 +179,10 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
         Route::post('official-holidays', [OfficialHolidayController::class, 'store'])->name('official-holidays.store');
         Route::put('official-holidays/{id}', [OfficialHolidayController::class, 'update'])->name('official-holidays.update');
         Route::delete('official-holidays/{id}', [OfficialHolidayController::class, 'destroy'])->name('official-holidays.destroy');
+
+        // 9. Work Policies & Rules (سياسات العمل واللوائح)
+        Route::get('policies', [WorkPolicyController::class, 'index'])->name('policies.index');
+        Route::post('policies', [WorkPolicyController::class, 'update'])->name('policies.update');
+        Route::post('policies/reset', [WorkPolicyController::class, 'resetDefaults'])->name('policies.reset');
     });
 });

@@ -16,6 +16,8 @@
 
 <!-- Page Styles -->
 @yield('page-style')
+@yield('styles')
+@stack('styles')
 
 <!-- app CSS -->
 @vite(['resources/css/app.css'])

@@ -17,7 +17,16 @@ class HRDatabaseSeeder extends Seeder
             ShiftSeeder::class,
             WorkScheduleSeeder::class,
             OfficialHolidaySeeder::class,
+            HrSettingSeeder::class,
             EmployeeSeeder::class,
+            LeaveRequestSeeder::class,
+            PermissionRequestSeeder::class,
+            LoanSeeder::class,
+            RewardSeeder::class,
+            PenaltySeeder::class,
+            PayrollSeeder::class,
+            WorkforcePlanSeeder::class,
+            JobRequisitionSeeder::class,
         ]);
     }
 }

@@ -26,6 +26,17 @@
       outline: 0;
       transform: translate(20px, -20px);
     }
+
+    html[dir="rtl"] &,
+    [dir="rtl"] & {
+      transform: translate(-23px, -25px);
+
+      &:hover,
+      &:focus,
+      &:active {
+        transform: translate(-20px, -20px);
+      }
+    }
     &::before{
       display: block;
       background-color: var(--#{$prefix}secondary-color);
@@ -43,6 +54,12 @@
       position: absolute;
       inset-block-start: $modal-dialog-margin - .5625rem;
       inset-inline-end: $modal-dialog-margin - .6875rem;
+
+      html[dir="rtl"] &,
+      [dir="rtl"] & {
+        right: auto;
+        left: $modal-dialog-margin - .6875rem;
+      }
     }
   }
 

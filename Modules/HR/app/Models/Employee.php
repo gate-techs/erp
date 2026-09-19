@@ -17,6 +17,12 @@ use Modules\HR\Enums\EmployeeStatus;
 use Modules\HR\Enums\EmploymentType;
 use Modules\HR\Enums\Gender;
 use Modules\HR\Enums\MaritalStatus;
+use Modules\HR\Models\Attendance;
+use Modules\HR\Models\LeaveRequest;
+use Modules\HR\Models\Loan;
+use Modules\HR\Models\Penalty;
+use Modules\HR\Models\PermissionRequest;
+use Modules\HR\Models\Reward;
 use Modules\Nursery\Models\NurseryBranch;
 use Modules\Settings\Models\Bank;
 use Modules\Settings\Models\GeneralSetting;
@@ -148,6 +154,15 @@ class Employee extends Model implements TranslatableContract
 
     //======================
     /**
+     * Relationship: Branch (Alias to primaryBranch).
+     */
+    public function branch(): BelongsTo
+    {
+        return $this->primaryBranch();
+    }
+
+    //======================
+    /**
      * Relationship: Department.
      */
     public function department(): BelongsTo
@@ -257,11 +272,74 @@ class Employee extends Model implements TranslatableContract
 
     //======================
     /**
+     * Relationship: Payroll Items.
+     */
+    public function payrollItems(): HasMany
+    {
+        return $this->hasMany(PayrollItem::class, 'employee_id');
+    }
+
+    //======================
+    /**
      * Relationship: Employee Documents.
      */
     public function documents(): HasMany
     {
         return $this->hasMany(EmployeeDocument::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Attendances.
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Leave Requests.
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Permission Requests.
+     */
+    public function permissionRequests(): HasMany
+    {
+        return $this->hasMany(PermissionRequest::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Loans & Advances.
+     */
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Rewards & Incentives.
+     */
+    public function rewards(): HasMany
+    {
+        return $this->hasMany(Reward::class, 'employee_id');
+    }
+
+    //======================
+    /**
+     * Relationship: Penalties & Violations.
+     */
+    public function penalties(): HasMany
+    {
+        return $this->hasMany(Penalty::class, 'employee_id');
     }
 
     //======================

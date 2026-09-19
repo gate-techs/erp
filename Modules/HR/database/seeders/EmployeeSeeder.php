@@ -64,6 +64,25 @@ class EmployeeSeeder extends Seeder
         $contractDoc = HrSetting::where('type', 'document-types')->whereTranslationLike('name', '%عقد%')->first();
         $degreeDoc = HrSetting::where('type', 'document-types')->whereTranslationLike('name', '%شهادة%')->orWhereTranslationLike('name', '%مؤهل%')->first();
 
+        // Resolve seeded HR settings by stable names; numeric fallback IDs are
+        // unsafe because IDs vary between databases.
+        $findHrSetting = static function (string $type, string $name): HrSetting {
+            return HrSetting::where('type', $type)
+                ->whereHas('translations', fn ($query) => $query
+                    ->where('locale', 'en')
+                    ->where('name', $name))
+                ->firstOrFail();
+        };
+
+        $housingAllowance = $findHrSetting('allowance-types', 'Housing Allowance');
+        $transportAllowance = $findHrSetting('allowance-types', 'Transportation Allowance');
+        $phoneAllowance = $findHrSetting('allowance-types', 'Phone Allowance');
+        $natureAllowance = $findHrSetting('allowance-types', 'Nature of Work Allowance');
+        $civilIdDoc = $findHrSetting('document-types', 'Civil ID / Residence');
+        $passportDoc = $findHrSetting('document-types', 'Passport');
+        $contractDoc = $findHrSetting('document-types', 'Employment Contract');
+        $degreeDoc = $findHrSetting('document-types', 'Qualification Certificate');
+
         $employeesData = [
             [
                 'code'           => 'EMP-0001',

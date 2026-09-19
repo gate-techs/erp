@@ -75,6 +75,61 @@ class HRServiceProvider extends ModuleServiceProvider
             \Modules\HR\Repositories\Contracts\EmployeeRepositoryInterface::class,
             \Modules\HR\Repositories\EmployeeRepository::class
         );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\AttendanceRepositoryInterface::class,
+            \Modules\HR\Repositories\AttendanceRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\AttendanceRawLogRepositoryInterface::class,
+            \Modules\HR\Repositories\AttendanceRawLogRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\WorkPolicyRepositoryInterface::class,
+            \Modules\HR\Repositories\WorkPolicyRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\LeaveRequestRepositoryInterface::class,
+            \Modules\HR\Repositories\LeaveRequestRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\PermissionRequestRepositoryInterface::class,
+            \Modules\HR\Repositories\PermissionRequestRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\LoanRepositoryInterface::class,
+            \Modules\HR\Repositories\LoanRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\RewardRepositoryInterface::class,
+            \Modules\HR\Repositories\RewardRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\PenaltyRepositoryInterface::class,
+            \Modules\HR\Repositories\PenaltyRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\PayrollRepositoryInterface::class,
+            \Modules\HR\Repositories\PayrollRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\WorkforcePlanRepositoryInterface::class,
+            \Modules\HR\Repositories\WorkforcePlanRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\JobRequisitionRepositoryInterface::class,
+            \Modules\HR\Repositories\JobRequisitionRepository::class
+        );
     }
 
     //======================

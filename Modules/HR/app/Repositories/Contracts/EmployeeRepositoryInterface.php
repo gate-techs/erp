@@ -39,6 +39,15 @@ interface EmployeeRepositoryInterface
 
     //======================
     /**
+     * Find an employee by ID with full profile relationships.
+     *
+     * @param int $id
+     * @return Employee|null
+     */
+    public function findWithFullProfile(int $id): ?Employee;
+
+    //======================
+    /**
      * Find an employee by code.
      *
      * @param string $code

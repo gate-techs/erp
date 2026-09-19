@@ -501,23 +501,7 @@ window.addEventListener('load', function () {
                 className: 'text-center'
             }
         ],
-        order: [[9, 'desc']],
-        language: {
-            search: "{{ __('Search:') }}",
-            searchPlaceholder: "{{ __('Search shifts...') }}",
-            lengthMenu: "{{ __('Show _MENU_ entries') }}",
-            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-            infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
-            emptyTable: "{{ __('No shifts available in table') }}",
-            zeroRecords: "{{ __('No matching shifts found') }}",
-            processing: "{{ __('Processing...') }}",
-            paginate: {
-                first: "{{ __('First') }}",
-                last: "{{ __('Last') }}",
-                next: "{{ __('Next') }}",
-                previous: "{{ __('Previous') }}"
-            }
-        }
+        order: [[9, 'desc']]
     });
 
     // 2. Edit Action: Populate & Open Offcanvas

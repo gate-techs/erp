@@ -576,4 +576,60 @@ body[dir="rtl"] table.dataTable thead > tr > th.sorting_desc::after {
     left: 0.75rem !important;
 }
 
+/* ==========================================================================
+   RTL Modal Close Button Alignment Fix
+   In LTR, Sneat translates close button translate(23px, -25px) to top-right corner.
+   In RTL, it must translate(-23px, -25px) to sit properly at top-left corner.
+   ========================================================================== */
+html[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close,
+[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close,
+body[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close {
+    right: auto !important;
+    left: 0.8125rem !important;
+    transform: translate(-23px, -25px) !important;
+}
+
+html[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:hover,
+html[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:focus,
+html[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:active,
+[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:hover,
+[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:focus,
+[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:active,
+body[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:hover,
+body[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:focus,
+body[dir="rtl"] .modal:not(.modal-dialog-scrollable):not(.modal-fullscreen):not(.modal-top) .btn-close:active {
+    transform: translate(-20px, -20px) !important;
+}
+
+/* ==========================================================================
+   KPI Summary Cards & Live Balance Cards (Global Component Styles)
+   ========================================================================== */
+.kpi-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e7e7e8;
+}
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(67, 89, 113, 0.1);
+}
+.live-balance-card {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.live-balance-card.active {
+    background: #f0fdf4;
+    border-color: #86efac;
+}
+.live-balance-card.warning-state {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+.live-balance-card.danger {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+
 

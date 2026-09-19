@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
     <ul class="navbar-nav flex-row align-items-center ms-auto gap-2">
         <!-- Language Switcher (文A) -->
         <li class="nav-item dropdown-language dropdown">
-            <a class="nav-link dropdown-toggle hide-arrow btn-nav-circle" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" title="تغيير اللغة">
+            <a class="nav-link dropdown-toggle hide-arrow btn-nav-circle" href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" title="{{ __('Change Language') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="nav-icon-svg">
                     <path d="M4 5h7M9 3v2c0 3.5-1.5 6.5-4 8.5M7 9c1.5 2 3.5 3.5 6 4.5"/>
                     <path d="M14 20l4-9 4 9M15.5 17h5"/>
@@ -69,7 +69,7 @@ use Illuminate\Support\Facades\Route;
 
         <!-- Style / Theme Switcher (Sun / Moon) -->
         <li class="nav-item dropdown-style-switcher dropdown">
-            <a class="nav-link dropdown-toggle hide-arrow btn-nav-circle" href="javascript:void(0);" id="theme-toggle-btn" title="الوضع الليلي / النهاري">
+            <a class="nav-link dropdown-toggle hide-arrow btn-nav-circle" href="javascript:void(0);" id="theme-toggle-btn" title="{{ __('Toggle Dark / Light Mode') }}">
                 <i class="icon-base bx bx-sun fs-4 theme-icon-sun"></i>
                 <i class="icon-base bx bx-moon fs-4 theme-icon-moon d-none"></i>
             </a>
@@ -93,7 +93,7 @@ use Illuminate\Support\Facades\Route;
                                 </div>
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-0">{{ Auth::check() ? Auth::user()->name : 'مسؤول النظام' }}</h6>
+                                <h6 class="mb-0">{{ Auth::check() ? Auth::user()->name : __('System Administrator') }}</h6>
                                 <small class="text-muted">{{ Auth::check() ? Auth::user()->email : 'Admin' }}</small>
                             </div>
                         </div>
@@ -119,7 +119,7 @@ use Illuminate\Support\Facades\Route;
                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
                         @csrf
                         <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="document.getElementById('logout-form').submit();">
-                            <i class="icon-base bx bx-power-off icon-md me-3"></i><span>تسجيل الخروج</span>
+                            <i class="icon-base bx bx-power-off icon-md me-3"></i><span>{{ __('Log Out') }}</span>
                         </a>
                     </form>
                 </li>

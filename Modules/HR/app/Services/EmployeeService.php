@@ -88,6 +88,63 @@ class EmployeeService
 
     //======================
     /**
+     * Get full employee profile data for the profile view.
+     *
+     * @return array{employee: Employee, kpis: array}|null
+     */
+    public function getProfileData(int $id): ?array
+    {
+        $employee = $this->employeeRepository->findWithFullProfile($id);
+
+        if (!$employee) {
+            return null;
+        }
+
+        // ---- KPI: Basic Salary ----
+        $basicSalary = (float) ($employee->basic_salary ?? 0);
+
+        // ---- KPI: Active Allowances Total ----
+        $allowancesTotal = $employee->allowances
+            ->where('is_active', true)
+            ->sum('amount');
+
+        // ---- KPI: Service Duration ----
+        $serviceYears  = null;
+        $serviceMonths = null;
+        if ($employee->hire_date) {
+            $serviceYears  = (int) now()->diffInYears($employee->hire_date);
+            $serviceMonths = (int) now()->subYears($serviceYears)->diffInMonths($employee->hire_date);
+        }
+
+        // ---- KPI: Attendance this month ----
+        $attendanceDays = $employee->attendances()
+            ->whereMonth('date', now()->month)
+            ->whereYear('date', now()->year)
+            ->count();
+
+        // ---- Stats: Totals ----
+        $activeLoan      = $employee->loans->where('status', 'disbursed')->first();
+        $totalRewardsYTD = $employee->rewards
+            ->where('status', 'paid')
+            ->filter(fn($r) => $r->created_at && $r->created_at->year === now()->year)
+            ->sum('amount');
+
+        return [
+            'employee' => $employee,
+            'kpis'     => [
+                'basic_salary'      => $basicSalary,
+                'allowances_total'  => $allowancesTotal,
+                'service_years'     => $serviceYears,
+                'service_months'    => $serviceMonths,
+                'attendance_days'   => $attendanceDays,
+                'active_loan'       => $activeLoan,
+                'total_rewards_ytd' => $totalRewardsYTD,
+            ],
+        ];
+    }
+
+    //======================
+    /**
      * Create a new employee record.
      */
     public function createEmployee(array $validated, ?int $authUserId = null): Employee

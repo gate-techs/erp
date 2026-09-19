@@ -259,9 +259,14 @@ class HRSettingController extends Controller
     protected function getCounts(): array
     {
         return [
-            'administrations' => Department::whereNull('parent_id')->count(),
-            'departments'     => Department::whereNotNull('parent_id')->count(),
-            'job_titles'      => \Modules\HR\Models\JobTitle::count(),
+            'administrations'   => Department::whereNull('parent_id')->count(),
+            'departments'       => Department::whereNotNull('parent_id')->count(),
+            'job_titles'        => \Modules\HR\Models\JobTitle::count(),
+            'allowance_types'   => \Modules\HR\Models\HrSetting::where('type', 'allowance-types')->count(),
+            'document_types'    => \Modules\HR\Models\HrSetting::where('type', 'document-types')->count(),
+            'shifts'            => \Modules\HR\Models\Shift::count(),
+            'work_schedules'    => \Modules\HR\Models\WorkSchedule::count(),
+            'official_holidays' => \Modules\HR\Models\OfficialHoliday::count(),
         ];
     }
 }

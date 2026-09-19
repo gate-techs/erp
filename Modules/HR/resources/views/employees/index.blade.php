@@ -27,21 +27,7 @@
     </div>
 </div>
 
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-3 shadow-xs" role="alert">
-        <i class="icon-base bx bx-check-circle me-2 font-20"></i>
-        <div class="flex-grow-1">{{ session('success') }}</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 
-@if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-3 shadow-xs" role="alert">
-        <i class="icon-base bx bx-error me-2 font-20"></i>
-        <div class="flex-grow-1">{{ session('error') }}</div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 
 <!-- Filters Card (نفس تصميم nursery-branches تماماً) -->
 <div class="card shadow-sm border-0 mb-4">
@@ -53,7 +39,7 @@
                 <select id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                     <option value="">{{ __('All Branches') }}</option>
                     @foreach ($branches as $branch)
-                        <option value="{{ $branch->id }}">{{ $branch->translate('ar')?->name ?? $branch->name }}</option>
+                        <option value="{{ $branch->id }}">{{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -64,7 +50,7 @@
                 <select id="filter_department_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
                     <option value="">{{ __('All Departments') }}</option>
                     @foreach ($departments as $dept)
-                        <option value="{{ $dept->id }}">{{ $dept->translate('ar')?->name ?? $dept->name }}</option>
+                        <option value="{{ $dept->id }}">{{ $dept->translate(app()->getLocale())?->name ?? $dept->translate('ar')?->name ?? $dept->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -75,7 +61,7 @@
                 <select id="filter_job_title_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Job Titles') }}" data-allow-clear="true">
                     <option value="">{{ __('All Job Titles') }}</option>
                     @foreach ($jobTitles as $job)
-                        <option value="{{ $job->id }}">{{ $job->translate('ar')?->name ?? $job->name }}</option>
+                        <option value="{{ $job->id }}">{{ $job->translate(app()->getLocale())?->name ?? $job->translate('ar')?->name ?? $job->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -118,7 +104,7 @@
                 <select id="filter_work_schedule_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Schedules') }}" data-allow-clear="true">
                     <option value="">{{ __('All Schedules') }}</option>
                     @foreach ($workSchedules as $sched)
-                        <option value="{{ $sched->id }}">{{ $sched->translate('ar')?->name ?? $sched->name }}</option>
+                        <option value="{{ $sched->id }}">{{ $sched->translate(app()->getLocale())?->name ?? $sched->translate('ar')?->name ?? $sched->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -129,7 +115,7 @@
                 <select id="filter_shift_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Shifts') }}" data-allow-clear="true">
                     <option value="">{{ __('All Shifts') }}</option>
                     @foreach ($shifts as $shift)
-                        <option value="{{ $shift->id }}">{{ $shift->translate('ar')?->name ?? $shift->name }}</option>
+                        <option value="{{ $shift->id }}">{{ $shift->translate(app()->getLocale())?->name ?? $shift->translate('ar')?->name ?? $shift->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -140,7 +126,7 @@
                 <select id="filter_nationality" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Nationalities') }}" data-allow-clear="true">
                     <option value="">{{ __('All Nationalities') }}</option>
                     @foreach ($nationalities as $nat)
-                        <option value="{{ $nat->id }}">{{ $nat->translate('ar')?->name ?? $nat->name }}</option>
+                        <option value="{{ $nat->id }}">{{ $nat->translate(app()->getLocale())?->name ?? $nat->translate('ar')?->name ?? $nat->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -151,7 +137,7 @@
                 <select id="filter_marital_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Marital Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Marital Statuses') }}</option>
                     @foreach ($maritalStatuses as $ms)
-                        <option value="{{ $ms->id }}">{{ $ms->translate('ar')?->name ?? $ms->name }}</option>
+                        <option value="{{ $ms->id }}">{{ $ms->translate(app()->getLocale())?->name ?? $ms->translate('ar')?->name ?? $ms->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -178,7 +164,7 @@
 
 <!-- Employees DataTable Card -->
 <div class="card shadow-sm border-0">
-    <div class="card-datatable table-responsive">
+    <div class="card-datatable">
         <table id="employeesTable" class="table table-hover border-top w-100 text-nowrap">
             <thead>
                 <tr>

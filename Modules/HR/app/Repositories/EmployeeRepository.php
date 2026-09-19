@@ -140,6 +140,42 @@ class EmployeeRepository implements EmployeeRepositoryInterface
 
     //======================
     /**
+     * Find an employee by ID with all profile-related relations for the profile page.
+     */
+    public function findWithFullProfile(int $id): ?Employee
+    {
+        return Employee::query()
+            ->with([
+                'translations',
+                'primaryBranch.translations',
+                'department.translations',
+                'jobTitle.translations',
+                'manager.translations',
+                'workSchedule.translations',
+                'shift.translations',
+                'branches.translations',
+                'allowances.allowanceType.translations',
+                'documents.documentType.translations',
+                'user',
+                'bank',
+                'bankBranch',
+                'governorate',
+                'visaType.translations',
+                // Latest records
+                'attendances' => fn($q) => $q->orderByDesc('date')->limit(10),
+                'leaveRequests' => fn($q) => $q->orderByDesc('created_at')->limit(8),
+                'permissionRequests' => fn($q) => $q->orderByDesc('created_at')->limit(8),
+                'loans' => fn($q) => $q->orderByDesc('created_at')->limit(8),
+                'rewards' => fn($q) => $q->with('rewardType.translations')->orderByDesc('created_at')->limit(8),
+                'penalties' => fn($q) => $q->with('penaltyType.translations')->orderByDesc('created_at')->limit(8),
+                'payrollItems' => fn($q) => $q->with('payroll')->orderByDesc('created_at')->limit(8),
+            ])
+            ->withCount(['documents', 'leaveRequests', 'loans', 'rewards', 'penalties'])
+            ->find($id);
+    }
+
+    //======================
+    /**
      * Find an employee by code.
      */
     public function findByCode(string $code, array $with = ['translations']): ?Employee

@@ -222,6 +222,204 @@ class HrGeneralSettingController extends Controller
     }
 
     // =========================================================================
+    // 3. Reward & Incentive Types (أنواع المكافآت والحوافز)
+    // =========================================================================
+
+    //======================
+    /**
+     * Display listing view for Reward Types.
+     */
+    public function rewardTypes(): View
+    {
+        $parents  = $this->service->getParentsList(HrSettingType::REWARD_TYPES->value);
+        $statuses = HrSettingStatus::cases();
+
+        return view('hr::settings.reward_types.index', compact('parents', 'statuses'));
+    }
+
+    //======================
+    /**
+     * Server-side DataTables endpoint for Reward Types.
+     */
+    public function rewardTypesData(Request $request): JsonResponse
+    {
+        $filters = array_merge($request->all(), ['type' => HrSettingType::REWARD_TYPES->value]);
+        $query   = $this->service->getDataTableQuery($filters);
+
+        return $this->buildDataTable($query);
+    }
+
+    //======================
+    /**
+     * Store a newly created Reward Type.
+     */
+    public function storeRewardType(StoreHrSettingRequest $request): RedirectResponse
+    {
+        try {
+            $data = $request->validated();
+            $data['type'] = HrSettingType::REWARD_TYPES->value;
+
+            $this->service->createSetting($data, auth()->id());
+
+            return redirect()->route('hr.settings.reward-types.index')
+                ->with('success', __('Reward Type created successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('Failed to create Reward Type: ') . $e->getMessage());
+        }
+    }
+
+    //======================
+    /**
+     * Update the specified Reward Type.
+     */
+    public function updateRewardType(UpdateHrSettingRequest $request, int $id): RedirectResponse
+    {
+        try {
+            $setting = $this->service->getSettingById($id);
+
+            if (!$setting || $setting->type !== HrSettingType::REWARD_TYPES) {
+                return redirect()->back()->with('error', __('Reward Type not found.'));
+            }
+
+            $data = $request->validated();
+            $data['type'] = HrSettingType::REWARD_TYPES->value;
+
+            $this->service->updateSetting($setting, $data);
+
+            return redirect()->route('hr.settings.reward-types.index')
+                ->with('success', __('Reward Type updated successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('Failed to update Reward Type: ') . $e->getMessage());
+        }
+    }
+
+    //======================
+    /**
+     * Remove the specified Reward Type.
+     */
+    public function destroyRewardType(int $id): RedirectResponse
+    {
+        try {
+            $setting = $this->service->getSettingById($id);
+
+            if (!$setting || $setting->type !== HrSettingType::REWARD_TYPES) {
+                return redirect()->back()->with('error', __('Reward Type not found.'));
+            }
+
+            $this->service->deleteSetting($setting);
+
+            return redirect()->route('hr.settings.reward-types.index')
+                ->with('success', __('Reward Type deleted successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->with('error', __('Failed to delete Reward Type: ') . $e->getMessage());
+        }
+    }
+
+    // =========================================================================
+    // 5. Penalty Types (أنواع الجزاءات والمخالفات)
+    // =========================================================================
+
+    //======================
+    /**
+     * Display listing view for Penalty Types.
+     */
+    public function penaltyTypes(): View
+    {
+        $parents  = $this->service->getParentsList(HrSettingType::PENALTY_TYPES->value);
+        $statuses = HrSettingStatus::cases();
+
+        return view('hr::settings.penalty_types.index', compact('parents', 'statuses'));
+    }
+
+    //======================
+    /**
+     * Server-side DataTables endpoint for Penalty Types.
+     */
+    public function penaltyTypesData(Request $request): JsonResponse
+    {
+        $filters = array_merge($request->all(), ['type' => HrSettingType::PENALTY_TYPES->value]);
+        $query   = $this->service->getDataTableQuery($filters);
+
+        return $this->buildDataTable($query);
+    }
+
+    //======================
+    /**
+     * Store a newly created Penalty Type.
+     */
+    public function storePenaltyType(StoreHrSettingRequest $request): RedirectResponse
+    {
+        try {
+            $data = $request->validated();
+            $data['type'] = HrSettingType::PENALTY_TYPES->value;
+
+            $this->service->createSetting($data, auth()->id());
+
+            return redirect()->route('hr.settings.penalty-types.index')
+                ->with('success', __('Penalty Type created successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('Failed to create Penalty Type: ') . $e->getMessage());
+        }
+    }
+
+    //======================
+    /**
+     * Update the specified Penalty Type.
+     */
+    public function updatePenaltyType(UpdateHrSettingRequest $request, int $id): RedirectResponse
+    {
+        try {
+            $setting = $this->service->getSettingById($id);
+
+            if (!$setting || $setting->type !== HrSettingType::PENALTY_TYPES) {
+                return redirect()->back()->with('error', __('Penalty Type not found.'));
+            }
+
+            $data = $request->validated();
+            $data['type'] = HrSettingType::PENALTY_TYPES->value;
+
+            $this->service->updateSetting($setting, $data);
+
+            return redirect()->route('hr.settings.penalty-types.index')
+                ->with('success', __('Penalty Type updated successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('Failed to update Penalty Type: ') . $e->getMessage());
+        }
+    }
+
+    //======================
+    /**
+     * Remove the specified Penalty Type.
+     */
+    public function destroyPenaltyType(int $id): RedirectResponse
+    {
+        try {
+            $setting = $this->service->getSettingById($id);
+
+            if (!$setting || $setting->type !== HrSettingType::PENALTY_TYPES) {
+                return redirect()->back()->with('error', __('Penalty Type not found.'));
+            }
+
+            $this->service->deleteSetting($setting);
+
+            return redirect()->route('hr.settings.penalty-types.index')
+                ->with('success', __('Penalty Type deleted successfully.'));
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->with('error', __('Failed to delete Penalty Type: ') . $e->getMessage());
+        }
+    }
+
+    // =========================================================================
     // Helpers
     // =========================================================================
 

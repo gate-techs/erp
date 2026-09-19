@@ -85,9 +85,10 @@ class EmployeeController extends Controller
                 ';
             })
             ->addColumn('job_info', function (Employee $item) {
-                $jobTitle = $item->jobTitle?->translate('ar')?->name ?? $item->jobTitle?->translate('en')?->name ?? '-';
-                $department = $item->department?->translate('ar')?->name ?? $item->department?->translate('en')?->name ?? '-';
-                $branch = $item->primaryBranch?->translate('ar')?->name ?? $item->primaryBranch?->translate('en')?->name ?? '-';
+                $locale = app()->getLocale();
+                $jobTitle = $item->jobTitle?->translate($locale)?->name ?? $item->jobTitle?->translate('ar')?->name ?? $item->jobTitle?->translate('en')?->name ?? '-';
+                $department = $item->department?->translate($locale)?->name ?? $item->department?->translate('ar')?->name ?? $item->department?->translate('en')?->name ?? '-';
+                $branch = $item->primaryBranch?->translate($locale)?->name ?? $item->primaryBranch?->translate('ar')?->name ?? $item->primaryBranch?->translate('en')?->name ?? '-';
 
                 return '
                     <div class="d-flex flex-column">
@@ -104,8 +105,9 @@ class EmployeeController extends Controller
                 ';
             })
             ->addColumn('work_info', function (Employee $item) {
-                $schedule = $item->workSchedule?->translate('ar')?->name ?? $item->workSchedule?->translate('en')?->name ?? '-';
-                $shift = $item->shift?->translate('ar')?->name ?? $item->shift?->translate('en')?->name ?? '-';
+                $locale = app()->getLocale();
+                $schedule = $item->workSchedule?->translate($locale)?->name ?? $item->workSchedule?->translate('ar')?->name ?? $item->workSchedule?->translate('en')?->name ?? '-';
+                $shift = $item->shift?->translate($locale)?->name ?? $item->shift?->translate('ar')?->name ?? $item->shift?->translate('en')?->name ?? '-';
                 $empType = $item->employment_type ? $item->employment_type->label() : '-';
 
                 $empTypeClass = match($item->employment_type?->value) {
@@ -199,6 +201,9 @@ class EmployeeController extends Controller
                 $name = e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '');
                 return '
                     <div class="d-inline-flex gap-1">
+                        <a href="' . route('hr.employees.show', $item->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Profile') . '">
+                            <i class="icon-base bx bx-user"></i>
+                        </a>
                         <a href="' . route('hr.employees.edit', $item->id) . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '">
                             <i class="icon-base bx bx-edit-alt"></i>
                         </a>
@@ -272,14 +277,14 @@ class EmployeeController extends Controller
      */
     public function show(int $id): View|RedirectResponse
     {
-        $employee = $this->employeeService->getEmployeeById($id);
+        $profileData = $this->employeeService->getProfileData($id);
 
-        if (!$employee) {
+        if (!$profileData) {
             return redirect()->route('hr.employees.index')
                 ->with('error', __('Employee not found.'));
         }
 
-        return view('hr::employees.show', compact('employee'));
+        return view('hr::employees.show', $profileData);
     }
 
     //======================

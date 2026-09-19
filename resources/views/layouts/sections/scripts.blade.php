@@ -15,6 +15,8 @@
 <!-- END: Pricing Modal JS-->
 <!-- BEGIN: Page JS-->
 @yield('page-script')
+@yield('scripts')
+@stack('scripts')
 <!-- END: Page JS-->
 
 <!-- app JS -->

@@ -320,23 +320,7 @@ window.addEventListener('load', function () {
                 }
             }
         ],
-        order: [[0, 'asc']],
-        language: {
-            search: "{{ __('Search:') }}",
-            searchPlaceholder: "{{ __('Search allowances...') }}",
-            lengthMenu: "{{ __('Show _MENU_ entries') }}",
-            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-            infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
-            emptyTable: "{{ __('No data available in table') }}",
-            zeroRecords: "{{ __('No matching records found') }}",
-            processing: "{{ __('Processing...') }}",
-            paginate: {
-                first: "{{ __('First') }}",
-                last: "{{ __('Last') }}",
-                next: "{{ __('Next') }}",
-                previous: "{{ __('Previous') }}"
-            }
-        }
+        order: [[0, 'asc']]
     });
 
     // 2. Edit Action: Populate & Open Offcanvas
