@@ -236,7 +236,7 @@
 
                 <div class="col-12 col-md-3">
                     <label class="form-label fw-semibold text-heading small">{{ __('Expected Start Date') }}</label>
-                    <input type="date" name="expected_start_date" class="form-control @error('expected_start_date') is-invalid @enderror" value="{{ old('expected_start_date', $requisition->expected_start_date?->format('Y-m-d')) }}">
+                    <input type="date" name="expected_start_date" class="form-control js-flatpickr-date @error('expected_start_date') is-invalid @enderror" value="{{ old('expected_start_date', $requisition->expected_start_date?->format('Y-m-d')) }}">
                     @error('expected_start_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

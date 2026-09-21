@@ -213,7 +213,7 @@
             <!-- Penalty Date -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold text-heading">{{ __('Penalty Date') }} <span class="text-danger">*</span></label>
-                <input type="date" id="create_penalty_date" name="penalty_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                <input type="date" id="create_penalty_date" name="penalty_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                 <div class="invalid-feedback" id="err-penalty_date"></div>
             </div>
 

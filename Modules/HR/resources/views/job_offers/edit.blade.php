@@ -205,17 +205,17 @@
                 <div class="card-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="offer_date">{{ __('Offer Issue Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="offer_date" id="offer_date" class="form-control" value="{{ old('offer_date', $offer->offer_date->format('Y-m-d')) }}" required>
+                        <input type="date" name="offer_date" id="offer_date" class="form-control js-flatpickr-date" value="{{ old('offer_date', $offer->offer_date->format('Y-m-d')) }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="expiry_date">{{ __('Offer Expiry Date') }}</label>
-                        <input type="date" name="expiry_date" id="expiry_date" class="form-control" value="{{ old('expiry_date', $offer->expiry_date?->format('Y-m-d')) }}">
+                        <input type="date" name="expiry_date" id="expiry_date" class="form-control js-flatpickr-date" value="{{ old('expiry_date', $offer->expiry_date?->format('Y-m-d')) }}">
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="joining_date">{{ __('Expected Joining Date') }}</label>
-                        <input type="date" name="joining_date" id="joining_date" class="form-control" value="{{ old('joining_date', $offer->joining_date?->format('Y-m-d')) }}">
+                        <input type="date" name="joining_date" id="joining_date" class="form-control js-flatpickr-date" value="{{ old('joining_date', $offer->joining_date?->format('Y-m-d')) }}">
                     </div>
 
                     <div class="mb-3">

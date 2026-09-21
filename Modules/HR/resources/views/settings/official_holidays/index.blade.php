@@ -126,11 +126,11 @@
                 <div class="row g-3">
                     <div class="col-6">
                         <label class="form-label required fw-semibold">{{ __('Start Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="start_date" id="add_start_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                        <input type="date" name="start_date" id="add_start_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="col-6">
                         <label class="form-label required fw-semibold">{{ __('End Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="end_date" id="add_end_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                        <input type="date" name="end_date" id="add_end_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                     </div>
                 </div>
                 <div class="mt-2 text-end">
@@ -246,11 +246,11 @@
                 <div class="row g-3">
                     <div class="col-6">
                         <label class="form-label required fw-semibold">{{ __('Start Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="start_date" id="edit_start_date" class="form-control" required>
+                        <input type="date" name="start_date" id="edit_start_date" class="form-control js-flatpickr-date" required>
                     </div>
                     <div class="col-6">
                         <label class="form-label required fw-semibold">{{ __('End Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="end_date" id="edit_end_date" class="form-control" required>
+                        <input type="date" name="end_date" id="edit_end_date" class="form-control js-flatpickr-date" required>
                     </div>
                 </div>
                 <div class="mt-2 text-end">

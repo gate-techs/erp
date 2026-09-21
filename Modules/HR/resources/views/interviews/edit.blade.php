@@ -226,7 +226,7 @@
                     <div class="row g-3">
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold small text-heading required">{{ __('Date & Start Time') }}</label>
-                            <input type="datetime-local" name="scheduled_at" class="form-control"
+                            <input type="datetime-local" name="scheduled_at" class="form-control js-flatpickr-datetime"
                                    value="{{ old('scheduled_at', $interview->scheduled_at?->format('Y-m-d\TH:i')) }}" required>
                         </div>
                         <div class="col-12 col-md-6">

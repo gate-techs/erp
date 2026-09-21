@@ -757,7 +757,7 @@
             <!-- Date & Time -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold" for="punch_time">{{ __('التاريخ والوقت') }}</label>
-                <input type="datetime-local" class="form-control" name="punch_time" id="punch_time" value="{{ now()->format('Y-m-d\TH:i') }}" required>
+                <input type="datetime-local" class="form-control js-flatpickr-datetime" name="punch_time" id="punch_time" value="{{ now()->format('Y-m-d\TH:i') }}" required>
             </div>
 
             <!-- Source -->

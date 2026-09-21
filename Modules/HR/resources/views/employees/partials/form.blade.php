@@ -274,7 +274,7 @@
                     <!-- Date of Birth -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Date of Birth') }}</label>
-                        <input type="date" name="date_of_birth" class="form-control" 
+                        <input type="date" name="date_of_birth" class="form-control js-flatpickr-date"
                                value="{{ old('date_of_birth', $isEdit && $employee->date_of_birth ? $employee->date_of_birth->format('Y-m-d') : '') }}">
                     </div>
 
@@ -324,12 +324,12 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Issue Date') }}</label>
-                                    <input type="date" name="passport_issue_date" class="form-control" 
+                                    <input type="date" name="passport_issue_date" class="form-control js-flatpickr-date"
                                            value="{{ old('passport_issue_date', $isEdit && $employee->passport_issue_date ? $employee->passport_issue_date->format('Y-m-d') : '') }}">
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Expiry Date') }}</label>
-                                    <input type="date" name="passport_expiry_date" class="form-control" 
+                                    <input type="date" name="passport_expiry_date" class="form-control js-flatpickr-date"
                                            value="{{ old('passport_expiry_date', $isEdit && $employee->passport_expiry_date ? $employee->passport_expiry_date->format('Y-m-d') : '') }}">
                                 </div>
 
@@ -346,7 +346,7 @@
                                 </div>
                                 <div class="col-12 col-md-6 mt-2">
                                     <label class="form-label text-muted small mb-1">{{ __('Visa Expiry Date') }}</label>
-                                    <input type="date" name="visa_expiry_date" class="form-control" 
+                                    <input type="date" name="visa_expiry_date" class="form-control js-flatpickr-date"
                                            value="{{ old('visa_expiry_date', $isEdit && $employee->visa_expiry_date ? $employee->visa_expiry_date->format('Y-m-d') : '') }}">
                                 </div>
                             </div>
@@ -477,7 +477,7 @@
                     <!-- Hire Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small fw-semibold mb-1">{{ __('Hire Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="hire_date" class="form-control @error('hire_date') is-invalid @enderror" 
+                        <input type="date" name="hire_date" class="form-control js-flatpickr-date @error('hire_date') is-invalid @enderror"
                                value="{{ old('hire_date', $isEdit && $employee->hire_date ? $employee->hire_date->format('Y-m-d') : now()->toDateString()) }}" required>
                         @error('hire_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
@@ -485,14 +485,14 @@
                     <!-- Probation End Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Probation End Date') }}</label>
-                        <input type="date" name="probation_end_date" class="form-control" 
+                        <input type="date" name="probation_end_date" class="form-control js-flatpickr-date"
                                value="{{ old('probation_end_date', $isEdit && $employee->probation_end_date ? $employee->probation_end_date->format('Y-m-d') : '') }}">
                     </div>
 
                     <!-- Contract End Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Contract End Date') }}</label>
-                        <input type="date" name="contract_end_date" class="form-control" 
+                        <input type="date" name="contract_end_date" class="form-control js-flatpickr-date"
                                value="{{ old('contract_end_date', $isEdit && $employee->contract_end_date ? $employee->contract_end_date->format('Y-m-d') : '') }}">
                     </div>
                 </div>
@@ -795,7 +795,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="date" name="allowances[{{ $aIdx }}][effective_date]" class="form-control" value="{{ !empty($allowance['effective_date']) ? (is_string($allowance['effective_date']) ? substr($allowance['effective_date'], 0, 10) : $allowance['effective_date']->format('Y-m-d')) : now()->toDateString() }}">
+                                            <input type="date" name="allowances[{{ $aIdx }}][effective_date]" class="form-control js-flatpickr-date" value="{{ !empty($allowance['effective_date']) ? (is_string($allowance['effective_date']) ? substr($allowance['effective_date'], 0, 10) : $allowance['effective_date']->format('Y-m-d')) : now()->toDateString() }}">
                                         </td>
                                         <td>
                                             <input type="text" name="allowances[{{ $aIdx }}][notes]" class="form-control" value="{{ $allowance['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
@@ -883,12 +883,12 @@
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Issue Date') }}</label>
-                                        <input type="date" name="documents[{{ $dIdx }}][issue_date]" class="form-control" value="{{ !empty($doc['issue_date']) ? (is_string($doc['issue_date']) ? substr($doc['issue_date'], 0, 10) : $doc['issue_date']->format('Y-m-d')) : '' }}">
+                                        <input type="date" name="documents[{{ $dIdx }}][issue_date]" class="form-control js-flatpickr-date" value="{{ !empty($doc['issue_date']) ? (is_string($doc['issue_date']) ? substr($doc['issue_date'], 0, 10) : $doc['issue_date']->format('Y-m-d')) : '' }}">
                                     </div>
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Expiry Date') }}</label>
-                                        <input type="date" name="documents[{{ $dIdx }}][expiry_date]" class="form-control" value="{{ !empty($doc['expiry_date']) ? (is_string($doc['expiry_date']) ? substr($doc['expiry_date'], 0, 10) : $doc['expiry_date']->format('Y-m-d')) : '' }}">
+                                        <input type="date" name="documents[{{ $dIdx }}][expiry_date]" class="form-control js-flatpickr-date" value="{{ !empty($doc['expiry_date']) ? (is_string($doc['expiry_date']) ? substr($doc['expiry_date'], 0, 10) : $doc['expiry_date']->format('Y-m-d')) : '' }}">
                                     </div>
 
                                     <div class="col-12 col-md-3">
@@ -964,7 +964,7 @@
             </select>
         </td>
         <td>
-            <input type="date" name="allowances[__INDEX__][effective_date]" class="form-control" value="{{ now()->toDateString() }}">
+            <input type="date" name="allowances[__INDEX__][effective_date]" class="form-control js-flatpickr-date" value="{{ now()->toDateString() }}">
         </td>
         <td>
             <input type="text" name="allowances[__INDEX__][notes]" class="form-control" placeholder="{{ __('Notes...') }}">
@@ -1012,12 +1012,12 @@
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Issue Date') }}</label>
-                <input type="date" name="documents[__INDEX__][issue_date]" class="form-control">
+                <input type="date" name="documents[__INDEX__][issue_date]" class="form-control js-flatpickr-date">
             </div>
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Expiry Date') }}</label>
-                <input type="date" name="documents[__INDEX__][expiry_date]" class="form-control">
+                <input type="date" name="documents[__INDEX__][expiry_date]" class="form-control js-flatpickr-date">
             </div>
 
             <div class="col-12 col-md-3">

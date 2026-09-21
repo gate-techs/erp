@@ -369,13 +369,13 @@
                 <div class="mb-4 row">
                     <label for="html5-datetime-local-input" class="col-md-2 col-form-label">Datetime</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="datetime-local" value="2021-06-18T12:30:00" id="html5-datetime-local-input" />
+                        <input class="form-control js-flatpickr-datetime" type="datetime-local" value="2021-06-18T12:30:00" id="html5-datetime-local-input" />
                     </div>
                 </div>
                 <div class="mb-4 row">
                     <label for="html5-date-input" class="col-md-2 col-form-label">Date</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="date" value="2021-06-18" id="html5-date-input" />
+                        <input class="form-control js-flatpickr-date" type="date" value="2021-06-18" id="html5-date-input" />
                     </div>
                 </div>
                 <div class="mb-4 row">

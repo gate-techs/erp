@@ -101,7 +101,7 @@
 
                 <div class="col-12 col-md-2">
                     <label class="form-label fw-semibold text-heading small required">{{ __('Start Date') }}</label>
-                    <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date', now()->startOfYear()->format('Y-m-d')) }}" required>
+                    <input type="date" name="start_date" class="form-control js-flatpickr-date @error('start_date') is-invalid @enderror" value="{{ old('start_date', now()->startOfYear()->format('Y-m-d')) }}" required>
                     @error('start_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -109,7 +109,7 @@
 
                 <div class="col-12 col-md-2">
                     <label class="form-label fw-semibold text-heading small required">{{ __('End Date') }}</label>
-                    <input type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date', now()->endOfYear()->format('Y-m-d')) }}" required>
+                    <input type="date" name="end_date" class="form-control js-flatpickr-date @error('end_date') is-invalid @enderror" value="{{ old('end_date', now()->endOfYear()->format('Y-m-d')) }}" required>
                     @error('end_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

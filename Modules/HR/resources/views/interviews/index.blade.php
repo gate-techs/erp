@@ -126,7 +126,7 @@
 
             <div class="col-12 col-md-3">
                 <label class="form-label fw-semibold text-heading small">{{ __('Filter by Date') }}</label>
-                <input type="date" name="date" id="filter_date" class="form-control" value="{{ $selectedDate }}" onchange="document.getElementById('filterForm').submit();">
+                <input type="date" name="date" id="filter_date" class="form-control js-flatpickr-date" value="{{ $selectedDate }}" onchange="document.getElementById('filterForm').submit();">
             </div>
 
             <div class="col-12 col-md-2 d-flex gap-2">

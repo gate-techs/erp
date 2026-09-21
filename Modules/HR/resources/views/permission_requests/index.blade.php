@@ -145,13 +145,13 @@
             <!-- 6. Date From Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Date From') }}</label>
-                <input type="date" id="filter_date_from" class="form-control">
+                <input type="date" id="filter_date_from" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 7. Date To Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Date To') }}</label>
-                <input type="date" id="filter_date_to" class="form-control">
+                <input type="date" id="filter_date_to" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 8. Reset Filters Action Button -->
@@ -220,7 +220,7 @@
             <!-- Date -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold text-heading" for="modal_date">{{ __('Date') }} <span class="text-danger">*</span></label>
-                <input type="date" id="modal_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                <input type="date" id="modal_date" name="date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
             </div>
 
             <!-- Permission Type & Emergency Flag -->

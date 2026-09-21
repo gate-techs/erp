@@ -213,7 +213,7 @@
             <!-- Award Date -->
             <div class="mb-3">
                 <label class="form-label required fw-semibold text-heading">{{ __('Award Date') }} <span class="text-danger">*</span></label>
-                <input type="date" id="create_award_date" name="award_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                <input type="date" id="create_award_date" name="award_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                 <div class="invalid-feedback" id="err-award_date"></div>
             </div>
 

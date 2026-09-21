@@ -170,7 +170,7 @@
                 <!-- 11. Hire Date From Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Hire Date From') }}</label>
-                    <input type="date" id="filter_hire_date_from" class="form-control">
+                    <input type="date" id="filter_hire_date_from" class="form-control js-flatpickr-date">
                 </div>
 
                 <!-- 12. Hire Date To Filter with Reset Button -->
@@ -183,7 +183,7 @@
                             <i class="icon-base bx bx-reset me-1"></i>{{ __('Reset') }}
                         </button>
                     </div>
-                    <input type="date" id="filter_hire_date_to" class="form-control">
+                    <input type="date" id="filter_hire_date_to" class="form-control js-flatpickr-date">
                 </div>
             </div>
         </div>

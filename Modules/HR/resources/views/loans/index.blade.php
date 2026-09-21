@@ -145,13 +145,13 @@
             <!-- 6. Date From Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Date From') }}</label>
-                <input type="date" id="filter_date_from" class="form-control">
+                <input type="date" id="filter_date_from" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 7. Date To Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Date To') }}</label>
-                <input type="date" id="filter_date_to" class="form-control">
+                <input type="date" id="filter_date_to" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 8. Reset Filters Action Button -->
@@ -279,7 +279,7 @@
             <div class="row g-2 mb-3">
                 <div class="col-12 col-sm-6">
                     <label class="form-label required fw-semibold text-heading" for="modal_start_date">{{ __('First Installment Due Date') }} <span class="text-danger">*</span></label>
-                    <input type="date" id="modal_start_date" name="start_date" class="form-control" value="{{ date('Y-m-01', strtotime('+1 month')) }}" required>
+                    <input type="date" id="modal_start_date" name="start_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-01', strtotime('+1 month')) }}" required>
                 </div>
                 <div class="col-12 col-sm-6 d-flex flex-column justify-content-end pb-1">
                     <div class="p-2 rounded bg-label-primary d-flex align-items-center justify-content-between">
@@ -405,7 +405,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-heading">{{ __('Disbursement Date') }} <span class="text-danger">*</span></label>
-                    <input type="date" name="disbursed_at" id="disburse_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                    <input type="date" name="disbursed_at" id="disburse_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                 </div>
             </div>
             <div class="modal-footer border-top py-2">
@@ -476,7 +476,7 @@
                 </p>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-heading">{{ __('New Due Date') }} <span class="text-danger">*</span></label>
-                    <input type="date" id="postpone_new_due_date" name="new_due_date" class="form-control" required>
+                    <input type="date" id="postpone_new_due_date" name="new_due_date" class="form-control js-flatpickr-date" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-heading">{{ __('Postponement Reason') }}</label>
