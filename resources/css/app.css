@@ -1035,7 +1035,7 @@ html[lang^="ar"] .theme-customizer-toggle {
 }
 
 /* Ensure the phone number itself is always LTR without forcing the wrapper */
-.js-phone-input-pilot {
+.js-phone-input {
     direction: ltr;
     text-align: left;
 }
@@ -1081,9 +1081,9 @@ html[dir="rtl"] .iti__search-input {
     box-shadow: none !important;
 }
 
-/* Dropdown Overlay Z-Index and Geometry */
+/* Dropdown Overlay Z-Index and Geometry (above modals) */
 .iti--inline-country-selector:not(.iti--detached-country-selector) .iti__country-selector {
-    z-index: 1050 !important;
+    z-index: 1095 !important;
 }
 
 /* RTL Row Alignment */
@@ -1096,3 +1096,9 @@ html[dir="rtl"] .iti__country-name {
 }
 
 /* Remove classNames form-control since we just styled it cleanly */
+
+/* Support intl-tel-input inside Bootstrap input-groups */
+.input-group .iti {
+    flex: 1 1 auto;
+    width: 1%;
+}

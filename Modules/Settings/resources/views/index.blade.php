@@ -195,7 +195,7 @@
                         <label class="form-label">{{ __('WhatsApp Number') }}</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="icon-base bx bxl-whatsapp text-success"></i></span>
-                            <input type="text" name="whatsapp" class="form-control" value="{{ old('whatsapp', $settings->whatsapp) }}" placeholder="+965 xxxxxxxx" dir="ltr">
+                            <input type="text" name="whatsapp" class="form-control js-phone-input" value="{{ old('whatsapp', $settings->whatsapp) }}" placeholder="+965 xxxxxxxx" dir="ltr">
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3">

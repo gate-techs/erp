@@ -421,13 +421,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-// --- Phone Input Pilot (intl-tel-input) v29.5.1 ---
+// --- Phone Inputs (intl-tel-input) v29.5.1 ---
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
 import { ar } from 'intl-tel-input/locale';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const phoneInput = document.querySelector('.js-phone-input-pilot');
-    if (phoneInput) {
+    const phoneInputs = document.querySelectorAll('.js-phone-input');
+
+    // Determine language family once for all inputs
+    const lang = document.documentElement.lang || 'en';
+    const isArabic = lang.toLowerCase().startsWith('ar');
+
+    phoneInputs.forEach(function(phoneInput) {
         const originalValue = phoneInput.value;
         let isDirty = false;
 
@@ -452,10 +457,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!val.startsWith('+') && (val.startsWith('010') || val.startsWith('011') || val.startsWith('012') || val.startsWith('015'))) {
             initialCountry = "eg";
         }
-
-        // Determine language family
-        const lang = document.documentElement.lang || 'en';
-        const isArabic = lang.toLowerCase().startsWith('ar');
 
         const iti = intlTelInput(phoneInput, {
             initialCountry: initialCountry,
@@ -497,5 +498,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    }
+    });
 });

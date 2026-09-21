@@ -306,7 +306,7 @@
             <!-- Emergency Contact Phone -->
             <div class="mb-3">
                 <label class="form-label fw-semibold text-heading">{{ __('Emergency Contact Phone') }}</label>
-                <input type="text" id="modal_emergency_contact_phone" name="emergency_contact_phone" class="form-control" placeholder="+965 ...">
+                <input type="text" id="modal_emergency_contact_phone" name="emergency_contact_phone" class="form-control js-phone-input" placeholder="+965 ..." dir="ltr">
             </div>
 
             <!-- Attachment Upload -->

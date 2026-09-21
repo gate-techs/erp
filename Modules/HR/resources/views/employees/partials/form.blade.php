@@ -511,7 +511,7 @@
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                           <label class="form-label small fw-semibold mb-1">{{ __('Phone Number') }} <span class="text-danger">*</span></label>
-                          <input type="text" name="phone" class="form-control js-phone-input-pilot @error('phone') is-invalid @enderror"
+                          <input type="text" name="phone" class="form-control js-phone-input @error('phone') is-invalid @enderror"
                                  value="{{ old('phone', $isEdit ? $employee->phone : '') }}" placeholder="01012345678" required dir="ltr">
                           @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
