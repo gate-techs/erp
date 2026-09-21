@@ -177,21 +177,21 @@
                         <div class="row g-2 mb-2">
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-in Starts') }}</label>
-                                <input type="time" name="checkin_start" class="form-control form-control-sm">
+                                <input type="time" name="checkin_start" class="form-control">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-in Ends') }}</label>
-                                <input type="time" name="checkin_end" class="form-control form-control-sm">
+                                <input type="time" name="checkin_end" class="form-control">
                             </div>
                         </div>
                         <div class="row g-2">
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-out Starts') }}</label>
-                                <input type="time" name="checkout_start" class="form-control form-control-sm">
+                                <input type="time" name="checkout_start" class="form-control">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-out Ends') }}</label>
-                                <input type="time" name="checkout_end" class="form-control form-control-sm">
+                                <input type="time" name="checkout_end" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -331,21 +331,21 @@
                         <div class="row g-2 mb-2">
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-in Starts') }}</label>
-                                <input type="time" name="checkin_start" id="edit_checkin_start" class="form-control form-control-sm">
+                                <input type="time" name="checkin_start" id="edit_checkin_start" class="form-control">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-in Ends') }}</label>
-                                <input type="time" name="checkin_end" id="edit_checkin_end" class="form-control form-control-sm">
+                                <input type="time" name="checkin_end" id="edit_checkin_end" class="form-control">
                             </div>
                         </div>
                         <div class="row g-2">
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-out Starts') }}</label>
-                                <input type="time" name="checkout_start" id="edit_checkout_start" class="form-control form-control-sm">
+                                <input type="time" name="checkout_start" id="edit_checkout_start" class="form-control">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small fw-semibold">{{ __('Check-out Ends') }}</label>
-                                <input type="time" name="checkout_end" id="edit_checkout_end" class="form-control form-control-sm">
+                                <input type="time" name="checkout_end" id="edit_checkout_end" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -449,7 +449,7 @@ window.addEventListener('load', function () {
             { 
                 data: 'code', 
                 name: 'code',
-                render: data => `<span class="badge bg-label-info font-monospace">${data || '-'}</span>`
+                render: data => `<span class="badge bg-label-info">${data || '-'}</span>`
             },
             { 
                 data: 'name_ar', 

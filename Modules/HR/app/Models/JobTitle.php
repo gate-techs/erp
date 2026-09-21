@@ -64,6 +64,15 @@ class JobTitle extends Model implements TranslatableContract
 
     //======================
     /**
+     * Employees with this job title.
+     */
+    public function employees(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Employee::class, 'job_title_id');
+    }
+
+    //======================
+    /**
      * User who created this job title.
      */
     public function creator(): BelongsTo

@@ -48,7 +48,7 @@ class BankController extends Controller
             ->addColumn('branches_count', fn(Bank $bank) => $bank->branches_count ?? 0)
             ->editColumn('code', fn(Bank $bank) => $bank->code ?: '-')
             ->editColumn('swift_code', fn(Bank $bank) => $bank->swift_code 
-                ? '<span class="badge bg-label-info font-monospace">' . e($bank->swift_code) . '</span>' 
+                ? '<span class="badge bg-label-info">' . e($bank->swift_code) . '</span>' 
                 : '<span class="text-muted">-</span>'
             )
             ->editColumn('status', function (Bank $bank) {
@@ -187,7 +187,7 @@ class BankController extends Controller
             ->addColumn('name_en', fn(Bank $branch) => $branch->translate('en')?->name ?? '-')
             ->editColumn('code', fn(Bank $branch) => $branch->code ?: '-')
             ->editColumn('swift_code', fn(Bank $branch) => $branch->swift_code 
-                ? '<span class="badge bg-label-info font-monospace">' . e($branch->swift_code) . '</span>' 
+                ? '<span class="badge bg-label-info">' . e($branch->swift_code) . '</span>' 
                 : '<span class="text-muted">-</span>'
             )
             ->editColumn('status', function (Bank $branch) {

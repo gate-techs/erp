@@ -136,4 +136,12 @@ class JobRequisition extends Model
     {
         return $this->hired_count >= $this->headcount_needed;
     }
+
+    /**
+     * Linked job openings / postings.
+     */
+    public function jobOpenings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JobOpening::class, 'job_requisition_id');
+    }
 }

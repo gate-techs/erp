@@ -119,7 +119,7 @@
             <div class="card-body p-3 d-flex align-items-center justify-content-between">
                 <div>
                     <span class="text-muted small d-block mb-1">{{ __('Total Budgeted Cost') }}</span>
-                    <h3 class="fw-bold mb-0 text-success font-monospace">{{ number_format($plan->total_budgeted_cost, 3) }} <span class="fs-6 fw-normal text-muted">{{ __('KWD') }}</span></h3>
+                    <h3 class="fw-bold mb-0 text-success">{{ number_format($plan->total_budgeted_cost, 3) }} <span class="fs-6 fw-normal text-muted">{{ __('KWD') }}</span></h3>
                 </div>
                 <div class="avatar avatar-md bg-label-success rounded p-2 d-flex align-items-center justify-content-center">
                     <i class="icon-base bx bx-wallet font-22"></i>
@@ -148,7 +148,7 @@
         <div class="row g-3">
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Plan Code') }}</span>
-                <span class="fw-bold font-monospace text-heading">{{ $plan->plan_code }}</span>
+                <span class="fw-bold text-heading">{{ $plan->plan_code }}</span>
             </div>
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Plan Year') }}</span>
@@ -156,7 +156,7 @@
             </div>
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Validity Period') }}</span>
-                <span class="font-monospace small text-heading">
+                <span class=" small text-heading">
                     {{ $plan->start_date ? $plan->start_date->format('Y-m-d') : '-' }} &rarr; {{ $plan->end_date ? $plan->end_date->format('Y-m-d') : '-' }}
                 </span>
             </div>
@@ -257,7 +257,7 @@
                         </div>
                     </td>
                     <td>
-                        <span class="font-monospace small text-muted">{{ number_format($item->estimated_monthly_salary, 3) }} KWD</span>
+                        <span class=" small text-muted">{{ number_format($item->estimated_monthly_salary, 3) }} KWD</span>
                     </td>
                     <td class="text-center">
                         @if (in_array($plan->status, [\Modules\HR\Enums\WorkforcePlanStatus::APPROVED, \Modules\HR\Enums\WorkforcePlanStatus::ACTIVE]))

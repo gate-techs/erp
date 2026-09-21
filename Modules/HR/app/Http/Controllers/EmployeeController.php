@@ -72,12 +72,12 @@ class EmployeeController extends Controller
                                 <circle cx="24" cy="24" r="21" stroke="' . $color . '" stroke-width="3" stroke-dasharray="' . $circumference . '" stroke-dashoffset="' . $dashOffset . '" stroke-linecap="round" fill="none" style="transition: stroke-dashoffset 0.6s ease;" />
                             </svg>
                             <img src="' . e($avatar) . '" alt="' . e($displayName) . '" class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover; z-index: 1;">
-                            <span class="position-absolute badge ' . $badgeClass . ' rounded-pill text-white fw-bold font-monospace" style="bottom: -5px; font-size: 8.5px; padding: 1px 4.5px; line-height: 1.1; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">' . $percent . '%</span>
+                            <span class="position-absolute badge ' . $badgeClass . ' rounded-pill text-white fw-bold" style="bottom: -5px; font-size: 8.5px; padding: 1px 4.5px; line-height: 1.1; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">' . $percent . '%</span>
                         </div>
                         <div class="d-flex flex-column">
                             <span class="text-heading fw-bold fs-6 text-truncate mb-1">' . e($displayName) . '</span>
                             <div class="d-flex align-items-center gap-1">
-                                <span class="badge bg-label-primary font-monospace py-0 px-2 font-11">' . $code . '</span>
+                                <span class="badge bg-label-primary py-0 px-2 font-11">' . $code . '</span>
                                 ' . $genderBadge . '
                             </div>
                         </div>
@@ -146,13 +146,13 @@ class EmployeeController extends Controller
                 $email = $item->email 
                     ? '<a href="mailto:' . e($item->email) . '" class="text-muted small d-inline-flex align-items-center gap-1 mt-1 text-decoration-none" title="' . e($item->email) . '">
                            <i class="bx bx-envelope text-info font-14 flex-shrink-0"></i>
-                           <span class="font-monospace" dir="ltr">' . e($item->email) . '</span>
+                           <span class="" dir="ltr">' . e($item->email) . '</span>
                        </a>' 
                     : '';
 
                 return '
                     <div class="d-flex flex-column align-items-start">
-                        <a href="tel:' . $phone . '" class="fw-bold text-heading font-monospace d-inline-flex align-items-center gap-1 text-decoration-none">
+                        <a href="tel:' . $phone . '" class="fw-bold text-heading d-inline-flex align-items-center gap-1 text-decoration-none">
                             <i class="bx bx-phone-call text-success font-15 flex-shrink-0"></i>
                             <span dir="ltr">' . $phone . '</span>
                         </a>
@@ -189,7 +189,7 @@ class EmployeeController extends Controller
                 $diff = $item->hire_date->locale(app()->getLocale())->diffForHumans();
                 return '
                     <div class="d-flex flex-column align-items-start">
-                        <span class="fw-semibold text-heading font-monospace d-inline-flex align-items-center gap-1">
+                        <span class="fw-semibold text-heading d-inline-flex align-items-center gap-1">
                             <i class="bx bx-calendar-event text-primary font-14 flex-shrink-0"></i>
                             <span dir="ltr">' . $dateFormatted . '</span>
                         </span>

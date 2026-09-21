@@ -75,7 +75,7 @@ class JobRequisitionController extends Controller
                             <a href="' . route('hr.job-requisitions.show', $item->id) . '" class="fw-bold text-heading text-truncate text-decoration-none">' . e($roleName) . '</a>
                             ' . $budgetBadge . '
                         </div>
-                        <small class="text-muted font-monospace">' . e($item->requisition_number) . ' • ' . e($deptName) . '</small>
+                        <small class="text-muted">' . e($item->requisition_number) . ' • ' . e($deptName) . '</small>
                     </div>
                 ';
             })
@@ -94,7 +94,7 @@ class JobRequisitionController extends Controller
                 if ($item->min_salary || $item->max_salary) {
                     $min = $item->min_salary ? number_format($item->min_salary, 3) : '—';
                     $max = $item->max_salary ? number_format($item->max_salary, 3) : '—';
-                    return '<span class="font-monospace small">' . $min . ' - ' . $max . ' <small class="text-muted">KWD</small></span>';
+                    return '<span class=" small">' . $min . ' - ' . $max . ' <small class="text-muted">KWD</small></span>';
                 }
                 return '<span class="text-muted">—</span>';
             })

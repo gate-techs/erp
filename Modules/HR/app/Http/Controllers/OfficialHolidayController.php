@@ -56,7 +56,7 @@ class OfficialHolidayController extends Controller
                         </div>';
             })
             ->editColumn('year', function (OfficialHoliday $item) {
-                return '<span class="badge bg-label-info font-monospace">' . $item->year . '</span>';
+                return '<span class="badge bg-label-info">' . $item->year . '</span>';
             })
             ->editColumn('is_recurring', function (OfficialHoliday $item) {
                 if ($item->is_recurring) {
@@ -75,7 +75,7 @@ class OfficialHolidayController extends Controller
                 $color = $item->color ?? '#e83e8c';
                 return '<div class="d-flex align-items-center gap-2">
                             <span class="rounded-circle shadow-xs" style="display:inline-block; width: 18px; height: 18px; background-color: ' . e($color) . ';"></span>
-                            <small class="text-muted font-monospace">' . e($color) . '</small>
+                            <small class="text-muted">' . e($color) . '</small>
                         </div>';
             })
             ->editColumn('status', function (OfficialHoliday $item) {

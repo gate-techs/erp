@@ -66,7 +66,7 @@
             <!-- 1. Type Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Structure Level') }}</label>
-                <select id="filter_type" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Levels') }}" data-allow-clear="true">
+                <select id="filter_type" class="select2 form-select" data-placeholder="{{ __('All Levels') }}" data-allow-clear="true">
                     <option value="">{{ __('All Levels') }}</option>
                     <option value="main">{{ __('Main Administrations') }}</option>
                     <option value="sub">{{ __('Sub Departments') }}</option>
@@ -76,7 +76,7 @@
             <!-- 2. Parent Administration Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Parent Administration') }}</label>
-                <select id="filter_parent_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Administrations') }}" data-allow-clear="true">
+                <select id="filter_parent_id" class="select2 form-select" data-placeholder="{{ __('All Administrations') }}" data-allow-clear="true">
                     <option value="">{{ __('All Administrations') }}</option>
                     @foreach ($parentDepartments as $parent)
                         <option value="{{ $parent->id }}">{{ $parent->name }}</option>
@@ -87,7 +87,7 @@
             <!-- 3. Nursery Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Nursery') }}</label>
-                <select id="filter_nursery_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Nurseries') }}" data-allow-clear="true">
+                <select id="filter_nursery_id" class="select2 form-select" data-placeholder="{{ __('All Nurseries') }}" data-allow-clear="true">
                     <option value="">{{ __('All Nurseries') }}</option>
                     @foreach ($nurseries as $nursery)
                         <option value="{{ $nursery->id }}">{{ $nursery->name }}</option>
@@ -98,7 +98,7 @@
             <!-- 4. Branch Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                <select id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                     <option value="">{{ __('All Branches') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -114,7 +114,7 @@
                         <i class="icon-base bx bx-reset me-1"></i>{{ __('Reset') }}
                     </button>
                 </div>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     <option value="active">{{ __('Active') }}</option>
                     <option value="inactive">{{ __('Inactive') }}</option>
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: 'code', 
                 name: 'code',
                 render: function (data) {
-                    return data ? '<span class="badge bg-label-secondary font-monospace">' + data + '</span>' : '<span class="text-muted">-</span>';
+                    return data ? '<span class="badge bg-label-secondary">' + data + '</span>' : '<span class="text-muted">-</span>';
                 },
                 className: 'align-middle'
             },

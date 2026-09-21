@@ -202,7 +202,7 @@
                                         </div>
                                         <div id="rollover_days_wrapper" class="flex-grow-1 {{ empty($policies['leaves']['allow_annual_rollover']) ? 'd-none' : '' }}">
                                             <div class="position-relative">
-                                                <input type="number" step="1" min="0" max="60" class="form-control input-with-unit form-control-sm" name="policies[max_rollover_days]" value="{{ $policies['leaves']['max_rollover_days'] ?? 15 }}" placeholder="{{ __('Max Days') }}">
+                                                <input type="number" step="1" min="0" max="60" class="form-control input-with-unit form-control" name="policies[max_rollover_days]" value="{{ $policies['leaves']['max_rollover_days'] ?? 15 }}" placeholder="{{ __('Max Days') }}">
                                                 <span class="unit-badge">{{ __('Days') }}</span>
                                             </div>
                                         </div>
@@ -379,20 +379,20 @@
                                             <tr data-index="{{ $index }}">
                                                 <td class="fw-bold text-muted tier-order">{{ $loop->iteration }}</td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" name="sick_leave_tiers[{{ $index }}][name_ar]" value="{{ $tier->name_ar }}" placeholder="{{ __('Tier description (e.g. 15 days full pay)') }}" required>
+                                                    <input type="text" class="form-control" name="sick_leave_tiers[{{ $index }}][name_ar]" value="{{ $tier->name_ar }}" placeholder="{{ __('Tier description (e.g. 15 days full pay)') }}" required>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" name="sick_leave_tiers[{{ $index }}][name_en]" value="{{ $tier->name_en }}" placeholder="{{ __('English Description') }}">
+                                                    <input type="text" class="form-control" name="sick_leave_tiers[{{ $index }}][name_en]" value="{{ $tier->name_en }}" placeholder="{{ __('English Description') }}">
                                                 </td>
                                                 <td>
                                                     <div class="position-relative">
-                                                        <input type="number" min="1" max="180" class="form-control form-control-sm input-with-unit" name="sick_leave_tiers[{{ $index }}][days_count]" value="{{ $tier->days_count }}" required>
+                                                        <input type="number" min="1" max="180" class="form-control input-with-unit" name="sick_leave_tiers[{{ $index }}][days_count]" value="{{ $tier->days_count }}" required>
                                                         <span class="unit-badge">{{ __('Days') }}</span>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="position-relative">
-                                                        <input type="number" step="0.5" min="0" max="100" class="form-control form-control-sm input-with-unit" name="sick_leave_tiers[{{ $index }}][salary_percentage]" value="{{ $tier->salary_percentage }}" required>
+                                                        <input type="number" step="0.5" min="0" max="100" class="form-control input-with-unit" name="sick_leave_tiers[{{ $index }}][salary_percentage]" value="{{ $tier->salary_percentage }}" required>
                                                         <span class="unit-badge">%</span>
                                                     </div>
                                                 </td>
@@ -706,26 +706,26 @@
                                             <tr data-index="{{ $index }}">
                                                 <td class="fw-bold text-muted eos-order">{{ $loop->iteration }}</td>
                                                 <td>
-                                                    <select class="form-select form-select-sm" name="eos_rules[{{ $index }}][type]">
+                                                    <select class="form-select" name="eos_rules[{{ $index }}][type]">
                                                         <option value="resignation" {{ $rule->type == 'resignation' ? 'selected' : '' }}>{{ __('Resignation') }}</option>
                                                         <option value="termination" {{ $rule->type == 'termination' ? 'selected' : '' }}>{{ __('Employer Termination / End of Contract') }}</option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" name="eos_rules[{{ $index }}][name_ar]" value="{{ $rule->name_ar }}" placeholder="{{ __('Description') }}">
+                                                    <input type="text" class="form-control" name="eos_rules[{{ $index }}][name_ar]" value="{{ $rule->name_ar }}" placeholder="{{ __('Description') }}">
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" name="eos_rules[{{ $index }}][name_en]" value="{{ $rule->name_en }}" placeholder="{{ __('English Description') }}">
+                                                    <input type="text" class="form-control" name="eos_rules[{{ $index }}][name_en]" value="{{ $rule->name_en }}" placeholder="{{ __('English Description') }}">
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.5" min="0" max="60" class="form-control form-control-sm" name="eos_rules[{{ $index }}][from_years]" value="{{ $rule->from_years }}" required>
+                                                    <input type="number" step="0.5" min="0" max="60" class="form-control" name="eos_rules[{{ $index }}][from_years]" value="{{ $rule->from_years }}" required>
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.5" min="0" max="60" class="form-control form-control-sm" name="eos_rules[{{ $index }}][to_years]" value="{{ $rule->to_years }}" placeholder="{{ __('Open / Unlimited') }}">
+                                                    <input type="number" step="0.5" min="0" max="60" class="form-control" name="eos_rules[{{ $index }}][to_years]" value="{{ $rule->to_years }}" placeholder="{{ __('Open / Unlimited') }}">
                                                 </td>
                                                 <td>
                                                     <div class="position-relative">
-                                                        <input type="number" step="0.01" min="0" max="100" class="form-control form-control-sm input-with-unit" name="eos_rules[{{ $index }}][percentage]" value="{{ $rule->percentage }}" required>
+                                                        <input type="number" step="0.01" min="0" max="100" class="form-control input-with-unit" name="eos_rules[{{ $index }}][percentage]" value="{{ $rule->percentage }}" required>
                                                         <span class="unit-badge">%</span>
                                                     </div>
                                                 </td>
@@ -934,20 +934,20 @@ document.addEventListener('DOMContentLoaded', function() {
             tr.innerHTML = `
                 <td class="fw-bold text-muted tier-order">${rowCount}</td>
                 <td>
-                    <input type="text" class="form-control form-control-sm" name="sick_leave_tiers[${sickIndex}][name_ar]" placeholder="{{ __('Tier description (e.g. 15 days full pay)') }}" required>
+                    <input type="text" class="form-control" name="sick_leave_tiers[${sickIndex}][name_ar]" placeholder="{{ __('Tier description (e.g. 15 days full pay)') }}" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control form-control-sm" name="sick_leave_tiers[${sickIndex}][name_en]" placeholder="{{ __('English Description') }}">
+                    <input type="text" class="form-control" name="sick_leave_tiers[${sickIndex}][name_en]" placeholder="{{ __('English Description') }}">
                 </td>
                 <td>
                     <div class="position-relative">
-                        <input type="number" min="1" max="180" class="form-control form-control-sm input-with-unit" name="sick_leave_tiers[${sickIndex}][days_count]" value="10" required>
+                        <input type="number" min="1" max="180" class="form-control input-with-unit" name="sick_leave_tiers[${sickIndex}][days_count]" value="10" required>
                         <span class="unit-badge">{{ __('Days') }}</span>
                     </div>
                 </td>
                 <td>
                     <div class="position-relative">
-                        <input type="number" step="0.5" min="0" max="100" class="form-control form-control-sm input-with-unit" name="sick_leave_tiers[${sickIndex}][salary_percentage]" value="50" required>
+                        <input type="number" step="0.5" min="0" max="100" class="form-control input-with-unit" name="sick_leave_tiers[${sickIndex}][salary_percentage]" value="50" required>
                         <span class="unit-badge">%</span>
                     </div>
                 </td>
@@ -976,26 +976,26 @@ document.addEventListener('DOMContentLoaded', function() {
             tr.innerHTML = `
                 <td class="fw-bold text-muted eos-order">${rowCount}</td>
                 <td>
-                    <select class="form-select form-select-sm" name="eos_rules[${eosIndex}][type]">
+                    <select class="form-select" name="eos_rules[${eosIndex}][type]">
                         <option value="resignation">{{ __('Resignation') }}</option>
                         <option value="termination">{{ __('Employer Termination / End of Contract') }}</option>
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="form-control form-control-sm" name="eos_rules[${eosIndex}][name_ar]" placeholder="{{ __('Description') }}">
+                    <input type="text" class="form-control" name="eos_rules[${eosIndex}][name_ar]" placeholder="{{ __('Description') }}">
                 </td>
                 <td>
-                    <input type="text" class="form-control form-control-sm" name="eos_rules[${eosIndex}][name_en]" placeholder="{{ __('English Description') }}">
+                    <input type="text" class="form-control" name="eos_rules[${eosIndex}][name_en]" placeholder="{{ __('English Description') }}">
                 </td>
                 <td>
-                    <input type="number" step="0.5" min="0" max="60" class="form-control form-control-sm" name="eos_rules[${eosIndex}][from_years]" value="0" required>
+                    <input type="number" step="0.5" min="0" max="60" class="form-control" name="eos_rules[${eosIndex}][from_years]" value="0" required>
                 </td>
                 <td>
-                    <input type="number" step="0.5" min="0" max="60" class="form-control form-control-sm" name="eos_rules[${eosIndex}][to_years]" placeholder="{{ __('Open / Unlimited') }}">
+                    <input type="number" step="0.5" min="0" max="60" class="form-control" name="eos_rules[${eosIndex}][to_years]" placeholder="{{ __('Open / Unlimited') }}">
                 </td>
                 <td>
                     <div class="position-relative">
-                        <input type="number" step="0.01" min="0" max="100" class="form-control form-control-sm input-with-unit" name="eos_rules[${eosIndex}][percentage]" value="100" required>
+                        <input type="number" step="0.01" min="0" max="100" class="form-control input-with-unit" name="eos_rules[${eosIndex}][percentage]" value="100" required>
                         <span class="unit-badge">%</span>
                     </div>
                 </td>

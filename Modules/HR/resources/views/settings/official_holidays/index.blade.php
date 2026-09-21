@@ -48,7 +48,7 @@
 
             <div class="d-flex align-items-center gap-2">
                 <!-- Year Filter -->
-                <select id="filter_year" class="form-select select2 form-select-sm" style="min-width: 120px;" data-placeholder="{{ __('All Years') }}" data-allow-clear="true">
+                <select id="filter_year" class="form-select select2 form-select" style="min-width: 120px;" data-placeholder="{{ __('All Years') }}" data-allow-clear="true">
                     <option value="">{{ __('All Years') }}</option>
                     @foreach ($years as $yr)
                         <option value="{{ $yr }}" {{ $yr == date('Y') ? 'selected' : '' }}>{{ $yr }}</option>

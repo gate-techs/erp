@@ -236,10 +236,10 @@
                                                     <input type="hidden" name="work_days[{{ $idx }}][day]" value="{{ $dayKey }}">
                                                 </td>
                                                 <td class="py-2">
-                                                    <input type="time" name="work_days[{{ $idx }}][from_time]" class="form-control form-control-sm" value="{{ $d['from'] }}">
+                                                    <input type="time" name="work_days[{{ $idx }}][from_time]" class="form-control" value="{{ $d['from'] }}">
                                                 </td>
                                                 <td class="py-2">
-                                                    <input type="time" name="work_days[{{ $idx }}][to_time]" class="form-control form-control-sm" value="{{ $d['to'] }}">
+                                                    <input type="time" name="work_days[{{ $idx }}][to_time]" class="form-control" value="{{ $d['to'] }}">
                                                 </td>
                                                 <td class="text-center align-middle py-2">
                                                     <div class="form-check form-switch d-inline-block m-0">
@@ -526,7 +526,7 @@ window.addEventListener('load', function () {
                 data: 'created_at', 
                 name: 'created_at',
                 className: 'text-center',
-                render: data => `<span class="text-muted font-monospace">${data}</span>`
+                render: data => `<span class="text-muted">${data}</span>`
             },
             { 
                 data: null, 

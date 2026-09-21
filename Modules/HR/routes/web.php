@@ -18,8 +18,17 @@ use Modules\HR\Http\Controllers\PenaltyController;
 use Modules\HR\Http\Controllers\PayrollController;
 use Modules\HR\Http\Controllers\WorkforcePlanController;
 use Modules\HR\Http\Controllers\JobRequisitionController;
+use Modules\HR\Http\Controllers\JobOpeningController;
+use Modules\HR\Http\Controllers\JobApplicationController;
+use Modules\HR\Http\Controllers\InterviewController;
+use Modules\HR\Http\Controllers\JobOfferController;
+use Modules\HR\Http\Controllers\OnboardingController;
+use Modules\HR\Http\Controllers\HRDashboardController;
 
 Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(function () {
+    // Dashboard & Command Center (الرئيسية ولوحة تحكم الموارد البشرية)
+    Route::get('/', [HRDashboardController::class, 'index'])->name('dashboard');
+
     // Payroll & Wage Management (إدارة مسير الرواتب والأجور)
     Route::get('payrolls/data', [PayrollController::class, 'data'])->name('payrolls.data');
     Route::get('payrolls/{id}/items-data', [PayrollController::class, 'itemsData'])->name('payrolls.items-data');
@@ -105,6 +114,46 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
     Route::post('job-requisitions/{id}/start-recruitment', [JobRequisitionController::class, 'startRecruitment'])->name('job-requisitions.start-recruitment');
     Route::post('job-requisitions/{id}/cancel', [JobRequisitionController::class, 'cancel'])->name('job-requisitions.cancel');
     Route::resource('job-requisitions', JobRequisitionController::class);
+
+    // Job Openings & Postings (إعلانات الشواغر الوظيفية)
+    Route::get('job-openings/data', [JobOpeningController::class, 'data'])->name('job-openings.data');
+    Route::get('job-openings/requisition-details', [JobOpeningController::class, 'requisitionDetails'])->name('job-openings.requisition-details');
+    Route::post('job-openings/{id}/publish', [JobOpeningController::class, 'publish'])->name('job-openings.publish');
+    Route::post('job-openings/{id}/close', [JobOpeningController::class, 'close'])->name('job-openings.close');
+    Route::resource('job-openings', JobOpeningController::class);
+
+    // Candidate Pipeline & Applications (استقبال وتتبع المرشحين)
+    Route::get('job-applications/data', [JobApplicationController::class, 'data'])->name('job-applications.data');
+    Route::post('job-applications/{id}/stage', [JobApplicationController::class, 'updateStage'])->name('job-applications.update-stage');
+    Route::post('job-applications/{id}/reject', [JobApplicationController::class, 'reject'])->name('job-applications.reject');
+    Route::post('job-applications/{id}/reopen', [JobApplicationController::class, 'reopen'])->name('job-applications.reopen');
+    Route::post('job-applications/{id}/rating', [JobApplicationController::class, 'updateRating'])->name('job-applications.update-rating');
+    Route::get('job-applications/{id}/resume', [JobApplicationController::class, 'downloadResume'])->name('job-applications.download-resume');
+    Route::resource('job-applications', JobApplicationController::class);
+
+    // Interviews & Candidate Evaluation (إدارة المقابلات وبطاقات التقييم)
+    Route::get('interviews/data', [InterviewController::class, 'data'])->name('interviews.data');
+    Route::get('interviews/{id}/evaluate', [InterviewController::class, 'evaluate'])->name('interviews.evaluate');
+    Route::post('interviews/{id}/evaluate', [InterviewController::class, 'storeEvaluation'])->name('interviews.store-evaluation');
+    Route::post('interviews/{id}/cancel', [InterviewController::class, 'cancel'])->name('interviews.cancel');
+    Route::resource('interviews', InterviewController::class);
+
+    // Job Offers Management (إدارة عروض العمل وخطابات التوظيف)
+    Route::get('job-offers/data', [JobOfferController::class, 'data'])->name('job-offers.data');
+    Route::post('job-offers/{id}/submit', [JobOfferController::class, 'submitForApproval'])->name('job-offers.submit');
+    Route::post('job-offers/{id}/approve', [JobOfferController::class, 'approve'])->name('job-offers.approve');
+    Route::post('job-offers/{id}/send', [JobOfferController::class, 'send'])->name('job-offers.send');
+    Route::post('job-offers/{id}/accept', [JobOfferController::class, 'accept'])->name('job-offers.accept');
+    Route::post('job-offers/{id}/decline', [JobOfferController::class, 'decline'])->name('job-offers.decline');
+    Route::post('job-offers/{id}/cancel', [JobOfferController::class, 'cancel'])->name('job-offers.cancel');
+    Route::resource('job-offers', JobOfferController::class);
+
+    // Onboarding & Candidate Conversion (التهيئة واستقبال الموظف الجديد)
+    Route::get('onboardings/data', [OnboardingController::class, 'data'])->name('onboardings.data');
+    Route::post('onboardings/{id}/tasks', [OnboardingController::class, 'addTask'])->name('onboardings.tasks.store');
+    Route::post('onboardings/tasks/{taskId}/toggle', [OnboardingController::class, 'toggleTask'])->name('onboardings.tasks.toggle');
+    Route::post('onboardings/{id}/convert', [OnboardingController::class, 'convertToEmployee'])->name('onboardings.convert');
+    Route::resource('onboardings', OnboardingController::class)->except(['edit', 'update']);
 
     // HR Settings Root (Redirects to administrations)
     Route::get('settings', [HRSettingController::class, 'index'])->name('settings');

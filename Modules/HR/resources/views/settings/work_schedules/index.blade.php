@@ -215,7 +215,7 @@
 
                                 <!-- Shift Selection -->
                                 <div class="flex-grow-1 day-shifts-container {{ $isDefaultOff ? 'd-none' : '' }}">
-                                    <select class="form-select form-select-sm select2 day-shift-select" name="days[{{ $dayNum }}][shift_id]" data-placeholder="{{ __('Select Shift...') }}" {{ $isDefaultOff ? 'disabled' : '' }}>
+                                    <select class="form-select select2 day-shift-select" name="days[{{ $dayNum }}][shift_id]" data-placeholder="{{ __('Select Shift...') }}" {{ $isDefaultOff ? 'disabled' : '' }}>
                                         <option value="">{{ __('Select Shift...') }}</option>
                                         @foreach ($shifts as $s)
                                             <option value="{{ $s->id }}">{{ $s->name }} ({{ \Carbon\Carbon::parse($s->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($s->end_time)->format('h:i A') }})</option>
@@ -376,7 +376,7 @@
 
                                 <!-- Shift Selection -->
                                 <div class="flex-grow-1 day-shifts-container">
-                                    <select class="form-select form-select-sm select2 day-shift-select" name="days[{{ $dayNum }}][shift_id]" id="edit_shift_{{ $dayNum }}" data-placeholder="{{ __('Select Shift...') }}">
+                                    <select class="form-select select2 day-shift-select" name="days[{{ $dayNum }}][shift_id]" id="edit_shift_{{ $dayNum }}" data-placeholder="{{ __('Select Shift...') }}">
                                         <option value="">{{ __('Select Shift...') }}</option>
                                         @foreach ($shifts as $s)
                                             <option value="{{ $s->id }}">{{ $s->name }} ({{ \Carbon\Carbon::parse($s->start_time)->format('h:i A') }} - {{ \Carbon\Carbon::parse($s->end_time)->format('h:i A') }})</option>
@@ -476,7 +476,7 @@ window.addEventListener('load', function () {
             { 
                 data: 'code', 
                 name: 'code',
-                render: data => `<span class="badge bg-label-info font-monospace">${data || '-'}</span>`
+                render: data => `<span class="badge bg-label-info">${data || '-'}</span>`
             },
             { 
                 data: 'name_ar', 

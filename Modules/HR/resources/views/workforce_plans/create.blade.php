@@ -176,7 +176,7 @@
                 </div>
                 <div>
                     <span class="text-muted small">{{ __('Estimated Annual Cost:') }}</span>
-                    <strong class="fs-6 text-success ms-1 font-monospace" id="summary-total-budget">0.000 KWD</strong>
+                    <strong class="fs-6 text-success ms-1" id="summary-total-budget">0.000 KWD</strong>
                 </div>
             </div>
         </div>
@@ -187,7 +187,7 @@
 <template id="item-row-template">
     <tr class="plan-item-row">
         <td>
-            <select name="items[INDEX][department_id]" class="form-select form-select-sm item-dept" required>
+            <select name="items[INDEX][department_id]" class="form-select item-dept" required>
                 <option value="">{{ __('Select Department') }}</option>
                 @foreach ($departments as $dept)
                     <option value="{{ $dept->id }}">{{ $dept->translate(app()->getLocale())?->name ?? $dept->translate('ar')?->name ?? $dept->name }}</option>
@@ -195,7 +195,7 @@
             </select>
         </td>
         <td>
-            <select name="items[INDEX][job_title_id]" class="form-select form-select-sm item-job" required>
+            <select name="items[INDEX][job_title_id]" class="form-select item-job" required>
                 <option value="">{{ __('Select Job Title') }}</option>
                 @foreach ($jobTitles as $job)
                     <option value="{{ $job->id }}">{{ $job->translate(app()->getLocale())?->name ?? $job->translate('ar')?->name ?? $job->name }}</option>
@@ -203,7 +203,7 @@
             </select>
         </td>
         <td>
-            <select name="items[INDEX][branch_id]" class="form-select form-select-sm item-branch">
+            <select name="items[INDEX][branch_id]" class="form-select item-branch">
                 <option value="">{{ __('All Branches') }}</option>
                 @foreach ($branches as $br)
                     <option value="{{ $br->id }}">{{ $br->translate(app()->getLocale())?->name ?? $br->translate('ar')?->name ?? $br->name }}</option>
@@ -211,37 +211,37 @@
             </select>
         </td>
         <td>
-            <select name="items[INDEX][employment_type]" class="form-select form-select-sm">
+            <select name="items[INDEX][employment_type]" class="form-select">
                 @foreach ($empTypes as $type)
                     <option value="{{ $type->value }}">{{ $type->label() }}</option>
                 @endforeach
             </select>
         </td>
         <td>
-            <select name="items[INDEX][target_quarter]" class="form-select form-select-sm">
+            <select name="items[INDEX][target_quarter]" class="form-select">
                 @foreach ($quarters as $q)
                     <option value="{{ $q->value }}">{{ $q->label() }}</option>
                 @endforeach
             </select>
         </td>
         <td>
-            <select name="items[INDEX][priority]" class="form-select form-select-sm">
+            <select name="items[INDEX][priority]" class="form-select">
                 @foreach ($priorities as $pr)
                     <option value="{{ $pr->value }}" {{ $pr === \Modules\HR\Enums\PlanItemPriority::MEDIUM ? 'selected' : '' }}>{{ $pr->label() }}</option>
                 @endforeach
             </select>
         </td>
         <td>
-            <input type="number" name="items[INDEX][current_headcount]" class="form-control form-control-sm text-center item-current bg-light" value="0" readonly>
+            <input type="number" name="items[INDEX][current_headcount]" class="form-control text-center item-current bg-light" value="0" readonly>
         </td>
         <td>
-            <input type="number" name="items[INDEX][target_headcount]" class="form-control form-control-sm text-center item-target" min="1" value="1" required>
+            <input type="number" name="items[INDEX][target_headcount]" class="form-control text-center item-target" min="1" value="1" required>
         </td>
         <td>
-            <input type="number" class="form-control form-control-sm text-center item-vacancies bg-light" value="1" readonly>
+            <input type="number" class="form-control text-center item-vacancies bg-light" value="1" readonly>
         </td>
         <td>
-            <input type="number" step="0.001" name="items[INDEX][estimated_monthly_salary]" class="form-control form-control-sm item-salary" placeholder="0.000" min="0">
+            <input type="number" step="0.001" name="items[INDEX][estimated_monthly_salary]" class="form-control item-salary" placeholder="0.000" min="0">
         </td>
         <td class="text-center">
             <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-row" title="{{ __('Remove') }}">

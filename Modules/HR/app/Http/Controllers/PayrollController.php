@@ -58,7 +58,7 @@ class PayrollController extends Controller
             ->addIndexColumn()
             ->addColumn('payroll_code', function (Payroll $payroll) {
                 $url = route('hr.payrolls.show', $payroll->id);
-                return '<a href="' . $url . '" class="fw-bold text-primary font-monospace">' . e($payroll->payroll_number) . '</a>';
+                return '<a href="' . $url . '" class="fw-bold text-primary">' . e($payroll->payroll_number) . '</a>';
             })
             ->addColumn('month_info', function (Payroll $payroll) {
                 return '<div>

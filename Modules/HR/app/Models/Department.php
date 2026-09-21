@@ -80,6 +80,15 @@ class Department extends Model implements TranslatableContract
 
     //======================
     /**
+     * Get employees belonging to this department.
+     */
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'department_id');
+    }
+
+    //======================
+    /**
      * Get the nursery associated with this department.
      */
     public function nursery(): BelongsTo

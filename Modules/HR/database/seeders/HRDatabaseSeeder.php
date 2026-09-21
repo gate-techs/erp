@@ -27,6 +27,9 @@ class HRDatabaseSeeder extends Seeder
             PayrollSeeder::class,
             WorkforcePlanSeeder::class,
             JobRequisitionSeeder::class,
+            JobOpeningSeeder::class,
+            JobApplicationSeeder::class,
+            InterviewSeeder::class,
         ]);
     }
 }

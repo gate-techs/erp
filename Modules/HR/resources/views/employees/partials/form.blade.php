@@ -53,7 +53,7 @@
                     </label>
                     <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/png, image/jpeg, image/jpg, image/webp">
                     
-                    <span id="profileCompletionBadge" class="position-absolute badge {{ $completion['class'] }} rounded-pill text-white fw-bold font-monospace shadow-sm" style="bottom: -8px; font-size: 11px; padding: 2px 8px; z-index: 3;">
+                    <span id="profileCompletionBadge" class="position-absolute badge {{ $completion['class'] }} rounded-pill text-white fw-bold shadow-sm" style="bottom: -8px; font-size: 11px; padding: 2px 8px; z-index: 3;">
                         {{ $completion['percentage'] }}%
                     </span>
                 </div>
@@ -68,9 +68,9 @@
                 <div class="text-start border-top pt-3">
                     <div class="mb-3">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employee Code') }}</label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-barcode"></i></span>
-                            <input type="text" name="employee_code" class="form-control font-monospace @error('employee_code') is-invalid @enderror" 
+                            <input type="text" name="employee_code" class="form-control @error('employee_code') is-invalid @enderror" 
                                    value="{{ old('employee_code', $isEdit ? $employee->employee_code : $nextCode) }}" placeholder="{{ __('e.g. EMP-0001') }}">
                         </div>
                         @error('employee_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -133,7 +133,7 @@
                         <label class="form-label text-muted small mb-1">
                             {{ $isEdit && $employee->user_id ? __('Change Password') : __('Password') }}
                         </label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-lock-alt"></i></span>
                             <input type="password" name="user_password" class="form-control" placeholder="{{ $isEdit ? __('Leave blank to keep current') : '••••••••' }}">
                         </div>
@@ -270,14 +270,14 @@
                     <!-- Date of Birth -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Date of Birth') }}</label>
-                        <input type="date" name="date_of_birth" class="form-control form-control-sm" 
+                        <input type="date" name="date_of_birth" class="form-control" 
                                value="{{ old('date_of_birth', $isEdit && $employee->date_of_birth ? $employee->date_of_birth->format('Y-m-d') : '') }}">
                     </div>
 
                     <!-- National ID -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('National ID') }}</label>
-                        <input type="text" name="national_id" class="form-control form-control-sm font-monospace @error('national_id') is-invalid @enderror" 
+                        <input type="text" name="national_id" class="form-control @error('national_id') is-invalid @enderror" 
                                value="{{ old('national_id', $isEdit ? $employee->national_id : '') }}" placeholder="2900101...">
                         @error('national_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
@@ -315,17 +315,17 @@
                             <div class="row g-2">
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Number') }}</label>
-                                    <input type="text" name="passport_number" class="form-control form-control-sm font-monospace" 
+                                    <input type="text" name="passport_number" class="form-control" 
                                            value="{{ old('passport_number', $isEdit ? $employee->passport_number : '') }}" placeholder="A12345678">
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Issue Date') }}</label>
-                                    <input type="date" name="passport_issue_date" class="form-control form-control-sm" 
+                                    <input type="date" name="passport_issue_date" class="form-control" 
                                            value="{{ old('passport_issue_date', $isEdit && $employee->passport_issue_date ? $employee->passport_issue_date->format('Y-m-d') : '') }}">
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Expiry Date') }}</label>
-                                    <input type="date" name="passport_expiry_date" class="form-control form-control-sm" 
+                                    <input type="date" name="passport_expiry_date" class="form-control" 
                                            value="{{ old('passport_expiry_date', $isEdit && $employee->passport_expiry_date ? $employee->passport_expiry_date->format('Y-m-d') : '') }}">
                                 </div>
 
@@ -342,7 +342,7 @@
                                 </div>
                                 <div class="col-12 col-md-6 mt-2">
                                     <label class="form-label text-muted small mb-1">{{ __('Visa Expiry Date') }}</label>
-                                    <input type="date" name="visa_expiry_date" class="form-control form-control-sm" 
+                                    <input type="date" name="visa_expiry_date" class="form-control" 
                                            value="{{ old('visa_expiry_date', $isEdit && $employee->visa_expiry_date ? $employee->visa_expiry_date->format('Y-m-d') : '') }}">
                                 </div>
                             </div>
@@ -473,7 +473,7 @@
                     <!-- Hire Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small fw-semibold mb-1">{{ __('Hire Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="hire_date" class="form-control form-control-sm @error('hire_date') is-invalid @enderror" 
+                        <input type="date" name="hire_date" class="form-control @error('hire_date') is-invalid @enderror" 
                                value="{{ old('hire_date', $isEdit && $employee->hire_date ? $employee->hire_date->format('Y-m-d') : now()->toDateString()) }}" required>
                         @error('hire_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
@@ -481,14 +481,14 @@
                     <!-- Probation End Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Probation End Date') }}</label>
-                        <input type="date" name="probation_end_date" class="form-control form-control-sm" 
+                        <input type="date" name="probation_end_date" class="form-control" 
                                value="{{ old('probation_end_date', $isEdit && $employee->probation_end_date ? $employee->probation_end_date->format('Y-m-d') : '') }}">
                     </div>
 
                     <!-- Contract End Date -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Contract End Date') }}</label>
-                        <input type="date" name="contract_end_date" class="form-control form-control-sm" 
+                        <input type="date" name="contract_end_date" class="form-control" 
                                value="{{ old('contract_end_date', $isEdit && $employee->contract_end_date ? $employee->contract_end_date->format('Y-m-d') : '') }}">
                     </div>
                 </div>
@@ -507,9 +507,9 @@
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                         <label class="form-label small fw-semibold mb-1">{{ __('Phone Number') }} <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-phone"></i></span>
-                            <input type="text" name="phone" class="form-control font-monospace @error('phone') is-invalid @enderror" 
+                            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" 
                                    value="{{ old('phone', $isEdit ? $employee->phone : '') }}" placeholder="01012345678" required dir="ltr">
                         </div>
                         @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -517,15 +517,15 @@
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Alternate Phone') }}</label>
-                        <input type="text" name="alternate_phone" class="form-control form-control-sm font-monospace" 
+                        <input type="text" name="alternate_phone" class="form-control" 
                                value="{{ old('alternate_phone', $isEdit ? $employee->alternate_phone : '') }}" placeholder="011..." dir="ltr">
                     </div>
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Email') }}</label>
-                        <div class="input-group input-group-sm">
+                        <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-envelope"></i></span>
-                            <input type="email" name="email" class="form-control font-monospace @error('email') is-invalid @enderror" 
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
                                    value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
                         </div>
                         @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -565,24 +565,24 @@
                     <!-- Address 1 (Arabic & English) -->
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Address 1 [Arabic]') }}</label>
-                        <input type="text" name="address_1_ar" class="form-control form-control-sm" 
+                        <input type="text" name="address_1_ar" class="form-control" 
                                value="{{ old('address_1_ar', $isEdit ? $employee->translate('ar')?->address_1 : '') }}" placeholder="{{ __('Street / Building No.') }}" dir="rtl">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Address 1 [English]') }}</label>
-                        <input type="text" name="address_1_en" class="form-control form-control-sm" 
+                        <input type="text" name="address_1_en" class="form-control" 
                                value="{{ old('address_1_en', $isEdit ? $employee->translate('en')?->address_1 : '') }}" placeholder="{{ __('Street / Building No.') }}" dir="ltr">
                     </div>
 
                     <!-- Address 2 (Arabic & English) -->
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Address 2 [Arabic]') }}</label>
-                        <input type="text" name="address_2_ar" class="form-control form-control-sm" 
+                        <input type="text" name="address_2_ar" class="form-control" 
                                value="{{ old('address_2_ar', $isEdit ? $employee->translate('ar')?->address_2 : '') }}" placeholder="{{ __('Landmark / Additional details') }}" dir="rtl">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Address 2 [English]') }}</label>
-                        <input type="text" name="address_2_en" class="form-control form-control-sm" 
+                        <input type="text" name="address_2_en" class="form-control" 
                                value="{{ old('address_2_en', $isEdit ? $employee->translate('en')?->address_2 : '') }}" placeholder="{{ __('Landmark / Additional details') }}" dir="ltr">
                     </div>
 
@@ -596,7 +596,7 @@
                             <div class="row g-2">
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Emergency Contact Name') }}</label>
-                                    <input type="text" name="emergency_contact_name" class="form-control form-control-sm" 
+                                    <input type="text" name="emergency_contact_name" class="form-control" 
                                            value="{{ old('emergency_contact_name', $isEdit ? $employee->emergency_contact_name : '') }}" placeholder="{{ __('e.g. Ahmed Mohamed') }}">
                                 </div>
                                 <div class="col-12 col-md-4">
@@ -623,7 +623,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Emergency Contact Phone') }}</label>
-                                    <input type="text" name="emergency_contact_phone" class="form-control form-control-sm font-monospace" 
+                                    <input type="text" name="emergency_contact_phone" class="form-control" 
                                            value="{{ old('emergency_contact_phone', $isEdit ? $employee->emergency_contact_phone : '') }}" placeholder="010..." dir="ltr">
                                 </div>
                             </div>
@@ -645,8 +645,8 @@
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                         <label class="form-label small fw-semibold mb-1">{{ __('Basic Salary') }} <span class="text-danger">*</span></label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" step="0.01" min="0" name="basic_salary" class="form-control font-monospace @error('basic_salary') is-invalid @enderror" 
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0" name="basic_salary" class="form-control @error('basic_salary') is-invalid @enderror" 
                                    value="{{ old('basic_salary', $isEdit ? $employee->basic_salary : '0.00') }}" required>
                             <span class="input-group-text bg-light">{{ __('KWD') }}</span>
                         </div>
@@ -655,8 +655,8 @@
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Hourly Rate') }}</label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" step="0.01" min="0" name="hourly_rate" class="form-control font-monospace" 
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0" name="hourly_rate" class="form-control" 
                                    value="{{ old('hourly_rate', $isEdit ? $employee->hourly_rate : '') }}" placeholder="0.00">
                             <span class="input-group-text bg-light">{{ __('KWD') }}</span>
                         </div>
@@ -664,7 +664,7 @@
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Daily Working Hours') }}</label>
-                        <input type="number" step="0.5" min="1" max="24" name="daily_working_hours" class="form-control form-control-sm font-monospace" 
+                        <input type="number" step="0.5" min="1" max="24" name="daily_working_hours" class="form-control" 
                                value="{{ old('daily_working_hours', $isEdit ? $employee->daily_working_hours : '8.0') }}">
                     </div>
 
@@ -698,32 +698,32 @@
 
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Account Holder Name') }}</label>
-                        <input type="text" name="account_holder_name" class="form-control form-control-sm" 
+                        <input type="text" name="account_holder_name" class="form-control" 
                                value="{{ old('account_holder_name', $isEdit ? $employee->account_holder_name : '') }}">
                     </div>
 
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Account Number') }}</label>
-                        <input type="text" name="account_number" class="form-control form-control-sm font-monospace" 
+                        <input type="text" name="account_number" class="form-control" 
                                value="{{ old('account_number', $isEdit ? $employee->account_number : '') }}" placeholder="1234567890">
                     </div>
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('IBAN') }}</label>
-                        <input type="text" name="iban" class="form-control form-control-sm font-monospace" 
+                        <input type="text" name="iban" class="form-control" 
                                value="{{ old('iban', $isEdit ? $employee->iban : '') }}" placeholder="KW00..." dir="ltr">
                     </div>
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Social Insurance Number') }}</label>
-                        <input type="text" name="social_insurance_number" class="form-control form-control-sm font-monospace" 
+                        <input type="text" name="social_insurance_number" class="form-control" 
                                value="{{ old('social_insurance_number', $isEdit ? $employee->social_insurance_number : '') }}">
                     </div>
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Social Insurance Percentage (%)') }}</label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" step="0.1" min="0" max="100" name="social_insurance_percentage" class="form-control font-monospace" 
+                        <div class="input-group">
+                            <input type="number" step="0.1" min="0" max="100" name="social_insurance_percentage" class="form-control" 
                                    value="{{ old('social_insurance_percentage', $isEdit ? $employee->social_insurance_percentage : '0') }}">
                             <span class="input-group-text bg-light">%</span>
                         </div>
@@ -766,7 +766,7 @@
                                 @foreach ($existingAllowances as $aIdx => $allowance)
                                     <tr class="allowance-row" data-index="{{ $aIdx }}">
                                         <td>
-                                            <select name="allowances[{{ $aIdx }}][allowance_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Allowance Type...') }}" required>
+                                            <select name="allowances[{{ $aIdx }}][allowance_type_id]" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Allowance Type...') }}" required>
                                                 <option value=""></option>
                                                 @foreach ($allowanceTypes as $at)
                                                     <option value="{{ $at->id }}" {{ (isset($allowance['allowance_type_id']) && $allowance['allowance_type_id'] == $at->id) ? 'selected' : '' }}>
@@ -776,25 +776,25 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" step="0.01" min="0" name="allowances[{{ $aIdx }}][amount]" class="form-control form-control-sm font-monospace" value="{{ $allowance['amount'] ?? '0.00' }}" placeholder="0.00" required>
+                                            <input type="number" step="0.01" min="0" name="allowances[{{ $aIdx }}][amount]" class="form-control" value="{{ $allowance['amount'] ?? '0.00' }}" placeholder="0.00" required>
                                         </td>
                                         <td>
-                                            <select name="allowances[{{ $aIdx }}][is_percentage]" class="form-select form-select-sm select2" data-control="select2">
+                                            <select name="allowances[{{ $aIdx }}][is_percentage]" class="form-select select2" data-control="select2">
                                                 <option value="0" {{ empty($allowance['is_percentage']) ? 'selected' : '' }}>{{ __('Fixed Amount') }} ({{ __('KWD') }})</option>
                                                 <option value="1" {{ !empty($allowance['is_percentage']) ? 'selected' : '' }}>{{ __('Percentage') }} (%)</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="allowances[{{ $aIdx }}][is_recurring]" class="form-select form-select-sm select2" data-control="select2">
+                                            <select name="allowances[{{ $aIdx }}][is_recurring]" class="form-select select2" data-control="select2">
                                                 <option value="1" {{ !isset($allowance['is_recurring']) || !empty($allowance['is_recurring']) ? 'selected' : '' }}>{{ __('Recurring Monthly') }}</option>
                                                 <option value="0" {{ isset($allowance['is_recurring']) && empty($allowance['is_recurring']) ? 'selected' : '' }}>{{ __('One-time / Variable') }}</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="date" name="allowances[{{ $aIdx }}][effective_date]" class="form-control form-control-sm" value="{{ !empty($allowance['effective_date']) ? (is_string($allowance['effective_date']) ? substr($allowance['effective_date'], 0, 10) : $allowance['effective_date']->format('Y-m-d')) : now()->toDateString() }}">
+                                            <input type="date" name="allowances[{{ $aIdx }}][effective_date]" class="form-control" value="{{ !empty($allowance['effective_date']) ? (is_string($allowance['effective_date']) ? substr($allowance['effective_date'], 0, 10) : $allowance['effective_date']->format('Y-m-d')) : now()->toDateString() }}">
                                         </td>
                                         <td>
-                                            <input type="text" name="allowances[{{ $aIdx }}][notes]" class="form-control form-control-sm" value="{{ $allowance['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
+                                            <input type="text" name="allowances[{{ $aIdx }}][notes]" class="form-control" value="{{ $allowance['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-allowance" title="{{ __('Remove') }}">
@@ -846,7 +846,7 @@
                                 <div class="row g-3">
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Document Type') }} <span class="text-danger">*</span></label>
-                                        <select name="documents[{{ $dIdx }}][document_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Document Type...') }}" required>
+                                        <select name="documents[{{ $dIdx }}][document_type_id]" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Document Type...') }}" required>
                                             <option value=""></option>
                                             @foreach ($documentTypes as $dt)
                                                 <option value="{{ $dt->id }}" {{ (isset($doc['document_type_id']) && $doc['document_type_id'] == $dt->id) ? 'selected' : '' }}>
@@ -858,12 +858,12 @@
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Document / ID Number') }}</label>
-                                        <input type="text" name="documents[{{ $dIdx }}][document_number]" class="form-control form-control-sm font-monospace" value="{{ $doc['document_number'] ?? '' }}" placeholder="{{ __('e.g. DOC-12345') }}">
+                                        <input type="text" name="documents[{{ $dIdx }}][document_number]" class="form-control" value="{{ $doc['document_number'] ?? '' }}" placeholder="{{ __('e.g. DOC-12345') }}">
                                     </div>
 
                                     <div class="col-12 col-md-6">
                                         <label class="form-label text-muted small mb-1">{{ __('Upload File') }}</label>
-                                        <input type="file" name="documents[{{ $dIdx }}][file]" class="form-control form-control-sm" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+                                        <input type="file" name="documents[{{ $dIdx }}][file]" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
                                         @if (!empty($doc['file_path']))
                                             <input type="hidden" name="documents[{{ $dIdx }}][file_path]" value="{{ $doc['file_path'] }}">
                                             <input type="hidden" name="documents[{{ $dIdx }}][file_name]" value="{{ $doc['file_name'] ?? '' }}">
@@ -879,25 +879,25 @@
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Issue Date') }}</label>
-                                        <input type="date" name="documents[{{ $dIdx }}][issue_date]" class="form-control form-control-sm" value="{{ !empty($doc['issue_date']) ? (is_string($doc['issue_date']) ? substr($doc['issue_date'], 0, 10) : $doc['issue_date']->format('Y-m-d')) : '' }}">
+                                        <input type="date" name="documents[{{ $dIdx }}][issue_date]" class="form-control" value="{{ !empty($doc['issue_date']) ? (is_string($doc['issue_date']) ? substr($doc['issue_date'], 0, 10) : $doc['issue_date']->format('Y-m-d')) : '' }}">
                                     </div>
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Expiry Date') }}</label>
-                                        <input type="date" name="documents[{{ $dIdx }}][expiry_date]" class="form-control form-control-sm" value="{{ !empty($doc['expiry_date']) ? (is_string($doc['expiry_date']) ? substr($doc['expiry_date'], 0, 10) : $doc['expiry_date']->format('Y-m-d')) : '' }}">
+                                        <input type="date" name="documents[{{ $dIdx }}][expiry_date]" class="form-control" value="{{ !empty($doc['expiry_date']) ? (is_string($doc['expiry_date']) ? substr($doc['expiry_date'], 0, 10) : $doc['expiry_date']->format('Y-m-d')) : '' }}">
                                     </div>
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Notification Before Expiry (Days)') }}</label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="number" name="documents[{{ $dIdx }}][notify_before_days]" class="form-control form-control-sm font-monospace" min="1" max="365" value="{{ $doc['notify_before_days'] ?? 30 }}">
+                                        <div class="input-group">
+                                            <input type="number" name="documents[{{ $dIdx }}][notify_before_days]" class="form-control" min="1" max="365" value="{{ $doc['notify_before_days'] ?? 30 }}">
                                             <span class="input-group-text bg-white">{{ __('days') }}</span>
                                         </div>
                                     </div>
 
                                     <div class="col-12 col-md-3">
                                         <label class="form-label text-muted small mb-1">{{ __('Notes') }}</label>
-                                        <input type="text" name="documents[{{ $dIdx }}][notes]" class="form-control form-control-sm" value="{{ $doc['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
+                                        <input type="text" name="documents[{{ $dIdx }}][notes]" class="form-control" value="{{ $doc['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
                                     </div>
                                 </div>
                             </div>
@@ -923,11 +923,11 @@
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Notes [Arabic]') }}</label>
-                        <textarea name="notes_ar" rows="3" class="form-control form-control-sm" placeholder="{{ __('Any administrative notes in Arabic...') }}" dir="rtl">{{ old('notes_ar', $isEdit ? $employee->translate('ar')?->notes : '') }}</textarea>
+                        <textarea name="notes_ar" rows="3" class="form-control" placeholder="{{ __('Any administrative notes in Arabic...') }}" dir="rtl">{{ old('notes_ar', $isEdit ? $employee->translate('ar')?->notes : '') }}</textarea>
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Notes [English]') }}</label>
-                        <textarea name="notes_en" rows="3" class="form-control form-control-sm" placeholder="{{ __('Any administrative notes in English...') }}" dir="ltr">{{ old('notes_en', $isEdit ? $employee->translate('en')?->notes : '') }}</textarea>
+                        <textarea name="notes_en" rows="3" class="form-control" placeholder="{{ __('Any administrative notes in English...') }}" dir="ltr">{{ old('notes_en', $isEdit ? $employee->translate('en')?->notes : '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -939,7 +939,7 @@
 <template id="allowanceRowTemplate">
     <tr class="allowance-row" data-index="__INDEX__">
         <td>
-            <select name="allowances[__INDEX__][allowance_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Allowance Type...') }}" required>
+            <select name="allowances[__INDEX__][allowance_type_id]" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Allowance Type...') }}" required>
                 <option value=""></option>
                 @foreach ($allowanceTypes as $at)
                     <option value="{{ $at->id }}">{{ $at->translate(app()->getLocale())?->name ?? $at->translate('ar')?->name ?? $at->name }}</option>
@@ -947,25 +947,25 @@
             </select>
         </td>
         <td>
-            <input type="number" step="0.01" min="0" name="allowances[__INDEX__][amount]" class="form-control form-control-sm font-monospace" placeholder="0.00" required>
+            <input type="number" step="0.01" min="0" name="allowances[__INDEX__][amount]" class="form-control" placeholder="0.00" required>
         </td>
         <td>
-            <select name="allowances[__INDEX__][is_percentage]" class="form-select form-select-sm select2" data-control="select2">
+            <select name="allowances[__INDEX__][is_percentage]" class="form-select select2" data-control="select2">
                 <option value="0">{{ __('Fixed Amount') }} ({{ __('KWD') }})</option>
                 <option value="1">{{ __('Percentage') }} (%)</option>
             </select>
         </td>
         <td>
-            <select name="allowances[__INDEX__][is_recurring]" class="form-select form-select-sm select2" data-control="select2">
+            <select name="allowances[__INDEX__][is_recurring]" class="form-select select2" data-control="select2">
                 <option value="1">{{ __('Recurring Monthly') }}</option>
                 <option value="0">{{ __('One-time / Variable') }}</option>
             </select>
         </td>
         <td>
-            <input type="date" name="allowances[__INDEX__][effective_date]" class="form-control form-control-sm" value="{{ now()->toDateString() }}">
+            <input type="date" name="allowances[__INDEX__][effective_date]" class="form-control" value="{{ now()->toDateString() }}">
         </td>
         <td>
-            <input type="text" name="allowances[__INDEX__][notes]" class="form-control form-control-sm" placeholder="{{ __('Notes...') }}">
+            <input type="text" name="allowances[__INDEX__][notes]" class="form-control" placeholder="{{ __('Notes...') }}">
         </td>
         <td class="text-center">
             <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-allowance" title="{{ __('Remove') }}">
@@ -990,7 +990,7 @@
         <div class="row g-3">
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Document Type') }} <span class="text-danger">*</span></label>
-                <select name="documents[__INDEX__][document_type_id]" class="form-select form-select-sm select2" data-control="select2" data-placeholder="{{ __('Select Document Type...') }}" required>
+                <select name="documents[__INDEX__][document_type_id]" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Document Type...') }}" required>
                     <option value=""></option>
                     @foreach ($documentTypes as $dt)
                         <option value="{{ $dt->id }}">{{ $dt->translate(app()->getLocale())?->name ?? $dt->translate('ar')?->name ?? $dt->name }}</option>
@@ -1000,35 +1000,35 @@
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Document / ID Number') }}</label>
-                <input type="text" name="documents[__INDEX__][document_number]" class="form-control form-control-sm font-monospace" placeholder="{{ __('e.g. DOC-12345') }}">
+                <input type="text" name="documents[__INDEX__][document_number]" class="form-control" placeholder="{{ __('e.g. DOC-12345') }}">
             </div>
 
             <div class="col-12 col-md-6">
                 <label class="form-label text-muted small mb-1">{{ __('Upload File') }} <span class="text-danger">*</span></label>
-                <input type="file" name="documents[__INDEX__][file]" class="form-control form-control-sm" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" required>
+                <input type="file" name="documents[__INDEX__][file]" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" required>
             </div>
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Issue Date') }}</label>
-                <input type="date" name="documents[__INDEX__][issue_date]" class="form-control form-control-sm">
+                <input type="date" name="documents[__INDEX__][issue_date]" class="form-control">
             </div>
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Expiry Date') }}</label>
-                <input type="date" name="documents[__INDEX__][expiry_date]" class="form-control form-control-sm">
+                <input type="date" name="documents[__INDEX__][expiry_date]" class="form-control">
             </div>
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Notification Before Expiry (Days)') }}</label>
-                <div class="input-group input-group-sm">
-                    <input type="number" name="documents[__INDEX__][notify_before_days]" class="form-control form-control-sm font-monospace" min="1" max="365" value="30">
+                <div class="input-group">
+                    <input type="number" name="documents[__INDEX__][notify_before_days]" class="form-control" min="1" max="365" value="30">
                     <span class="input-group-text bg-white">{{ __('days') }}</span>
                 </div>
             </div>
 
             <div class="col-12 col-md-3">
                 <label class="form-label text-muted small mb-1">{{ __('Notes') }}</label>
-                <input type="text" name="documents[__INDEX__][notes]" class="form-control form-control-sm" placeholder="{{ __('Notes...') }}">
+                <input type="text" name="documents[__INDEX__][notes]" class="form-control" placeholder="{{ __('Notes...') }}">
             </div>
         </div>
     </div>

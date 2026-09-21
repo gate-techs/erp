@@ -59,13 +59,22 @@
                 <span>{{ __('Reject') }}</span>
             </button>
         @elseif ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::APPROVED)
+            <a href="{{ route('hr.job-openings.create', ['requisition_id' => $requisition->id]) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
+                <i class="icon-base bx bx-broadcast font-16"></i>
+                <span>{{ __('Create Job Opening') }}</span>
+            </a>
             <form action="{{ route('hr.job-requisitions.start-recruitment', $requisition->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Start active candidate recruitment for this role?') }}');">
                 @csrf
-                <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
+                <button type="submit" class="btn btn-outline-primary d-flex align-items-center gap-1">
                     <i class="icon-base bx bx-user-voice font-16"></i>
                     <span>{{ __('Start Recruitment') }}</span>
                 </button>
             </form>
+        @elseif ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::IN_RECRUITMENT)
+            <a href="{{ route('hr.job-openings.create', ['requisition_id' => $requisition->id]) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
+                <i class="icon-base bx bx-broadcast font-16"></i>
+                <span>{{ __('Create Job Opening') }}</span>
+            </a>
         @endif
 
         @if (!in_array($requisition->status, [\Modules\HR\Enums\JobRequisitionStatus::CANCELLED, \Modules\HR\Enums\JobRequisitionStatus::FULFILLED, \Modules\HR\Enums\JobRequisitionStatus::REJECTED]))
@@ -150,7 +159,7 @@
             <div class="card-body p-3 d-flex align-items-center justify-content-between">
                 <div>
                     <span class="text-muted small d-block mb-1">{{ __('Salary Range (KWD)') }}</span>
-                    <h4 class="fw-bold mb-0 text-dark font-monospace">
+                    <h4 class="fw-bold mb-0 text-dark">
                         @if ($requisition->min_salary || $requisition->max_salary)
                             {{ number_format($requisition->min_salary ?? 0, 0) }} - {{ number_format($requisition->max_salary ?? 0, 0) }}
                         @else
@@ -178,7 +187,7 @@
         <div class="row g-4">
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Requisition Number') }}</span>
-                <span class="fw-bold font-monospace text-heading">{{ $requisition->requisition_number }}</span>
+                <span class="fw-bold text-heading">{{ $requisition->requisition_number }}</span>
             </div>
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Department') }}</span>
@@ -218,14 +227,14 @@
             </div>
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Expected Start Date') }}</span>
-                <span class="fw-semibold text-heading font-monospace">
+                <span class="fw-semibold text-heading">
                     {{ $requisition->expected_start_date ? $requisition->expected_start_date->format('Y-m-d') : '—' }}
                 </span>
             </div>
             <div class="col-6 col-md-3">
                 <span class="text-muted small d-block">{{ __('Requested By') }}</span>
                 <span class="fw-semibold text-heading">{{ $requisition->requester?->name ?? '-' }}</span>
-                <small class="text-muted d-block font-monospace">{{ $requisition->created_at->format('Y-m-d H:i') }}</small>
+                <small class="text-muted d-block">{{ $requisition->created_at->format('Y-m-d H:i') }}</small>
             </div>
 
             @if ($requisition->approved_at)
@@ -290,6 +299,66 @@
     </div>
     @endif
 </div>
+
+<!-- Linked Job Openings -->
+@if ($requisition->jobOpenings && $requisition->jobOpenings->count() > 0)
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
+        <h6 class="card-title mb-0 fw-bold text-heading d-flex align-items-center gap-2">
+            <i class="icon-base bx bx-broadcast text-primary"></i>
+            <span>{{ __('Published Job Openings') }}</span>
+            <span class="badge bg-label-primary font-11">{{ $requisition->jobOpenings->count() }}</span>
+        </h6>
+        <a href="{{ route('hr.job-openings.create', ['requisition_id' => $requisition->id]) }}" class="btn btn-sm btn-outline-primary">
+            <i class="bx bx-plus me-1"></i> {{ __('Add Opening') }}
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>{{ __('Opening Code') }}</th>
+                    <th>{{ __('Title') }}</th>
+                    <th class="text-center">{{ __('Workplace') }}</th>
+                    <th class="text-center">{{ __('Positions') }}</th>
+                    <th class="text-center">{{ __('Status') }}</th>
+                    <th class="text-center">{{ __('Actions') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($requisition->jobOpenings as $op)
+                    <tr>
+                        <td>
+                            <a href="{{ route('hr.job-openings.show', $op->id) }}" class="fw-semibold text-primary">
+                                {{ $op->opening_code }}
+                            </a>
+                        </td>
+                        <td>{{ $op->title }}</td>
+                        <td class="text-center">
+                            <span class="badge {{ $op->workplace_type->badgeClass() }} font-11">
+                                {{ $op->workplace_type->label() }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <strong>{{ $op->filled_positions }} / {{ $op->open_positions }}</strong>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge {{ $op->status->badgeClass() }} font-11">
+                                {{ $op->status->label() }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('hr.job-openings.show', $op->id) }}" class="btn btn-sm btn-icon btn-outline-secondary">
+                                <i class="bx bx-show"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
 
 <!-- Rejection Modal -->
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">

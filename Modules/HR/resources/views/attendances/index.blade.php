@@ -471,7 +471,7 @@
                     <!-- 1. Branch Filter -->
                     <div class="col-12 col-sm-6 col-lg-3">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                        <select name="branch_id" id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                        <select name="branch_id" id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                             <option value="">{{ __('All Branches') }}</option>
                             @foreach ($branches as $br)
                                 <option value="{{ $br->id }}" {{ $selectedBranch == $br->id ? 'selected' : '' }}>
@@ -484,7 +484,7 @@
                     <!-- 2. Department Filter -->
                     <div class="col-12 col-sm-6 col-lg-3">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Department') }}</label>
-                        <select name="department_id" id="filter_department_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
+                        <select name="department_id" id="filter_department_id" class="select2 form-select" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
                             <option value="">{{ __('All Departments') }}</option>
                             @foreach ($departments as $dept)
                                 <option value="{{ $dept->id }}" {{ $selectedDepartment == $dept->id ? 'selected' : '' }}>
@@ -497,7 +497,7 @@
                     <!-- 3. Employee Filter -->
                     <div class="col-12 col-sm-6 col-lg-2">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Employee') }}</label>
-                        <select name="employee_id" id="filter_employee_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
+                        <select name="employee_id" id="filter_employee_id" class="select2 form-select" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
                             <option value="">{{ __('All Employees') }}</option>
                             @foreach ($employees as $emp)
                                 <option value="{{ $emp->id }}" {{ $selectedEmployee == $emp->id ? 'selected' : '' }}>
@@ -510,7 +510,7 @@
                     <!-- 4. Month Filter -->
                     <div class="col-12 col-sm-6 col-lg-2">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Month') }}</label>
-                        <select name="month" id="filter_month" class="select2 form-select form-select-sm">
+                        <select name="month" id="filter_month" class="select2 form-select">
                             @foreach ($months as $num => $name)
                                 <option value="{{ $num }}" {{ $selectedMonth == $num ? 'selected' : '' }}>
                                     {{ $name }}
@@ -522,7 +522,7 @@
                     <!-- 5. Year Filter -->
                     <div class="col-12 col-sm-6 col-lg-2">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Year') }}</label>
-                        <select name="year" id="filter_year" class="select2 form-select form-select-sm text-center">
+                        <select name="year" id="filter_year" class="select2 form-select text-center">
                             @foreach ($years as $yr)
                                 <option value="{{ $yr }}" {{ $selectedYear == $yr ? 'selected' : '' }}>
                                     {{ $yr }}

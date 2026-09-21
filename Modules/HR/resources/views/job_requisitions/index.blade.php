@@ -90,7 +90,7 @@
             <!-- 1. Branch Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                <select id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                     <option value="">{{ __('All Branches') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}</option>
@@ -101,7 +101,7 @@
             <!-- 2. Department Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Department') }}</label>
-                <select id="filter_department_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
+                <select id="filter_department_id" class="select2 form-select" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
                     <option value="">{{ __('All Departments') }}</option>
                     @foreach ($departments as $dept)
                         <option value="{{ $dept->id }}">{{ $dept->translate(app()->getLocale())?->name ?? $dept->translate('ar')?->name ?? $dept->name }}</option>
@@ -112,7 +112,7 @@
             <!-- 3. Status Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     @foreach ($statuses as $st)
                         <option value="{{ $st->value }}">{{ $st->label() }}</option>
@@ -123,7 +123,7 @@
             <!-- 4. Requisition Type Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Requisition Type') }}</label>
-                <select id="filter_type" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
+                <select id="filter_type" class="select2 form-select" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
                     <option value="">{{ __('All Types') }}</option>
                     @foreach ($types as $tp)
                         <option value="{{ $tp->value }}">{{ $tp->label() }}</option>
@@ -134,7 +134,7 @@
             <!-- 5. Priority Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Priority') }}</label>
-                <select id="filter_priority" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Priorities') }}" data-allow-clear="true">
+                <select id="filter_priority" class="select2 form-select" data-placeholder="{{ __('All Priorities') }}" data-allow-clear="true">
                     <option value="">{{ __('All Priorities') }}</option>
                     @foreach ($priorities as $p)
                         <option value="{{ $p->value }}">{{ $p->label() }}</option>
@@ -145,7 +145,7 @@
             <!-- 6. Budget Status Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Budget Status') }}</label>
-                <select id="filter_is_budgeted" class="select2 form-select form-select-sm" data-placeholder="{{ __('All') }}" data-allow-clear="true">
+                <select id="filter_is_budgeted" class="select2 form-select" data-placeholder="{{ __('All') }}" data-allow-clear="true">
                     <option value="">{{ __('All') }}</option>
                     <option value="1">{{ __('Budgeted') }}</option>
                     <option value="0">{{ __('Unbudgeted') }}</option>

@@ -334,7 +334,7 @@ body { background: var(--p-bg) !important; }
     word-break: break-word;
 }
 .dl-value.mono {
-    font-family: var(--bs-font-monospace, monospace);
+    font-family: var(--bs-, monospace);
     font-weight: 500;
 }
 .dl-value.empty {
@@ -565,7 +565,7 @@ body { background: var(--p-bg) !important; }
                 @if($kpis['service_years'] !== null)
                     <span><i class="bx bx-time-five me-1"></i>{{ $kpis['service_years'] }} {{ __('yrs') }}{{ $kpis['service_months'] ? ' '.$kpis['service_months'].' '.__('mos') : '' }}</span>
                 @endif
-                <span class="font-monospace"><i class="bx bx-hash me-1"></i>{{ $employee->employee_code }}</span>
+                <span class=""><i class="bx bx-hash me-1"></i>{{ $employee->employee_code }}</span>
             </div>
             @endif
         </div>

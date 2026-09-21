@@ -31,46 +31,10 @@
       "slug": "hr",
       "submenu": [
         {
-          "name": "Attendance & Absence",
-          "icon": "menu-icon icon-base bx bx-calendar-check",
-          "slug": "hr.attendances.index",
-          "url": "/hr/attendances"
-        },
-        {
-          "name": "Leave Requests",
-          "icon": "menu-icon icon-base bx bx-calendar-star",
-          "slug": "hr.leaves.index",
-          "url": "/hr/leaves"
-        },
-        {
-          "name": "Permissions & Short Leaves",
-          "icon": "menu-icon icon-base bx bx-time-five",
-          "slug": "hr.permissions.index",
-          "url": "/hr/permissions"
-        },
-        {
-          "name": "Loans & Advances",
-          "icon": "menu-icon icon-base bx bx-wallet",
-          "slug": "hr.loans.index",
-          "url": "/hr/loans"
-        },
-        {
-          "name": "Rewards & Incentives",
-          "icon": "menu-icon icon-base bx bx-gift",
-          "slug": "hr.rewards.index",
-          "url": "/hr/rewards"
-        },
-        {
-          "name": "Penalties & Deductions",
-          "icon": "menu-icon icon-base bx bx-error-circle",
-          "slug": "hr.penalties.index",
-          "url": "/hr/penalties"
-        },
-        {
-          "name": "Payroll & Wages",
-          "icon": "menu-icon icon-base bx bx-credit-card",
-          "slug": "hr.payrolls.index",
-          "url": "/hr/payrolls"
+          "name": "Dashboard",
+          "icon": "menu-icon icon-base bx bx-home-circle",
+          "slug": "hr.dashboard",
+          "url": "/hr"
         },
         {
           "name": "Employees",
@@ -79,19 +43,119 @@
           "url": "/hr/employees"
         },
         {
-          "name": "Workforce Plans",
-          "icon": "menu-icon icon-base bx bx-line-chart",
-          "slug": "hr.workforce-plans.index",
-          "url": "/hr/workforce-plans"
+          "name": "Time & Attendance",
+          "icon": "menu-icon icon-base bx bx-time-five",
+          "slug": [
+            "hr.attendances",
+            "hr.leaves",
+            "hr.permissions"
+          ],
+          "submenu": [
+            {
+              "name": "Attendance & Absence",
+              "slug": "hr.attendances.index",
+              "url": "/hr/attendances"
+            },
+            {
+              "name": "Leave Requests",
+              "slug": "hr.leaves.index",
+              "url": "/hr/leaves"
+            },
+            {
+              "name": "Permissions & Short Leaves",
+              "slug": "hr.permissions.index",
+              "url": "/hr/permissions"
+            }
+          ]
         },
         {
-          "name": "Job Requisitions",
-          "icon": "menu-icon icon-base bx bx-briefcase",
-          "slug": "hr.job-requisitions.index",
-          "url": "/hr/job-requisitions"
+          "name": "Payroll & Financials",
+          "icon": "menu-icon icon-base bx bx-wallet",
+          "slug": [
+            "hr.payrolls",
+            "hr.loans",
+            "hr.rewards",
+            "hr.penalties"
+          ],
+          "submenu": [
+            {
+              "name": "Payroll & Wages",
+
+              "slug": "hr.payrolls.index",
+              "url": "/hr/payrolls"
+            },
+            {
+              "name": "Loans & Advances",
+
+              "slug": "hr.loans.index",
+              "url": "/hr/loans"
+            },
+            {
+              "name": "Rewards & Incentives",
+
+              "slug": "hr.rewards.index",
+              "url": "/hr/rewards"
+            },
+            {
+              "name": "Penalties & Deductions",
+
+              "slug": "hr.penalties.index",
+              "url": "/hr/penalties"
+            }
+          ]
         },
         {
-          "name": "HR Settings",
+          "name": "Recruitment & Staffing",
+          "icon": "menu-icon icon-base bx bx-briefcase-alt-2",
+          "slug": [
+            "hr.workforce-plans",
+            "hr.job-requisitions",
+            "hr.job-openings",
+            "hr.job-applications",
+            "hr.interviews",
+            "hr.job-offers",
+            "hr.onboardings"
+          ],
+          "submenu": [
+            {
+              "name": "Workforce Plans",
+              "slug": "hr.workforce-plans.index",
+              "url": "/hr/workforce-plans"
+            },
+            {
+              "name": "Job Requisitions",
+              "slug": "hr.job-requisitions.index",
+              "url": "/hr/job-requisitions"
+            },
+            {
+              "name": "Job Openings",
+              "slug": "hr.job-openings.index",
+              "url": "/hr/job-openings"
+            },
+            {
+              "name": "Candidate Pipeline",
+              "slug": "hr.job-applications.index",
+              "url": "/hr/job-applications"
+            },
+            {
+              "name": "Interviews & Evaluations",
+              "slug": "hr.interviews.index",
+              "url": "/hr/interviews"
+            },
+            {
+              "name": "Job Offers",
+              "slug": "hr.job-offers.index",
+              "url": "/hr/job-offers"
+            },
+            {
+              "name": "Onboarding & Hired",
+              "slug": "hr.onboardings.index",
+              "url": "/hr/onboardings"
+            }
+          ]
+        },
+        {
+          "name": "Settings",
           "icon": "menu-icon icon-base bx bx-slider-alt",
           "slug": "hr.settings",
           "url": "/hr/settings"

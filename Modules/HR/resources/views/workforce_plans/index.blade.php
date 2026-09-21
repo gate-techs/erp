@@ -90,7 +90,7 @@
             <!-- 1. Plan Year Filter -->
             <div class="col-12 col-sm-6 col-lg-4">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Plan Year') }}</label>
-                <select id="filter_year" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Years') }}" data-allow-clear="true">
+                <select id="filter_year" class="select2 form-select" data-placeholder="{{ __('All Years') }}" data-allow-clear="true">
                     <option value="">{{ __('All Years') }}</option>
                     @foreach ($years as $yr)
                         <option value="{{ $yr }}">{{ $yr }}</option>
@@ -101,7 +101,7 @@
             <!-- 2. Status Filter -->
             <div class="col-12 col-sm-6 col-lg-4">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     @foreach ($statuses as $st)
                         <option value="{{ $st->value }}">{{ $st->label() }}</option>

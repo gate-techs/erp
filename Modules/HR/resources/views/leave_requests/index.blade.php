@@ -90,7 +90,7 @@
             <!-- 1. Branch Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                <select id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                     <option value="">{{ __('All Branches') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}</option>
@@ -101,7 +101,7 @@
             <!-- 2. Department Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Department') }}</label>
-                <select id="filter_department_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
+                <select id="filter_department_id" class="select2 form-select" data-placeholder="{{ __('All Departments') }}" data-allow-clear="true">
                     <option value="">{{ __('All Departments') }}</option>
                     @foreach ($departments as $dept)
                         <option value="{{ $dept->id }}">{{ $dept->translate(app()->getLocale())?->name ?? $dept->translate('ar')?->name ?? $dept->name }}</option>
@@ -112,7 +112,7 @@
             <!-- 3. Employee Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Employee') }}</label>
-                <select id="filter_employee_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
+                <select id="filter_employee_id" class="select2 form-select" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
                     <option value="">{{ __('All Employees') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->employee_code }})</option>
@@ -123,7 +123,7 @@
             <!-- 4. Leave Type Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Leave Type') }}</label>
-                <select id="filter_leave_type" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
+                <select id="filter_leave_type" class="select2 form-select" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
                     <option value="">{{ __('All Types') }}</option>
                     @foreach ($leaveTypes as $type)
                         <option value="{{ $type->value }}">{{ $type->label() }}</option>
@@ -134,7 +134,7 @@
             <!-- 5. Status Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -145,13 +145,13 @@
             <!-- 6. Date From Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Start Date From') }}</label>
-                <input type="date" id="filter_date_from" class="form-control form-control-sm">
+                <input type="date" id="filter_date_from" class="form-control">
             </div>
 
             <!-- 7. Date To Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Start Date To') }}</label>
-                <input type="date" id="filter_date_to" class="form-control form-control-sm">
+                <input type="date" id="filter_date_to" class="form-control">
             </div>
 
             <!-- 8. Reset Filters Action Button -->

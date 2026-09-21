@@ -130,6 +130,36 @@ class HRServiceProvider extends ModuleServiceProvider
             \Modules\HR\Repositories\Contracts\JobRequisitionRepositoryInterface::class,
             \Modules\HR\Repositories\JobRequisitionRepository::class
         );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\JobOpeningRepositoryInterface::class,
+            \Modules\HR\Repositories\JobOpeningRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\JobApplicationRepositoryInterface::class,
+            \Modules\HR\Repositories\JobApplicationRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\InterviewRepositoryInterface::class,
+            \Modules\HR\Repositories\InterviewRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\JobOfferRepositoryInterface::class,
+            \Modules\HR\Repositories\JobOfferRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\OnboardingRepositoryInterface::class,
+            \Modules\HR\Repositories\OnboardingRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\HRDashboardRepositoryInterface::class,
+            \Modules\HR\Repositories\HRDashboardRepository::class
+        );
     }
 
     //======================

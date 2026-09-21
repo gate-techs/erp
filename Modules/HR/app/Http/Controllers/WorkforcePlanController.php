@@ -58,20 +58,20 @@ class WorkforcePlanController extends Controller
                 return '
                     <div class="d-flex flex-column">
                         <a href="' . route('hr.workforce-plans.show', $plan->id) . '" class="fw-bold text-heading text-truncate text-decoration-none">' . e($plan->title) . '</a>
-                        <small class="text-muted font-monospace">' . e($plan->plan_code) . ' • ' . e($plan->year) . '</small>
+                        <small class="text-muted">' . e($plan->plan_code) . ' • ' . e($plan->year) . '</small>
                     </div>
                 ';
             })
             ->addColumn('duration', function (WorkforcePlan $plan) {
                 $start = $plan->start_date ? $plan->start_date->format('Y-m-d') : '-';
                 $end   = $plan->end_date ? $plan->end_date->format('Y-m-d') : '-';
-                return '<div class="small text-muted font-monospace">' . $start . ' &rarr; ' . $end . '</div>';
+                return '<div class="small text-muted">' . $start . ' &rarr; ' . $end . '</div>';
             })
             ->addColumn('target_headcount', function (WorkforcePlan $plan) {
                 return '<span class="fw-bold text-dark">' . number_format($plan->total_target_headcount) . ' ' . __('Positions') . '</span>';
             })
             ->addColumn('budgeted_cost', function (WorkforcePlan $plan) {
-                return '<span class="fw-bold text-success font-monospace">' . number_format($plan->total_budgeted_cost, 3) . ' ' . __('KWD') . '</span>';
+                return '<span class="fw-bold text-success">' . number_format($plan->total_budgeted_cost, 3) . ' ' . __('KWD') . '</span>';
             })
             ->addColumn('status_badge', function (WorkforcePlan $plan) {
                 $status = $plan->status;

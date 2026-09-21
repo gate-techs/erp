@@ -35,7 +35,7 @@
             <!-- 1. Nursery Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Nursery') }}</label>
-                <select id="filter_nursery_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Nurseries') }}" data-allow-clear="true">
+                <select id="filter_nursery_id" class="select2 form-select" data-placeholder="{{ __('All Nurseries') }}" data-allow-clear="true">
                     <option value="">{{ __('All Nurseries') }}</option>
                     @foreach ($nurseries as $nursery)
                         <option value="{{ $nursery->id }}">{{ $nursery->name }}</option>
@@ -46,7 +46,7 @@
             <!-- 2. Employee Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Responsible Employee') }}</label>
-                <select id="filter_employee_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
+                <select id="filter_employee_id" class="select2 form-select" data-placeholder="{{ __('All Employees') }}" data-allow-clear="true">
                     <option value="">{{ __('All Employees') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}">{{ $emp->name }}</option>
@@ -57,7 +57,7 @@
             <!-- 3. Government Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Government') }}</label>
-                <select id="filter_government_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Governments') }}" data-allow-clear="true">
+                <select id="filter_government_id" class="select2 form-select" data-placeholder="{{ __('All Governments') }}" data-allow-clear="true">
                     <option value="">{{ __('All Governments') }}</option>
                     @foreach ($governments as $gov)
                         <option value="{{ $gov->id }}">{{ $gov->name }}</option>
@@ -73,7 +73,7 @@
                         <i class="icon-base bx bx-reset me-1"></i>{{ __('Reset') }}
                     </button>
                 </div>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     <option value="active">{{ __('Active') }}</option>
                     <option value="inactive">{{ __('Inactive') }}</option>
@@ -319,10 +319,10 @@
                                                     <input type="hidden" name="work_days[{{ $idx }}][day]" value="{{ $d['day'] }}">
                                                 </td>
                                                 <td class="py-2">
-                                                    <input type="time" name="work_days[{{ $idx }}][from_time]" class="form-control form-control-sm" value="{{ $d['from'] }}">
+                                                    <input type="time" name="work_days[{{ $idx }}][from_time]" class="form-control" value="{{ $d['from'] }}">
                                                 </td>
                                                 <td class="py-2">
-                                                    <input type="time" name="work_days[{{ $idx }}][to_time]" class="form-control form-control-sm" value="{{ $d['to'] }}">
+                                                    <input type="time" name="work_days[{{ $idx }}][to_time]" class="form-control" value="{{ $d['to'] }}">
                                                 </td>
                                                 <td class="text-center align-middle py-2">
                                                     <div class="form-check form-switch d-inline-block m-0">
@@ -703,7 +703,7 @@ window.addEventListener('load', function () {
                 data: 'created_at', 
                 name: 'created_at',
                 className: 'text-center',
-                render: data => `<span class="text-muted font-monospace">${data}</span>`
+                render: data => `<span class="text-muted">${data}</span>`
             },
             { 
                 data: null, 

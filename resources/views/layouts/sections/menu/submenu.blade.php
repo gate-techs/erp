@@ -6,26 +6,44 @@ use Illuminate\Support\Facades\Route;
   @if (isset($menu))
     @foreach ($menu as $submenu)
 
+    @if (isset($submenu->menuHeader))
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">{{ __($submenu->menuHeader) }}</span>
+      </li>
+    @else
     {{-- active menu method --}}
     @php
       $activeClass = null;
       $active = 'active open';
       $currentRouteName = Route::currentRouteName() ?? '';
 
-      if ($currentRouteName === $submenu->slug) {
-          $activeClass = 'active';
-      }
-      elseif (isset($submenu->submenu)) {
-        if (gettype($submenu->slug) === 'array') {
+      if (isset($submenu->submenu)) {
+        if (is_array($submenu->slug)) {
           foreach($submenu->slug as $slug){
-            if (str_contains($currentRouteName,$slug) and strpos($currentRouteName,$slug) === 0) {
+            if (str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0) {
                 $activeClass = $active;
+                break;
             }
           }
-        }
-        else{
-          if (str_contains($currentRouteName,$submenu->slug) and strpos($currentRouteName,$submenu->slug) === 0) {
+        } else {
+          if (str_contains($currentRouteName, $submenu->slug) && strpos($currentRouteName, $submenu->slug) === 0) {
             $activeClass = $active;
+          }
+        }
+      } else {
+        if (isset($submenu->slug)) {
+          if (is_array($submenu->slug)) {
+            foreach($submenu->slug as $slug){
+              if (str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0) {
+                $activeClass = 'active';
+                break;
+              }
+            }
+          } else {
+            $baseSlug = str_replace('.index', '', $submenu->slug);
+            if ($currentRouteName === $submenu->slug || ($baseSlug && (str_contains($currentRouteName, $baseSlug . '.') || $currentRouteName === $baseSlug))) {
+              $activeClass = 'active';
+            }
           }
         }
       }
@@ -47,6 +65,7 @@ use Illuminate\Support\Facades\Route;
           @include('layouts.sections.menu.submenu',['menu' => $submenu->submenu])
         @endif
       </li>
+    @endif
     @endforeach
   @endif
 </ul>

@@ -119,7 +119,7 @@
                                 <td>
                                     <input type="hidden" name="translations[{{ $index }}][key]" value="{{ $item['key'] }}">
                                     <textarea name="translations[{{ $index }}][ar]" 
-                                              class="form-control form-control-sm translation-input translation-textarea" 
+                                              class="form-control translation-input translation-textarea" 
                                               placeholder="{{ __('Arabic Translation...') }}"
                                               rows="1"
                                               dir="rtl"
@@ -127,7 +127,7 @@
                                 </td>
                                 <td>
                                     <textarea name="translations[{{ $index }}][en]" 
-                                              class="form-control form-control-sm translation-input translation-textarea" 
+                                              class="form-control translation-input translation-textarea" 
                                               placeholder="{{ __('English Translation...') }}"
                                               rows="1"
                                               dir="ltr"

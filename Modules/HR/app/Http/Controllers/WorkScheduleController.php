@@ -92,7 +92,7 @@ class WorkScheduleController extends Controller
                 $color = $item->color ?? '#7367f0';
                 return '<div class="d-flex align-items-center gap-2">
                             <span class="rounded-circle shadow-xs" style="display:inline-block; width: 18px; height: 18px; background-color: ' . e($color) . ';"></span>
-                            <small class="text-muted font-monospace">' . e($color) . '</small>
+                            <small class="text-muted">' . e($color) . '</small>
                         </div>';
             })
             ->editColumn('status', function (WorkSchedule $item) {

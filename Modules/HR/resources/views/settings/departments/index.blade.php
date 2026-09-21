@@ -277,7 +277,7 @@ window.addEventListener('load', function () {
                 data: 'code', 
                 name: 'code',
                 render: data => data !== '-'
-                    ? `<span class="badge bg-label-secondary font-monospace">${data}</span>`
+                    ? `<span class="badge bg-label-secondary">${data}</span>`
                     : `<span class="text-muted">-</span>`
             },
             { 

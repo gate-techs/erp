@@ -90,13 +90,13 @@
             <!-- 1. Month Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Payroll Month') }}</label>
-                <input type="month" id="filter_month" class="form-control form-control-sm">
+                <input type="month" id="filter_month" class="form-control">
             </div>
 
             <!-- 2. Branch Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                <select id="filter_branch_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
                     <option value="">{{ __('All Branches') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
@@ -107,7 +107,7 @@
             <!-- 3. Status Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                <select id="filter_status" class="form-select form-select-sm">
+                <select id="filter_status" class="form-select">
                     <option value="">{{ __('All Statuses') }}</option>
                     @foreach ($statuses as $st)
                         <option value="{{ $st->value }}">{{ $st->label() }}</option>

@@ -10,7 +10,7 @@
             <a href="{{ route('hr.payrolls.index') }}" class="btn btn-icon btn-sm btn-outline-secondary rounded-circle me-1" title="{{ __('Back to Payrolls') }}">
                 <i class="icon-base bx bx-arrow-back font-16"></i>
             </a>
-            <h4 class="fw-bold mb-0 text-heading font-monospace">{{ $payroll->payroll_number }}</h4>
+            <h4 class="fw-bold mb-0 text-heading">{{ $payroll->payroll_number }}</h4>
             <span class="badge bg-label-primary ms-1">{{ $payroll->payroll_month }}</span>
             <span class="fw-semibold {{ $payroll->status->textColor() }} d-inline-flex align-items-center gap-1 ms-2">
                 <i class="icon-base bx {{ $payroll->status->icon() }} font-16"></i>
@@ -182,7 +182,7 @@
                         <span class="text-muted small">{{ __('Salary Payslip for the period:') }} <strong id="ps_payroll_month"></strong></span>
                     </div>
                     <div class="text-end">
-                        <span class="badge bg-label-secondary font-monospace" id="ps_payroll_number"></span>
+                        <span class="badge bg-label-secondary" id="ps_payroll_number"></span>
                         <div class="mt-1" id="ps_payment_status"></div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     </div>
                     <div class="col-sm-6">
                         <span class="text-muted small d-block">{{ __('Bank & IBAN') }}:</span>
-                        <span class="text-heading font-monospace small" id="ps_emp_bank"></span>
+                        <span class="text-heading small" id="ps_emp_bank"></span>
                     </div>
                 </div>
 
@@ -350,23 +350,23 @@
 
                             <div class="mb-3">
                                 <label class="form-label required fw-semibold text-heading small">{{ __('Basic Salary') }}</label>
-                                <input type="number" step="0.01" id="edit_basic_salary" name="basic_salary" class="form-control form-control-sm calc-trigger" required>
+                                <input type="number" step="0.01" id="edit_basic_salary" name="basic_salary" class="form-control calc-trigger" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Allowances Amount') }}</label>
-                                <input type="number" step="0.01" id="edit_allowances_amount" name="allowances_amount" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_allowances_amount" name="allowances_amount" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Overtime Amount') }}</label>
-                                <input type="number" step="0.01" id="edit_overtime_amount" name="overtime_amount" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_overtime_amount" name="overtime_amount" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Rewards Amount') }}</label>
-                                <input type="number" step="0.01" id="edit_rewards_amount" name="rewards_amount" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_rewards_amount" name="rewards_amount" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Other Earnings') }}</label>
-                                <input type="number" step="0.01" id="edit_other_earnings" name="other_earnings" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_other_earnings" name="other_earnings" class="form-control calc-trigger">
                             </div>
                         </div>
 
@@ -376,27 +376,27 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Absence Deduction') }}</label>
-                                <input type="number" step="0.01" id="edit_absence_deduction" name="absence_deduction" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_absence_deduction" name="absence_deduction" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Late Deduction') }}</label>
-                                <input type="number" step="0.01" id="edit_late_deduction" name="late_deduction" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_late_deduction" name="late_deduction" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Loans Deduction') }}</label>
-                                <input type="number" step="0.01" id="edit_loans_deduction" name="loans_deduction" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_loans_deduction" name="loans_deduction" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Penalties Deduction') }}</label>
-                                <input type="number" step="0.01" id="edit_penalties_deduction" name="penalties_deduction" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_penalties_deduction" name="penalties_deduction" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Social Insurance (PIFSS)') }}</label>
-                                <input type="number" step="0.01" id="edit_insurance_deduction" name="insurance_deduction" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_insurance_deduction" name="insurance_deduction" class="form-control calc-trigger">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-heading small">{{ __('Other Deductions') }}</label>
-                                <input type="number" step="0.01" id="edit_other_deductions" name="other_deductions" class="form-control form-control-sm calc-trigger">
+                                <input type="number" step="0.01" id="edit_other_deductions" name="other_deductions" class="form-control calc-trigger">
                             </div>
                         </div>
                     </div>

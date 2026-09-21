@@ -94,7 +94,7 @@
             <!-- 1. Employee Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Employee') }}</label>
-                <select id="filter_employee_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('Select Employee...') }}" data-allow-clear="true">
+                <select id="filter_employee_id" class="select2 form-select" data-placeholder="{{ __('Select Employee...') }}" data-allow-clear="true">
                     <option value="">{{ __('Select Employee...') }}</option>
                     @foreach ($employees as $emp)
                         <option value="{{ $emp->id }}">{{ $emp->name }} ({{ $emp->employee_code }})</option>
@@ -105,7 +105,7 @@
             <!-- 2. Penalty Type Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Penalty Type') }}</label>
-                <select id="filter_penalty_type_id" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
+                <select id="filter_penalty_type_id" class="select2 form-select" data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
                     <option value="">{{ __('All Types') }}</option>
                     @foreach ($penaltyTypes as $type)
                         <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -116,7 +116,7 @@
             <!-- 3. Status Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                <select id="filter_status" class="select2 form-select form-select-sm" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
                     <option value="">{{ __('All Statuses') }}</option>
                     @foreach ($statuses as $st)
                         <option value="{{ $st->value }}">{{ $st->label() }}</option>
@@ -127,7 +127,7 @@
             <!-- 4. Deduction Method Filter -->
             <div class="col-12 col-sm-6 col-lg-2">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Deduction Method') }}</label>
-                <select id="filter_deduction_method" class="select2 form-select form-select-sm" data-placeholder="{{ __('All') }}" data-allow-clear="true">
+                <select id="filter_deduction_method" class="select2 form-select" data-placeholder="{{ __('All') }}" data-allow-clear="true">
                     <option value="">{{ __('All') }}</option>
                     @foreach ($deductionMethods as $dm)
                         <option value="{{ $dm->value }}">{{ $dm->label() }}</option>
