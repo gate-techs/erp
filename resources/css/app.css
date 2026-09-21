@@ -1,3 +1,4 @@
+@import 'intl-tel-input/styles';
 /* ==========================================================================
    Global Responsive Layout & Overflow Containment
    ========================================================================== */
@@ -705,4 +706,399 @@ html[dir="rtl"] .menu-vertical .menu-item.open:not(.menu-item-closing)>.menu-lin
 [dir="rtl"] .menu-vertical .menu-item.open:not(.menu-item-closing)>.menu-link.menu-toggle::after {
     border-color: #94a3b8 !important;
     transform: translateY(-50%) rotate(-135deg) !important;
+}
+/* Flatpickr Vuexy Theme Overrides */
+.flatpickr-calendar {
+    font-family: var(--bs-font-sans-serif);
+    border: 0;
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.25);
+    background: var(--bs-body-bg);
+}
+
+[data-bs-theme="dark"] .flatpickr-calendar {
+    background: var(--bs-paper-bg);
+}
+
+.flatpickr-calendar .flatpickr-day,
+.flatpickr-calendar .flatpickr-month,
+.flatpickr-calendar .flatpickr-weekday,
+.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months {
+    color: var(--bs-body-color);
+}
+
+.flatpickr-calendar span.flatpickr-weekday {
+    color: var(--bs-heading-color);
+    font-weight: 500;
+    font-size: 0.8125rem;
+}
+
+.flatpickr-calendar .flatpickr-current-month {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months {
+    font-weight: 500;
+}
+
+.flatpickr-calendar .flatpickr-current-month .numInputWrapper {
+    margin: 0 0.25rem;
+}
+
+/* Arrows */
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month,
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month {
+    color: var(--bs-body-color);
+    fill: var(--bs-body-color);
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
+    fill: var(--bs-primary);
+}
+
+/* Today */
+.flatpickr-calendar .flatpickr-day.today {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+/* Normal Hover */
+.flatpickr-calendar .flatpickr-day:hover,
+.flatpickr-calendar .flatpickr-day:focus,
+.flatpickr-calendar .flatpickr-day.prevMonthDay:hover,
+.flatpickr-calendar .flatpickr-day.nextMonthDay:hover,
+.flatpickr-calendar .flatpickr-day.today:hover,
+.flatpickr-calendar .flatpickr-day.today:focus {
+    background: var(--bs-primary-bg-subtle);
+    border-color: transparent;
+    color: var(--bs-primary);
+}
+
+/* Selected States */
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+.flatpickr-calendar .flatpickr-day.selected.inRange,
+.flatpickr-calendar .flatpickr-day.startRange.inRange,
+.flatpickr-calendar .flatpickr-day.endRange.inRange,
+.flatpickr-calendar .flatpickr-day.selected:focus,
+.flatpickr-calendar .flatpickr-day.startRange:focus,
+.flatpickr-calendar .flatpickr-day.endRange:focus,
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day.startRange:hover,
+.flatpickr-calendar .flatpickr-day.endRange:hover,
+.flatpickr-calendar .flatpickr-day.selected.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.startRange.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.endRange.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.selected.nextMonthDay,
+.flatpickr-calendar .flatpickr-day.startRange.nextMonthDay,
+.flatpickr-calendar .flatpickr-day.endRange.nextMonthDay {
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff !important;
+}
+
+.flatpickr-calendar .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
+.flatpickr-calendar .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
+.flatpickr-calendar .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+    box-shadow: -10px 0 0 var(--bs-primary);
+}
+
+.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months:focus,
+.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months:active {
+    outline: none;
+}
+/* Theme Customizer */
+.theme-customizer {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: var(--bs-paper-bg, #fff);
+    z-index: 1090;
+    box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+html[lang^="ar"] .theme-customizer {
+    right: auto;
+    left: -400px;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+}
+.theme-customizer.open { right: 0; }
+html[lang^="ar"] .theme-customizer.open { left: 0; }
+
+.theme-customizer-toggle {
+    position: absolute;
+    top: 50%;
+    left: -42px;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    background: var(--bs-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    z-index: 1089;
+    box-shadow: -2px 0 8px rgba(var(--bs-primary-rgb, 0,0,0), 0.5);
+}
+html[lang^="ar"] .theme-customizer-toggle {
+    left: auto;
+    right: -42px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 0 8px rgba(var(--bs-primary-rgb, 0,0,0), 0.5);
+}
+.theme-customizer-toggle i { font-size: 1.5rem; }
+
+.theme-customizer-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.theme-customizer-header h5 { margin: 0; font-weight: 600; }
+.theme-customizer-close {
+    background: transparent;
+    border: none;
+    color: var(--bs-heading-color);
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.theme-customizer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.customizer-section { margin-bottom: 2rem; }
+.customizer-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--bs-secondary);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.customizer-option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.customizer-option-label {
+    font-size: 0.875rem;
+    color: var(--bs-heading-color);
+    margin: 0;
+}
+
+.customizer-radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.customizer-radio-item {
+    flex: 1;
+    position: relative;
+}
+.customizer-radio-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+.customizer-radio-item label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0.5rem;
+    border: 2px solid var(--bs-border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--bs-heading-color);
+    font-size: 0.85rem;
+    margin: 0;
+}
+.customizer-radio-item input[type="radio"]:checked + label {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+    background: var(--bs-primary-bg-subtle, rgba(var(--bs-primary-rgb, 0,0,0), 0.1));
+}
+
+.customizer-color-item {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.customizer-color-item input[type="radio"] { position: absolute; opacity: 0; }
+.customizer-color-item label {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    transition: transform 0.1s;
+}
+.customizer-color-item input[type="radio"]:checked + label {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px var(--bs-paper-bg, #fff), 0 0 0 4px var(--bs-primary);
+}
+.customizer-color-item input[type="radio"]:checked + label::after {
+    content: '\eb84';
+    font-family: boxicons !important;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.color-bg-primary label { background: var(--bs-primary); }
+.color-bg-secondary label { background: var(--bs-secondary); }
+.color-bg-success label { background: var(--bs-success); }
+.color-bg-danger label { background: var(--bs-danger); }
+.color-bg-warning label { background: var(--bs-warning); }
+.color-bg-info label { background: var(--bs-info); }
+.color-bg-dark label { background: var(--bs-dark); }
+.color-bg-theme label { background: var(--bs-paper-bg, #fff); border: 1px solid var(--bs-border-color); }
+.color-bg-theme input[type="radio"]:checked + label::after { color: var(--bs-heading-color); }
+
+.theme-customizer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 1088;
+    display: none;
+}
+.theme-customizer-backdrop.show { display: block; }
+.theme-customizer[dir="rtl"] .form-check {
+    padding-right: 2.5em;
+    padding-left: 0;
+}
+.theme-customizer[dir="rtl"] .form-check .form-check-input {
+    float: right;
+    margin-right: -2.5em;
+    margin-left: 0;
+}
+.theme-customizer[dir="ltr"] .form-check {
+    padding-left: 2.5em;
+    padding-right: 0;
+}
+.theme-customizer[dir="ltr"] .form-check .form-check-input {
+    float: left;
+    margin-left: -2.5em;
+    margin-right: 0;
+}
+
+/* --- Phone Input Pilot Overrides --- */
+
+:root {
+    /* Map official iti variables to actual Vuexy variables for Light Mode */
+    --iti-border-color: var(--bs-border-color);
+    --iti-dialcode-color: var(--bs-body-color);
+    --iti-text-color: var(--bs-heading-color);
+    --iti-hover-color: rgba(0, 0, 0, 0.04);
+    --iti-country-selector-bg: var(--bs-paper-bg, #fff);
+    --iti-spacer-horizontal: 14px;
+    --iti-icon-color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] {
+    /* Hardcode the exact Vuexy dark theme hex codes to avoid variable mismatch */
+    --iti-border-color: #363d4f;
+    --iti-dialcode-color: #cbd5e1;
+    --iti-text-color: #cbd5e1;
+    --iti-hover-color: #343c4e;
+    --iti-country-selector-bg: #282e3d;
+    --iti-icon-color: #cbd5e1;
+}
+
+.iti {
+    display: block !important;
+    width: 100%;
+}
+
+/* Ensure the phone number itself is always LTR without forcing the wrapper */
+.js-phone-input {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Base Dropdown matching Vuexy */
+.iti__country-selector {
+    background-color: var(--bs-paper-bg, #fff);
+    border-radius: var(--bs-border-radius, 0.375rem);
+    box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45);
+}
+
+[data-bs-theme="dark"] .iti__country-selector {
+    background-color: #282e3d !important;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Let Vuexy handle search input focus without blue halo double borders */
+.iti__search-input-wrapper {
+    border-bottom: none !important;
+}
+
+.iti__search-input {
+    background-color: transparent !important;
+    color: var(--iti-text-color) !important;
+    border: 1px solid var(--iti-border-color) !important;
+    border-radius: var(--bs-border-radius, 0.375rem) !important;
+    padding-top: 0.4375rem !important;
+    padding-bottom: 0.4375rem !important;
+    margin: 8px !important;
+    width: calc(100% - 16px) !important;
+    font-family: inherit !important;
+    outline: none !important;
+}
+
+/* Fix RTL Search Input Padding so placeholder doesn't hit icon */
+html[dir="rtl"] .iti__search-input {
+    padding-right: 36px !important;
+    padding-left: 36px !important;
+}
+
+.iti__search-input:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+}
+
+/* Dropdown Overlay Z-Index and Geometry (above modals) */
+.iti--inline-country-selector:not(.iti--detached-country-selector) .iti__country-selector {
+    z-index: 1095 !important;
+}
+
+/* RTL Row Alignment */
+html[dir="rtl"] .iti__country-name {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.iti__country-name {
+    margin-right: 8px;
+}
+
+/* Remove classNames form-control since we just styled it cleanly */
+
+/* Support intl-tel-input inside Bootstrap input-groups */
+.input-group .iti {
+    flex: 1 1 auto;
+    width: 1%;
 }

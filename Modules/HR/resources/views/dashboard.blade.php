@@ -450,7 +450,7 @@
                                         <span class="font-12">{{ $log->check_in ?? '-' }}</span>
                                     </td>
                                     <td>
-                                        <span class="badge {{ $log->status?->badgeColor() ?? 'bg-label-primary' }} font-10">
+                                        <span class="badge {{ $log->status?->badgeClass() ?? 'bg-label-primary' }} font-10">
                                             {{ $log->status?->label() ?? 'Recorded' }}
                                         </span>
                                     </td>

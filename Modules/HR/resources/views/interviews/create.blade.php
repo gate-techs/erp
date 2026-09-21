@@ -109,7 +109,7 @@
                     <div class="row g-3 mb-4">
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold text-heading small required">{{ __('Date & Start Time') }}</label>
-                            <input type="datetime-local" name="scheduled_at" class="form-control" value="{{ old('scheduled_at', now()->addDay()->setTime(10, 0)->format('Y-m-d\TH:i')) }}" required>
+                            <input type="datetime-local" name="scheduled_at" class="form-control js-flatpickr-datetime" value="{{ old('scheduled_at', now()->addDay()->setTime(10, 0)->format('Y-m-d\TH:i')) }}" required>
                         </div>
 
                         <div class="col-12 col-md-6" id="field_meeting_link">

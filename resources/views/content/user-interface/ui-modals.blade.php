@@ -44,7 +44,7 @@
                                                 </div>
                                                 <div class="col mb-0">
                                                     <label for="dobBasic" class="form-label">DOB</label>
-                                                    <input type="date" id="dobBasic" class="form-control" />
+                                                    <input type="date" id="dobBasic" class="form-control js-flatpickr-date" />
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +87,7 @@
                                                 </div>
                                                 <div class="col mb-0">
                                                     <label for="dobWithTitle" class="form-label">DOB</label>
-                                                    <input type="date" id="dobWithTitle" class="form-control" />
+                                                    <input type="date" id="dobWithTitle" class="form-control js-flatpickr-date" />
                                                 </div>
                                             </div>
                                         </div>
@@ -130,7 +130,7 @@
                                                 </div>
                                                 <div class="col mb-0">
                                                     <label for="dobSlideTop" class="form-label">DOB</label>
-                                                    <input type="date" id="dobSlideTop" class="form-control" />
+                                                    <input type="date" id="dobSlideTop" class="form-control js-flatpickr-date" />
                                                 </div>
                                             </div>
                                         </div>
@@ -277,7 +277,7 @@
                                             </div>
                                             <div class="col mb-0">
                                                 <label for="dobSmall" class="form-label">DOB</label>
-                                                <input id="dobSmall" type="date" class="form-control" />
+                                                <input id="dobSmall" type="date" class="form-control js-flatpickr-date" />
                                             </div>
                                         </div>
                                     </div>
@@ -310,7 +310,7 @@
                                             </div>
                                             <div class="col mb-0">
                                                 <label for="dobLarge" class="form-label">DOB</label>
-                                                <input type="date" id="dobLarge" class="form-control" />
+                                                <input type="date" id="dobLarge" class="form-control js-flatpickr-date" />
                                             </div>
                                         </div>
                                     </div>
@@ -343,7 +343,7 @@
                                             </div>
                                             <div class="col mb-0">
                                                 <label for="dobExLarge" class="form-label">DOB</label>
-                                                <input type="date" id="dobExLarge" class="form-control" />
+                                                <input type="date" id="dobExLarge" class="form-control js-flatpickr-date" />
                                             </div>
                                         </div>
                                     </div>
@@ -474,7 +474,7 @@
                                                 </div>
                                                 <div class="col mb-0">
                                                     <label for="dobBackdrop" class="form-label">DOB</label>
-                                                    <input type="date" id="dobBackdrop" class="form-control" />
+                                                    <input type="date" id="dobBackdrop" class="form-control js-flatpickr-date" />
                                                 </div>
                                             </div>
                                         </div>

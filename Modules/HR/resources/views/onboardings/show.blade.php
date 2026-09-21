@@ -333,7 +333,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold" for="conv_hire_date">{{ __('Official Hire Date') }} <span class="text-danger">*</span></label>
-                            <input type="date" name="hire_date" id="conv_hire_date" class="form-control" value="{{ $onboarding->start_date->format('Y-m-d') }}" required>
+                            <input type="date" name="hire_date" id="conv_hire_date" class="form-control js-flatpickr-date" value="{{ $onboarding->start_date->format('Y-m-d') }}" required>
                         </div>
 
                         <div class="col-12 col-md-6">

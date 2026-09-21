@@ -315,14 +315,14 @@
                 <!-- Publish Date -->
                 <div class="col-12 col-md-4">
                     <label class="form-label fw-semibold text-heading small">{{ __('Publish Date') }}</label>
-                    <input type="date" name="publish_date" id="publish_date" class="form-control @error('publish_date') is-invalid @enderror" value="{{ old('publish_date', $opening->publish_date?->format('Y-m-d')) }}">
+                    <input type="date" name="publish_date" id="publish_date" class="form-control js-flatpickr-date @error('publish_date') is-invalid @enderror" value="{{ old('publish_date', $opening->publish_date?->format('Y-m-d')) }}">
                     @error('publish_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 
                 <!-- Closing Date -->
                 <div class="col-12 col-md-4">
                     <label class="form-label fw-semibold text-heading small">{{ __('Application Deadline (Optional)') }}</label>
-                    <input type="date" name="closing_date" id="closing_date" class="form-control @error('closing_date') is-invalid @enderror" value="{{ old('closing_date', $opening->closing_date?->format('Y-m-d')) }}">
+                    <input type="date" name="closing_date" id="closing_date" class="form-control js-flatpickr-date @error('closing_date') is-invalid @enderror" value="{{ old('closing_date', $opening->closing_date?->format('Y-m-d')) }}">
                     <div class="form-text text-muted small">{{ __('Leave blank for open-ended posting.') }}</div>
                     @error('closing_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>

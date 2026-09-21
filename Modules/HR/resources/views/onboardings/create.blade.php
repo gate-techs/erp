@@ -102,7 +102,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold" for="start_date">{{ __('First Day of Work (Start Date)') }} <span class="text-danger">*</span></label>
-                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('start_date', now()->addDays(7)->toDateString()) }}" required>
+                            <input type="date" name="start_date" id="start_date" class="form-control js-flatpickr-date" value="{{ old('start_date', now()->addDays(7)->toDateString()) }}" required>
                         </div>
 
                         <div class="col-12">

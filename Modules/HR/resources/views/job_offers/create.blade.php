@@ -209,18 +209,18 @@
                 <div class="card-body p-4">
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="offer_date">{{ __('Offer Issue Date') }} <span class="text-danger">*</span></label>
-                        <input type="date" name="offer_date" id="offer_date" class="form-control" value="{{ old('offer_date', now()->toDateString()) }}" required>
+                        <input type="date" name="offer_date" id="offer_date" class="form-control js-flatpickr-date" value="{{ old('offer_date', now()->toDateString()) }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="expiry_date">{{ __('Offer Expiry Date') }}</label>
-                        <input type="date" name="expiry_date" id="expiry_date" class="form-control" value="{{ old('expiry_date', now()->addDays(7)->toDateString()) }}">
+                        <input type="date" name="expiry_date" id="expiry_date" class="form-control js-flatpickr-date" value="{{ old('expiry_date', now()->addDays(7)->toDateString()) }}">
                         <small class="text-muted">{{ __('Candidate must respond before this deadline.') }}</small>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="joining_date">{{ __('Expected Joining Date') }}</label>
-                        <input type="date" name="joining_date" id="joining_date" class="form-control" value="{{ old('joining_date', now()->addDays(14)->toDateString()) }}">
+                        <input type="date" name="joining_date" id="joining_date" class="form-control js-flatpickr-date" value="{{ old('joining_date', now()->addDays(14)->toDateString()) }}">
                     </div>
 
                     <div class="mb-3">

@@ -4,7 +4,23 @@
 <head>
     <script>
         (function() {
-            const theme = localStorage.getItem('astro_theme') || 'light';
+            let theme = localStorage.getItem('astro_theme') || 'light';
+            try {
+                const saved = localStorage.getItem('vuexy_customizer_state');
+                if (saved) {
+                    const state = JSON.parse(saved);
+                    if (state.skin === 'light' || state.skin === 'dark') theme = state.skin;
+                    const locale = (document.documentElement.lang || 'en').split('-')[0].toLowerCase();
+                    if (state.directionByLocale && state.directionByLocale[locale]) {
+                        const dir = state.directionByLocale[locale];
+                        if (dir === 'rtl' || dir === 'ltr') document.documentElement.setAttribute('dir', dir);
+                    }
+                    if (state.navbarType === 'sticky') document.documentElement.classList.add('layout-navbar-fixed');
+                    else if (state.navbarType === 'static' || state.navbarType === 'hidden') document.documentElement.classList.remove('layout-navbar-fixed');
+                    if (state.footerType === 'sticky') document.documentElement.classList.add('layout-footer-fixed');
+                    else if (state.footerType === 'static' || state.footerType === 'hidden') document.documentElement.classList.remove('layout-footer-fixed');
+                }
+            } catch (e) {}
             document.documentElement.setAttribute('data-bs-theme', theme);
         })();
     </script>
@@ -132,6 +148,9 @@
 
     <!-- Global Notification Toasts -->
     @include('layouts/sections/notifications')
+
+    <!-- Theme Customizer -->
+    @include('layouts/sections/customizer')
 
     <!-- Include Scripts -->
     @include('layouts/sections/scripts')

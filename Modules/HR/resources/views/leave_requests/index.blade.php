@@ -145,13 +145,13 @@
             <!-- 6. Date From Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Start Date From') }}</label>
-                <input type="date" id="filter_date_from" class="form-control">
+                <input type="date" id="filter_date_from" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 7. Date To Filter -->
             <div class="col-12 col-sm-6 col-lg-3">
                 <label class="form-label fw-semibold text-heading small mb-1">{{ __('Start Date To') }}</label>
-                <input type="date" id="filter_date_to" class="form-control">
+                <input type="date" id="filter_date_to" class="form-control js-flatpickr-date">
             </div>
 
             <!-- 8. Reset Filters Action Button -->
@@ -269,11 +269,11 @@
             <div class="row g-3 mb-3">
                 <div class="col-6">
                     <label class="form-label required fw-semibold text-heading">{{ __('Start Date') }} <span class="text-danger">*</span></label>
-                    <input type="date" id="modal_start_date" name="start_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                    <input type="date" id="modal_start_date" name="start_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                 </div>
                 <div class="col-6">
                     <label class="form-label required fw-semibold text-heading">{{ __('End Date') }} <span class="text-danger">*</span></label>
-                    <input type="date" id="modal_end_date" name="end_date" class="form-control" value="{{ date('Y-m-d') }}" required>
+                    <input type="date" id="modal_end_date" name="end_date" class="form-control js-flatpickr-date" value="{{ date('Y-m-d') }}" required>
                 </div>
             </div>
 
@@ -306,7 +306,7 @@
             <!-- Emergency Contact Phone -->
             <div class="mb-3">
                 <label class="form-label fw-semibold text-heading">{{ __('Emergency Contact Phone') }}</label>
-                <input type="text" id="modal_emergency_contact_phone" name="emergency_contact_phone" class="form-control" placeholder="+965 ...">
+                <input type="text" id="modal_emergency_contact_phone" name="emergency_contact_phone" class="form-control js-phone-input" placeholder="+965 ..." dir="ltr">
             </div>
 
             <!-- Attachment Upload -->
