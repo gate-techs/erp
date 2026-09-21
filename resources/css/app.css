@@ -1,3 +1,4 @@
+@import 'intl-tel-input/styles';
 /* ==========================================================================
    Global Responsive Layout & Overflow Containment
    ========================================================================== */
@@ -1004,3 +1005,94 @@ html[lang^="ar"] .theme-customizer-toggle {
     margin-left: -2.5em;
     margin-right: 0;
 }
+
+/* --- Phone Input Pilot Overrides --- */
+
+:root {
+    /* Map official iti variables to actual Vuexy variables for Light Mode */
+    --iti-border-color: var(--bs-border-color);
+    --iti-dialcode-color: var(--bs-body-color);
+    --iti-text-color: var(--bs-heading-color);
+    --iti-hover-color: rgba(0, 0, 0, 0.04);
+    --iti-country-selector-bg: var(--bs-paper-bg, #fff);
+    --iti-spacer-horizontal: 14px;
+    --iti-icon-color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] {
+    /* Hardcode the exact Vuexy dark theme hex codes to avoid variable mismatch */
+    --iti-border-color: #363d4f;
+    --iti-dialcode-color: #cbd5e1;
+    --iti-text-color: #cbd5e1;
+    --iti-hover-color: #343c4e;
+    --iti-country-selector-bg: #282e3d;
+    --iti-icon-color: #cbd5e1;
+}
+
+.iti {
+    display: block !important;
+    width: 100%;
+}
+
+/* Ensure the phone number itself is always LTR without forcing the wrapper */
+.js-phone-input-pilot {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Base Dropdown matching Vuexy */
+.iti__country-selector {
+    background-color: var(--bs-paper-bg, #fff);
+    border-radius: var(--bs-border-radius, 0.375rem);
+    box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45);
+}
+
+[data-bs-theme="dark"] .iti__country-selector {
+    background-color: #282e3d !important;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Let Vuexy handle search input focus without blue halo double borders */
+.iti__search-input-wrapper {
+    border-bottom: none !important;
+}
+
+.iti__search-input {
+    background-color: transparent !important;
+    color: var(--iti-text-color) !important;
+    border: 1px solid var(--iti-border-color) !important;
+    border-radius: var(--bs-border-radius, 0.375rem) !important;
+    padding-top: 0.4375rem !important;
+    padding-bottom: 0.4375rem !important;
+    margin: 8px !important;
+    width: calc(100% - 16px) !important;
+    font-family: inherit !important;
+    outline: none !important;
+}
+
+/* Fix RTL Search Input Padding so placeholder doesn't hit icon */
+html[dir="rtl"] .iti__search-input {
+    padding-right: 36px !important;
+    padding-left: 36px !important;
+}
+
+.iti__search-input:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+}
+
+/* Dropdown Overlay Z-Index and Geometry */
+.iti--inline-country-selector:not(.iti--detached-country-selector) .iti__country-selector {
+    z-index: 1050 !important;
+}
+
+/* RTL Row Alignment */
+html[dir="rtl"] .iti__country-name {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.iti__country-name {
+    margin-right: 8px;
+}
+
+/* Remove classNames form-control since we just styled it cleanly */

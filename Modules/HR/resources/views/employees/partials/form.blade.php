@@ -510,18 +510,15 @@
             <div class="card-body p-4">
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
-                        <label class="form-label small fw-semibold mb-1">{{ __('Phone Number') }} <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="bx bx-phone"></i></span>
-                            <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror" 
-                                   value="{{ old('phone', $isEdit ? $employee->phone : '') }}" placeholder="01012345678" required dir="ltr">
-                        </div>
-                        @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                          <label class="form-label small fw-semibold mb-1">{{ __('Phone Number') }} <span class="text-danger">*</span></label>
+                          <input type="text" name="phone" class="form-control js-phone-input-pilot @error('phone') is-invalid @enderror"
+                                 value="{{ old('phone', $isEdit ? $employee->phone : '') }}" placeholder="01012345678" required dir="ltr">
+                          @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Alternate Phone') }}</label>
-                        <input type="text" name="alternate_phone" class="form-control" 
+                        <input type="text" name="alternate_phone" class="form-control"
                                value="{{ old('alternate_phone', $isEdit ? $employee->alternate_phone : '') }}" placeholder="011..." dir="ltr">
                     </div>
 
@@ -529,7 +526,7 @@
                         <label class="form-label small mb-1">{{ __('Email') }}</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-envelope"></i></span>
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
                         </div>
                         @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror

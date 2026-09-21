@@ -420,3 +420,82 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+// --- Phone Input Pilot (intl-tel-input) v29.5.1 ---
+import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
+import { ar } from 'intl-tel-input/locale';
+
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.querySelector('.js-phone-input-pilot');
+    if (phoneInput) {
+        const originalValue = phoneInput.value;
+        let isDirty = false;
+
+        phoneInput.addEventListener('input', function() { isDirty = true; });
+        phoneInput.addEventListener('countrychange', function() { isDirty = true; });
+
+        if (phoneInput.form) {
+            phoneInput.form.addEventListener('submit', function() {
+                if (!isDirty) {
+                    phoneInput.value = originalValue;
+                }
+            });
+        }
+
+        const hadServerError = phoneInput.classList.contains('is-invalid');
+        const val = phoneInput.value.trim();
+        let initialCountry = ""; // Blank globe by default
+
+        // Let the package auto-detect + numbers naturally.
+        // We only hint "eg" for legacy numbers starting with 01X, so they validate
+        // without mutating the input's actual DOM value.
+        if (!val.startsWith('+') && (val.startsWith('010') || val.startsWith('011') || val.startsWith('012') || val.startsWith('015'))) {
+            initialCountry = "eg";
+        }
+
+        // Determine language family
+        const lang = document.documentElement.lang || 'en';
+        const isArabic = lang.toLowerCase().startsWith('ar');
+
+        const iti = intlTelInput(phoneInput, {
+            initialCountry: initialCountry,
+            countrySearch: true,
+            countrySelectorMode: "DROPDOWN",
+            separateDialCode: false,
+            ...(isArabic ? {
+                uiTranslations: ar,
+                countryNameLocale: "ar"
+            } : {})
+        });
+
+        phoneInput.addEventListener('blur', function() {
+            const wrapper = phoneInput.closest('.iti');
+
+            // Clear only client-side errors
+            let clientFeedback = wrapper.parentElement.querySelector('.invalid-feedback.iti-error');
+            if (clientFeedback) clientFeedback.remove();
+
+            // Never remove a Laravel server error
+            if (!hadServerError) {
+                phoneInput.classList.remove('is-invalid');
+            }
+
+            if (phoneInput.value.trim() && !iti.isValidNumber()) {
+                phoneInput.classList.add('is-invalid');
+
+                // Only inject client error if server didn't already complain
+                if (!hadServerError) {
+                    clientFeedback = document.createElement('div');
+                    clientFeedback.className = 'invalid-feedback d-block iti-error';
+
+                    const errorCode = iti.getValidationError();
+                    const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
+                    clientFeedback.textContent = errorMap[errorCode] || "Invalid phone number";
+
+                    // Insert BELOW the entire .iti wrapper so it doesn't break input styling
+                    wrapper.insertAdjacentElement('afterend', clientFeedback);
+                }
+            }
+        });
+    }
+});
