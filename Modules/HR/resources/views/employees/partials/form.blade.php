@@ -6,67 +6,71 @@
     $currentAdminId = $currentDept ? $currentDept->parent_id : null;
 @endphp
 
-<div class="row g-4">
-    <!-- Left Column: Avatar & Quick Info -->
-    <div class="col-12 col-lg-4 col-xl-3">
-        <!-- Avatar & Quick Overview Card -->
-        <div class="card shadow-sm border-0 mb-4 text-center">
-            <div class="card-body p-4">
-                @php
-                    $rawGender = $isEdit ? ($employee->gender instanceof \BackedEnum ? $employee->gender->value : ($employee->gender ?? 'female')) : 'female';
-                    $genderVal = strtolower((string)$rawGender);
-                    $defaultAvatar = ($genderVal === 'male' || $genderVal === 'ذكر') 
-                        ? asset('assets/img/avatars/male-avatar.png') 
-                        : asset('assets/img/avatars/female-avatar.png');
-                    $hasCustomAvatar = ($isEdit && $employee->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($employee->avatar)) ? '1' : '0';
-                    $currentAvatarSrc = $hasCustomAvatar === '1' ? $employee->avatar_url : $defaultAvatar;
+<!-- Top Overview & Account Setup Card (Single Column Header) -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+        <div class="row g-4 align-items-stretch">
+            <!-- Avatar & Profile Widget -->
+            <div class="col-12 col-lg-3">
+                <div class="h-100 p-3 p-xl-4 bg-light rounded-3 d-flex flex-column align-items-center justify-content-center text-center">
+                    @php
+                        $rawGender = $isEdit ? ($employee->gender instanceof \BackedEnum ? $employee->gender->value : ($employee->gender ?? 'female')) : 'female';
+                        $genderVal = strtolower((string)$rawGender);
+                        $defaultAvatar = ($genderVal === 'male' || $genderVal === 'ذكر') 
+                            ? asset('assets/img/avatars/male-avatar.png') 
+                            : asset('assets/img/avatars/female-avatar.png');
+                        $hasCustomAvatar = ($isEdit && $employee->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($employee->avatar)) ? '1' : '0';
+                        $currentAvatarSrc = $hasCustomAvatar === '1' ? $employee->avatar_url : $defaultAvatar;
 
-                    $completion = $isEdit ? $employee->profile_completion : [
-                        'percentage' => 20,
-                        'color' => '#ff3e1d',
-                        'class' => 'bg-danger',
-                        'label' => __('Incomplete')
-                    ];
-                    $formCircumference = 389.56;
-                    $formDashOffset = round($formCircumference - ($formCircumference * ($completion['percentage'] / 100)), 2);
-                @endphp
-                <div class="position-relative d-inline-flex align-items-center justify-content-center mb-4" style="width: 140px; height: 140px;" data-bs-toggle="tooltip" title="{{ __('Profile Completion') }}: {{ $completion['percentage'] }}% ({{ $completion['label'] }})">
-                    <!-- SVG Circular Progress Ring -->
-                    <svg class="position-absolute top-0 start-0" width="140" height="140" viewBox="0 0 140 140" style="transform: rotate(-90deg);">
-                        <circle cx="70" cy="70" r="62" stroke="#eceef1" stroke-width="5" fill="none" />
-                        <circle id="profileCompletionCircle" cx="70" cy="70" r="62" stroke="{{ $completion['color'] }}" stroke-width="5" 
-                                stroke-dasharray="{{ $formCircumference }}" stroke-dashoffset="{{ $formDashOffset }}" 
-                                stroke-linecap="round" fill="none" style="transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;" />
-                    </svg>
-                    
-                    <img id="avatarPreview" 
-                         src="{{ $currentAvatarSrc }}" 
-                         alt="Avatar" 
-                         data-female-avatar="{{ asset('assets/img/avatars/female-avatar.png') }}"
-                         data-male-avatar="{{ asset('assets/img/avatars/male-avatar.png') }}"
-                         data-has-custom="{{ $hasCustomAvatar }}"
-                         class="rounded-circle shadow-xs" 
-                         style="width: 112px; height: 112px; object-fit: cover; z-index: 1;">
-                         
-                    <label for="avatarInput" class="btn btn-icon btn-sm btn-primary rounded-circle position-absolute shadow-sm" title="{{ __('Upload Avatar') }}" style="bottom: 8px; right: 6px; z-index: 4; cursor: pointer;">
-                        <i class="icon-base bx bx-camera font-16"></i>
-                    </label>
-                    <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/png, image/jpeg, image/jpg, image/webp">
-                    
-                    <span id="profileCompletionBadge" class="position-absolute badge {{ $completion['class'] }} rounded-pill text-white fw-bold shadow-sm" style="bottom: -8px; font-size: 11px; padding: 2px 8px; z-index: 3;">
-                        {{ $completion['percentage'] }}%
-                    </span>
+                        $completion = $isEdit ? $employee->profile_completion : [
+                            'percentage' => 20,
+                            'color' => '#ff3e1d',
+                            'class' => 'bg-danger',
+                            'label' => __('Incomplete')
+                        ];
+                        $formCircumference = 389.56;
+                        $formDashOffset = round($formCircumference - ($formCircumference * ($completion['percentage'] / 100)), 2);
+                    @endphp
+                    <div class="position-relative d-inline-flex align-items-center justify-content-center mb-3" style="width: 130px; height: 130px;" data-bs-toggle="tooltip" title="{{ __('Profile Completion') }}: {{ $completion['percentage'] }}% ({{ $completion['label'] }})">
+                        <!-- SVG Circular Progress Ring -->
+                        <svg class="position-absolute top-0 start-0" width="130" height="130" viewBox="0 0 140 140" style="transform: rotate(-90deg);">
+                            <circle cx="70" cy="70" r="62" stroke="#eceef1" stroke-width="5" fill="none" />
+                            <circle id="profileCompletionCircle" cx="70" cy="70" r="62" stroke="{{ $completion['color'] }}" stroke-width="5" 
+                                    stroke-dasharray="{{ $formCircumference }}" stroke-dashoffset="{{ $formDashOffset }}" 
+                                    stroke-linecap="round" fill="none" style="transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;" />
+                        </svg>
+                        
+                        <img id="avatarPreview" 
+                             src="{{ $currentAvatarSrc }}" 
+                             alt="Avatar" 
+                             data-female-avatar="{{ asset('assets/img/avatars/female-avatar.png') }}"
+                             data-male-avatar="{{ asset('assets/img/avatars/male-avatar.png') }}"
+                             data-has-custom="{{ $hasCustomAvatar }}"
+                             class="rounded-circle shadow-xs" 
+                             style="width: 104px; height: 104px; object-fit: cover; z-index: 1;">
+                             
+                        <label for="avatarInput" class="btn btn-icon btn-sm btn-primary rounded-circle position-absolute shadow-sm" title="{{ __('Upload Avatar') }}" style="bottom: 4px; right: 4px; z-index: 4; cursor: pointer;">
+                            <i class="icon-base bx bx-camera font-16"></i>
+                        </label>
+                        <input type="file" id="avatarInput" name="avatar" class="d-none" accept="image/png, image/jpeg, image/jpg, image/webp">
+                        
+                        <span id="profileCompletionBadge" class="position-absolute badge {{ $completion['class'] }} rounded-pill text-white fw-bold shadow-sm" style="bottom: -8px; font-size: 11px; padding: 2px 8px; z-index: 3;">
+                            {{ $completion['percentage'] }}%
+                        </span>
+                    </div>
+                    <h6 class="fw-bold mb-1 text-heading text-truncate w-100" id="cardEmployeeName">
+                        {{ $isEdit ? ($employee->translate('ar')?->name ?? $employee->translate('en')?->name) : __('New Employee') }}
+                    </h6>
+                    <p class="text-muted small mb-0 text-truncate w-100">
+                        {{ $isEdit && $employee->jobTitle ? ($employee->jobTitle->translate('ar')?->name ?? $employee->jobTitle->name) : __('Workforce Profile') }}
+                    </p>
                 </div>
-                <h6 class="fw-bold mb-1 text-heading" id="cardEmployeeName">
-                    {{ $isEdit ? ($employee->translate('ar')?->name ?? $employee->translate('en')?->name) : __('New Employee') }}
-                </h6>
-                <p class="text-muted small mb-3">
-                    {{ $isEdit && $employee->jobTitle ? ($employee->jobTitle->translate('ar')?->name ?? $employee->jobTitle->name) : __('Workforce Profile') }}
-                </p>
+            </div>
 
-                <!-- Code & Status -->
-                <div class="text-start border-top pt-3">
-                    <div class="mb-3">
+            <!-- Core Setup & System Account -->
+            <div class="col-12 col-lg-9 d-flex flex-column justify-content-between">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employee Code') }}</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bx bx-barcode"></i></span>
@@ -76,7 +80,7 @@
                         @error('employee_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="mb-3">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Status') }} <span class="text-danger">*</span></label>
                         <select name="status" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Status...') }}" required>
                             <option value=""></option>
@@ -89,7 +93,7 @@
                         @error('status') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="mb-3">
+                    <div class="col-12 col-sm-6 col-lg-4">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employment Type') }} <span class="text-danger">*</span></label>
                         <select name="employment_type" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Employment Type...') }}" required>
                             <option value=""></option>
@@ -102,49 +106,49 @@
                         @error('employment_type') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- System User Account Box (Simple & Optional) -->
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="icon-base bx bx-user-circle text-primary font-20"></i>
-                        <span class="fw-semibold text-heading small">{{ __('System User Account') }}</span>
-                    </div>
-                    <div class="form-check form-switch m-0">
-                        <input class="form-check-input" type="checkbox" id="createUserAccountSwitch" name="create_user_account" value="1"
-                               {{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? 'checked' : '' }}>
-                    </div>
-                </div>
-                <p class="text-muted x-small mb-2 lh-sm">
-                    {{ __('Allow this employee to log into the ERP system with their email.') }}
-                </p>
-
-                <div id="userAccountFields" class="{{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? '' : 'd-none' }} pt-2 border-top">
-                    @if ($isEdit && $employee->user)
-                        <div class="alert alert-light-primary py-2 px-3 small mb-2 d-flex align-items-center gap-2 rounded-2">
-                            <i class="bx bx-check-shield text-success font-18"></i>
-                            <span class="text-truncate">{{ __('Linked User:') }} <strong>{{ $employee->user->email }}</strong></span>
+                <!-- System User Account Box (Inline) -->
+                <div class="p-3 bg-light rounded-3 border">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="icon-base bx bx-user-circle text-primary font-22"></i>
+                            <div>
+                                <span class="fw-semibold text-heading small">{{ __('System User Account') }}</span>
+                                <span class="text-muted x-small d-block">{{ __('Allow this employee to log into the ERP system with their email.') }}</span>
+                            </div>
                         </div>
-                    @endif
-                    <div>
-                        <label class="form-label text-muted small mb-1">
-                            {{ $isEdit && $employee->user_id ? __('Change Password') : __('Password') }}
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="bx bx-lock-alt"></i></span>
-                            <input type="password" name="user_password" class="form-control" placeholder="{{ $isEdit ? __('Leave blank to keep current') : '••••••••' }}">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" id="createUserAccountSwitch" name="create_user_account" value="1"
+                                   {{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? 'checked' : '' }}>
+                        </div>
+                    </div>
+
+                    <div id="userAccountFields" class="{{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? '' : 'd-none' }} pt-3 mt-2 border-top">
+                        <div class="row align-items-center g-3">
+                            @if ($isEdit && $employee->user)
+                                <div class="col-12 col-md-6">
+                                    <div class="alert alert-light-primary py-2 px-3 small mb-0 d-flex align-items-center gap-2 rounded-2">
+                                        <i class="bx bx-check-shield text-success font-18"></i>
+                                        <span class="text-truncate">{{ __('Linked User:') }} <strong>{{ $employee->user->email }}</strong></span>
+                                    </div>
+                                </div>
+                            @endif
+                            <div class="col-12 {{ $isEdit && $employee->user ? 'col-md-6' : 'col-md-6' }}">
+                                <label class="form-label text-muted small mb-1">
+                                    {{ $isEdit && $employee->user_id ? __('Change Password') : __('Password') }}
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bx bx-lock-alt"></i></span>
+                                    <input type="password" name="user_password" class="form-control bg-white" placeholder="{{ $isEdit ? __('Leave blank to keep current') : '••••••••' }}">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Right Column: Structured Information Cards -->
-    <div class="col-12 col-lg-8 col-xl-9">
+</div>
         <!-- 1. Personal & Civil Information -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-transparent border-bottom py-3">
@@ -932,8 +936,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 <!-- Allowance Row Template for Dynamic JS Addition -->
 <template id="allowanceRowTemplate">

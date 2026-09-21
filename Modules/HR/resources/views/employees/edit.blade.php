@@ -53,22 +53,7 @@
             </div>
         </div>
 
-        @if (isset($errors) && $errors->any())
-            <div class="alert alert-danger alert-dismissible fade show mb-4 shadow-xs" role="alert">
-                <div class="d-flex align-items-start gap-2">
-                    <i class="icon-base bx bx-error-circle font-22 flex-shrink-0 mt-1"></i>
-                    <div class="flex-grow-1">
-                        <strong class="d-block mb-1">{{ __('Please correct the following errors:') }}</strong>
-                        <ul class="mb-0 ps-3 small">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
+     
 
         <!-- Form Body -->
         <form action="{{ route('hr.employees.update', $employee->id) }}" method="POST" enctype="multipart/form-data"
