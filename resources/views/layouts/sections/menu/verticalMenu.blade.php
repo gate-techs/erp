@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
     <ul class="menu-inner py-1">
         @foreach ($menuData[0]->menu as $menu)
+        @if (\App\Helpers\MenuHelper::isItemVisible($menu))
 
         {{-- adding active and open class if child is active --}}
 
@@ -73,6 +74,7 @@ use Illuminate\Support\Facades\Route;
             @include('layouts.sections.menu.submenu',['menu' => $menu->submenu])
             @endisset
         </li>
+        @endif
         @endif
         @endforeach
     </ul>

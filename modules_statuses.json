@@ -1,5 +1,6 @@
 {
     "HR": true,
     "Settings": true,
-    "Nursery": true
+    "Nursery": true,
+    "AccessControl": true
 }

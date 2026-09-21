@@ -15,13 +15,15 @@
           "name": "Nurseries List",
           "icon": "menu-icon icon-base bx bx-list-ul",
           "slug": "nursery.index",
-          "url": "/nurseries"
+          "url": "/nurseries",
+          "permission": "nursery.view"
         },
         {
           "name": "Nursery Branches",
           "icon": "menu-icon icon-base bx bx-git-branch",
           "slug": "nursery.branches.index",
-          "url": "/nursery-branches"
+          "url": "/nursery-branches",
+          "permission": "nursery.branches.view"
         }
       ]
     },
@@ -34,13 +36,15 @@
           "name": "Dashboard",
           "icon": "menu-icon icon-base bx bx-home-circle",
           "slug": "hr.dashboard",
-          "url": "/hr"
+          "url": "/hr",
+          "permission": "hr.dashboard.view"
         },
         {
           "name": "Employees",
           "icon": "menu-icon icon-base bx bx-id-card",
           "slug": "hr.employees.index",
-          "url": "/hr/employees"
+          "url": "/hr/employees",
+          "permission": "hr.employees.view"
         },
         {
           "name": "Time & Attendance",
@@ -54,17 +58,20 @@
             {
               "name": "Attendance & Absence",
               "slug": "hr.attendances.index",
-              "url": "/hr/attendances"
+              "url": "/hr/attendances",
+              "permission": "hr.attendances.view"
             },
             {
               "name": "Leave Requests",
               "slug": "hr.leaves.index",
-              "url": "/hr/leaves"
+              "url": "/hr/leaves",
+              "permission": "hr.leaves.view"
             },
             {
               "name": "Permissions & Short Leaves",
               "slug": "hr.permissions.index",
-              "url": "/hr/permissions"
+              "url": "/hr/permissions",
+              "permission": "hr.permissions.view"
             }
           ]
         },
@@ -80,27 +87,27 @@
           "submenu": [
             {
               "name": "Payroll & Wages",
-
               "slug": "hr.payrolls.index",
-              "url": "/hr/payrolls"
+              "url": "/hr/payrolls",
+              "permission": "hr.payrolls.view"
             },
             {
               "name": "Loans & Advances",
-
               "slug": "hr.loans.index",
-              "url": "/hr/loans"
+              "url": "/hr/loans",
+              "permission": "hr.loans.view"
             },
             {
               "name": "Rewards & Incentives",
-
               "slug": "hr.rewards.index",
-              "url": "/hr/rewards"
+              "url": "/hr/rewards",
+              "permission": "hr.rewards.view"
             },
             {
               "name": "Penalties & Deductions",
-
               "slug": "hr.penalties.index",
-              "url": "/hr/penalties"
+              "url": "/hr/penalties",
+              "permission": "hr.penalties.view"
             }
           ]
         },
@@ -120,37 +127,44 @@
             {
               "name": "Workforce Plans",
               "slug": "hr.workforce-plans.index",
-              "url": "/hr/workforce-plans"
+              "url": "/hr/workforce-plans",
+              "permission": "hr.workforce-plans.view"
             },
             {
               "name": "Job Requisitions",
               "slug": "hr.job-requisitions.index",
-              "url": "/hr/job-requisitions"
+              "url": "/hr/job-requisitions",
+              "permission": "hr.job-requisitions.view"
             },
             {
               "name": "Job Openings",
               "slug": "hr.job-openings.index",
-              "url": "/hr/job-openings"
+              "url": "/hr/job-openings",
+              "permission": "hr.job-openings.view"
             },
             {
               "name": "Candidate Pipeline",
               "slug": "hr.job-applications.index",
-              "url": "/hr/job-applications"
+              "url": "/hr/job-applications",
+              "permission": "hr.job-applications.view"
             },
             {
               "name": "Interviews & Evaluations",
               "slug": "hr.interviews.index",
-              "url": "/hr/interviews"
+              "url": "/hr/interviews",
+              "permission": "hr.interviews.view"
             },
             {
               "name": "Job Offers",
               "slug": "hr.job-offers.index",
-              "url": "/hr/job-offers"
+              "url": "/hr/job-offers",
+              "permission": "hr.job-offers.view"
             },
             {
               "name": "Onboarding & Hired",
               "slug": "hr.onboardings.index",
-              "url": "/hr/onboardings"
+              "url": "/hr/onboardings",
+              "permission": "hr.onboardings.view"
             }
           ]
         },
@@ -158,7 +172,48 @@
           "name": "Settings",
           "icon": "menu-icon icon-base bx bx-slider-alt",
           "slug": "hr.settings",
-          "url": "/hr/settings"
+          "url": "/hr/settings",
+          "permission": [
+            "hr.settings.administrations.view",
+            "hr.settings.departments.view",
+            "hr.settings.job-titles.view",
+            "hr.settings.allowance-types.view",
+            "hr.settings.document-types.view",
+            "hr.settings.reward-types.view",
+            "hr.settings.penalty-types.view",
+            "hr.settings.shifts.view",
+            "hr.settings.work-schedules.view",
+            "hr.settings.official-holidays.view",
+            "hr.settings.policies.view"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "icon": "menu-icon icon-base bx bx-user-check",
+      "slug": [
+        "users.index",
+        "settings.roles.index"
+      ],
+      "permission": [
+        "users.view",
+        "settings.roles.view"
+      ],
+      "submenu": [
+        {
+          "name": "Users",
+          "icon": "menu-icon icon-base bx bx-user",
+          "slug": "users.index",
+          "url": "/users",
+          "permission": "users.view"
+        },
+        {
+          "name": "Roles",
+          "icon": "menu-icon icon-base bx bx-shield-quarter",
+          "slug": "settings.roles.index",
+          "url": "/settings/roles",
+          "permission": "settings.roles.view"
         }
       ]
     },
@@ -170,20 +225,40 @@
         {
           "name": "Company Settings",
           "icon": "menu-icon icon-base bx bx-building",
-          "slug": "settings.index",
-          "url": "/settings"
+          "slug": [
+            "settings.index",
+            "settings.update"
+          ],
+          "url": "/settings",
+          "permission": "settings.company.view"
         },
         {
           "name": "General Settings",
           "icon": "menu-icon icon-base bx bx-slider-alt",
           "slug": "settings.general",
-          "url": "/settings/general"
+          "url": "/settings/general",
+          "permission": [
+            "settings.general.governments.view",
+            "settings.general.nationalities.view",
+            "settings.general.religions.view",
+            "settings.general.marital-statuses.view",
+            "settings.general.banks.view",
+            "settings.general.bank-branches.view"
+          ]
         },
         {
           "name": "Translation Manager",
           "icon": "menu-icon icon-base bx bx-globe",
           "slug": "settings.translations.index",
-          "url": "/settings/translations"
+          "url": "/settings/translations",
+          "permission": "settings.translations.view"
+        },
+        {
+          "name": "Print Settings",
+          "icon": "menu-icon icon-base bx bx-printer",
+          "slug": "settings.print-templates.index",
+          "url": "/settings/print-templates",
+          "permission": "settings.print-templates.view"
         }
       ]
     }

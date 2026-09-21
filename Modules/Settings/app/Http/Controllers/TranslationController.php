@@ -28,9 +28,60 @@ class TranslationController extends Controller
             $activeModule = in_array('Settings', $moduleIds, true) ? 'Settings' : ($moduleIds[0] ?? 'core');
         }
 
-        $translations = $this->translationService->getTranslations($activeModule);
+        return view('settings::translations.index', compact('modules', 'activeModule'));
+    }
 
-        return view('settings::translations.index', compact('modules', 'activeModule', 'translations'));
+    /**
+     * Serve translation rows to DataTables without rendering the full JSON files in the page.
+     */
+    public function data(Request $request)
+    {
+        $module = $request->query('module', 'Settings');
+        $moduleIds = array_column($this->translationService->getModules(), 'id');
+        if (!in_array($module, $moduleIds, true)) {
+            $module = in_array('Settings', $moduleIds, true) ? 'Settings' : ($moduleIds[0] ?? 'core');
+        }
+
+        $page = $this->translationService->getTranslationsPage(
+            $module,
+            (int) $request->input('start', 0),
+            (int) $request->input('length', 25),
+            (string) $request->input('search.value', ''),
+            $request->boolean('missing')
+        );
+
+        return response()->json([
+            'draw' => (int) $request->input('draw', 0),
+            'recordsTotal' => $page['recordsTotal'],
+            'recordsFiltered' => $page['recordsFiltered'],
+            'data' => $page['data'],
+        ]);
+    }
+
+    /**
+     * Update one row from the server-side DataTable.
+     */
+    public function updateKey(Request $request)
+    {
+        $validated = $request->validate([
+            'module' => 'required|string',
+            'key' => 'required|string',
+            'ar' => 'nullable|string',
+            'en' => 'nullable|string',
+        ]);
+
+        $updated = $this->translationService->updateTranslation(
+            $validated['module'],
+            $validated['key'],
+            $validated['ar'] ?? null,
+            $validated['en'] ?? null
+        );
+
+        if (!$updated) {
+            return response()->json(['message' => __('Translation key not found.')], 404);
+        }
+
+        return response()->json(['message' => __('Translation saved successfully.')]);
     }
 
     /**

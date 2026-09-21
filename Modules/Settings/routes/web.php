@@ -12,9 +12,20 @@ Route::middleware(['auth'])->group(function () {
 
     // Language & Translation Manager
     Route::get('settings/translations', [TranslationController::class, 'index'])->name('settings.translations.index');
+    Route::get('settings/translations/data', [TranslationController::class, 'data'])->name('settings.translations.data');
     Route::put('settings/translations', [TranslationController::class, 'update'])->name('settings.translations.update');
+    Route::put('settings/translations/key', [TranslationController::class, 'updateKey'])->name('settings.translations.update-key');
     Route::post('settings/translations/key', [TranslationController::class, 'store'])->name('settings.translations.store');
     Route::delete('settings/translations/key', [TranslationController::class, 'destroy'])->name('settings.translations.destroy');
+
+    // Print Templates Manager
+    Route::prefix('settings/print-templates')->name('settings.print-templates.')->group(function () {
+        Route::get('/', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'index'])->name('index');
+        Route::get('/{id}/edit', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'update'])->name('update');
+        Route::get('/{id}/preview', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'preview'])->name('preview');
+        Route::patch('/{id}/toggle-status', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'toggleStatus'])->name('toggle-status');
+    });
 
     // General Settings Root
     Route::get('settings/general', [GeneralSettingController::class, 'index'])->name('settings.general');
@@ -63,4 +74,3 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('bank-branches/{id}', [\Modules\Settings\Http\Controllers\BankController::class, 'destroyBranch'])->name('bank-branches.destroy');
     });
 });
-

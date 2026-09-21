@@ -88,6 +88,66 @@ class TranslationService
     }
 
     /**
+     * Return only the requested translation rows for a server-side DataTable.
+     * The JSON files are still read once per request, but the browser receives
+     * only one page instead of rendering the complete translation set.
+     *
+     * @return array{data: array<int, array{key: string, ar: string, en: string}>, recordsTotal: int, recordsFiltered: int}
+     */
+    public function getTranslationsPage(string $moduleId, int $start, int $length, string $search = '', bool $missingOnly = false): array
+    {
+        $translations = $this->getTranslations($moduleId);
+        $total = count($translations);
+        $search = trim($search);
+
+        if ($search !== '') {
+            $needle = mb_strtolower($search);
+            $translations = array_values(array_filter($translations, static function (array $item) use ($needle): bool {
+                return str_contains(mb_strtolower($item['key']), $needle)
+                    || str_contains(mb_strtolower($item['ar']), $needle)
+                    || str_contains(mb_strtolower($item['en']), $needle);
+            }));
+        }
+
+        if ($missingOnly) {
+            $translations = array_values(array_filter($translations, static function (array $item): bool {
+                return $item['ar'] === '' || $item['en'] === '';
+            }));
+        }
+
+        return [
+            'data' => array_slice($translations, max(0, $start), max(1, $length)),
+            'recordsTotal' => $total,
+            'recordsFiltered' => count($translations),
+        ];
+    }
+
+    /**
+     * Update one translation key without requiring all DataTable pages in the request.
+     */
+    public function updateTranslation(string $moduleId, string $key, ?string $ar, ?string $en): bool
+    {
+        $translations = $this->getTranslations($moduleId);
+        $updated = false;
+
+        foreach ($translations as &$translation) {
+            if ($translation['key'] === $key) {
+                $translation['ar'] = (string) ($ar ?? '');
+                $translation['en'] = (string) ($en ?? '');
+                $updated = true;
+                break;
+            }
+        }
+        unset($translation);
+
+        if (!$updated) {
+            return false;
+        }
+
+        return $this->updateTranslations($moduleId, $translations);
+    }
+
+    /**
      * Bulk update translations for a specific module.
      *
      * @param string $moduleId

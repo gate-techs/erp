@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        $this->call(\Modules\AccessControl\Database\Seeders\AccessControlDatabaseSeeder::class);
         $this->call(\Modules\Settings\Database\Seeders\SettingsDatabaseSeeder::class);
         $this->call(\Modules\Nursery\Database\Seeders\NurseryDatabaseSeeder::class);
         $this->call(\Modules\HR\Database\Seeders\HRDatabaseSeeder::class);
