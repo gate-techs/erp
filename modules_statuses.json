@@ -2,5 +2,7 @@
     "HR": true,
     "Settings": true,
     "Nursery": true,
-    "AccessControl": true
+    "AccessControl": true,
+    "AuditLog": true,
+    "Accounting": true
 }

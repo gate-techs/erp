@@ -185,6 +185,15 @@ class PermissionSeeder extends Seeder
                 'hr.onboardings.tasks',
                 'hr.onboardings.convert',
             ],
+            'hr_reports' => [
+                'hr.reports.view',
+                'hr.reports.attendance.view',
+                'hr.reports.attendance.export',
+                'hr.reports.attendance.print',
+                'hr.reports.leaves.view',
+                'hr.reports.payrolls.view',
+                'hr.reports.employees.view',
+            ],
 
             // ==========================================
             // 3. HR Settings (إعدادات الموارد البشرية)
@@ -327,6 +336,23 @@ class PermissionSeeder extends Seeder
                 'settings.general.bank-branches.create',
                 'settings.general.bank-branches.edit',
                 'settings.general.bank-branches.delete',
+            ],
+            // ==========================================
+            // 5. Audit & Activity Logs (سجل الأنشطة والتدقيق)
+            // ==========================================
+            'audit_logs' => [
+                'audit.view',
+                'audit.export',
+            ],
+
+            // ==========================================
+            // 6. Accounting Module (المحاسبة والمالية)
+            // ==========================================
+            'accounting_entities' => [
+                'accounting.entities.view',
+                'accounting.entities.create',
+                'accounting.entities.edit',
+                'accounting.entities.delete',
             ],
         ];
 

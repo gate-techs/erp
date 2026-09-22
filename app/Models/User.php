@@ -83,4 +83,12 @@ class User extends Authenticatable
 
         return asset('assets/img/avatars/1.png');
     }
+
+    /**
+     * Check if user is a developer.
+     */
+    public function isDeveloper(): bool
+    {
+        return $this->user_type === \App\Enums\UserType::DEVELOPER || $this->user_type?->value === 'developer';
+    }
 }

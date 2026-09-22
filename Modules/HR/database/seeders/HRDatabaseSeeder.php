@@ -30,6 +30,7 @@ class HRDatabaseSeeder extends Seeder
             JobOpeningSeeder::class,
             JobApplicationSeeder::class,
             InterviewSeeder::class,
+            AttendanceSeeder::class,
         ]);
     }
 }

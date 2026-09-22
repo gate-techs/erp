@@ -169,6 +169,49 @@
           ]
         },
         {
+          "name": "Reports & Analytics",
+          "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
+          "slug": [
+            "hr.reports.attendance",
+            "hr.reports.leaves",
+            "hr.reports.payrolls",
+            "hr.reports.employees"
+          ],
+          "permission": [
+            "hr.reports.view",
+            "hr.reports.attendance.view",
+            "hr.reports.leaves.view",
+            "hr.reports.payrolls.view",
+            "hr.reports.employees.view"
+          ],
+          "submenu": [
+            {
+              "name": "Attendance & Time Reports",
+              "slug": "hr.reports.attendance.index",
+              "url": "/hr/reports/attendance",
+              "permission": "hr.reports.attendance.view"
+            },
+            {
+              "name": "Leave & Permission Reports",
+              "slug": "hr.reports.leaves.index",
+              "url": "/hr/reports/leaves",
+              "permission": "hr.reports.leaves.view"
+            },
+            {
+              "name": "Payroll & Financial Reports",
+              "slug": "hr.reports.payrolls.index",
+              "url": "/hr/reports/payrolls",
+              "permission": "hr.reports.payrolls.view"
+            },
+            {
+              "name": "Employee Master & Documents",
+              "slug": "hr.reports.employees.index",
+              "url": "/hr/reports/employees",
+              "permission": "hr.reports.employees.view"
+            }
+          ]
+        },
+        {
           "name": "Settings",
           "icon": "menu-icon icon-base bx bx-slider-alt",
           "slug": "hr.settings",
@@ -186,6 +229,30 @@
             "hr.settings.official-holidays.view",
             "hr.settings.policies.view"
           ]
+        }
+      ]
+    },
+    {
+      "name": "Accounting",
+      "icon": "menu-icon icon-base bx bx-calculator",
+      "slug": [
+        "accounting",
+        "accounting.accounts.index",
+        "accounting.entities.index"
+      ],
+      "submenu": [
+        {
+          "name": "Chart of Accounts",
+          "icon": "menu-icon icon-base bx bx-git-repo-forked",
+          "slug": "accounting.accounts.index",
+          "url": "/accounting/accounts"
+        },
+        {
+          "name": "Accounting Entities",
+          "icon": "menu-icon icon-base bx bx-buildings",
+          "slug": "accounting.entities.index",
+          "url": "/accounting/entities",
+          "permission": "accounting.entities.view"
         }
       ]
     },
@@ -220,7 +287,11 @@
     {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
-      "slug": "settings",
+      "slug": [
+        "settings",
+        "audit-logs.index",
+        "audit-logs.settings.index"
+      ],
       "submenu": [
         {
           "name": "Company Settings",
@@ -259,6 +330,20 @@
           "slug": "settings.print-templates.index",
           "url": "/settings/print-templates",
           "permission": "settings.print-templates.view"
+        },
+        {
+          "name": "Audit Log Settings",
+          "icon": "menu-icon icon-base bx bx-server",
+          "slug": "audit-logs.settings.index",
+          "url": "/audit-logs/settings",
+          "user_type": "developer"
+        },
+        {
+          "name": "Audit Logs",
+          "icon": "menu-icon icon-base bx bx-history",
+          "slug": "audit-logs.index",
+          "url": "/audit-logs",
+          "permission": "audit.view"
         }
       ]
     }

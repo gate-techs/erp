@@ -24,7 +24,17 @@ class MenuHelper
             return false;
         }
 
-        // Super Admin has unrestricted access to all menu items
+        // If specific user_type(s) are required for this item (e.g. developer only)
+        if (isset($item->user_type) || isset($item->user_types)) {
+            $requiredTypes = isset($item->user_types) ? (array) $item->user_types : [(string) $item->user_type];
+            $userTypeValue = is_object($user->user_type) ? $user->user_type->value : (string) $user->user_type;
+
+            if (! in_array($userTypeValue, $requiredTypes, true)) {
+                return false;
+            }
+        }
+
+        // Super Admin has unrestricted access to all general menu items
         if ($user->hasRole('super_admin')) {
             return true;
         }

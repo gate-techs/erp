@@ -1,0 +1,27 @@
+{
+    "name": "nwidart/auditlog",
+    "description": "Enterprise Audit and Activity Logging Module",
+    "authors": [
+        {
+            "name": "GateTech"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\AuditLog\\": "app/",
+            "Modules\\AuditLog\\Database\\Factories\\": "database/factories/",
+            "Modules\\AuditLog\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\AuditLog\\Tests\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "Audit Logs": "سجل الأنشطة والتدقيق",
+    "Activity Logs": "سجل الأنشطة والتدقيق",
+    "Activity & Audit Logs": "سجل الأنشطة وتدقيق العمليات",
+    "Audit & Activity Logs": "سجل الأنشطة وتدقيق العمليات",
+    "Event": "نوع الحدث",
+    "Subject": "السجل المتأثر",
+    "Description": "الوصف والبيان",
+    "Causer": "المستخدم المنفذ",
+    "Properties": "البيانات والخصائص",
+    "Before vs After": "مقارنة قبل وبعد التعديل",
+    "Field": "الحقل",
+    "Old Value": "القيمة السابقة",
+    "New Value": "القيمة الجديدة",
+    "View Diff": "عرض الفروقات",
+    "Total Logged Activities": "إجمالي العمليات المسجلة",
+    "Today's Activities": "عمليات اليوم",
+    "Created Events": "عمليات الإضافة",
+    "Updated Events": "عمليات التعديل",
+    "Deleted Events": "عمليات الحذف"
+}

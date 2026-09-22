@@ -23,13 +23,14 @@ use Modules\HR\Models\Loan;
 use Modules\HR\Models\Penalty;
 use Modules\HR\Models\PermissionRequest;
 use Modules\HR\Models\Reward;
+use Modules\AuditLog\Traits\Auditable;
 use Modules\Nursery\Models\NurseryBranch;
 use Modules\Settings\Models\Bank;
 use Modules\Settings\Models\GeneralSetting;
 
 class Employee extends Model implements TranslatableContract
 {
-    use HasFactory, SoftDeletes, Translatable;
+    use HasFactory, SoftDeletes, Translatable, Auditable;
 
     /**
      * The table associated with the model.

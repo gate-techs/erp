@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\AuditLog\Traits\Auditable;
 use Modules\HR\Enums\PayrollStatus;
 use Modules\Nursery\Models\NurseryBranch;
 
 class Payroll extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Auditable;
 
     /**
      * The table associated with the model.

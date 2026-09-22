@@ -4,7 +4,23 @@
 .offcanvas {
   box-shadow: var(--#{$prefix}offcanvas-box-shadow);
   .offcanvas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding-block-end: $offcanvas-padding-y * .5;
+
+    .btn-close {
+      html[dir="rtl"] &,
+      [dir="rtl"] & {
+        margin-right: auto;
+        margin-left: 0;
+      }
+      html[dir="ltr"] &,
+      [dir="ltr"] & {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
   }
 }
 

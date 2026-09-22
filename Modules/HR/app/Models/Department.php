@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\AuditLog\Traits\Auditable;
 use Modules\HR\Enums\DepartmentStatus;
 use Modules\Nursery\Models\Nursery;
 use Modules\Nursery\Models\NurseryBranch;
 
 class Department extends Model implements TranslatableContract
 {
-    use HasFactory, SoftDeletes, Translatable;
+    use HasFactory, SoftDeletes, Translatable, Auditable;
 
     /**
      * The table associated with the model.

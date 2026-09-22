@@ -343,6 +343,17 @@ class AccessControlService
                             ['name' => 'hr.onboardings.convert', 'label' => 'تحويل لموظف', 'label_en' => 'Convert'],
                         ],
                     ],
+                    [
+                        'key' => 'hr_reports_attendance',
+                        'name' => 'Attendance & Time Reports',
+                        'name_ar' => 'تقارير الحضور والدوام',
+                        'icon' => 'bx-bar-chart-alt-2',
+                        'view' => 'hr.reports.attendance.view',
+                        'custom' => [
+                            ['name' => 'hr.reports.attendance.export', 'label' => 'تصدير إكسيل', 'label_en' => 'Export'],
+                            ['name' => 'hr.reports.attendance.print', 'label' => 'طباعة التقرير', 'label_en' => 'Print'],
+                        ],
+                    ],
                 ],
             ],
             [
@@ -589,6 +600,23 @@ class AccessControlService
                         'create' => 'settings.general.bank-branches.create',
                         'edit' => 'settings.general.bank-branches.edit',
                         'delete' => 'settings.general.bank-branches.delete',
+                    ],
+                ],
+            ],
+            [
+                'module' => 'Audit & System Activity Logs',
+                'module_ar' => 'سجل الأنشطة وتدقيق العمليات',
+                'icon' => 'bx-history',
+                'screens' => [
+                    [
+                        'key' => 'audit_logs',
+                        'name' => 'Audit Logs Activity',
+                        'name_ar' => 'سجل الأنشطة والعمليات',
+                        'icon' => 'bx-history',
+                        'view' => 'audit.view',
+                        'custom' => [
+                            ['name' => 'audit.export', 'label' => 'تصدير السجلات', 'label_en' => 'Export Logs'],
+                        ],
                     ],
                 ],
             ],

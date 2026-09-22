@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Enums\UserType;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'مدير النظام',
                 'password' => Hash::make('password123'),
                 'email_verified_at' => now(),
+                'user_type' => UserType::DEVELOPER,
             ]
         );
 
@@ -27,5 +29,6 @@ class DatabaseSeeder extends Seeder
         $this->call(\Modules\Settings\Database\Seeders\SettingsDatabaseSeeder::class);
         $this->call(\Modules\Nursery\Database\Seeders\NurseryDatabaseSeeder::class);
         $this->call(\Modules\HR\Database\Seeders\HRDatabaseSeeder::class);
+        $this->call(\Modules\Accounting\Database\Seeders\AccountingDatabaseSeeder::class);
     }
 }
