@@ -1195,3 +1195,18 @@ html[dir="ltr"] .btn-group > .btn:last-child,
     margin-left: -1px !important;
 }
 
+
+/* Employee Form Scoped Surface Refinements */
+html[data-bs-theme="light"] .employee-form-surface,
+html[data-bs-theme="light"] .employee-form-surface-table th {
+    background-color: #f7f9fc !important;
+}
+
+html[data-bs-theme="dark"] .employee-form-surface,
+html[data-bs-theme="dark"] .employee-form-surface-table th {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.employee-form-surface {
+    border-color: var(--bs-border-color) !important;
+}

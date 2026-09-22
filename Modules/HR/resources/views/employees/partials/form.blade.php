@@ -12,7 +12,7 @@
         <div class="row g-4 align-items-stretch">
             <!-- Avatar & Profile Widget -->
             <div class="col-12 col-lg-3">
-                <div class="h-100 p-3 p-xl-4 bg-light rounded-3 d-flex flex-column align-items-center justify-content-center text-center">
+                <div class="h-100 p-3 p-xl-4 employee-form-surface rounded-3 d-flex flex-column align-items-center justify-content-center text-center">
                     @php
                         $rawGender = $isEdit ? ($employee->gender instanceof \BackedEnum ? $employee->gender->value : ($employee->gender ?? 'female')) : 'female';
                         $genderVal = strtolower((string)$rawGender);
@@ -73,7 +73,7 @@
                     <div class="col-12 col-sm-6 col-lg-4">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employee Code') }}</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="bx bx-barcode"></i></span>
+                            <span class="input-group-text employee-form-surface"><i class="bx bx-barcode"></i></span>
                             <input type="text" name="employee_code" class="form-control @error('employee_code') is-invalid @enderror" 
                                    value="{{ old('employee_code', $isEdit ? $employee->employee_code : $nextCode) }}" placeholder="{{ __('e.g. EMP-0001') }}">
                         </div>
@@ -108,7 +108,7 @@
                 </div>
 
                 <!-- System User Account Box (Inline) -->
-                <div class="p-3 bg-light rounded-3 border">
+                <div class="p-3 employee-form-surface rounded-3 border">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <i class="icon-base bx bx-user-circle text-primary font-22"></i>
@@ -311,7 +311,7 @@
 
                     <!-- Passport & Visa Sub-Section -->
                     <div class="col-12 mt-3">
-                        <div class="p-3 bg-light rounded-2 border">
+                        <div class="p-3 employee-form-surface rounded-2 border">
                             <span class="fw-semibold text-heading small d-flex align-items-center gap-1 mb-2">
                                 <i class="bx bx-id-card text-info font-16"></i>
                                 {{ __('Passport & Visa Information') }}
@@ -525,7 +525,7 @@
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Email') }}</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light"><i class="bx bx-envelope"></i></span>
+                            <span class="input-group-text employee-form-surface"><i class="bx bx-envelope"></i></span>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
                         </div>
@@ -589,7 +589,7 @@
 
                     <!-- Emergency Contact Sub-Box -->
                     <div class="col-12 mt-3">
-                        <div class="p-3 bg-light rounded-2 border">
+                        <div class="p-3 employee-form-surface rounded-2 border">
                             <span class="fw-semibold text-heading small d-flex align-items-center gap-1 mb-2">
                                 <i class="bx bx-error-circle text-warning font-16"></i>
                                 {{ __('Emergency Contact') }}
@@ -649,7 +649,7 @@
                         <div class="input-group">
                             <input type="number" step="0.01" min="0" name="basic_salary" class="form-control @error('basic_salary') is-invalid @enderror" 
                                    value="{{ old('basic_salary', $isEdit ? $employee->basic_salary : '0.00') }}" required>
-                            <span class="input-group-text bg-light">{{ __('KWD') }}</span>
+                            <span class="input-group-text employee-form-surface">{{ __('KWD') }}</span>
                         </div>
                         @error('basic_salary') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
@@ -659,7 +659,7 @@
                         <div class="input-group">
                             <input type="number" step="0.01" min="0" name="hourly_rate" class="form-control" 
                                    value="{{ old('hourly_rate', $isEdit ? $employee->hourly_rate : '') }}" placeholder="0.00">
-                            <span class="input-group-text bg-light">{{ __('KWD') }}</span>
+                            <span class="input-group-text employee-form-surface">{{ __('KWD') }}</span>
                         </div>
                     </div>
 
@@ -726,7 +726,7 @@
                         <div class="input-group">
                             <input type="number" step="0.1" min="0" max="100" name="social_insurance_percentage" class="form-control" 
                                    value="{{ old('social_insurance_percentage', $isEdit ? $employee->social_insurance_percentage : '0') }}">
-                            <span class="input-group-text bg-light">%</span>
+                            <span class="input-group-text employee-form-surface">%</span>
                         </div>
                     </div>
                 </div>
@@ -748,7 +748,7 @@
             <div class="card-body p-4">
                 <div class="table-responsive">
                     <table class="table table-sm align-middle table-hover mb-0" id="allowancesTable">
-                        <thead class="table-light">
+                        <thead class="employee-form-surface-table">
                             <tr class="text-muted small">
                                 <th style="min-width: 180px;">{{ __('Allowance Type') }} <span class="text-danger">*</span></th>
                                 <th style="min-width: 130px;">{{ __('Amount / Value') }} <span class="text-danger">*</span></th>
@@ -808,7 +808,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noAllowancesAlert" class="alert alert-light text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingAllowances) ? 'd-none' : '' }}">
+                <div id="noAllowancesAlert" class="alert employee-form-surface text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingAllowances) ? 'd-none' : '' }}">
                     <i class="bx bx-info-circle me-1 text-primary font-18 align-middle"></i>
                     {{ __('No allowances added yet. Click "+ Add Allowance" to add one.') }}
                 </div>
@@ -834,7 +834,7 @@
                     @endphp
                     @if (!empty($existingDocuments))
                         @foreach ($existingDocuments as $dIdx => $doc)
-                            <div class="document-item card border shadow-none bg-light p-3 position-relative" data-index="{{ $dIdx }}">
+                            <div class="document-item card border shadow-none employee-form-surface p-3 position-relative" data-index="{{ $dIdx }}">
                                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3">
                                     <span class="fw-semibold small text-primary d-flex align-items-center gap-1">
                                         <i class="bx bx-paperclip font-16"></i>
@@ -905,7 +905,7 @@
                         @endforeach
                     @endif
                 </div>
-                <div id="noDocumentsAlert" class="alert alert-light text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingDocuments) ? 'd-none' : '' }}">
+                <div id="noDocumentsAlert" class="alert employee-form-surface text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingDocuments) ? 'd-none' : '' }}">
                     <i class="bx bx-info-circle me-1 text-primary font-18 align-middle"></i>
                     {{ __('No documents attached yet. Click "+ Add Document" to attach one.') }}
                 </div>
@@ -976,7 +976,7 @@
 
 <!-- Document Card Template for Dynamic JS Addition -->
 <template id="documentItemTemplate">
-    <div class="document-item card border shadow-none bg-light p-3 position-relative" data-index="__INDEX__">
+    <div class="document-item card border shadow-none employee-form-surface p-3 position-relative" data-index="__INDEX__">
         <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3">
             <span class="fw-semibold small text-primary d-flex align-items-center gap-1">
                 <i class="bx bx-paperclip font-16"></i>

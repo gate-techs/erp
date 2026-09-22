@@ -3,7 +3,6 @@
 @section('title', __('System Settings') . ' - ' . config('variables.templateName'))
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
     <!-- Header -->
     <div class="mb-4">
         <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
@@ -316,7 +315,6 @@
             </div>
         </div>
     </form>
-</div>
 
 <script>
     function previewImage(input, previewId) {
