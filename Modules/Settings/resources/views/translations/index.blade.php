@@ -70,15 +70,15 @@
                 <div class="col-12 col-md-6">
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="icon-base bx bx-search text-muted"></i></span>
-                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="{{ __('Search in keys or translations...') }}" onkeyup="filterTranslations()">
+                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="{{ __('Search in keys or translations...') }}">
                     </div>
                 </div>
                 <div class="col-12 col-md-6 d-flex align-items-center justify-content-md-end gap-2">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary active" id="btnFilterAll" onclick="setFilter('all')">
-                            {{ __('All') }} ({{ count($translations) }})
+                        <button type="button" class="btn btn-sm btn-outline-secondary active" id="btnFilterAll">
+                            {{ __('All') }}
                         </button>
-                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnFilterMissing" onclick="setFilter('missing')">
+                        <button type="button" class="btn btn-sm btn-outline-warning" id="btnFilterMissing">
                             <i class="icon-base bx bx-error-circle me-1"></i>
                             {{ __('Incomplete') }}
                         </button>
@@ -88,16 +88,11 @@
         </div>
 
         <!-- Translations Form & Table -->
-        <form id="translationsForm" action="{{ route('settings.translations.update') }}" method="POST">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="module" value="{{ $activeModule }}">
-
+        <div id="translationsForm">
             <div class="table-responsive">
                 <table class="table table-hover table-translations mb-0" id="translationsTable">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 4%;">#</th>
                             <th style="width: 28%;">{{ __('Translation Key') }}</th>
                             <th style="width: 32%;">{{ __('Arabic (AR)') }}</th>
                             <th style="width: 32%;">{{ __('English (EN)') }}</th>
@@ -105,68 +100,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($translations as $index => $item)
-                            <tr class="translation-row" data-key="{{ strtolower($item['key']) }}" data-ar="{{ strtolower($item['ar']) }}" data-en="{{ strtolower($item['en']) }}" data-is-missing="{{ empty($item['ar']) || empty($item['en']) ? 'true' : 'false' }}">
-                                <td class="text-muted small pt-3">{{ $index + 1 }}</td>
-                                <td>
-                                    <div class="translation-key-badge">
-                                        <span>{{ $item['key'] }}</span>
-                                        <button type="button" class="btn-copy-key" title="{{ __('Copy Key') }}" onclick="copyKey(this, '{{ addslashes($item['key']) }}')">
-                                            <i class="icon-base bx bx-copy"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <input type="hidden" name="translations[{{ $index }}][key]" value="{{ $item['key'] }}">
-                                    <textarea name="translations[{{ $index }}][ar]" 
-                                              class="form-control translation-input translation-textarea" 
-                                              placeholder="{{ __('Arabic Translation...') }}"
-                                              rows="1"
-                                              dir="rtl"
-                                              oninput="autoExpand(this)">{{ $item['ar'] }}</textarea>
-                                </td>
-                                <td>
-                                    <textarea name="translations[{{ $index }}][en]" 
-                                              class="form-control translation-input translation-textarea" 
-                                              placeholder="{{ __('English Translation...') }}"
-                                              rows="1"
-                                              dir="ltr"
-                                              oninput="autoExpand(this)">{{ $item['en'] }}</textarea>
-                                </td>
-                                <td class="text-center pt-2">
-                                    <button type="button" class="btn btn-sm btn-icon btn-outline-danger" title="{{ __('Delete') }}" onclick="confirmDelete('{{ addslashes($item['key']) }}')">
-                                        <i class="icon-base bx bx-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    <i class="icon-base bx bx-folder-open font-40 mb-2 d-block text-secondary"></i>
-                                    {{ __('No translations found for this module.') }}
-                                </td>
-                            </tr>
-                        @endforelse
                     </tbody>
                 </table>
             </div>
-
-            <!-- Bottom Save Bar -->
-            @if (count($translations) > 0)
-                <div class="card-footer border-top bg-lighter py-3">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <span class="text-muted small">
-                            <i class="icon-base bx bx-info-circle text-primary me-1"></i>
-                            {{ __('Any modifications saved will be written immediately into the module JSON files.') }}
-                        </span>
-                        <button type="submit" class="btn btn-primary d-flex align-items-center gap-2 px-4 shadow-sm">
-                            <i class="icon-base bx bx-save font-18"></i>
-                            <span>{{ __('Save Changes') }}</span>
-                        </button>
-                    </div>
-                </div>
-            @endif
-        </form>
+            <div class="card-footer border-top bg-lighter py-3">
+                <span class="text-muted small"><i class="icon-base bx bx-info-circle text-primary me-1"></i>{{ __('Each row is saved independently so pagination does not lose changes.') }}</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -234,66 +174,93 @@
     <input type="hidden" name="key" id="deleteKeyInput">
 </form>
 
+@section('page-script')
 <script>
+window.addEventListener('load', function () {
+    const $ = window.jQuery || window.$;
+    if (!$ || !$.fn.DataTable) return;
+
     let currentFilter = 'all';
+    const table = $('#translationsTable').DataTable({
+        processing: true,
+        serverSide: true,
+        pageLength: 25,
+        lengthMenu: [[25, 50, 100], [25, 50, 100]],
+        pagingType: 'simple_numbers',
+        ajax: {
+            url: "{{ route('settings.translations.data') }}",
+            data: function (data) {
+                data.module = @json($activeModule);
+                data.missing = currentFilter === 'missing' ? 1 : 0;
+                data.search.value = $('#searchInput').val();
+            }
+        },
+        dom: 'rt<"d-flex flex-wrap justify-content-between align-items-center p-3"ip>',
+        columns: [
+            { data: 'key', render: (data) => `<div class="translation-key-badge"><span>${escapeHtml(data)}</span><button type="button" class="btn-copy-key" title="{{ __('Copy Key') }}" data-key="${escapeHtml(data)}"><i class="icon-base bx bx-copy"></i></button></div>` },
+            { data: 'ar', orderable: false, render: (data) => `<textarea class="form-control translation-input translation-textarea" rows="1" dir="rtl">${escapeHtml(data || '')}</textarea>` },
+            { data: 'en', orderable: false, render: (data) => `<textarea class="form-control translation-input translation-textarea" rows="1" dir="ltr">${escapeHtml(data || '')}</textarea>` },
+            { data: null, orderable: false, searchable: false, className: 'text-center', render: () => `<div class="d-inline-flex gap-1"><button type="button" class="btn btn-sm btn-icon btn-outline-success btn-save-translation" title="{{ __('Save Changes') }}"><i class="icon-base bx bx-save"></i></button><button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete-translation" title="{{ __('Delete') }}"><i class="icon-base bx bx-trash"></i></button></div>` }
+        ],
+        order: [[0, 'asc']]
+    });
+
+    function escapeHtml(value) {
+        return $('<div>').text(value == null ? '' : value).html();
+    }
 
     function autoExpand(el) {
         el.style.height = 'auto';
         el.style.height = Math.max(38, el.scrollHeight) + 'px';
     }
 
-    // Auto expand all textareas on load
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.translation-textarea').forEach(el => autoExpand(el));
-    });
-
-    function filterTranslations() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        const rows = document.querySelectorAll('.translation-row');
-
-        rows.forEach(row => {
-            const key = row.getAttribute('data-key');
-            const ar = row.getAttribute('data-ar');
-            const en = row.getAttribute('data-en');
-            const isMissing = row.getAttribute('data-is-missing') === 'true';
-
-            const matchesSearch = !query || key.includes(query) || ar.includes(query) || en.includes(query);
-            const matchesFilter = (currentFilter === 'all') || (currentFilter === 'missing' && isMissing);
-
-            if (matchesSearch && matchesFilter) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    }
+    $('#searchInput').on('input', function () { table.ajax.reload(); });
+    $('#btnFilterAll').on('click', function () { setFilter('all'); });
+    $('#btnFilterMissing').on('click', function () { setFilter('missing'); });
 
     function setFilter(filter) {
         currentFilter = filter;
-        document.getElementById('btnFilterAll').classList.toggle('active', filter === 'all');
-        document.getElementById('btnFilterMissing').classList.toggle('active', filter === 'missing');
-        filterTranslations();
+        $('#btnFilterAll').toggleClass('active', filter === 'all');
+        $('#btnFilterMissing').toggleClass('active', filter === 'missing');
+        table.ajax.reload();
     }
 
-    function copyKey(btn, keyText) {
-        navigator.clipboard.writeText(keyText).then(() => {
-            // Subtle button icon feedback only
-            const icon = btn.querySelector('i');
-            if (icon) {
-                const originalClass = icon.className;
-                icon.className = 'icon-base bx bx-check text-success';
-                setTimeout(() => {
-                    icon.className = originalClass;
-                }, 1500);
-            }
+    $('#translationsTable').on('draw.dt', function () {
+        document.querySelectorAll('.translation-textarea').forEach(autoExpand);
+    });
+
+    $('#translationsTable').on('click', '.btn-copy-key', function () {
+        const button = this;
+        navigator.clipboard.writeText($(button).data('key')).then(() => {
+            const icon = button.querySelector('i');
+            const original = icon.className;
+            icon.className = 'icon-base bx bx-check text-success';
+            setTimeout(() => icon.className = original, 1500);
         });
-    }
+    });
 
-    function confirmDelete(keyText) {
-        if (confirm("{{ __('Are you sure you want to delete the translation key:') }} " + keyText)) {
-            document.getElementById('deleteKeyInput').value = keyText;
-            document.getElementById('deleteKeyForm').submit();
+    $('#translationsTable').on('click', '.btn-save-translation', function () {
+        const row = table.row($(this).closest('tr'));
+        const data = row.data();
+        const button = this;
+        $.ajax({
+            url: "{{ route('settings.translations.update-key') }}",
+            method: 'PUT',
+            data: { _token: "{{ csrf_token() }}", module: @json($activeModule), key: data.key, ar: $(row.node()).find('textarea').eq(0).val(), en: $(row.node()).find('textarea').eq(1).val() }
+        }).done(function () {
+            $(button).removeClass('btn-outline-success').addClass('btn-success');
+            setTimeout(() => $(button).removeClass('btn-success').addClass('btn-outline-success'), 1200);
+        }).fail(function (xhr) { alert(xhr.responseJSON?.message || '{{ __('Unable to save translation.') }}'); });
+    });
+
+    $('#translationsTable').on('click', '.btn-delete-translation', function () {
+        const data = table.row($(this).closest('tr')).data();
+        if (confirm("{{ __('Are you sure you want to delete the translation key:') }} " + data.key)) {
+            $('#deleteKeyInput').val(data.key);
+            $('#deleteKeyForm').submit();
         }
-    }
+    });
+});
 </script>
+@endsection
 @endsection

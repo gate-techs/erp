@@ -57,5 +57,7 @@ class SettingsDatabaseSeeder extends Seeder
         );
 
         $this->call(GeneralSettingDatabaseSeeder::class);
+        $this->call(PrintTemplateSeeder::class);
+        $this->call(BankDatabaseSeeder::class);
     }
 }

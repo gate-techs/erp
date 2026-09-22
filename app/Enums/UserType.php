@@ -8,6 +8,7 @@ enum UserType: string
     case EMPLOYEE = 'employee';
     case GUARDIAN = 'guardian';
     case STUDENT = 'student';
+    case DEVELOPER = 'developer';
 
     /**
      * Get the display label for the user type.
@@ -19,6 +20,7 @@ enum UserType: string
             self::EMPLOYEE => __('Employee'),
             self::GUARDIAN => __('Guardian'),
             self::STUDENT => __('Student'),
+            self::DEVELOPER => __('Developer'),
         };
     }
 
@@ -30,6 +32,11 @@ enum UserType: string
     public static function values(): array
     {
         return array_column(self::cases(), 'value');
+    }
+
+    public function isDeveloper(): bool
+    {
+        return $this === self::DEVELOPER;
     }
 
     public function isAdmin(): bool

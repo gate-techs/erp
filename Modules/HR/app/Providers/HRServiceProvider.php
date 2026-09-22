@@ -160,6 +160,26 @@ class HRServiceProvider extends ModuleServiceProvider
             \Modules\HR\Repositories\Contracts\HRDashboardRepositoryInterface::class,
             \Modules\HR\Repositories\HRDashboardRepository::class
         );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\AttendanceReportRepositoryInterface::class,
+            \Modules\HR\Repositories\AttendanceReportRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\LeaveReportRepositoryInterface::class,
+            \Modules\HR\Repositories\LeaveReportRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\PayrollReportRepositoryInterface::class,
+            \Modules\HR\Repositories\PayrollReportRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\EmployeeReportRepositoryInterface::class,
+            \Modules\HR\Repositories\EmployeeReportRepository::class
+        );
     }
 
     //======================

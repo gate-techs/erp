@@ -73,5 +73,10 @@ class SettingsServiceProvider extends ModuleServiceProvider
             \Modules\Settings\Repositories\Contracts\BankRepositoryInterface::class,
             \Modules\Settings\Repositories\BankRepository::class
         );
+
+        $this->app->bind(
+            \Modules\Settings\Repositories\Contracts\PrintTemplateRepositoryInterface::class,
+            \Modules\Settings\Repositories\PrintTemplateRepository::class
+        );
     }
 }

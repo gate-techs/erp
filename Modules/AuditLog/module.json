@@ -1,0 +1,11 @@
+{
+    "name": "AuditLog",
+    "alias": "auditlog",
+    "description": "Enterprise Activity and Audit Logging Module",
+    "keywords": ["audit", "log", "activity", "security"],
+    "priority": 0,
+    "providers": [
+        "Modules\\AuditLog\\Providers\\AuditLogServiceProvider"
+    ],
+    "files": []
+}

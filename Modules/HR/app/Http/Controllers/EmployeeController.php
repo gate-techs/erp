@@ -49,11 +49,7 @@ class EmployeeController extends Controller
                 $displayName = app()->getLocale() === 'ar' ? ($nameAr ?: $nameEn) : ($nameEn ?: $nameAr);
                 $code = e($item->employee_code);
 
-                $rawGender = $item->gender instanceof \BackedEnum ? $item->gender->value : ($item->gender ?? '');
-                $isMale = strtolower((string)$rawGender) === 'male' || $rawGender === 'ذكر';
-                $genderBadge = $isMale 
-                    ? '<span class="badge bg-label-info py-0 px-2 font-11 d-inline-flex align-items-center"><i class="bx bx-male-sign me-1"></i>' . __('Male') . '</span>'
-                    : '<span class="badge bg-label-danger py-0 px-2 font-11 d-inline-flex align-items-center"><i class="bx bx-female-sign me-1"></i>' . __('Female') . '</span>';
+
 
                 $completion = $item->profile_completion;
                 $percent = (int) $completion['percentage'];
@@ -78,7 +74,6 @@ class EmployeeController extends Controller
                             <span class="text-heading fw-bold fs-6 text-truncate mb-1">' . e($displayName) . '</span>
                             <div class="d-flex align-items-center gap-1">
                                 <span class="badge bg-label-primary py-0 px-2 font-11">' . $code . '</span>
-                                ' . $genderBadge . '
                             </div>
                         </div>
                     </div>

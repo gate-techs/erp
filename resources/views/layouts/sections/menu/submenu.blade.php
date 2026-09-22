@@ -1,10 +1,43 @@
 @php
 use Illuminate\Support\Facades\Route;
+
+$currentRouteName = Route::currentRouteName() ?? '';
+
+// Determine which leaf submenu item is the single best match
+$bestActiveIndex = null;
+$highestScore = 0;
+
+if (isset($menu)) {
+    foreach ($menu as $index => $item) {
+        if (isset($item->menuHeader) || !isset($item->slug) || isset($item->submenu) || ! \App\Helpers\MenuHelper::isItemVisible($item)) {
+            continue;
+        }
+
+        $slugs = is_array($item->slug) ? $item->slug : [$item->slug];
+        foreach ($slugs as $slug) {
+            $score = 0;
+            if ($currentRouteName === $slug) {
+                $score = 10000 + strlen($slug);
+            } else {
+                $prefix = str_ends_with($slug, '.index') ? substr($slug, 0, -5) : $slug . '.';
+                if (str_starts_with($currentRouteName, $prefix)) {
+                    $score = 1000 + strlen($prefix);
+                }
+            }
+
+            if ($score > $highestScore) {
+                $highestScore = $score;
+                $bestActiveIndex = $index;
+            }
+        }
+    }
+}
 @endphp
 
 <ul class="menu-sub">
   @if (isset($menu))
     @foreach ($menu as $submenu)
+    @if (\App\Helpers\MenuHelper::isItemVisible($submenu))
 
     @if (isset($submenu->menuHeader))
       <li class="menu-header small text-uppercase">
@@ -15,36 +48,18 @@ use Illuminate\Support\Facades\Route;
     @php
       $activeClass = null;
       $active = 'active open';
-      $currentRouteName = Route::currentRouteName() ?? '';
 
       if (isset($submenu->submenu)) {
-        if (is_array($submenu->slug)) {
-          foreach($submenu->slug as $slug){
-            if (str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0) {
-                $activeClass = $active;
-                break;
-            }
-          }
-        } else {
-          if (str_contains($currentRouteName, $submenu->slug) && strpos($currentRouteName, $submenu->slug) === 0) {
+        $slugs = is_array($submenu->slug) ? $submenu->slug : (isset($submenu->slug) ? [$submenu->slug] : []);
+        foreach ($slugs as $slug) {
+          if (str_starts_with($currentRouteName, $slug . '.') || $currentRouteName === $slug) {
             $activeClass = $active;
+            break;
           }
         }
       } else {
-        if (isset($submenu->slug)) {
-          if (is_array($submenu->slug)) {
-            foreach($submenu->slug as $slug){
-              if (str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0) {
-                $activeClass = 'active';
-                break;
-              }
-            }
-          } else {
-            $baseSlug = str_replace('.index', '', $submenu->slug);
-            if ($currentRouteName === $submenu->slug || ($baseSlug && (str_contains($currentRouteName, $baseSlug . '.') || $currentRouteName === $baseSlug))) {
-              $activeClass = 'active';
-            }
-          }
+        if ($bestActiveIndex === $loop->index) {
+          $activeClass = 'active';
         }
       }
     @endphp
@@ -65,6 +80,7 @@ use Illuminate\Support\Facades\Route;
           @include('layouts.sections.menu.submenu',['menu' => $submenu->submenu])
         @endif
       </li>
+    @endif
     @endif
     @endforeach
   @endif

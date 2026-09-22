@@ -1,0 +1,21 @@
+{
+    "Audit Logs": "Audit Logs",
+    "Activity Logs": "Activity Logs",
+    "Activity & Audit Logs": "Activity & Audit Logs",
+    "Audit & Activity Logs": "Audit & Activity Logs",
+    "Event": "Event",
+    "Subject": "Subject",
+    "Description": "Description",
+    "Causer": "Causer",
+    "Properties": "Properties",
+    "Before vs After": "Before vs After",
+    "Field": "Field",
+    "Old Value": "Old Value",
+    "New Value": "New Value",
+    "View Diff": "View Diff",
+    "Total Logged Activities": "Total Logged Activities",
+    "Today's Activities": "Today's Activities",
+    "Created Events": "Created Events",
+    "Updated Events": "Updated Events",
+    "Deleted Events": "Deleted Events"
+}

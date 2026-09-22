@@ -24,10 +24,38 @@ use Modules\HR\Http\Controllers\InterviewController;
 use Modules\HR\Http\Controllers\JobOfferController;
 use Modules\HR\Http\Controllers\OnboardingController;
 use Modules\HR\Http\Controllers\HRDashboardController;
+use Modules\HR\Http\Controllers\AttendanceReportController;
+use Modules\HR\Http\Controllers\LeaveReportController;
+use Modules\HR\Http\Controllers\PayrollReportController;
+use Modules\HR\Http\Controllers\EmployeeReportController;
 
 Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(function () {
     // Dashboard & Command Center (الرئيسية ولوحة تحكم الموارد البشرية)
     Route::get('/', [HRDashboardController::class, 'index'])->name('dashboard');
+
+    // HR Reports Hub (تقارير الموارد البشرية)
+    Route::prefix('reports')->name('reports.')->group(function () {
+        // 1. Attendance & Time Tracking Reports (تقارير الحضور والدوام)
+        Route::get('attendance', [AttendanceReportController::class, 'index'])->name('attendance.index');
+        Route::get('attendance/print', [AttendanceReportController::class, 'print'])->name('attendance.print');
+        Route::get('attendance/export', [AttendanceReportController::class, 'export'])->name('attendance.export');
+
+        // 2. Leaves & Permissions Reports (تقارير الإجازات والاستئذانات)
+        Route::get('leaves', [LeaveReportController::class, 'index'])->name('leaves.index');
+        Route::get('leaves/print', [LeaveReportController::class, 'print'])->name('leaves.print');
+        Route::get('leaves/export', [LeaveReportController::class, 'export'])->name('leaves.export');
+
+        // 3. Payroll & Compensation Reports (تقارير الرواتب والمالية)
+        Route::get('payrolls', [PayrollReportController::class, 'index'])->name('payrolls.index');
+        Route::get('payrolls/print', [PayrollReportController::class, 'print'])->name('payrolls.print');
+        Route::get('payrolls/payslip/{itemId}', [PayrollReportController::class, 'payslip'])->name('payrolls.payslip');
+        Route::get('payrolls/export', [PayrollReportController::class, 'export'])->name('payrolls.export');
+
+        // 4. Employee Master & Documents Reports (تقارير بيانات وملفات الموظفين)
+        Route::get('employees', [EmployeeReportController::class, 'index'])->name('employees.index');
+        Route::get('employees/print', [EmployeeReportController::class, 'print'])->name('employees.print');
+        Route::get('employees/export', [EmployeeReportController::class, 'export'])->name('employees.export');
+    });
 
     // Payroll & Wage Management (إدارة مسير الرواتب والأجور)
     Route::get('payrolls/data', [PayrollController::class, 'data'])->name('payrolls.data');

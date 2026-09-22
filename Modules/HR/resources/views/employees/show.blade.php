@@ -497,22 +497,33 @@ body { background: var(--p-bg) !important; }
 {{-- =================== BREADCRUMB =================== --}}
 <div class="d-flex align-items-center justify-content-between mb-3 no-print">
     <div class="d-flex align-items-center gap-2">
-        <a href="{{ route('hr.employees.index') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 rounded-pill px-3">
-            <i class="icon-base bx bx-arrow-back font-15"></i>
-            <span>{{ __('Employees') }}</span>
-        </a>
-        <span class="text-muted small">/</span>
-        <span class="text-muted small">{{ $dispName }}</span>
+        @if(isset($isOwnProfile) && $isOwnProfile)
+            <a href="{{ url('/') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 rounded-pill px-3">
+                <i class="icon-base bx bx-home font-15"></i>
+                <span>{{ __('Dashboard') }}</span>
+            </a>
+            <span class="text-muted small">/</span>
+            <span class="fw-medium small text-primary">{{ __('My Profile') }}</span>
+        @else
+            <a href="{{ route('hr.employees.index') }}" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 rounded-pill px-3">
+                <i class="icon-base bx bx-arrow-back font-15"></i>
+                <span>{{ __('Employees') }}</span>
+            </a>
+            <span class="text-muted small">/</span>
+            <span class="text-muted small">{{ $dispName }}</span>
+        @endif
     </div>
     <div class="d-flex gap-2">
         <button onclick="window.print()" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
             <i class="icon-base bx bx-printer font-15"></i>
             <span class="d-none d-sm-inline">{{ __('Print') }}</span>
         </button>
-        <a href="{{ route('hr.employees.edit', $employee->id) }}" class="btn btn-sm btn-dark d-flex align-items-center gap-1 px-3">
-            <i class="icon-base bx bx-edit font-15"></i>
-            <span>{{ __('Edit Profile') }}</span>
-        </a>
+        @if(auth()->user() && auth()->user()->can('employees.edit'))
+            <a href="{{ route('hr.employees.edit', $employee->id) }}" class="btn btn-sm btn-dark d-flex align-items-center gap-1 px-3">
+                <i class="icon-base bx bx-edit font-15"></i>
+                <span>{{ __('Edit Profile') }}</span>
+            </a>
+        @endif
     </div>
 </div>
 

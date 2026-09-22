@@ -37,8 +37,8 @@
                 <!-- 1. Branch Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
-                    <select id="filter_branch_id" class="select2 form-select"
-                        data-placeholder="{{ __('All Branches') }}" data-allow-clear="true">
+                    <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}"
+                        data-allow-clear="true">
                         <option value="">{{ __('All Branches') }}</option>
                         @foreach ($branches as $branch)
                             <option value="{{ $branch->id }}">
@@ -79,8 +79,8 @@
                 <!-- 4. Status Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
-                    <select id="filter_status" class="select2 form-select"
-                        data-placeholder="{{ __('All Statuses') }}" data-allow-clear="true">
+                    <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}"
+                        data-allow-clear="true">
                         <option value="">{{ __('All Statuses') }}</option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -91,8 +91,8 @@
                 <!-- 5. Employment Type Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Employment Type') }}</label>
-                    <select id="filter_employment_type" class="select2 form-select"
-                        data-placeholder="{{ __('All Types') }}" data-allow-clear="true">
+                    <select id="filter_employment_type" class="select2 form-select" data-placeholder="{{ __('All Types') }}"
+                        data-allow-clear="true">
                         <option value="">{{ __('All Types') }}</option>
                         @foreach ($employmentTypes as $type)
                             <option value="{{ $type->value }}">{{ $type->label() }}</option>
@@ -128,8 +128,8 @@
                 <!-- 8. Shift Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Shift') }}</label>
-                    <select id="filter_shift_id" class="select2 form-select"
-                        data-placeholder="{{ __('All Shifts') }}" data-allow-clear="true">
+                    <select id="filter_shift_id" class="select2 form-select" data-placeholder="{{ __('All Shifts') }}"
+                        data-allow-clear="true">
                         <option value="">{{ __('All Shifts') }}</option>
                         @foreach ($shifts as $shift)
                             <option value="{{ $shift->id }}">

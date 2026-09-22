@@ -30,6 +30,17 @@ enum PayrollPaymentStatus: string
     }
 
     /**
+     * Badge CSS class.
+     */
+    public function badgeClass(): string
+    {
+        return match ($this) {
+            self::PENDING => 'bg-label-warning',
+            self::PAID    => 'bg-label-success',
+        };
+    }
+
+    /**
      * Associated Boxicons icon.
      */
     public function icon(): string

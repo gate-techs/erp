@@ -47,6 +47,11 @@ class AuthenticatedSessionController extends Controller
 
             $request->clearRateLimit();
 
+            $user = auth()->user();
+            if ($user && ($user->hasRole('employee') || $user->user_type === \App\Enums\UserType::EMPLOYEE) && ! $user->hasAnyRole(['super_admin', 'admin'])) {
+                return redirect()->route('profile.show');
+            }
+
             return redirect()->intended(route('dashboard-analytics'));
         } catch (ValidationException $e) {
             $request->hitRateLimit();

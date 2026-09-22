@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Accounting\Models\Entity;
 use Modules\Nursery\Enums\NurseryStatus;
 use Modules\Settings\Models\GeneralSetting;
 
@@ -169,5 +171,15 @@ class Nursery extends Model implements TranslatableContract
     public function branches(): HasMany
     {
         return $this->hasMany(NurseryBranch::class, 'nursery_id');
+    }
+
+    //======================
+    /**
+     * Get the accounting entity linked to this nursery.
+     */
+    //--------------------------------------------------
+    public function entity(): HasOne
+    {
+        return $this->hasOne(Entity::class, 'nursery_id');
     }
 }

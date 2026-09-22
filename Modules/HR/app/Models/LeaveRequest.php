@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\AuditLog\Traits\Auditable;
 use Modules\HR\Enums\LeaveRequestStatus;
 use Modules\HR\Enums\LeaveType;
 
 class LeaveRequest extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Auditable;
 
     /**
      * The table associated with the model.
