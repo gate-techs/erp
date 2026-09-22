@@ -140,7 +140,7 @@
                 <!-- Phone -->
                 <div class="col-12 col-md-6">
                     <label class="form-label fw-semibold text-heading small">{{ __('Phone Number') }}</label>
-                    <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+965 xxxxxxxx">
+                    <input type="text" name="phone" id="phone" class="form-control js-phone-input @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+965 xxxxxxxx" dir="ltr">
                     @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
 

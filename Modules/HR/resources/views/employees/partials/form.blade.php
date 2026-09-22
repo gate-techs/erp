@@ -518,7 +518,7 @@
 
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Alternate Phone') }}</label>
-                        <input type="text" name="alternate_phone" class="form-control"
+                        <input type="text" name="alternate_phone" class="form-control js-phone-input"
                                value="{{ old('alternate_phone', $isEdit ? $employee->alternate_phone : '') }}" placeholder="011..." dir="ltr">
                     </div>
 
@@ -624,7 +624,7 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Emergency Contact Phone') }}</label>
-                                    <input type="text" name="emergency_contact_phone" class="form-control" 
+                                    <input type="text" name="emergency_contact_phone" class="form-control js-phone-input"
                                            value="{{ old('emergency_contact_phone', $isEdit ? $employee->emergency_contact_phone : '') }}" placeholder="010..." dir="ltr">
                                 </div>
                             </div>

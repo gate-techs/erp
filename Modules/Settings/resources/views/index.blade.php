@@ -188,7 +188,7 @@
                         <label class="form-label">{{ __('Primary Phone') }}</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="icon-base bx bx-phone"></i></span>
-                            <input type="text" name="phone" class="form-control" value="{{ old('phone', $settings->phone) }}" placeholder="+965 xxxxxxxx" dir="ltr">
+                            <input type="text" name="phone" class="form-control js-phone-input" value="{{ old('phone', $settings->phone) }}" placeholder="+965 xxxxxxxx" dir="ltr">
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3">
@@ -202,7 +202,7 @@
                         <label class="form-label text-danger">{{ __('Emergency Phone') }}</label>
                         <div class="input-group">
                             <span class="input-group-text text-danger"><i class="icon-base bx bx-alarm-exclamation"></i></span>
-                            <input type="text" name="emergency_phone" class="form-control" value="{{ old('emergency_phone', $settings->emergency_phone) }}" placeholder="+965 xxxxxxxx" dir="ltr">
+                            <input type="text" name="emergency_phone" class="form-control js-phone-input" value="{{ old('emergency_phone', $settings->emergency_phone) }}" placeholder="+965 xxxxxxxx" dir="ltr">
                         </div>
                     </div>
                 </div>
