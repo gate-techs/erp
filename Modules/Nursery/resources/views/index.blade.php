@@ -159,7 +159,7 @@
                     <label class="form-label fw-semibold">{{ __('WhatsApp Number') }}</label>
                     <div class="input-group">
                         <span class="input-group-text bg-lighter text-success"><i class="icon-base bx bxl-whatsapp font-18"></i></span>
-                        <input type="text" name="whatsapp" class="form-control" placeholder="+965..." dir="ltr">
+                        <input type="text" name="whatsapp" class="form-control js-phone-input" placeholder="+965..." dir="ltr">
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">
@@ -360,7 +360,7 @@
                     <label class="form-label fw-semibold">{{ __('WhatsApp Number') }}</label>
                     <div class="input-group">
                         <span class="input-group-text bg-lighter text-success"><i class="icon-base bx bxl-whatsapp font-18"></i></span>
-                        <input type="text" id="edit_whatsapp" name="whatsapp" class="form-control" dir="ltr">
+                        <input type="text" id="edit_whatsapp" name="whatsapp" class="form-control js-phone-input" dir="ltr">
                     </div>
                 </div>
                 <div class="col-12 col-sm-6">

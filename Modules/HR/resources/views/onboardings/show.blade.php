@@ -368,7 +368,7 @@
 
                         <div class="col-12 col-md-6">
                             <label class="form-label fw-semibold" for="conv_phone">{{ __('Phone') }}</label>
-                            <input type="text" name="phone" id="conv_phone" class="form-control" value="{{ $onboarding->candidate?->phone }}">
+                            <input type="text" name="phone" id="conv_phone" class="form-control js-phone-input" value="{{ $onboarding->candidate?->phone }}" dir="ltr">
                         </div>
                     </div>
                 </div>
