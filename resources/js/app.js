@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
             dateFormat: 'Y-m-d\\TH:i',
             time_24hr: true,
             allowInput: true,
-            altInput: false,
+            altInput: true,
+            altFormat: 'd/m/Y H:i',
             disableMobile: true
           });
         }
