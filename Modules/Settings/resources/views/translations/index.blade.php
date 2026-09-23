@@ -3,8 +3,7 @@
 @section('title', __('Language & Translation Manager') . ' - ' . config('variables.templateName'))
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
-    <!-- Header & Controls -->
+<!-- Header & Controls -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
@@ -108,7 +107,6 @@
             </div>
         </div>
     </div>
-</div>
 
 <!-- Add Key Modal -->
 <div class="modal fade" id="addKeyModal" tabindex="-1" aria-labelledby="addKeyModalLabel" aria-hidden="true">
@@ -131,12 +129,12 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ __('Translation Key (English / Identifier)') }} <span class="text-danger">*</span></label>
-                    <input type="text" name="key" class="form-control" placeholder="e.g. Employees Directory" required dir="ltr">
+                    <input type="text" name="key" class="form-control" placeholder="{{ __('e.g. Employees Directory') }}" required dir="ltr">
                     <small class="text-muted">{{ __('Used in code with __("Key")') }}</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ __('Arabic Translation') }}</label>
-                    <textarea name="ar" class="form-control" rows="2" placeholder="مثال: دليل وملفات الموظفين" dir="rtl"></textarea>
+                    <textarea name="ar" class="form-control" rows="2" placeholder="{{ __('e.g. Employees Directory') }}" dir="rtl"></textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold">{{ __('English Translation') }}</label>
