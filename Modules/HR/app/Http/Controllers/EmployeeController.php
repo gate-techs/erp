@@ -72,8 +72,9 @@ class EmployeeController extends Controller
                         </div>
                         <div class="d-flex flex-column">
                             <span class="text-heading fw-bold fs-6 text-truncate mb-1">' . e($displayName) . '</span>
-                            <div class="d-flex align-items-center gap-1">
+                            <div class="d-flex align-items-center gap-1 flex-wrap">
                                 <span class="badge bg-label-primary py-0 px-2 font-11">' . $code . '</span>
+                                ' . ($item->is_teacher ? '<span class="badge bg-label-info py-0 px-2 font-11 d-inline-flex align-items-center gap-1"><i class="bx bx-book-reader font-12"></i> ' . __('Teacher') . '</span>' : '') . '
                             </div>
                         </div>
                     </div>

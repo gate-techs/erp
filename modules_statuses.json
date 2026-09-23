@@ -4,5 +4,6 @@
     "Nursery": true,
     "AccessControl": true,
     "AuditLog": true,
-    "Accounting": true
+    "Accounting": true,
+    "AI": true
 }

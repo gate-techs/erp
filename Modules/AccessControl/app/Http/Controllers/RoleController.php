@@ -29,6 +29,7 @@ class RoleController extends Controller
         ]))
             ->addIndexColumn()
             ->addColumn('translated_name', fn (Role $role) => $role->display_name)
+            ->addColumn('is_system', fn (Role $role) => $role->isSystem())
             ->editColumn('created_at', fn (Role $role) => $role->created_at ? $role->created_at->format('Y-m-d') : '-')
             ->toJson();
     }
@@ -69,6 +70,11 @@ class RoleController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
+        $role = Role::findOrFail($id);
+        if ($role->isSystem()) {
+            return redirect()->route('settings.roles.index')->with('error', __('System roles cannot be deleted.'));
+        }
+
         $this->accessControlService->deleteRole($id);
 
         return redirect()->route('settings.roles.index')->with('success', __('Role deleted successfully.'));

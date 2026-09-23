@@ -29,8 +29,9 @@ class UpdateEmployeeRequest extends FormRequest
         $employeeId = $this->route('employee')?->id ?? $this->route('employee') ?? $this->employee;
 
         return [
-            // Code & Avatar
+            // Code, Avatar & Academic Teacher Flag
             'employee_code'               => ['nullable', 'string', 'max:50', Rule::unique('employees', 'employee_code')->ignore($employeeId)],
+            'is_teacher'                  => ['nullable', 'boolean'],
             'avatar'                      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
 
             // Names (Full Name)
@@ -100,6 +101,7 @@ class UpdateEmployeeRequest extends FormRequest
             'create_user_account'         => ['nullable', 'boolean'],
             'user_id'                     => ['nullable', 'integer', 'exists:users,id'],
             'user_password'               => ['nullable', 'string', 'min:6'],
+            'role'                        => ['nullable', 'string', 'exists:roles,name'],
 
             // 7. Allowances
             'allowances'                  => ['nullable', 'array'],

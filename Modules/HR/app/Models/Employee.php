@@ -58,6 +58,7 @@ class Employee extends Model implements TranslatableContract
      */
     protected $fillable = [
         'employee_code',
+        'is_teacher',
         'user_id',
         'avatar',
         'gender',
@@ -110,6 +111,7 @@ class Employee extends Model implements TranslatableContract
      * @var array<string, string>
      */
     protected $casts = [
+        'is_teacher'                  => 'boolean',
         'gender'                      => Gender::class,
         'employment_type'             => EmploymentType::class,
         'status'                      => EmployeeStatus::class,
@@ -467,5 +469,23 @@ class Employee extends Model implements TranslatableContract
     public function scopeByDepartment(Builder $query, int $departmentId): Builder
     {
         return $query->where('department_id', $departmentId);
+    }
+
+    //======================
+    /**
+     * Scope: Filter teachers (academic staff).
+     */
+    public function scopeTeachers(Builder $query): Builder
+    {
+        return $query->where('is_teacher', true);
+    }
+
+    //======================
+    /**
+     * Check if employee is an academic teacher.
+     */
+    public function isTeacher(): bool
+    {
+        return (bool) $this->is_teacher;
     }
 }

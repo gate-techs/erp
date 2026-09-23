@@ -1,0 +1,11 @@
+{
+    "name": "AI",
+    "alias": "ai",
+    "description": "Shared AI capabilities for the ERP.",
+    "keywords": ["ai", "translation", "automation"],
+    "priority": 0,
+    "providers": [
+        "Modules\\AI\\Providers\\AIServiceProvider"
+    ],
+    "files": []
+}

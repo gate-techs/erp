@@ -8,11 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Modules\Accounting\Enums\AccountType;
+use Modules\Accounting\Http\Requests\ImportAccountsRequest;
 use Modules\Accounting\Http\Requests\StoreAccountRequest;
 use Modules\Accounting\Http\Requests\UpdateAccountRequest;
 use Modules\Accounting\Models\Account;
 use Modules\Accounting\Models\Entity;
+use Modules\Accounting\Services\AccountImportExportService;
 use Modules\Accounting\Services\AccountService;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Yajra\DataTables\Facades\DataTables;
 
 class AccountController extends Controller
@@ -28,8 +31,9 @@ class AccountController extends Controller
     public function index(Request $request): View
     {
         $entities = Entity::with('translations')->where('status', 'active')->orderBy('id')->get();
-        $selectedEntityId = (int) ($request->get('entity_id') ?: ($entities->first()?->id ?? 0));
-        $selectedEntity = $entities->firstWhere('id', $selectedEntityId);
+        $rawEntityId = (int) $request->get('entity_id');
+        $selectedEntity = ($rawEntityId > 0 ? $entities->firstWhere('id', $rawEntityId) : null) ?: $entities->first();
+        $selectedEntityId = $selectedEntity?->id ?? 0;
 
         // Account statistics for KPI cards
         $stats = [
@@ -83,6 +87,9 @@ class AccountController extends Controller
     public function treeData(Request $request): JsonResponse
     {
         $entityId = (int) $request->get('entity_id');
+        if (!$entityId) {
+            $entityId = Entity::where('status', 'active')->orderBy('id')->first()?->id ?? 0;
+        }
         if (!$entityId) {
             return response()->json(['success' => false, 'message' => __('Entity required')], 422);
         }
@@ -426,5 +433,50 @@ class AccountController extends Controller
             'success' => true,
             'parents' => $formatted,
         ]);
+    }
+
+    //==================================================
+    /**
+     * Download standard Excel (.xlsx) template for accounts import.
+     */
+    public function downloadTemplate(AccountImportExportService $importExportService): StreamedResponse
+    {
+        return $importExportService->downloadTemplate();
+    }
+
+    //==================================================
+    /**
+     * Export all accounts of the specified entity to Excel (.xlsx).
+     */
+    public function export(Request $request, AccountImportExportService $importExportService): StreamedResponse
+    {
+        $entityId = (int) $request->get('entity_id');
+        if (!$entityId) {
+            abort(404, __('Entity required.'));
+        }
+
+        return $importExportService->exportEntityAccounts($entityId);
+    }
+
+    //==================================================
+    /**
+     * Import accounts from an uploaded spreadsheet file (.xlsx, .xls, .csv).
+     */
+    public function import(ImportAccountsRequest $request, AccountImportExportService $importExportService): JsonResponse
+    {
+        try {
+            $result = $importExportService->importAccounts(
+                $request->file('file'),
+                (int) $request->input('entity_id'),
+                auth()->id()
+            );
+
+            return response()->json($result);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
     }
 }

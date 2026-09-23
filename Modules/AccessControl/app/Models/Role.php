@@ -9,6 +9,28 @@ class Role extends SpatieRole
     protected $guarded = [];
 
     /**
+     * Core system roles that cannot be deleted.
+     */
+    public const SYSTEM_ROLES = [
+        'super_admin',
+        'admin',
+        'supervisor',
+        'teacher',
+        'nurse',
+        'employee',
+        'guardian',
+        'student',
+    ];
+
+    /**
+     * Determine if this is a protected system role.
+     */
+    public function isSystem(): bool
+    {
+        return in_array(strtolower(trim($this->name)), self::SYSTEM_ROLES);
+    }
+
+    /**
      * Get human-readable translated name for the role.
      */
     public function getDisplayNameAttribute(): string
@@ -16,10 +38,13 @@ class Role extends SpatieRole
         $key = strtolower(trim($this->name));
         $map = [
             'super_admin' => __('Super Administrator'),
-            'admin' => __('System Administrator'),
-            'employee' => __('Employee'),
-            'guardian' => __('Guardian'),
-            'student' => __('Student'),
+            'admin'       => __('System Administrator'),
+            'supervisor'  => __('Academic Supervisor'),
+            'teacher'     => __('Academic Teacher'),
+            'nurse'       => __('Nurse'),
+            'employee'    => __('Administrative Employee'),
+            'guardian'    => __('Guardian'),
+            'student'     => __('Student'),
         ];
 
         return $map[$key] ?? __($this->name);

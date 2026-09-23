@@ -194,6 +194,63 @@
                 <textarea name="description_en" class="form-control" rows="2" placeholder="{{ __('Description (English)') }}"></textarea>
             </div>
 
+            <!-- Chart of Accounts Setup Card -->
+            <div class="card border border-primary border-opacity-25 bg-label-primary shadow-none mb-3">
+                <div class="card-body p-3">
+                    <label class="form-label fw-bold text-heading d-flex align-items-center gap-2 mb-1">
+                        <i class="icon-base bx bx-sitemap text-primary font-18"></i>
+                        <span>{{ __('Chart of Accounts Setup') }}</span>
+                    </label>
+                    <p class="text-muted small mb-2">
+                        {{ __('Choose how you would like to initialize the Chart of Accounts for this entity.') }}
+                    </p>
+
+                    <div class="d-flex flex-column gap-2">
+                        <!-- Option 1: Standard Template (Default) -->
+                        <div class="form-check p-2 bg-white rounded border">
+                            <input class="form-check-input ms-0 me-2" type="radio" name="coa_action" id="coa_standard" value="standard_template" checked>
+                            <label class="form-check-label w-100 cursor-pointer" for="coa_standard">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fw-semibold text-heading">{{ __('Standard Chart of Accounts Template') }}</span>
+                                    <span class="badge bg-label-primary text-uppercase">{{ __('Recommended') }}</span>
+                                </div>
+                                <small class="text-muted d-block mt-1">{{ __('Automatically creates standard assets, liabilities, equity, revenues, and expenses.') }}</small>
+                            </label>
+                        </div>
+
+                        <!-- Option 2: Clone from Existing Entity -->
+                        @if(isset($existingEntities) && $existingEntities->isNotEmpty())
+                        <div class="form-check p-2 bg-white rounded border">
+                            <input class="form-check-input ms-0 me-2" type="radio" name="coa_action" id="coa_clone" value="clone_entity">
+                            <label class="form-check-label w-100 cursor-pointer" for="coa_clone">
+                                <span class="fw-semibold text-heading">{{ __('Clone from Existing Entity') }}</span>
+                                <small class="text-muted d-block mt-1">{{ __('Copy entire chart structure from another active entity.') }}</small>
+                            </label>
+                            <div class="mt-2 d-none" id="clone_entity_wrapper">
+                                <select name="clone_from_entity_id" id="add_clone_from_entity_id" class="form-select select2" data-placeholder="{{ __('Select source entity...') }}">
+                                    <option value="">{{ __('Select source entity...') }}</option>
+                                    @foreach($existingEntities as $exEntity)
+                                        <option value="{{ $exEntity->id }}">
+                                            {{ $exEntity->translate(app()->getLocale())?->name ?? $exEntity->translate('ar')?->name ?? $exEntity->code }} ({{ $exEntity->code }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Option 3: Blank -->
+                        <div class="form-check p-2 bg-white rounded border">
+                            <input class="form-check-input ms-0 me-2" type="radio" name="coa_action" id="coa_blank" value="blank">
+                            <label class="form-check-label w-100 cursor-pointer" for="coa_blank">
+                                <span class="fw-semibold text-heading">{{ __('Blank Chart of Accounts') }}</span>
+                                <small class="text-muted d-block mt-1">{{ __('Start with an empty tree and add accounts manually.') }}</small>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Status Radio -->
             <div class="mb-4">
                 <label class="form-label d-block fw-semibold text-heading mb-2">{{ __('Status') }}</label>
@@ -486,6 +543,18 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleNurseryGroup($('#add_type'), $('#add_nursery_group'));
     $('#offcanvasAddEntity').on('show.bs.offcanvas', function () {
         toggleNurseryGroup($('#add_type'), $('#add_nursery_group'));
+        $('#coa_standard').prop('checked', true).trigger('change');
+    });
+
+    // 3.1 Toggle Clone Entity Dropdown in Add Entity Offcanvas
+    $('input[name="coa_action"]').on('change', function () {
+        if ($('#coa_clone').is(':checked')) {
+            $('#clone_entity_wrapper').removeClass('d-none');
+            $('#add_clone_from_entity_id').prop('required', true);
+        } else {
+            $('#clone_entity_wrapper').addClass('d-none');
+            $('#add_clone_from_entity_id').prop('required', false).val('').trigger('change');
+        }
     });
 
     // 4. Reset Filters Handler (Exact match with /users)
@@ -532,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 addForm[0].reset();
                 $('#add_type').val('nursery').trigger('change');
                 $('#add_nursery_id').val('').trigger('change');
+                $('#coa_standard').prop('checked', true).trigger('change');
                 table.ajax.reload();
                 showAlert('success', res.message || "{{ __('Entity created successfully.') }}");
                 // Update auto-generated code for next entry if provided

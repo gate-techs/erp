@@ -24,6 +24,7 @@ use Modules\Nursery\Models\NurseryBranch;
 use Modules\Settings\Enums\GeneralSettingType;
 use Modules\Settings\Models\Bank;
 use Modules\Settings\Models\GeneralSetting;
+use Modules\AccessControl\Models\Role;
 
 class EmployeeService
 {
@@ -73,6 +74,7 @@ class EmployeeService
             'visaTypes'       => HrSetting::with('translations')->where('type', 'visa-types')->get(),
             'allowanceTypes'  => HrSetting::with('translations')->where('type', 'allowance-types')->get(),
             'documentTypes'   => HrSetting::with('translations')->where('type', 'document-types')->get(),
+            'roles'           => class_exists(Role::class) ? Role::all() : collect(),
             'nextCode'        => $this->employeeRepository->getNextEmployeeCode(),
         ];
     }
@@ -158,15 +160,21 @@ class EmployeeService
 
             // 2. Handle User Account Creation if requested
             $userId = !empty($validated['user_id']) ? (int) $validated['user_id'] : null;
+            $isTeacher = !empty($validated['is_teacher']);
             if (!empty($validated['create_user_account']) && !empty($validated['email']) && !$userId) {
+                $userType = $isTeacher ? UserType::TEACHER : UserType::EMPLOYEE;
                 $user = User::create([
                     'name'      => $validated['name_ar'],
                     'email'     => $validated['email'],
                     'phone'     => $validated['phone'] ?? null,
                     'password'  => Hash::make($validated['user_password'] ?? '12345678'),
-                    'user_type' => UserType::EMPLOYEE,
+                    'user_type' => $userType,
                     'is_active' => true,
                 ]);
+                $roleName = !empty($validated['role']) ? $validated['role'] : ($isTeacher ? 'teacher' : 'employee');
+                if (method_exists($user, 'assignRole')) {
+                    $user->assignRole($roleName);
+                }
                 $userId = $user->id;
             }
 
@@ -175,6 +183,7 @@ class EmployeeService
                 $this->formatTranslationData($validated),
                 [
                     'employee_code'               => !empty($validated['employee_code']) ? $validated['employee_code'] : null,
+                    'is_teacher'                  => $isTeacher,
                     'user_id'                     => $userId,
                     'avatar'                      => $avatarPath,
                     'gender'                      => $validated['gender'] ?? Gender::MALE->value,
@@ -250,10 +259,14 @@ class EmployeeService
                 $avatarPath = $validated['avatar']->store('employees/avatars', 'public');
             }
 
-            // 2. Handle User Account Linking / Password update
+            // 2. Handle User Account Linking / Password update / Role update
             $userId = $employee->user_id;
             if (!empty($validated['user_id'])) {
                 $userId = (int) $validated['user_id'];
+                $user = User::find($userId);
+                if ($user && !empty($validated['role']) && method_exists($user, 'syncRoles')) {
+                    $user->syncRoles([$validated['role']]);
+                }
             } elseif (!empty($validated['create_user_account']) && !$userId && !empty($validated['email'])) {
                 $user = User::create([
                     'name'      => $validated['name_ar'],
@@ -263,11 +276,31 @@ class EmployeeService
                     'user_type' => UserType::EMPLOYEE,
                     'is_active' => true,
                 ]);
+                $roleName = !empty($validated['role']) ? $validated['role'] : 'employee';
+                if (method_exists($user, 'assignRole')) {
+                    $user->assignRole($roleName);
+                }
                 $userId = $user->id;
-            } elseif ($userId && !empty($validated['user_password'])) {
-                User::where('id', $userId)->update([
-                    'password' => Hash::make($validated['user_password']),
-                ]);
+            } elseif ($userId) {
+                $user = User::find($userId);
+                if ($user) {
+                    $userUpdates = [];
+                    if (!empty($validated['name_ar'])) {
+                        $userUpdates['name'] = $validated['name_ar'];
+                    }
+                    if (!empty($validated['email'])) {
+                        $userUpdates['email'] = $validated['email'];
+                    }
+                    if (!empty($validated['user_password'])) {
+                        $userUpdates['password'] = Hash::make($validated['user_password']);
+                    }
+                    if (!empty($userUpdates)) {
+                        $user->update($userUpdates);
+                    }
+                    if (!empty($validated['role']) && method_exists($user, 'syncRoles')) {
+                        $user->syncRoles([$validated['role']]);
+                    }
+                }
             }
 
             // 3. Build Core Payload
@@ -275,6 +308,7 @@ class EmployeeService
                 $this->formatTranslationData($validated),
                 [
                     'employee_code'               => !empty($validated['employee_code']) ? $validated['employee_code'] : $employee->employee_code,
+                    'is_teacher'                  => isset($validated['is_teacher']) ? (bool) $validated['is_teacher'] : (bool) $employee->is_teacher,
                     'user_id'                     => $userId,
                     'avatar'                      => $avatarPath,
                     'gender'                      => $validated['gender'] ?? ($employee->gender instanceof \BackedEnum ? $employee->gender->value : $employee->gender),

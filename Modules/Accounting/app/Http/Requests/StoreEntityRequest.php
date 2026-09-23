@@ -36,6 +36,13 @@ class StoreEntityRequest extends FormRequest
                 'exists:nurseries,id',
                 Rule::unique('entities', 'nursery_id')->whereNull('deleted_at'),
             ],
+            'coa_action'           => ['nullable', 'string', 'in:standard_template,clone_entity,blank'],
+            'clone_from_entity_id' => [
+                'nullable',
+                'required_if:coa_action,clone_entity',
+                'integer',
+                'exists:entities,id',
+            ],
         ];
     }
 
@@ -45,15 +52,17 @@ class StoreEntityRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name_ar'        => __('Entity Name (Arabic)'),
-            'name_en'        => __('Entity Name (English)'),
-            'description_ar' => __('Description (Arabic)'),
-            'description_en' => __('Description (English)'),
-            'code'           => __('Code'),
-            'type'           => __('Type'),
-            'currency'       => __('Currency'),
-            'status'         => __('Status'),
-            'nursery_id'     => __('Nursery'),
+            'name_ar'              => __('Entity Name (Arabic)'),
+            'name_en'              => __('Entity Name (English)'),
+            'description_ar'       => __('Description (Arabic)'),
+            'description_en'       => __('Description (English)'),
+            'code'                 => __('Code'),
+            'type'                 => __('Type'),
+            'currency'             => __('Currency'),
+            'status'               => __('Status'),
+            'nursery_id'           => __('Nursery'),
+            'coa_action'           => __('Chart of Accounts Setup'),
+            'clone_from_entity_id' => __('Source Entity for Accounts'),
         ];
     }
 }

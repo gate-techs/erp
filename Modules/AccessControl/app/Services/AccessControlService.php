@@ -38,6 +38,11 @@ class AccessControlService
 
     public function deleteRole(int|Role $role): bool
     {
+        $roleModel = is_numeric($role) ? Role::find($role) : $role;
+        if ($roleModel && $roleModel->isSystem()) {
+            throw new \InvalidArgumentException(__('System roles cannot be deleted.'));
+        }
+
         return $this->roleRepository->delete($role);
     }
 

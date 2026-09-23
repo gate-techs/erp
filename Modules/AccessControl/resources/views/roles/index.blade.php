@@ -132,6 +132,7 @@ window.addEventListener('load', function () {
                             <i class="icon-base bx bx-shield-quarter font-16"></i>
                         </div>
                         <span class="fw-semibold text-heading">${escapeHtml(data || row.name)}</span>
+                        ${row.is_system ? `<span class="badge bg-label-secondary font-11 py-0 px-2"><i class="bx bx-lock-alt font-12 me-1"></i>{{ __('System') }}</span>` : ''}
                     </div>`
             },
             { 
@@ -149,9 +150,14 @@ window.addEventListener('load', function () {
                         <a href="{{ url('settings/roles') }}/${row.id}/edit" class="btn btn-icon btn-sm btn-outline-primary" title="{{ __('Edit') }}">
                             <i class="icon-base bx bx-edit-alt"></i>
                         </a>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-role" title="{{ __('Delete') }}" data-id="${row.id}" data-name="${escapeHtml(row.translated_name || row.name)}">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
+                        ${row.is_system 
+                            ? `<button type="button" class="btn btn-icon btn-sm btn-outline-secondary" disabled title="{{ __('Protected system role cannot be deleted') }}">
+                                   <i class="icon-base bx bx-lock-alt"></i>
+                               </button>`
+                            : `<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-role" title="{{ __('Delete') }}" data-id="${row.id}" data-name="${escapeHtml(row.translated_name || row.name)}">
+                                   <i class="icon-base bx bx-trash"></i>
+                               </button>`
+                        }
                     </div>`
             }
         ],

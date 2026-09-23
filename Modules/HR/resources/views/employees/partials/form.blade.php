@@ -70,7 +70,7 @@
             <!-- Core Setup & System Account -->
             <div class="col-12 col-lg-9 d-flex flex-column justify-content-between">
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="col-12 col-md-4">
                         <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employee Code') }}</label>
                         <div class="input-group">
                             <span class="input-group-text employee-form-surface"><i class="bx bx-barcode"></i></span>
@@ -80,41 +80,60 @@
                         @error('employee_code') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label class="form-label text-muted small fw-semibold mb-1">{{ __('Status') }} <span class="text-danger">*</span></label>
-                        <select name="status" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Status...') }}" required>
-                            <option value=""></option>
-                            @foreach ($statuses as $status)
-                                <option value="{{ $status->value }}" {{ old('status', $isEdit ? $employee->status?->value : 'active') === $status->value ? 'selected' : '' }}>
-                                    {{ $status->label() }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('status') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    <div class="col-12 col-md-4">
+                        <label class="form-label text-muted small fw-semibold mb-1" for="employeeNameAr">{{ __('Full Name [Arabic]') }} <span class="text-danger">*</span></label>
+                        <input type="text" name="name_ar" id="employeeNameAr" class="form-control @error('name_ar') is-invalid @enderror" 
+                               value="{{ old('name_ar', $isEdit ? $employee->translate('ar')?->name : '') }}" 
+                               placeholder="{{ __('e.g. Ahmed Mohamed') }}" required dir="rtl">
+                        @error('name_ar') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <label class="form-label text-muted small fw-semibold mb-1">{{ __('Employment Type') }} <span class="text-danger">*</span></label>
-                        <select name="employment_type" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Employment Type...') }}" required>
-                            <option value=""></option>
-                            @foreach ($employmentTypes as $type)
-                                <option value="{{ $type->value }}" {{ old('employment_type', $isEdit ? $employee->employment_type?->value : 'full_time') === $type->value ? 'selected' : '' }}>
-                                    {{ $type->label() }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('employment_type') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    <div class="col-12 col-md-4">
+                        <label class="form-label text-muted small fw-semibold mb-1 d-flex justify-content-between align-items-center" for="employeeNameEn">
+                            <span>{{ __('Full Name [English]') }}</span>
+                            <span class="badge bg-label-primary small cursor-pointer" id="btnBadgeTranslateName" title="{{ __('Auto-transliterate with AI') }}" style="cursor: pointer;">
+                                <i class="bx bx-brain me-1" id="translateNameIcon"></i>{{ __('AI Translate') }}
+                            </span>
+                        </label>
+                        <input type="text" name="name_en" id="employeeNameEn" class="form-control @error('name_en') is-invalid @enderror" 
+                               value="{{ old('name_en', $isEdit ? $employee->translate('en')?->name : '') }}" 
+                               placeholder="{{ __('e.g. Ahmed Mohamed Ali') }}" dir="ltr">
+                        <div id="aiTranslateFeedback" class="small text-danger mt-1 d-none"></div>
+                        @error('name_en') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    </div>
+                </div>
+
+                <!-- Academic Teacher Switch Option -->
+                <div class="p-3 mb-3 employee-form-surface rounded-3 border d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="avatar avatar-sm bg-label-primary rounded p-2 d-flex align-items-center justify-content-center">
+                            <i class="bx bx-book-reader font-20"></i>
+                        </div>
+                        <div>
+                            <label class="form-check-label fw-semibold text-heading small mb-0 cursor-pointer" for="isTeacherSwitch">
+                                {{ __('Academic Teacher') }}
+                            </label>
+                            <span class="text-muted x-small d-block">{{ __('Enable this option if this employee is an academic teacher (assigned to subjects, classrooms, and timetables).') }}</span>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input" type="checkbox" id="isTeacherSwitch" name="is_teacher" value="1"
+                               {{ old('is_teacher', $isEdit && $employee->is_teacher ? '1' : '0') == '1' ? 'checked' : '' }} style="cursor: pointer;">
                     </div>
                 </div>
 
                 <!-- System User Account Box (Inline) -->
+                @php
+                    $currentRole = old('role', ($isEdit && $employee->user) ? $employee->user->roles->first()?->name : 'employee');
+                    $rolesList = $roles ?? collect();
+                @endphp
                 <div class="p-3 employee-form-surface rounded-3 border">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <i class="icon-base bx bx-user-circle text-primary font-22"></i>
                             <div>
                                 <span class="fw-semibold text-heading small">{{ __('System User Account') }}</span>
-                                <span class="text-muted x-small d-block">{{ __('Allow this employee to log into the ERP system with their email.') }}</span>
+                                <span class="text-muted x-small d-block">{{ __('Allow this employee to log into the ERP system with their email and role.') }}</span>
                             </div>
                         </div>
                         <div class="form-check form-switch m-0">
@@ -126,21 +145,52 @@
                     <div id="userAccountFields" class="{{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? '' : 'd-none' }} pt-3 mt-2 border-top">
                         <div class="row align-items-center g-3">
                             @if ($isEdit && $employee->user)
-                                <div class="col-12 col-md-6">
+                                <div class="col-12">
                                     <div class="alert alert-light-primary py-2 px-3 small mb-0 d-flex align-items-center gap-2 rounded-2">
                                         <i class="bx bx-check-shield text-success font-18"></i>
-                                        <span class="text-truncate">{{ __('Linked User:') }} <strong>{{ $employee->user->email }}</strong></span>
+                                        <span class="text-truncate">{{ __('Linked User:') }} <strong>{{ $employee->user->email }}</strong> ({{ $employee->user->roles->pluck('name')->join(', ') ?: __('No Role') }})</span>
                                     </div>
                                 </div>
                             @endif
-                            <div class="col-12 {{ $isEdit && $employee->user ? 'col-md-6' : 'col-md-6' }}">
-                                <label class="form-label text-muted small mb-1">
+
+                            <!-- Email -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label text-muted small fw-semibold mb-1">
+                                    {{ __('Email') }} <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bx bx-envelope"></i></span>
+                                    <input type="email" id="userAccountEmail" name="email" class="form-control bg-white @error('email') is-invalid @enderror" 
+                                           value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
+                                </div>
+                                @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            </div>
+
+                            <!-- Password -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label text-muted small fw-semibold mb-1">
                                     {{ $isEdit && $employee->user_id ? __('Change Password') : __('Password') }}
+                                    @if (!$isEdit) <span class="text-muted font-11">({{ __('Default:') }} 12345678)</span> @endif
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bx bx-lock-alt"></i></span>
                                     <input type="password" name="user_password" class="form-control bg-white" placeholder="{{ $isEdit ? __('Leave blank to keep current') : '••••••••' }}">
                                 </div>
+                            </div>
+
+                            <!-- Role -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label text-muted small fw-semibold mb-1">
+                                    {{ __('Role & Permissions') }} <span class="text-danger">*</span>
+                                </label>
+                                <select name="role" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Role...') }}">
+                                    <option value=""></option>
+                                    @foreach ($rolesList as $r)
+                                        <option value="{{ $r->name }}" {{ $currentRole === $r->name ? 'selected' : '' }}>
+                                            {{ $r->display_name ?? __($r->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -149,6 +199,7 @@
         </div>
     </div>
 </div>
+
         <!-- 1. Personal & Civil Information -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-transparent border-bottom py-3">
@@ -159,21 +210,6 @@
             </div>
             <div class="card-body p-4">
                 <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold small mb-1">{{ __('Full Name [Arabic]') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="name_ar" class="form-control @error('name_ar') is-invalid @enderror" 
-                               value="{{ old('name_ar', $isEdit ? $employee->translate('ar')?->name : '') }}" 
-                               placeholder="{{ __('e.g. Ahmed Mohamed') }}" required dir="rtl">
-                        @error('name_ar') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold small mb-1">{{ __('Full Name [English]') }}</label>
-                        <input type="text" name="name_en" class="form-control @error('name_en') is-invalid @enderror" 
-                               value="{{ old('name_en', $isEdit ? $employee->translate('en')?->name : '') }}" 
-                               placeholder="{{ __('e.g. Ahmed Mohamed Ali') }}" dir="ltr">
-                        @error('name_en') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                    </div>
 
                     <!-- Gender (Select2) -->
                     <div class="col-12 col-md-3">
@@ -448,6 +484,34 @@
                         </select>
                     </div>
 
+                    <!-- Employment Type -->
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold mb-1">{{ __('Employment Type') }} <span class="text-danger">*</span></label>
+                        <select name="employment_type" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Employment Type...') }}" required>
+                            <option value=""></option>
+                            @foreach ($employmentTypes as $type)
+                                <option value="{{ $type->value }}" {{ old('employment_type', $isEdit ? $employee->employment_type?->value : 'full_time') === $type->value ? 'selected' : '' }}>
+                                    {{ $type->label() }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('employment_type') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-12 col-md-4">
+                        <label class="form-label small fw-semibold mb-1">{{ __('Status') }} <span class="text-danger">*</span></label>
+                        <select name="status" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Status...') }}" required>
+                            <option value=""></option>
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status->value }}" {{ old('status', $isEdit ? $employee->status?->value : 'active') === $status->value ? 'selected' : '' }}>
+                                    {{ $status->label() }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('status') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                    </div>
+
                     <!-- Work Schedule -->
                     <div class="col-12 col-md-4">
                         <label class="form-label small mb-1">{{ __('Work Schedule') }}</label>
@@ -483,14 +547,14 @@
                     </div>
 
                     <!-- Probation End Date -->
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Probation End Date') }}</label>
                         <input type="date" name="probation_end_date" class="form-control js-flatpickr-date"
                                value="{{ old('probation_end_date', $isEdit && $employee->probation_end_date ? $employee->probation_end_date->format('Y-m-d') : '') }}">
                     </div>
 
                     <!-- Contract End Date -->
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Contract End Date') }}</label>
                         <input type="date" name="contract_end_date" class="form-control js-flatpickr-date"
                                value="{{ old('contract_end_date', $isEdit && $employee->contract_end_date ? $employee->contract_end_date->format('Y-m-d') : '') }}">
@@ -526,7 +590,7 @@
                         <label class="form-label small mb-1">{{ __('Email') }}</label>
                         <div class="input-group">
                             <span class="input-group-text employee-form-surface"><i class="bx bx-envelope"></i></span>
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                            <input type="email" name="email" id="contactEmail" class="form-control @error('email') is-invalid @enderror"
                                    value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
                         </div>
                         @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
@@ -1032,4 +1096,122 @@
         </div>
     </div>
 </template>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const nameArInput = document.getElementById('employeeNameAr');
+    const nameEnInput = document.getElementById('employeeNameEn');
+    const btnTranslateAction = document.getElementById('btnTranslateNameAction');
+    const btnBadgeTranslate = document.getElementById('btnBadgeTranslateName');
+    const translateIcon = document.getElementById('translateNameIcon');
+    const cardEmployeeName = document.getElementById('cardEmployeeName');
+
+    if (!nameArInput || !nameEnInput) return;
+
+    let debounceTimer = null;
+    let isTranslating = false;
+
+    // Track if user manually typed in English name
+    nameEnInput.addEventListener('input', function () {
+        this.dataset.manuallyEdited = 'true';
+    });
+
+    function performTranslation(force = false) {
+        const arabicText = nameArInput.value.trim();
+        if (!arabicText) return;
+
+        // Don't overwrite if user manually typed unless forced by clicking the button
+        if (!force && nameEnInput.value.trim() && nameEnInput.dataset.manuallyEdited === 'true') {
+            return;
+        }
+
+        const feedbackEl = document.getElementById('aiTranslateFeedback');
+        if (feedbackEl) {
+            feedbackEl.classList.add('d-none');
+            feedbackEl.textContent = '';
+        }
+
+        if (isTranslating) return;
+        isTranslating = true;
+
+        if (translateIcon) {
+            translateIcon.className = 'bx bx-loader-alt bx-spin text-primary';
+        }
+
+        fetch('{{ route("ai.translate-name") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ name_ar: arabicText })
+        })
+        .then(async response => {
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                const errMsg = data.message || data.error || '{{ __("Failed to generate English name via AI.") }}';
+                throw new Error(errMsg);
+            }
+            return data;
+        })
+        .then(data => {
+            if (data.name_en) {
+                nameEnInput.value = data.name_en;
+                nameEnInput.dataset.autoFilled = 'true';
+
+                // Update preview card if present
+                if (cardEmployeeName) {
+                    cardEmployeeName.textContent = arabicText;
+                }
+            }
+        })
+        .catch(err => {
+            console.error('AI translation error:', err);
+            if (feedbackEl) {
+                feedbackEl.textContent = err.message;
+                feedbackEl.classList.remove('d-none');
+            }
+        })
+        .finally(() => {
+            isTranslating = false;
+            if (translateIcon) {
+                translateIcon.className = 'bx bx-brain';
+            }
+        });
+    }
+
+    // Auto translate when typing stops or on blur
+    nameArInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        const val = this.value.trim();
+        if (cardEmployeeName && val) {
+            cardEmployeeName.textContent = val;
+        }
+        if (val.length >= 3) {
+            debounceTimer = setTimeout(() => {
+                performTranslation(false);
+            }, 750);
+        }
+    });
+
+    nameArInput.addEventListener('blur', function () {
+        clearTimeout(debounceTimer);
+        performTranslation(false);
+    });
+
+    // Manual click on Translate buttons
+    if (btnTranslateAction) {
+        btnTranslateAction.addEventListener('click', function () {
+            performTranslation(true);
+        });
+    }
+
+    if (btnBadgeTranslate) {
+        btnBadgeTranslate.addEventListener('click', function () {
+            performTranslation(true);
+        });
+    }
+});
+</script>
 

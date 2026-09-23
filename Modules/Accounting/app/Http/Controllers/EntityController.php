@@ -29,6 +29,7 @@ class EntityController extends Controller
     {
         $allNurseries = Nursery::with('translations')->latest('id')->get();
         $availableNurseries = $this->entityService->getAvailableNurseries();
+        $existingEntities = Entity::with('translations')->orderBy('id')->get();
 
         $types = [
             'nursery' => __('Nursery'),
@@ -40,6 +41,7 @@ class EntityController extends Controller
         return view('accounting::entities.index', [
             'allNurseries'       => $allNurseries,
             'availableNurseries' => $availableNurseries,
+            'existingEntities'   => $existingEntities,
             'defaultCurrency'    => 'KWD',
             'nextCode'           => $nextCode,
             'types'              => $types,

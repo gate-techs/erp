@@ -282,7 +282,7 @@
                     });
                 }
 
-                // 7. User Account Toggle
+                // 7. User Account Toggle & Email Sync
                 const accountSwitch = document.getElementById('createUserAccountSwitch');
                 const accountFields = document.getElementById('userAccountFields');
 
@@ -290,11 +290,35 @@
                     accountSwitch.addEventListener('change', function () {
                         if (this.checked) {
                             accountFields.classList.remove('d-none');
+                            setupSelect2(accountFields);
                         } else {
                             accountFields.classList.add('d-none');
                         }
                     });
                 }
+
+                // Two-way sync between User Account Email and Contact Email
+                $('#userAccountEmail').on('input change', function () {
+                    $('#contactEmail').val($(this).val());
+                });
+                $('#contactEmail').on('input change', function () {
+                    $('#userAccountEmail').val($(this).val());
+                });
+
+                // Academic Teacher toggle role auto-sync
+                $('#isTeacherSwitch').on('change', function () {
+                    const isTeacher = $(this).is(':checked');
+                    const $roleSelect = $('select[name="role"]');
+                    if (isTeacher) {
+                        if (!$roleSelect.val() || $roleSelect.val() === 'employee') {
+                            $roleSelect.val('teacher').trigger('change');
+                        }
+                    } else {
+                        if ($roleSelect.val() === 'teacher') {
+                            $roleSelect.val('employee').trigger('change');
+                        }
+                    }
+                });
 
                 // 8. Dynamic Salary Allowances Repeater
                 let allowanceIndex = $('#allowancesTableBody tr.allowance-row').length;

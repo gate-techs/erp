@@ -27,8 +27,9 @@ class StoreEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // Code & Avatar
+            // Code, Avatar & Academic Teacher Flag
             'employee_code'               => ['nullable', 'string', 'max:50', 'unique:employees,employee_code'],
+            'is_teacher'                  => ['nullable', 'boolean'],
             'avatar'                      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
 
             // Names (Full Name)
@@ -98,6 +99,7 @@ class StoreEmployeeRequest extends FormRequest
             'create_user_account'         => ['nullable', 'boolean'],
             'user_id'                     => ['nullable', 'integer', 'exists:users,id'],
             'user_password'               => ['nullable', 'string', 'min:6'],
+            'role'                        => ['nullable', 'string', 'exists:roles,name'],
 
             // 7. Allowances
             'allowances'                  => ['nullable', 'array'],

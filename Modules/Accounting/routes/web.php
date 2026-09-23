@@ -14,6 +14,9 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::resource('entities', EntityController::class);
 
     // Chart of Accounts (دليل / شجرة الحسابات)
+    Route::get('accounts/template/download', [AccountController::class, 'downloadTemplate'])->name('accounts.template.download');
+    Route::get('accounts/export', [AccountController::class, 'export'])->name('accounts.export');
+    Route::post('accounts/import', [AccountController::class, 'import'])->name('accounts.import');
     Route::get('accounts/data', [AccountController::class, 'data'])->name('accounts.data');
     Route::get('accounts/tree-data', [AccountController::class, 'treeData'])->name('accounts.tree-data');
     Route::get('accounts/suggest-code', [AccountController::class, 'suggestCode'])->name('accounts.suggest-code');

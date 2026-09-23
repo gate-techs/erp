@@ -5,13 +5,17 @@ namespace Modules\Accounting\Services;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Modules\Accounting\Models\Entity;
 use Modules\Accounting\Repositories\Contracts\EntityRepositoryInterface;
 
 class EntityService
 {
     //--------------------------------------------------
-    public function __construct(protected EntityRepositoryInterface $repository) {}
+    public function __construct(
+        protected EntityRepositoryInterface $repository,
+        protected ChartOfAccountsTemplateService $coaTemplateService
+    ) {}
 
     //--------------------------------------------------
     public function getAllEntities(array $filters = []): Collection
@@ -50,7 +54,20 @@ class EntityService
             $data['created_by'] = $userId;
         }
 
-        return $this->repository->create($this->prepareData($data));
+        $coaAction = $data['coa_action'] ?? 'standard_template';
+        $cloneEntityId = !empty($data['clone_from_entity_id']) ? (int) $data['clone_from_entity_id'] : null;
+
+        return DB::transaction(function () use ($data, $userId, $coaAction, $cloneEntityId) {
+            $entity = $this->repository->create($this->prepareData($data));
+
+            if ($coaAction === 'standard_template') {
+                $this->coaTemplateService->generateTemplateForEntity($entity, $userId);
+            } elseif ($coaAction === 'clone_entity' && $cloneEntityId) {
+                $this->coaTemplateService->cloneChartFromEntity($cloneEntityId, $entity, $userId);
+            }
+
+            return $entity;
+        });
     }
 
     //--------------------------------------------------
@@ -93,7 +110,7 @@ class EntityService
             $data['nursery_id'] = null;
         }
 
-        foreach (['name_ar', 'name_en', 'description_ar', 'description_en'] as $field) {
+        foreach (['name_ar', 'name_en', 'description_ar', 'description_en', 'coa_action', 'clone_from_entity_id'] as $field) {
             unset($data[$field]);
         }
 

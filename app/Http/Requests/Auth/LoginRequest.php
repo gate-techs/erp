@@ -43,9 +43,9 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'يرجى إدخال البريد الإلكتروني.',
-            'email.email' => 'يرجى إدخال بريد إلكتروني صحيح.',
-            'password.required' => 'يرجى إدخال كلمة المرور.',
+            'email.required' => __('يرجى إدخال البريد الإلكتروني.'),
+            'email.email' => __('يرجى إدخال بريد إلكتروني صحيح.'),
+            'password.required' => __('يرجى إدخال كلمة المرور.'),
         ];
     }
 

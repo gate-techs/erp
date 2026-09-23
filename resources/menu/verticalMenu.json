@@ -332,6 +332,13 @@
           "permission": "settings.print-templates.view"
         },
         {
+          "name": "AI Settings",
+          "icon": "menu-icon icon-base bx bx-brain",
+          "slug": "settings.ai.index",
+          "url": "/settings/ai",
+          "user_type": "developer"
+        },
+        {
           "name": "Audit Log Settings",
           "icon": "menu-icon icon-base bx bx-server",
           "slug": "audit-logs.settings.index",
