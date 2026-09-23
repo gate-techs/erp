@@ -3,403 +3,6 @@
 @section('title', __('Attendance & Absence') . ' - ' . config('variables.templateName'))
 
 @section('page-style')
-<style>
-    /* ========================================================================= */
-    /* 1. Global Page Layout & Typography                                       */
-    /* ========================================================================= */
-    .attendance-page-root {
-        direction: rtl;
-        font-family: inherit;
-        color: #1e293b;
-    }
-
-    /* Top Action Bar */
-    .attendance-top-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 16px;
-    }
-    .attendance-main-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #1e293b;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-    }
-    .attendance-main-title i {
-        font-size: 24px;
-        color: #0f2b48;
-    }
-
-    /* Dark Navy "+ تسجيل حضور / إنصراف" Button */
-    .btn-action-navy {
-        background-color: #0b2545 !important;
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 6px !important;
-        padding: 8px 18px !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        cursor: pointer !important;
-        box-shadow: 0 1px 2px rgba(11, 37, 69, 0.2) !important;
-        transition: background-color 0.2s ease !important;
-    }
-    .btn-action-navy:hover {
-        background-color: #153965 !important;
-        color: #ffffff !important;
-    }
-
-    /* View Switcher: "عرض قائمة" / "الجدول الشهري" */
-    .attendance-view-switcher {
-        display: inline-flex;
-        align-items: center;
-        background: #ffffff;
-        border: 1px solid #dcdfe6;
-        border-radius: 6px;
-        padding: 3px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-    }
-    .view-switch-btn {
-        border: none !important;
-        background: transparent !important;
-        color: #64748b !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        padding: 6px 14px !important;
-        border-radius: 4px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }
-    .view-switch-btn:hover {
-        color: #0f2b48 !important;
-    }
-    .view-switch-btn.active {
-        background-color: #e0ecf8 !important;
-        color: #1d4ed8 !important;
-    }
-
-    /* ========================================================================= */
-    /* 2. Floating-Label Filters Bar (Exact Match with Reference Image)          */
-    /* ========================================================================= */
-    .attendance-filters-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-    }
-    .floating-field-wrapper {
-        position: relative;
-        background: #ffffff;
-        border: 1px solid #dcdfe6;
-        border-radius: 6px;
-        height: 42px;
-        padding: 0 10px;
-        display: flex;
-        align-items: center;
-        transition: border-color 0.2s ease;
-    }
-    .floating-field-wrapper:focus-within {
-        border-color: #3b82f6;
-    }
-    .floating-field-title {
-        position: absolute;
-        top: -9px;
-        right: 14px;
-        background: #ffffff;
-        padding: 0 4px;
-        font-size: 11px;
-        color: #64748b;
-        font-weight: 500;
-        line-height: 1;
-        z-index: 2;
-    }
-    .floating-field-control {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        width: 100% !important;
-        font-size: 13px !important;
-        color: #1e293b !important;
-        font-weight: 500 !important;
-        padding: 0 !important;
-        cursor: pointer;
-    }
-    .btn-green-filter {
-        background-color: #22c55e !important;
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 6px !important;
-        padding: 8px 22px !important;
-        font-weight: 600 !important;
-        font-size: 13px !important;
-        height: 42px !important;
-        cursor: pointer !important;
-        transition: background-color 0.2s ease !important;
-    }
-    .btn-green-filter:hover {
-        background-color: #16a34a !important;
-    }
-    .btn-gray-filter {
-        background-color: #f8fafc !important;
-        color: #64748b !important;
-        border: 1px solid #dcdfe6 !important;
-        border-radius: 6px !important;
-        padding: 8px 18px !important;
-        font-weight: 600 !important;
-        font-size: 13px !important;
-        height: 42px !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-    }
-    .btn-gray-filter:hover {
-        background-color: #f1f5f9 !important;
-        color: #334155 !important;
-    }
-
-    /* ========================================================================= */
-    /* 3. Subtitle & Legend Bar (Exact Match with Reference Image)               */
-    /* ========================================================================= */
-    .attendance-legend-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 10px 16px;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-    .legend-report-title {
-        color: #16a34a;
-        font-weight: 700;
-        font-size: 16px;
-        text-decoration: underline;
-        text-underline-offset: 4px;
-        white-space: nowrap;
-    }
-    .legend-symbols-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        font-size: 12px;
-        color: #475569;
-        font-weight: 500;
-    }
-    .legend-badge-item {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        white-space: nowrap;
-    }
-
-    /* ========================================================================= */
-    /* 4. Strict Matrix Grid Table (Clean Borders, Perfectly Centered)           */
-    /* ========================================================================= */
-    .attendance-matrix-scroll-box {
-        position: relative;
-        overflow-x: auto;
-        border: 1px solid #dcdfe6;
-        border-radius: 6px;
-        background: #ffffff;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-    table.matrix-attendance-table {
-        table-layout: fixed !important;
-        border-collapse: collapse !important;
-        width: max-content !important;
-        min-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background-color: #ffffff !important;
-        border: 1px solid #dcdfe6 !important;
-    }
-    table.matrix-attendance-table th,
-    table.matrix-attendance-table td {
-        border: 1px solid #dcdfe6 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        text-align: center !important;
-        vertical-align: middle !important;
-        box-sizing: border-box !important;
-        position: relative !important;
-    }
-
-    /* Column Widths & Heights */
-    table.matrix-attendance-table th.col-matrix-day,
-    table.matrix-attendance-table td.col-matrix-day {
-        width: 42px !important;
-        min-width: 42px !important;
-        max-width: 42px !important;
-        height: 52px !important;
-        cursor: pointer !important;
-        user-select: none !important;
-    }
-    table.matrix-attendance-table td.col-matrix-day:hover {
-        background-color: #eff6ff !important;
-        box-shadow: inset 0 0 0 2px #3b82f6 !important;
-    }
-
-    /* Sticky Employee Column */
-    table.matrix-attendance-table th.col-sticky-emp,
-    table.matrix-attendance-table td.col-sticky-emp {
-        position: sticky !important;
-        right: 0 !important;
-        z-index: 10 !important;
-        width: 220px !important;
-        min-width: 220px !important;
-        max-width: 240px !important;
-        background-color: #ffffff !important;
-        border-left: 2px solid #cbd5e1 !important;
-        padding: 6px 12px !important;
-        text-align: right !important;
-    }
-    table.matrix-attendance-table thead th.col-sticky-emp {
-        background-color: #f8fafc !important;
-        z-index: 15 !important;
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        color: #334155 !important;
-    }
-    table.matrix-attendance-table tbody tr:hover td.col-sticky-emp {
-        background-color: #f8fafc !important;
-    }
-
-    /* Table Headers */
-    table.matrix-attendance-table thead tr:first-child th {
-        height: 36px !important;
-        background-color: #f8fafc !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        color: #334155 !important;
-        border-bottom: 1px solid #dcdfe6 !important;
-    }
-    table.matrix-attendance-table thead tr:nth-child(2) th {
-        height: 28px !important;
-        background-color: #ffffff !important;
-        font-size: 11px !important;
-        font-weight: 500 !important;
-        color: #64748b !important;
-        border-bottom: 2px solid #cbd5e1 !important;
-    }
-    table.matrix-attendance-table thead th.today-highlight {
-        background-color: #fef3c7 !important;
-        color: #92400e !important;
-        font-weight: 700 !important;
-    }
-
-    /* Exact Status Symbols */
-    .sym-present-check {
-        color: #10b981 !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        display: block !important;
-        line-height: 1 !important;
-    }
-    .sym-absent-cross {
-        color: #ef4444 !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        display: block !important;
-        line-height: 1 !important;
-    }
-    .sym-restday-box {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        gap: 1px !important;
-        color: #94a3b8 !important;
-        line-height: 1 !important;
-    }
-    .sym-restday-box .ico {
-        font-size: 16px !important;
-    }
-    .sym-restday-box .txt {
-        font-size: 9px !important;
-        color: #94a3b8 !important;
-        white-space: nowrap !important;
-    }
-    .sym-future-dash {
-        color: #cbd5e1 !important;
-        font-size: 16px !important;
-        display: block !important;
-        line-height: 1 !important;
-    }
-    .sym-holiday-star {
-        color: #eab308 !important;
-        font-size: 15px !important;
-    }
-    .sym-late-clock {
-        color: #ea580c !important;
-        font-size: 15px !important;
-        font-weight: bold !important;
-    }
-    .sym-half-day {
-        color: #0284c7 !important;
-        font-size: 14px !important;
-        font-weight: bold !important;
-    }
-    .sym-leave-flag {
-        color: #dc2626 !important;
-        font-size: 14px !important;
-    }
-
-    /* Employee Card layout in Sticky Column */
-    .emp-card-layout {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        gap: 8px !important;
-    }
-    .emp-card-name {
-        font-weight: 600 !important;
-        color: #1e293b !important;
-        font-size: 13px !important;
-        white-space: nowrap !important;
-        text-overflow: ellipsis !important;
-        overflow: hidden !important;
-        text-align: right !important;
-    }
-    .emp-card-sub {
-        font-size: 11px !important;
-        color: #64748b !important;
-        white-space: nowrap !important;
-        text-overflow: ellipsis !important;
-        overflow: hidden !important;
-        text-align: right !important;
-    }
-    .emp-avatar-badge {
-        width: 28px !important;
-        height: 28px !important;
-        border-radius: 50% !important;
-        background-color: #cbd5e1 !important;
-        color: #475569 !important;
-        font-weight: 700 !important;
-        font-size: 12px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        flex-shrink: 0 !important;
-    }
-</style>
 @endsection
 
 @section('content')
@@ -408,37 +11,45 @@
     <!-- ========================================================================= -->
     <!-- 1. Top Header: Title & Action Controls                                    -->
     <!-- ========================================================================= -->
-    <div class="attendance-top-bar">
-        <!-- Title -->
-        <div>
-            <h4 class="attendance-main-title">
-                <i class="bx bx-calendar-check"></i>
-                <span>{{ __('الحضور والإنصراف') }}</span>
-            </h4>
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 attendance-page-header">
+        <div class="d-flex flex-column justify-content-center">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted fw-medium small">{{ __('Dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);" class="text-muted fw-medium small">{{ __('Human Resources') }}</a></li>
+                    <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ __('الحضور والإنصراف') }}</li>
+                </ol>
+            </nav>
+            <!-- Title -->
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <i class="icon-base bx bx-calendar-check text-primary font-24"></i>
+                <h4 class="mb-0 fw-bold text-heading">{{ __('الحضور والإنصراف') }}</h4>
+            </div>
         </div>
 
-        <!-- Left Controls -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="mt-3 mt-md-0 d-flex flex-wrap align-items-center gap-2">
             <!-- Navy Quick Punch Button -->
-            <button type="button" class="btn-action-navy" data-bs-toggle="offcanvas" data-bs-target="#offcanvasQuickPunch">
-                <i class="bx bx-plus"></i>
+            <button type="button" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm attendance-page-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasQuickPunch">
+                <i class="icon-base bx bx-plus font-18"></i>
                 <span>{{ __('+ تسجيل حضور / إنصراف') }}</span>
             </button>
 
             <!-- Excel Import -->
-            <button type="button" class="btn btn-outline-secondary btn-sm bg-white" data-bs-toggle="modal" data-bs-target="#modalImportExcel" style="height: 35px; border-radius: 6px; font-weight: 600;">
-                <i class="bx bx-upload me-1"></i>
+            <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-2 attendance-page-btn" data-bs-toggle="modal" data-bs-target="#modalImportExcel">
+                <i class="icon-base bx bx-upload font-18"></i>
                 <span>{{ __('استيراد إكسيل') }}</span>
             </button>
 
             <!-- Segmented Switcher -->
-            <div class="attendance-view-switcher">
-                <button type="button" class="view-switch-btn active" id="btnTabGrid" onclick="switchAttendanceTab('grid')">
-                    <i class="bx bx-grid-alt"></i>
+            <div class="btn-group shadow-sm" role="group">
+                <button type="button" class="btn btn-outline-primary active" id="btnTabGrid" onclick="switchAttendanceTab('grid')">
+                    <i class="icon-base bx bx-grid-alt me-1"></i>
                     <span>{{ __('الجدول الشهري') }}</span>
                 </button>
-                <button type="button" class="view-switch-btn" id="btnTabList" onclick="switchAttendanceTab('list')">
-                    <i class="bx bx-list-ul"></i>
+                <button type="button" class="btn btn-outline-primary" id="btnTabList" onclick="switchAttendanceTab('list')">
+                    <i class="icon-base bx bx-list-ul me-1"></i>
                     <span>{{ __('عرض قائمة') }}</span>
                 </button>
             </div>
@@ -675,7 +286,7 @@
     <!-- 5. List View Table (DataTables)                                           -->
     <!-- ========================================================================= -->
     <div id="listTableViewBox" style="display: none;">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-0 attendance-index-table-wrapper">
             <div class="card-datatable table-responsive p-3">
                 <table id="attendancesDataTable" class="table table-hover border-top w-100 text-nowrap">
                     <thead>
@@ -960,6 +571,8 @@
                 dataTableInstance = $('#attendancesDataTable').DataTable({
                     processing: true,
                     serverSide: true,
+                    pageLength: 10,
+                    dom: '<"row mx-2 py-3"<"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start"l><"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end"f>>t<"row mx-2 py-3"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
                     ajax: {
                         url: '{{ route('hr.attendances.data') }}',
                         data: function (d) {
@@ -983,7 +596,11 @@
                     ],
                     order: [[2, 'desc']],
                     language: {
-                        url: '{{ app()->getLocale() === "ar" ? asset("assets/vendor/libs/datatables-bs5/i18n/ar.json") : "" }}'
+                        url: '{{ app()->getLocale() === "ar" ? asset("assets/vendor/libs/datatables-bs5/i18n/ar.json") : "" }}',
+                        search: "",
+                        searchPlaceholder: "{{ __('البحث في السجلات...') }}",
+                        lengthMenu: "_MENU_",
+                        emptyTable: '<div class="attendance-empty-state text-center p-4"><div class="avatar avatar-md bg-label-secondary mx-auto mb-3"><i class="icon-base bx bx-calendar-x font-24"></i></div><h6 class="fw-semibold mb-1">{{ __('لا توجد سجلات حضور') }}</h6><p class="text-muted small mb-0">{{ __('لا توجد سجلات مطابقة للفلاتر المحددة.') }}</p></div>'
                     }
                 });
             } else {

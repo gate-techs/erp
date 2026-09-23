@@ -6,13 +6,24 @@
     $currentAdminId = $currentDept ? $currentDept->parent_id : null;
 @endphp
 
-<!-- Top Overview & Account Setup Card (Single Column Header) -->
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body p-4">
+<!-- Top Overview & Account Setup Card -->
+<div class="card employee-section-card mb-4">
+    <div class="card-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="avatar avatar-sm">
+                <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-cog font-20"></i></span>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-0 text-heading">{{ __('Overview & Account Setup') }}</h6>
+                <small class="text-muted d-block mt-1">{{ __('Core identity and system access') }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
         <div class="row g-4 align-items-stretch">
             <!-- Avatar & Profile Widget -->
             <div class="col-12 col-lg-3">
-                <div class="h-100 p-3 p-xl-4 employee-form-surface rounded-3 d-flex flex-column align-items-center justify-content-center text-center">
+                <div class="h-100 p-3 p-xl-4 employee-form-surface border rounded-3 d-flex flex-column align-items-center justify-content-center text-center">
                     @php
                         $rawGender = $isEdit ? ($employee->gender instanceof \BackedEnum ? $employee->gender->value : ($employee->gender ?? 'female')) : 'female';
                         $genderVal = strtolower((string)$rawGender);
@@ -108,7 +119,7 @@
                 </div>
 
                 <!-- System User Account Box (Inline) -->
-                <div class="p-3 employee-form-surface rounded-3 border">
+                <div class="p-4 employee-form-surface rounded-3 border">
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div class="d-flex align-items-center gap-2">
                             <i class="icon-base bx bx-user-circle text-primary font-22"></i>
@@ -150,14 +161,19 @@
     </div>
 </div>
         <!-- 1. Personal & Civil Information -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-user text-primary font-20"></i>
-                    {{ __('Personal Information') }}
-                </h6>
+        <div class="card employee-section-card mb-4">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-user font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Personal Information') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Basic civil and identification details') }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label fw-semibold small mb-1">{{ __('Full Name [Arabic]') }} <span class="text-danger">*</span></label>
@@ -311,12 +327,12 @@
 
                     <!-- Passport & Visa Sub-Section -->
                     <div class="col-12 mt-3">
-                        <div class="p-3 employee-form-surface rounded-2 border">
-                            <span class="fw-semibold text-heading small d-flex align-items-center gap-1 mb-2">
-                                <i class="bx bx-id-card text-info font-16"></i>
-                                {{ __('Passport & Visa Information') }}
-                            </span>
-                            <div class="row g-2">
+                        <div class="p-4 employee-form-surface rounded-3 border">
+                            <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                                <i class="bx bx-id-card text-primary font-20"></i>
+                                <h6 class="fw-semibold mb-0 text-heading">{{ __('Passport & Visa Information') }}</h6>
+                            </div>
+                            <div class="row g-3">
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Passport Number') }}</label>
                                     <input type="text" name="passport_number" class="form-control" 
@@ -357,14 +373,19 @@
         </div>
 
         <!-- 2. Job & Placement Information -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-briefcase text-primary font-20"></i>
-                    {{ __('Job & Department Assignment') }}
-                </h6>
+        <div class="card employee-section-card mb-4">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-briefcase font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Job & Department Assignment') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Employment terms, roles and department') }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="row g-3">
                     <!-- Primary Branch -->
                     <div class="col-12 col-md-6">
@@ -500,14 +521,19 @@
         </div>
 
         <!-- 3. Contact & Location Information -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-phone-call text-primary font-20"></i>
-                    {{ __('Contact & Location') }}
-                </h6>
+        <div class="card employee-section-card mb-4">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-phone-call font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Contact & Location') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Contact details and emergency information') }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                           <label class="form-label small fw-semibold mb-1">{{ __('Phone Number') }} <span class="text-danger">*</span></label>
@@ -589,12 +615,12 @@
 
                     <!-- Emergency Contact Sub-Box -->
                     <div class="col-12 mt-3">
-                        <div class="p-3 employee-form-surface rounded-2 border">
-                            <span class="fw-semibold text-heading small d-flex align-items-center gap-1 mb-2">
-                                <i class="bx bx-error-circle text-warning font-16"></i>
-                                {{ __('Emergency Contact') }}
-                            </span>
-                            <div class="row g-2">
+                        <div class="p-4 employee-form-surface rounded-3 border">
+                            <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                                <i class="bx bx-error-circle text-primary font-20"></i>
+                                <h6 class="fw-semibold mb-0 text-heading">{{ __('Emergency Contact') }}</h6>
+                            </div>
+                            <div class="row g-3">
                                 <div class="col-12 col-md-4">
                                     <label class="form-label text-muted small mb-1">{{ __('Emergency Contact Name') }}</label>
                                     <input type="text" name="emergency_contact_name" class="form-control" 
@@ -635,14 +661,19 @@
         </div>
 
         <!-- 4. Payroll & Financial Setup -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-wallet text-primary font-20"></i>
-                    {{ __('Payroll & Financial Setup') }}
-                </h6>
+        <div class="card employee-section-card mb-4">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-wallet font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Payroll & Financial Setup') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Base salary and payroll configuration') }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-4">
                         <label class="form-label small fw-semibold mb-1">{{ __('Basic Salary') }} <span class="text-danger">*</span></label>
@@ -734,18 +765,23 @@
         </div>
 
         <!-- 5. Salary Allowances (بدلات الراتب) -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-calculator text-primary font-20"></i>
-                    {{ __('Salary Allowances') }}
-                </h6>
-                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" id="btnAddAllowance">
+        <div class="card employee-section-card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-calculator font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Salary Allowances') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Additional recurring and variable allowances') }}</small>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-primary employee-action-btn d-flex align-items-center gap-1" id="btnAddAllowance">
                     <i class="bx bx-plus font-16"></i>
                     <span>{{ __('Add Allowance') }}</span>
                 </button>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-sm align-middle table-hover mb-0" id="allowancesTable">
                         <thead class="employee-form-surface-table">
@@ -798,7 +834,7 @@
                                             <input type="text" name="allowances[{{ $aIdx }}][notes]" class="form-control" value="{{ $allowance['notes'] ?? '' }}" placeholder="{{ __('Notes...') }}">
                                         </td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-allowance" title="{{ __('Remove') }}">
+                                            <button type="button" class="btn btn-icon btn-outline-danger employee-icon-btn btn-remove-allowance" title="{{ __('Remove') }}">
                                                 <i class="bx bx-trash font-16"></i>
                                             </button>
                                         </td>
@@ -808,26 +844,31 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="noAllowancesAlert" class="alert employee-form-surface text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingAllowances) ? 'd-none' : '' }}">
-                    <i class="bx bx-info-circle me-1 text-primary font-18 align-middle"></i>
-                    {{ __('No allowances added yet. Click "+ Add Allowance" to add one.') }}
+                <div id="noAllowancesAlert" class="employee-empty-state text-center py-4 mb-0 {{ !empty($existingAllowances) ? 'd-none' : '' }}">
+                    <div class="mb-2"><i class="bx bx-wallet text-muted opacity-50" style="font-size: 2rem;"></i></div>
+                    <span class="text-muted small fw-medium">{{ __('No allowances added yet. Click "+ Add Allowance" to add one.') }}</span>
                 </div>
             </div>
         </div>
 
         <!-- 6. Official Documents & Files (الملفات والمستندات) -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-file text-primary font-20"></i>
-                    {{ __('Official Documents & Attachments') }}
-                </h6>
-                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" id="btnAddDocument">
+        <div class="card employee-section-card mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-file font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Official Documents & Attachments') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Passports, IDs, and employee files') }}</small>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-primary employee-action-btn d-flex align-items-center gap-1" id="btnAddDocument">
                     <i class="bx bx-plus font-16"></i>
                     <span>{{ __('Add Document') }}</span>
                 </button>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div id="documentsContainer" class="d-flex flex-column gap-3">
                     @php
                         $existingDocuments = old('documents', $isEdit && $employee->documents ? $employee->documents->toArray() : []);
@@ -840,7 +881,7 @@
                                         <i class="bx bx-paperclip font-16"></i>
                                         {{ __('Document') }} #<span class="doc-number-label">{{ $dIdx + 1 }}</span>
                                     </span>
-                                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-document" title="{{ __('Remove') }}">
+                                    <button type="button" class="btn btn-icon btn-outline-danger employee-icon-btn btn-remove-document" title="{{ __('Remove') }}">
                                         <i class="bx bx-trash font-16"></i>
                                     </button>
                                 </div>
@@ -864,16 +905,24 @@
 
                                     <div class="col-12 col-md-6">
                                         <label class="form-label text-muted small mb-1">{{ __('Upload File') }}</label>
-                                        <input type="file" name="documents[{{ $dIdx }}][file]" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+                                        <div class="employee-file-upload d-flex align-items-center gap-2">
+                                            <label class="btn btn-outline-secondary employee-action-btn mb-0 d-flex align-items-center gap-1 cursor-pointer">
+                                                <i class="bx bx-upload"></i> <span>{{ __('Choose file') }}</span>
+                                                <input type="file" name="documents[{{ $dIdx }}][file]" class="d-none employee-file-input" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+                                            </label>
+                                            <span class="employee-file-name text-muted small text-truncate" style="max-width: 150px;">{{ __('No file chosen') }}</span>
+                                        </div>
                                         @if (!empty($doc['file_path']))
                                             <input type="hidden" name="documents[{{ $dIdx }}][file_path]" value="{{ $doc['file_path'] }}">
                                             <input type="hidden" name="documents[{{ $dIdx }}][file_name]" value="{{ $doc['file_name'] ?? '' }}">
                                             <div class="mt-1 d-flex align-items-center gap-2">
-                                                <a href="{{ asset('storage/' . $doc['file_path']) }}" target="_blank" class="badge bg-label-info text-truncate d-inline-flex align-items-center gap-1">
-                                                    <i class="bx bx-show font-14"></i>
-                                                    <span>{{ $doc['file_name'] ?? __('View Document') }}</span>
-                                                </a>
-                                                <span class="text-muted x-small">({{ __('Current File') }})</span>
+                                                <a href="{{ asset('storage/' . $doc['file_path']) }}" target="_blank" class="employee-current-file d-inline-flex align-items-center gap-2 text-decoration-none">
+                                                      <div class="file-icon"><i class="bx bx-file"></i></div>
+                                                      <div class="d-flex flex-column lh-1">
+                                                          <span class="text-heading small fw-medium text-truncate" style="max-width: 150px;">{{ $doc['file_name'] ?? __('View Document') }}</span>
+                                                          <span class="text-muted x-small mt-1">{{ __('Current File') }}</span>
+                                                      </div>
+                                                  </a>
                                             </div>
                                         @endif
                                     </div>
@@ -905,22 +954,27 @@
                         @endforeach
                     @endif
                 </div>
-                <div id="noDocumentsAlert" class="alert employee-form-surface text-center py-3 mb-0 small text-muted border border-dashed {{ !empty($existingDocuments) ? 'd-none' : '' }}">
-                    <i class="bx bx-info-circle me-1 text-primary font-18 align-middle"></i>
-                    {{ __('No documents attached yet. Click "+ Add Document" to attach one.') }}
+                <div id="noDocumentsAlert" class="employee-empty-state text-center py-4 mb-0 {{ !empty($existingDocuments) ? 'd-none' : '' }}">
+                    <div class="mb-2"><i class="bx bx-file text-muted opacity-50" style="font-size: 2rem;"></i></div>
+                    <span class="text-muted small fw-medium">{{ __('No documents attached yet. Click "+ Add Document" to attach one.') }}</span>
                 </div>
             </div>
         </div>
 
         <!-- 7. Administrative Notes -->
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-transparent border-bottom py-3">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2 text-heading">
-                    <i class="icon-base bx bx-note text-primary font-20"></i>
-                    {{ __('Administrative Notes') }}
-                </h6>
+        <div class="card employee-section-card mb-4">
+            <div class="card-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar avatar-sm">
+                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-note font-20"></i></span>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-heading">{{ __('Administrative Notes') }}</h6>
+                        <small class="text-muted d-block mt-1">{{ __('Internal HR notes and remarks') }}</small>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
                         <label class="form-label small mb-1">{{ __('Notes [Arabic]') }}</label>
@@ -967,7 +1021,7 @@
             <input type="text" name="allowances[__INDEX__][notes]" class="form-control" placeholder="{{ __('Notes...') }}">
         </td>
         <td class="text-center">
-            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-allowance" title="{{ __('Remove') }}">
+            <button type="button" class="btn btn-icon btn-outline-danger employee-icon-btn btn-remove-allowance" title="{{ __('Remove') }}">
                 <i class="bx bx-trash font-16"></i>
             </button>
         </td>
@@ -982,7 +1036,7 @@
                 <i class="bx bx-paperclip font-16"></i>
                 {{ __('Document') }} #<span class="doc-number-label">__DOC_NUM__</span>
             </span>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-remove-document" title="{{ __('Remove') }}">
+            <button type="button" class="btn btn-icon btn-outline-danger employee-icon-btn btn-remove-document" title="{{ __('Remove') }}">
                 <i class="bx bx-trash font-16"></i>
             </button>
         </div>
@@ -1004,7 +1058,13 @@
 
             <div class="col-12 col-md-6">
                 <label class="form-label text-muted small mb-1">{{ __('Upload File') }} <span class="text-danger">*</span></label>
-                <input type="file" name="documents[__INDEX__][file]" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" required>
+                <div class="employee-file-upload d-flex align-items-center gap-2">
+                                            <label class="btn btn-outline-secondary employee-action-btn mb-0 d-flex align-items-center gap-1 cursor-pointer">
+                                                <i class="bx bx-upload"></i> <span>{{ __('Choose file') }}</span>
+                                                <input type="file" name="documents[__INDEX__][file]" class="d-none employee-file-input" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" required>
+                                            </label>
+                                            <span class="employee-file-name text-muted small text-truncate" style="max-width: 150px;">{{ __('No file chosen') }}</span>
+                                        </div>
             </div>
 
             <div class="col-12 col-md-3">

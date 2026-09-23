@@ -2882,4 +2882,23 @@
     "Description (Arabic)": "الوصف (بالعربية)",
     "Description (English)": "الوصف (بالإنجليزية)",
     "Account Name": "اسم الحساب"
+,
+    "Overview & Account Setup": "نظرة عامة وإعداد الحساب",
+    "Core identity and system access": "البيانات الأساسية وصلاحية الدخول للنظام",
+    "Basic civil and identification details": "البيانات الشخصية ومعلومات الهوية",
+    "Employment terms, roles and department": "بيانات التوظيف والدور والقسم",
+    "Contact details and emergency information": "بيانات التواصل ومعلومات الطوارئ",
+    "Base salary and payroll configuration": "إعداد الراتب الأساسي وبيانات الرواتب",
+    "Additional recurring and variable allowances": "البدلات الإضافية الدورية والمتغيرة",
+    "Passports, IDs, and employee files": "الجوازات والهويات وملفات الموظف",
+    "Internal HR notes and remarks": "ملاحظات الموارد البشرية الداخلية"
+,
+    "Create New Employee": "إنشاء موظف جديد"
+,
+    "Filter Employees": "تصفية الموظفين",
+    "Search Employees...": "البحث عن موظف...",
+    "No Employees Found": "لا يوجد موظفون",
+    "Try adjusting your filters or search query.": "حاول تعديل عوامل التصفية أو عبارة البحث.",
+    "البحث في السجلات...": "البحث في السجلات...",
+    "لا توجد سجلات حضور": "لا توجد سجلات حضور"
 }

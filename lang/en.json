@@ -2204,4 +2204,23 @@
     "يدوي من لوحة التحكم (Manual)": "Manual from Dashboard",
     "يوم راحة أسبوعية (Rest Day)": "Weekly Rest Day",
     "يوم عطلة": "Rest Day"
+,
+    "Overview & Account Setup": "Overview & Account Setup",
+    "Core identity and system access": "Core identity and system access",
+    "Basic civil and identification details": "Basic civil and identification details",
+    "Employment terms, roles and department": "Employment terms, roles and department",
+    "Contact details and emergency information": "Contact details and emergency information",
+    "Base salary and payroll configuration": "Base salary and payroll configuration",
+    "Additional recurring and variable allowances": "Additional recurring and variable allowances",
+    "Passports, IDs, and employee files": "Passports, IDs, and employee files",
+    "Internal HR notes and remarks": "Internal HR notes and remarks"
+,
+    "Create New Employee": "Create New Employee"
+,
+    "Filter Employees": "Filter Employees",
+    "Search Employees...": "Search Employees...",
+    "No Employees Found": "No Employees Found",
+    "Try adjusting your filters or search query.": "Try adjusting your filters or search query.",
+    "البحث في السجلات...": "Search records...",
+    "لا توجد سجلات حضور": "No attendance records found"
 }
