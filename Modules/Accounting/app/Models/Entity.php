@@ -8,6 +8,8 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\AuditLog\Traits\Auditable as TraitsAuditable;
 use Modules\Nursery\Models\Nursery;
@@ -45,5 +47,28 @@ class Entity extends Model implements TranslatableContract
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function lockDate(): HasOne
+    {
+        return $this->hasOne(LockDate::class, 'entity_id');
+    }
+
+    //===============================
+    public function lockExceptions(): HasMany
+    {
+        return $this->hasMany(LockException::class, 'entity_id');
+    }
+
+    //===============================
+    public function costCenters(): HasMany
+    {
+        return $this->hasMany(CostCenter::class, 'entity_id');
+    }
+
+    //===============================
+    public function branches(): HasMany
+    {
+        return $this->hasMany(\Modules\Nursery\Models\NurseryBranch::class, 'nursery_id', 'nursery_id');
     }
 }

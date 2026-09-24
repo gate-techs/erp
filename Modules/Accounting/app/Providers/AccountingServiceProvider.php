@@ -5,7 +5,11 @@ namespace Modules\Accounting\Providers;
 use Modules\Accounting\Repositories\AccountRepository;
 use Modules\Accounting\Repositories\Contracts\AccountRepositoryInterface;
 use Modules\Accounting\Repositories\Contracts\EntityRepositoryInterface;
+use Modules\Accounting\Repositories\Contracts\FiscalYearRepositoryInterface;
+use Modules\Accounting\Repositories\Contracts\LockDateRepositoryInterface;
 use Modules\Accounting\Repositories\EntityRepository;
+use Modules\Accounting\Repositories\FiscalYearRepository;
+use Modules\Accounting\Repositories\LockDateRepository;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
@@ -55,6 +59,12 @@ class AccountingServiceProvider extends ModuleServiceProvider
 
         $this->app->bind(AccountRepositoryInterface::class, AccountRepository::class);
         $this->app->bind(EntityRepositoryInterface::class, EntityRepository::class);
+        $this->app->bind(FiscalYearRepositoryInterface::class, FiscalYearRepository::class);
+        $this->app->bind(LockDateRepositoryInterface::class, LockDateRepository::class);
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\CostCenterRepositoryInterface::class,
+            \Modules\Accounting\Repositories\CostCenterRepository::class
+        );
     }
 
     //--------------------------------------------------

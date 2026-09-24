@@ -238,7 +238,10 @@
       "slug": [
         "accounting",
         "accounting.accounts.index",
-        "accounting.entities.index"
+        "accounting.entities.index",
+        "accounting.fiscal-years.index",
+        "accounting.lock-dates.index",
+        "accounting.cost-centers.index"
       ],
       "submenu": [
         {
@@ -253,6 +256,24 @@
           "slug": "accounting.entities.index",
           "url": "/accounting/entities",
           "permission": "accounting.entities.view"
+        },
+        {
+          "name": "Cost Centers",
+          "icon": "menu-icon icon-base bx bx-pie-chart-alt-2",
+          "slug": "accounting.cost-centers.index",
+          "url": "/accounting/cost-centers"
+        },
+        {
+          "name": "Fiscal Years",
+          "icon": "menu-icon icon-base bx bx-calendar",
+          "slug": "accounting.fiscal-years.index",
+          "url": "/accounting/fiscal-years"
+        },
+        {
+          "name": "Lock Dates",
+          "icon": "menu-icon icon-base bx bx-lock-alt",
+          "slug": "accounting.lock-dates.index",
+          "url": "/accounting/lock-dates"
         }
       ]
     },
