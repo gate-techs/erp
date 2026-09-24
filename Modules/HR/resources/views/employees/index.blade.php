@@ -4,36 +4,45 @@
 
 @section('content')
     <!-- Page Header -->
-    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
-        <div>
-            <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-                <i class="icon-base bx bx-id-card text-primary font-24"></i>
-                <span>{{ __('Employees') }}</span>
-            </h4>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 employee-page-header">
+        <div class="d-flex flex-column justify-content-center">
+            <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Human Resources') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('Employees') }}</li>
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted fw-medium small">{{ __('Dashboard') }}</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);" class="text-muted fw-medium small">{{ __('Human Resources') }}</a></li>
+                    <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ __('Employees') }}</li>
                 </ol>
             </nav>
+            <!-- Title -->
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <i class="icon-base bx bx-id-card text-primary font-24"></i>
+                <h4 class="mb-0 fw-bold text-heading">{{ __('Employees') }}</h4>
+            </div>
         </div>
 
-        <div>
-            <a href="{{ route('hr.employees.create') }}"
-                class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm">
+        <div class="mt-3 mt-md-0">
+            <a href="{{ route('hr.employees.create') }}" class="btn btn-primary btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm">
                 <i class="icon-base bx bx-plus font-18"></i>
                 <span>{{ __('Add New Employee') }}</span>
             </a>
         </div>
     </div>
 
-
-
     <!-- Filters Card (نفس تصميم nursery-branches تماماً) -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body py-3">
-            <div class="row g-3 align-items-end">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0 fw-semibold text-heading d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-filter-alt text-secondary"></i>
+                    {{ __('Filter Employees') }}
+                </h6>
+                <button type="button" id="btnResetFilters" class="btn btn-sm btn-label-secondary employee-reset-btn d-flex align-items-center gap-1" title="{{ __('Reset Filters') }}">
+                    <i class="icon-base bx bx-reset font-16"></i>
+                    <span>{{ __('Reset') }}</span>
+                </button>
+            </div>
+            <div class="row g-3 align-items-end employee-index-filters">
                 <!-- 1. Branch Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
@@ -175,14 +184,7 @@
 
                 <!-- 12. Hire Date To Filter with Reset Button -->
                 <div class="col-12 col-sm-6 col-lg-3">
-                    <div class="d-flex align-items-center justify-content-between mb-1">
-                        <label class="form-label fw-semibold text-heading small mb-0">{{ __('Hire Date To') }}</label>
-                        <button type="button" id="btnResetFilters"
-                            class="btn btn-link btn-xs text-muted p-0 text-decoration-none"
-                            title="{{ __('Reset Filters') }}">
-                            <i class="icon-base bx bx-reset me-1"></i>{{ __('Reset') }}
-                        </button>
-                    </div>
+                    <label class="form-label fw-semibold text-heading small mb-1">{{ __('Hire Date To') }}</label>
                     <input type="date" id="filter_hire_date_to" class="form-control js-flatpickr-date">
                 </div>
             </div>
@@ -190,7 +192,7 @@
     </div>
 
     <!-- Employees DataTable Card -->
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 employee-index-table-wrapper">
         <div class="card-datatable">
             <table id="employeesTable" class="table table-hover border-top w-100 text-nowrap">
                 <thead>
@@ -256,6 +258,13 @@
                 processing: true,
                 serverSide: true,
                 pageLength: 10,
+                dom: '<"row mx-2 py-3"<"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start"l><"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end"f>>t<"row mx-2 py-3"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+                language: {
+                    search: "",
+                    searchPlaceholder: "{{ __('Search Employees...') }}",
+                    lengthMenu: "_MENU_",
+                    emptyTable: '<div class="employee-empty-state text-center p-4"><div class="avatar avatar-md bg-label-secondary mx-auto mb-3"><i class="icon-base bx bx-group font-24"></i></div><h6 class="fw-semibold mb-1">{{ __("No Employees Found") }}</h6><p class="text-muted small mb-0">{{ __("Try adjusting your filters or search query.") }}</p></div>'
+                },
                 lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                 ajax: {
                     url: dataUrl,

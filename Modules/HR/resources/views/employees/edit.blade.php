@@ -20,34 +20,34 @@
 
     @section('content')
         <!-- Page Header with Breadcrumbs & Back Action -->
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-            <div>
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <a href="{{ route('hr.employees.index') }}" class="btn btn-icon btn-sm btn-outline-secondary rounded-circle"
-                        title="{{ __('Back to Employees') }}">
-                        <i class="icon-base bx bx-arrow-back font-16"></i>
-                    </a>
-                    <h4 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                        {{ __('Edit Employee') }}: <span class="text-primary">{{ $displayName }}</span>
-                    </h4>
-                </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 employee-page-header">
+            <div class="d-flex flex-column justify-content-center">
+                <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 small">
-                        <li class="breadcrumb-item"><a href="{{ route('hr.employees.index') }}"
-                                class="text-muted">{{ __('Employees') }}</a></li>
-                        <li class="breadcrumb-item active text-primary" aria-current="page">{{ $displayName }}</li>
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('hr.employees.index') }}" class="text-muted fw-medium small">{{ __('Employees') }}</a>
+                        </li>
+                        <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ $displayName }}</li>
                     </ol>
                 </nav>
+
+                <!-- Title & Back -->
+                <div class="d-flex align-items-center gap-2 mt-1">
+                    <a href="{{ route('hr.employees.index') }}" class="btn btn-icon btn-sm btn-outline-secondary rounded-circle employee-back-btn" title="{{ __('Back to Employees') }}">
+                        <i class="bx bx-arrow-back font-20"></i>
+                    </a>
+                    <h4 class="mb-0 fw-bold text-heading">{{ __('Edit Employee') }}: <span class="text-primary">{{ $displayName }}</span></h4>
+                </div>
             </div>
 
-            <!-- Header Action Buttons -->
-            <div class="d-flex align-items-center gap-2">
-                <a href="{{ route('hr.employees.index') }}" class="btn btn-outline-secondary px-3 py-2 rounded-3">
+            <!-- Actions -->
+            <div class="d-flex flex-wrap align-items-center gap-2 mt-3 mt-md-0">
+                <a href="{{ route('hr.employees.index') }}" class="btn btn-outline-secondary employee-page-btn px-4 rounded-3">
                     {{ __('Cancel') }}
                 </a>
-                <button type="submit" form="employeeEditForm"
-                    class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3">
-                    <i class="icon-base bx bx-save font-18"></i>
+                <button type="submit" form="employeeEditForm" class="btn btn-primary employee-page-btn d-flex align-items-center gap-2 px-4 shadow-none rounded-3">
+                    <i class="bx bx-save font-18"></i>
                     <span>{{ __('Save Changes') }}</span>
                 </button>
             </div>
@@ -346,7 +346,12 @@
                     }
                 });
 
-                // 9. Dynamic Documents Repeater
+                // Employee File Upload custom handler
+                $(document).on('change', '.employee-file-input', function() {
+                    let fileName = $(this).val().split('\\').pop() || "{{ __('No file chosen') }}";
+                    $(this).closest('.employee-file-upload').find('.employee-file-name').text(fileName);
+                });
+// 9. Dynamic Documents Repeater
                 let documentIndex = $('#documentsContainer .document-item').length;
                 $('#btnAddDocument').on('click', function () {
                     const templateHtml = $('#documentItemTemplate').html();

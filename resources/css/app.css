@@ -82,7 +82,6 @@ div.dt-length select.dt-input,
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     color: #4b5563 !important;
-    background-color: #ffffff !important;
     border: 1px solid #d9dee3 !important;
     border-radius: 8px !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
@@ -148,7 +147,6 @@ div.dataTables_wrapper div.dataTables_filter input,
     padding: 0.5rem 1.25rem !important;
     border-radius: 8px !important;
     border: 1px solid #d9dee3 !important;
-    background-color: #ffffff !important;
     margin: 0 !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     transition: all 0.15s ease-in-out !important;
@@ -1209,4 +1207,911 @@ html[data-bs-theme="dark"] .employee-form-surface-table th {
 
 .employee-form-surface {
     border-color: var(--bs-border-color) !important;
+}
+
+/* Employee Form Section Card Refinements (Phase 1) */
+.employee-section-card {
+    border: 1px solid var(--bs-border-color) !important;
+    box-shadow: 0 2px 4px rgba(var(--bs-black-rgb), 0.02) !important; /* Very subtle shadow */
+    border-radius: 0.5rem; /* Vuexy standard radius */
+    background-color: var(--bs-card-bg);
+}
+
+.employee-section-card > .card-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.employee-section-card > .card-body {
+    padding: 1.5rem !important;
+}
+
+[data-bs-theme="dark"] .employee-section-card {
+    box-shadow: none !important; /* No shadow needed in dark mode */
+}
+
+/* ==========================================================================
+   Phase 2: Employee Form Scoped Control Refinements
+   ========================================================================== */
+
+/* 1 & 2 & 6. Unified Height, Border, Radius, Font Size */
+.employee-section-card .form-control,
+.employee-section-card .form-select,
+.employee-section-card .input-group-text,
+.employee-section-card .select2-container--default .select2-selection--single,
+.employee-section-card .select2-container--default .select2-selection--multiple,
+.employee-section-card .iti__search-input {
+    min-height: 40px !important;
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-border-color);
+    font-size: 0.9375rem !important;
+    background-color: transparent;
+    color: var(--bs-body-color);
+    box-shadow: none !important;
+    transition: border-color 0.15s ease-in-out;
+}
+
+
+
+/* 3. Focus Treatment */
+.employee-section-card .form-control:focus,
+.employee-section-card .form-select:focus,
+.employee-section-card .select2-container--default.select2-container--focus .select2-selection--single,
+.employee-section-card .select2-container--default.select2-container--focus .select2-selection--multiple,
+.employee-section-card .iti__search-input:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* 4. Labels Treatment */
+.employee-section-card .form-label {
+    font-size: 0.8125rem !important; /* Slightly smaller, subtle */
+    font-weight: 500 !important;
+    color: var(--bs-heading-color) !important;
+    margin-bottom: 0.4rem !important;
+    display: block;
+}
+
+.employee-section-card .form-label .text-danger {
+    color: var(--bs-danger) !important;
+    opacity: 0.8;
+}
+
+/* 5. Placeholder Treatment */
+.employee-section-card .form-control::placeholder,
+.employee-section-card .form-select::placeholder,
+.employee-section-card .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: var(--bs-secondary) !important;
+    opacity: 0.6 !important;
+    font-weight: 400 !important;
+}
+
+/* 6. Select2 specific tweaks for 40px height alignment */
+.employee-section-card .select2-container--default .select2-selection--single {
+    display: flex !important;
+    align-items: center !important;
+}
+.employee-section-card .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: normal !important;
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
+    color: var(--bs-body-color) !important;
+}
+.employee-section-card .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    right: 0.5rem !important;
+}
+html[dir="rtl"] .employee-section-card .select2-container--default .select2-selection--single .select2-selection__arrow {
+    right: auto !important;
+    left: 0.5rem !important;
+}
+.employee-section-card .select2-container--default .select2-selection--single .select2-selection__clear {
+    margin-right: 1.5rem !important; /* Keep clear button away from arrow */
+    margin-top: 0 !important;
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+}
+
+/* 7 & 8. Flatpickr and intl-tel-input visual alignment */
+
+/* Ensure the input next to a flatpickr or inside iti has exactly same height */
+.employee-section-card .flatpickr-input,
+.employee-section-card .iti__tel-input {
+    min-height: 40px !important;
+}
+
+/* 9. Input-Group Addons */
+.employee-section-card .input-group-text {
+    /* Background handled by .employee-form-surface */
+    color: var(--bs-secondary) !important;
+    font-weight: 500 !important;
+    border-color: var(--bs-border-color) !important;
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
+}
+.employee-section-card .input-group .form-control:focus + .input-group-text,
+.employee-section-card .input-group-text:has(+ .form-control:focus) {
+    border-color: var(--bs-primary) !important;
+}
+
+/* 10. Validation Treatment */
+.employee-section-card .is-invalid {
+    border-color: var(--bs-danger) !important;
+}
+.employee-section-card .is-invalid:focus {
+    border-color: var(--bs-danger) !important;
+    box-shadow: none !important;
+}
+.employee-section-card .invalid-feedback {
+    font-size: 0.75rem !important;
+    margin-top: 0.3rem !important;
+    color: var(--bs-danger) !important;
+}
+
+/* 11. Disabled / Readonly Treatment */
+.employee-section-card .form-control:disabled,
+.employee-section-card .form-control[readonly]:not(.flatpickr-input),
+.employee-section-card .form-select:disabled,
+.employee-section-card .select2-container--default.select2-container--disabled .select2-selection--single {
+    background-color: var(--bs-paper-bg) !important;
+    opacity: 0.8 !important;
+    color: var(--bs-secondary) !important;
+    cursor: not-allowed !important;
+}
+
+/* 12. Multiple Select2 Refinements */
+.employee-section-card .select2-container--default .select2-selection--multiple {
+    min-height: 40px !important;
+    height: auto !important;
+    padding: 0.125rem 0.25rem !important;
+    display: flex;
+    align-items: center;
+}
+.employee-section-card .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none;
+    width: 100%;
+}
+.employee-section-card .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: var(--bs-primary-bg-subtle) !important;
+    border: 1px solid var(--bs-border-color) !important;
+    border-radius: 0.25rem !important;
+    color: var(--bs-primary) !important;
+    font-size: 0.8125rem !important;
+    margin: 0 !important;
+    padding: 0.125rem 0.5rem !important;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.employee-section-card .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    border-right: none !important;
+    border-left: none !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+    position: relative;
+    color: var(--bs-primary) !important;
+    font-weight: bold;
+}
+.employee-section-card .select2-container--default .select2-search--inline {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+}
+.employee-section-card .select2-container--default .select2-search--inline .select2-search__field {
+    margin: 0 !important;
+    height: 1.5rem !important;
+    line-height: 1.5rem !important;
+    font-size: 0.9375rem !important;
+    padding-left: 0.5rem !important;
+}
+
+/* ==========================================================================
+   Phase 3: Employee Form Action Elements
+   ========================================================================== */
+
+/* 1 & 2. Main Page Buttons (Save / Cancel) */
+.employee-page-btn {
+    height: 40px !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+}
+.employee-page-btn i {
+    line-height: 1;
+}
+.btn-primary.employee-page-btn:focus { box-shadow: none !important; } .btn-primary.employee-page-btn:focus-visible { outline: 2px solid var(--bs-primary); outline-offset: 2px; }
+
+/* 3. Secondary Action Buttons (Add / Upload) */
+.employee-action-btn {
+    height: 40px !important;
+    border-radius: 0.375rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+    padding: 0 1rem !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-paper-bg);
+    color: var(--bs-heading-color);
+    transition: all 0.2s ease-in-out;
+}
+.btn-outline-primary.employee-action-btn {
+    border-color: var(--bs-primary) !important;
+    color: var(--bs-primary) !important;
+    background-color: transparent !important;
+}
+.btn-outline-primary.employee-action-btn:hover {
+    background-color: var(--bs-primary-bg-subtle) !important;
+}
+.btn-outline-secondary.employee-action-btn {
+    border-color: var(--bs-border-color) !important;
+    color: var(--bs-secondary) !important;
+    background-color: transparent !important;
+}
+.btn-outline-secondary.employee-action-btn:hover {
+    background-color: var(--bs-paper-bg) !important;
+}
+
+/* 4. Delete / Remove Icon Buttons */
+.employee-icon-btn {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-danger) !important;
+    color: var(--bs-danger) !important;
+    background-color: transparent !important;
+    transition: all 0.2s ease-in-out;
+}
+.employee-icon-btn:hover {
+    background-color: rgba(var(--bs-danger-rgb), 0.1) !important;
+}
+
+/* 5. Empty States */
+.employee-empty-state {
+    background-color: var(--bs-paper-bg);
+    border: 1px dashed var(--bs-border-color);
+    border-radius: 0.375rem;
+}
+
+/* 6. Current File Link Attachment */
+.employee-current-file {
+    background-color: var(--bs-paper-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--bs-heading-color);
+    transition: all 0.2s ease-in-out;
+}
+.employee-current-file:hover {
+    border-color: var(--bs-primary);
+    background-color: var(--bs-primary-bg-subtle);
+}
+.employee-current-file .file-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    background-color: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary);
+    font-size: 1.25rem;
+}
+
+/* 7. Info Bar */
+.employee-info-bar {
+    background-color: var(--bs-primary-bg-subtle);
+    border: 1px solid var(--bs-border-color);
+}
+
+/* ==========================================================================
+   Phase 4: Employee Page Header
+   ========================================================================== */
+
+.employee-page-header .breadcrumb {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+.employee-page-header .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--bs-secondary);
+    opacity: 0.5;
+}
+.employee-page-header .employee-back-btn {
+    border-color: var(--bs-border-color) !important;
+    color: var(--bs-secondary) !important;
+    transition: all 0.2s ease-in-out;
+}
+.employee-page-header .employee-back-btn:hover {
+    background-color: var(--bs-paper-bg) !important;
+    color: var(--bs-heading-color) !important;
+}
+html[dir="rtl"] .employee-page-header .employee-back-btn i {
+    transform: scaleX(-1);
+}
+
+/* ==========================================================================
+   Phase 5B: Sidebar Polish & Global Search (Vuexy Restored)
+   ========================================================================== */
+
+/* --- 1. Sidebar Brand Area --- */
+.layout-menu .app-brand {
+    align-items: center;
+    padding-inline: 0.625rem !important; /* Minimum padding */
+    height: 60px !important; /* Cap vertical space tightly */
+    margin-bottom: 0 !important;
+}
+.layout-menu .app-brand-link {
+    gap: 0.35rem !important; /* Tighter gap */
+}
+.layout-menu .app-brand-logo img {
+    max-width: 34px !important; /* Compact logo */
+    max-height: 34px !important;
+}
+.layout-menu .app-brand-text {
+    white-space: nowrap !important; /* Force single line */
+    font-size: 0.9rem !important; /* Compact font */
+    line-height: 1 !important;
+}
+
+/* Remove large vertical gap before first menu item */
+.layout-menu .menu-divider {
+    display: none !important;
+}
+.layout-menu .menu-inner {
+    padding-top: 0.5rem !important; /* ~8px visual gap from brand */
+}
+
+/* --- 2. Menu Geometry (Rhythm & Sizing) --- */
+.layout-menu .menu-inner > .menu-item {
+    margin: 3px 12px !important;
+}
+.layout-menu .menu-inner .menu-item .menu-link {
+    border-radius: 0.5rem !important; /* 8px radius */
+    padding-block: 0.625rem !important; /* 42-44px visual height */
+    padding-inline: 0.875rem !important;
+}
+.layout-menu .menu-icon {
+    font-size: 1.25rem !important; /* ~20px */
+    width: 1.25rem !important;
+    margin-inline-end: 0.75rem !important;
+}
+
+/* --- 3. Active Parent (Hierarchy Fix) --- */
+/* Reset the heavy navy block for open parents, keep it for leaf children */
+.layout-menu .menu-inner > .menu-item.active.open > .menu-link {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    color: var(--bs-heading-color) !important;
+    font-weight: 600 !important;
+}
+.layout-menu .menu-inner > .menu-item.active.open > .menu-link i {
+    color: var(--bs-primary) !important;
+}
+
+/* --- 4. Submenu Refinements --- */
+.layout-menu .menu-sub {
+    margin-top: 4px;
+}
+.layout-menu .menu-sub .menu-item {
+    margin: 2px 0 2px 12px !important; /* Proper LTR indentation */
+}
+html[dir="rtl"] .layout-menu .menu-sub .menu-item {
+    margin: 2px 12px 2px 0 !important; /* Proper RTL indentation */
+}
+.layout-menu .menu-sub .menu-link {
+    padding-block: 0.5rem !important; /* Slightly smaller for children */
+    font-size: 0.9375rem;
+}
+/* Ensure the leaf active child preserves the template's navy block */
+.layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link {
+    font-weight: 600 !important;
+}
+
+/* --- 5. Global Navbar Search --- */
+.global-navbar-search-wrapper {
+    width: 260px;
+    transition: width 0.2s ease;
+}
+.global-navbar-search-input {
+    height: 40px !important;
+    background-color: transparent !important; /* Minimal normal state */
+    color: var(--bs-heading-color) !important;
+    border: 1px solid transparent !important;
+    border-radius: 0.5rem !important;
+    padding-inline-start: 0.5rem !important;
+    transition: all 0.2s ease;
+}
+.global-navbar-search-input::placeholder {
+    color: var(--bs-secondary) !important;
+    opacity: 0.8;
+}
+.global-navbar-search-input:focus {
+    background-color: var(--bs-paper-bg) !important; /* Uses actual existing theme surface */
+    border-color: var(--bs-border-color) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Mobile Search behavior */
+@media (max-width: 767.98px) {
+    .global-navbar-search-wrapper {
+        width: 100%;
+    }
+}
+
+/* ==========================================================================
+   Phase 6: Employee Index
+   ========================================================================== */
+
+/* Header */
+.employee-page-header .breadcrumb {
+    margin-bottom: 0;
+}
+.employee-page-btn {
+    height: 38px;
+    padding-inline: 1.25rem;
+}
+
+/* Filter Panel */
+.employee-index-filters .form-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+.employee-index-filters .form-control,
+.employee-index-filters .form-select {
+    height: 38px !important;
+    min-height: 38px !important;
+    border-radius: 0.375rem;
+}
+/* Select2 height fix in filters */
+.employee-index-filters .select2-container--bootstrap-5 .select2-selection {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+}
+.employee-index-filters .select2-container--bootstrap-5 .select2-selection__rendered {
+    line-height: 1.5 !important;
+    padding: 0 !important;
+}
+.employee-index-filters .select2-container--bootstrap-5 .select2-selection__arrow {
+    height: 36px !important;
+}
+
+/* Reset Action */
+.employee-reset-btn {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.75rem;
+    height: 32px;
+}
+
+/* Table Toolbar (Search & Length) */
+.employee-index-table-wrapper .dataTables_wrapper .row.py-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+/* Length Selector */
+.employee-index-table-wrapper .dt-length select {
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-heading-color) !important;
+    height: 38px !important;
+    padding: 0.375rem 2rem 0.375rem 0.75rem !important;
+    min-width: 70px;
+}
+.employee-index-table-wrapper .dt-length select:focus {
+    border-color: var(--bs-primary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Table Search */
+.employee-index-table-wrapper .dt-search input {
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg) !important; /* Fix for dark mode */
+    color: var(--bs-heading-color) !important;
+    height: 38px !important;
+    width: 250px !important;
+    padding: 0.375rem 0.75rem !important;
+}
+.employee-index-table-wrapper .dt-search input::placeholder {
+    color: var(--bs-secondary) !important;
+    opacity: 0.8;
+}
+.employee-index-table-wrapper .dt-search input:focus {
+    background-color: var(--bs-paper-bg) !important; /* Theme-aware focus */
+    border-color: var(--bs-primary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Table Header & Rows */
+.employee-index-table-wrapper table th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    background-color: var(--bs-body-bg) !important;
+    border-bottom: 1px solid var(--bs-border-color) !important;
+    padding-block: 0.75rem;
+}
+.employee-index-table-wrapper table td {
+    vertical-align: middle;
+    padding-block: 0.75rem;
+}
+
+/* Empty State */
+.employee-empty-state {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.employee-empty-state .avatar {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Responsive Table */
+@media (max-width: 767.98px) {
+    .employee-index-table-wrapper .dt-search input {
+        width: 100% !important;
+    }
+    .employee-page-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .employee-page-btn {
+        width: 100%;
+        margin-top: 1rem;
+    }
+}
+
+
+
+/* ==========================================================================
+   Phase 7A: Time & Attendance Index
+   ========================================================================== */
+
+/* Header */
+.attendance-page-header .breadcrumb { margin-bottom: 0; }
+.attendance-page-btn { height: 38px; padding-inline: 1.25rem; }
+
+/* Filter Panel */
+.attendance-index-filters .form-label { font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.25rem; }
+.attendance-index-filters .form-control, .attendance-index-filters .form-select { height: 38px !important; min-height: 38px !important; border-radius: 0.375rem; }
+.attendance-index-filters .select2-container--bootstrap-5 .select2-selection { height: 38px !important; min-height: 38px !important; padding: 0.375rem 0.75rem; border-radius: 0.375rem; }
+.attendance-index-filters .select2-container--bootstrap-5 .select2-selection__rendered { line-height: 1.5 !important; padding: 0 !important; }
+.attendance-index-filters .select2-container--bootstrap-5 .select2-selection__arrow { height: 36px !important; }
+
+/* Table Toolbar (Search & Length) */
+.attendance-index-table-wrapper .dataTables_wrapper .row.py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+.attendance-index-table-wrapper .dt-length select { border-radius: 0.375rem !important; border: 1px solid var(--bs-border-color) !important; background-color: var(--bs-body-bg) !important; color: var(--bs-heading-color) !important; height: 38px !important; padding: 0.375rem 2rem 0.375rem 0.75rem !important; min-width: 70px; }
+.attendance-index-table-wrapper .dt-length select:focus { border-color: var(--bs-primary) !important; outline: none !important; box-shadow: none !important; }
+.attendance-index-table-wrapper .dt-search input { border-radius: 0.375rem !important; border: 1px solid var(--bs-border-color) !important; background-color: var(--bs-body-bg) !important; color: var(--bs-heading-color) !important; height: 38px !important; width: 250px !important; padding: 0.375rem 0.75rem !important; }
+.attendance-index-table-wrapper .dt-search input::placeholder { color: var(--bs-secondary) !important; opacity: 0.8; }
+.attendance-index-table-wrapper .dt-search input:focus { background-color: var(--bs-paper-bg) !important; border-color: var(--bs-primary) !important; outline: none !important; box-shadow: none !important; }
+
+/* Table Header & Rows */
+.attendance-index-table-wrapper table th { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; background-color: var(--bs-body-bg) !important; border-bottom: 1px solid var(--bs-border-color) !important; padding-block: 0.75rem; }
+.attendance-index-table-wrapper table td { vertical-align: middle; padding-block: 0.75rem; }
+
+/* Empty State */
+.attendance-empty-state { min-height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.attendance-empty-state .avatar { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+/* Responsive Table */
+@media (max-width: 767.98px) {
+    .attendance-index-table-wrapper .dt-search input { width: 100% !important; }
+    .attendance-page-header { flex-direction: column !important; align-items: flex-start !important; }
+    .attendance-page-btn { width: 100%; margin-top: 1rem; }
+}
+
+/* ---------------------------------------------------
+   Migrated Grid Matrix Styles (Theme-Aware)
+   --------------------------------------------------- */
+/* 3. Subtitle & Legend Bar (Exact Match with Reference Image)               */
+    /* ========================================================================= */
+    .attendance-legend-card {
+        background: transparent;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .legend-report-title {
+        color: #16a34a;
+        font-weight: 700;
+        font-size: 16px;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        white-space: nowrap;
+    }
+    .legend-symbols-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 12px;
+        color: var(--bs-heading-color);
+        font-weight: 500;
+    }
+    .legend-badge-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    /* ========================================================================= */
+    /* 4. Strict Matrix Grid Table (Clean Borders, Perfectly Centered)           */
+    /* ========================================================================= */
+    .attendance-matrix-scroll-box {
+        position: relative;
+        overflow-x: auto;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 6px;
+        background: transparent;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    table.matrix-attendance-table {
+        table-layout: fixed !important;
+        border-collapse: collapse !important;
+        width: max-content !important;
+        min-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: var(--bs-paper-bg) !important;
+        border: 1px solid var(--bs-border-color) !important;
+    }
+    table.matrix-attendance-table th,
+    table.matrix-attendance-table td {
+        border: 1px solid var(--bs-border-color) !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+    }
+
+    /* Column Widths & Heights */
+    table.matrix-attendance-table th.col-matrix-day,
+    table.matrix-attendance-table td.col-matrix-day {
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+        height: 52px !important;
+        cursor: pointer !important;
+        user-select: none !important;
+    }
+    table.matrix-attendance-table td.col-matrix-day:hover {
+        background-color: var(--bs-primary-bg-subtle) !important;
+        box-shadow: inset 0 0 0 2px var(--bs-primary) !important;
+    }
+
+    /* Sticky Employee Column */
+    table.matrix-attendance-table th.col-sticky-emp,
+    table.matrix-attendance-table td.col-sticky-emp {
+        position: sticky !important;
+        right: 0 !important;
+        z-index: 10 !important;
+        width: 220px !important;
+        min-width: 220px !important;
+        max-width: 240px !important;
+        background-color: var(--bs-paper-bg) !important;
+        border-left: 2px solid var(--bs-border-color) !important;
+        padding: 6px 12px !important;
+        text-align: right !important;
+    }
+    table.matrix-attendance-table thead th.col-sticky-emp {
+        background-color: var(--bs-body-bg) !important;
+        z-index: 15 !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        color: var(--bs-heading-color) !important;
+    }
+    table.matrix-attendance-table tbody tr:hover td.col-sticky-emp {
+        background-color: transparent !important;
+    }
+
+    /* Table Headers */
+    table.matrix-attendance-table thead tr:first-child th {
+        height: 36px !important;
+        background-color: transparent !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: var(--bs-heading-color) !important;
+        border-bottom: 1px solid var(--bs-border-color) !important;
+    }
+    table.matrix-attendance-table thead tr:nth-child(2) th {
+        height: 28px !important;
+        background-color: var(--bs-paper-bg) !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        color: var(--bs-secondary) !important;
+        border-bottom: 2px solid var(--bs-border-color) !important;
+    }
+    table.matrix-attendance-table thead th.today-highlight {
+        background-color: #fef3c7 !important;
+        color: #92400e !important;
+        font-weight: 700 !important;
+    }
+
+    /* Exact Status Symbols */
+    .sym-present-check {
+        color: #10b981 !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        display: block !important;
+        line-height: 1 !important;
+    }
+    .sym-absent-cross {
+        color: #ef4444 !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        display: block !important;
+        line-height: 1 !important;
+    }
+    .sym-restday-box {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1px !important;
+        color: #94a3b8 !important;
+        line-height: 1 !important;
+    }
+    .sym-restday-box .ico {
+        font-size: 16px !important;
+    }
+    .sym-restday-box .txt {
+        font-size: 9px !important;
+        color: #94a3b8 !important;
+        white-space: nowrap !important;
+    }
+    .sym-future-dash {
+        color: #cbd5e1 !important;
+        font-size: 16px !important;
+        display: block !important;
+        line-height: 1 !important;
+    }
+    .sym-holiday-star {
+        color: #eab308 !important;
+        font-size: 15px !important;
+    }
+    .sym-late-clock {
+        color: #ea580c !important;
+        font-size: 15px !important;
+        font-weight: bold !important;
+    }
+    .sym-half-day {
+        color: #0284c7 !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+    }
+    .sym-leave-flag {
+        color: #dc2626 !important;
+        font-size: 14px !important;
+    }
+
+    /* Employee Card layout in Sticky Column */
+    .emp-card-layout {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 8px !important;
+    }
+    .emp-card-name {
+        font-weight: 600 !important;
+        color: var(--bs-heading-color) !important;
+        font-size: 13px !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+        text-align: right !important;
+    }
+    .emp-card-sub {
+        font-size: 11px !important;
+        color: var(--bs-secondary) !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+        text-align: right !important;
+    }
+    .emp-avatar-badge {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 50% !important;
+        background-color: var(--bs-secondary-bg-subtle) !important;
+        color: var(--bs-heading-color) !important;
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+/* ==========================================================================
+   Phase 7A: Dark Mode Contrast Fixes
+   ========================================================================== */
+
+/* 1. Local Search Background */
+/* Override global DataTables white background specifically for Attendance in Dark Mode */
+
+
+/* 2. Grid/List Switcher Inactive Contrast */
+[data-bs-theme=dark] .attendance-page-header .btn-outline-primary:not(.active) {
+    color: var(--bs-heading-color) !important;
+    border-color: var(--bs-border-color) !important;
+}
+[data-bs-theme=dark] .attendance-page-header .btn-outline-primary:not(.active):hover {
+    background-color: var(--bs-primary-bg-subtle) !important;
+    color: var(--bs-primary-text-emphasis) !important;
+}
+
+/* 3. Check-out Time Contrast (Navy bg-label-primary) */
+[data-bs-theme=dark] .attendance-index-table-wrapper .badge.bg-label-primary {
+    color: var(--bs-primary-text-emphasis) !important; /* Theme-aware emphasis */
+}
+
+/* 4. Row Action Icon Contrast */
+[data-bs-theme=dark] .attendance-index-table-wrapper .btn-outline-primary {
+    color: var(--bs-primary-text-emphasis) !important;
+    border-color: var(--bs-primary) !important;
+}
+[data-bs-theme=dark] .attendance-index-table-wrapper .btn-outline-primary:hover {
+    background-color: var(--bs-primary) !important;
+    color: var(--bs-emphasis-color) !important;
+}
+
+
+/* Employee Dark Mode Contrast Fixes */
+[data-bs-theme=dark] .employee-index-table-wrapper .bg-label-primary {
+    color: var(--bs-primary-text-emphasis) !important;
+}
+[data-bs-theme=dark] .employee-index-table-wrapper .text-primary {
+    color: var(--bs-primary-text-emphasis) !important;
+}
+[data-bs-theme=dark] .employee-index-table-wrapper a.text-muted,
+[data-bs-theme=dark] .employee-index-table-wrapper .text-muted {
+    color: var(--bs-secondary-color) !important;
+}
+[data-bs-theme=dark] .employee-index-table-wrapper a.text-muted:hover {
+    color: var(--bs-heading-color) !important;
+}
+[data-bs-theme=dark] .employee-index-table-wrapper .text-info {
+    color: var(--bs-info-text-emphasis) !important;
 }

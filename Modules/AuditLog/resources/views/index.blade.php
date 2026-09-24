@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', __('سجل الأنشطة وتدقيق العمليات (Audit Logs)') . ' - ' . config('variables.templateName'))
+@section('title', __('Activity & Audit Logs') . ' - ' . config('variables.templateName'))
 
 @section('vendor-style')
     @vite([
@@ -18,21 +18,19 @@
 @endsection
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
-
-    <!-- Header -->
+<!-- Header -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
         <div>
             <h4 class="fw-bold py-1 mb-0 d-flex align-items-center gap-2">
                 <i class="icon-base bx bx-history text-primary font-24"></i>
-                <span class="text-muted fw-light">{{ __('النظام') }} /</span> <span>{{ __('سجل الأنشطة وتدقيق العمليات (Audit Logs)') }}</span>
+                <span class="text-muted fw-light">{{ __('System') }} /</span> <span>{{ __('Activity & Audit Logs') }}</span>
             </h4>
-            <p class="text-muted small mb-0">{{ __('تتبع وتوثيق كافة العمليات، الإضافات، التعديلات وحركات المستخدمين على النظام لحظياً.') }}</p>
+            <p class="text-muted small mb-0">{{ __('Track and document all operations, additions, modifications and user activities on the system instantly.') }}</p>
         </div>
 
         <div class="d-flex align-items-center gap-2">
             <button type="button" class="btn btn-outline-primary" id="btnRefreshTable">
-                <i class="bx bx-refresh me-1"></i> {{ __('تحديث الجدول') }}
+                <i class="bx bx-refresh me-1"></i> {{ __('Refresh Table') }}
             </button>
         </div>
     </div>
@@ -41,16 +39,16 @@
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-header bg-transparent border-bottom py-3">
             <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
-                <i class="bx bx-filter-alt text-primary"></i> {{ __('خيارات التصفية والبحث في السجلات') }}
+                <i class="bx bx-filter-alt text-primary"></i> {{ __('Filter and Search Options') }}
             </h6>
         </div>
         <div class="card-body pt-3">
             <div class="row g-3">
                 <!-- User Filter -->
                 <div class="col-md-3 col-sm-6">
-                    <label class="form-label small fw-semibold">{{ __('المستخدم المنفذ') }}</label>
-                    <select id="filter_user_id" class="form-select select2" data-placeholder="{{ __('جميع المستخدمين') }}" data-allow-clear="true">
-                        <option value="">{{ __('جميع المستخدمين') }}</option>
+                    <label class="form-label small fw-semibold">{{ __('User Executed') }}</label>
+                    <select id="filter_user_id" class="form-select select2" data-placeholder="{{ __('All Users') }}" data-allow-clear="true">
+                        <option value="">{{ __('All Users') }}</option>
                         @foreach($lookups['users'] as $u)
                             <option value="{{ $u->id }}">
                                 {{ $u->name }} ({{ $u->email }})
@@ -61,9 +59,9 @@
 
                 <!-- Event Type -->
                 <div class="col-md-3 col-sm-6">
-                    <label class="form-label small fw-semibold">{{ __('نوع العملية') }}</label>
-                    <select id="filter_event" class="form-select select2" data-placeholder="{{ __('جميع العمليات') }}" data-allow-clear="true">
-                        <option value="">{{ __('جميع العمليات') }}</option>
+                    <label class="form-label small fw-semibold">{{ __('Action Type') }}</label>
+                    <select id="filter_event" class="form-select select2" data-placeholder="{{ __('All Actions') }}" data-allow-clear="true">
+                        <option value="">{{ __('All Actions') }}</option>
                         @foreach($lookups['events'] as $evt)
                             <option value="{{ $evt }}">
                                 {{ ucfirst($evt) }}
@@ -104,10 +102,10 @@
                         <th style="width: 50px;" class="text-center">#</th>
                         <th style="width: 170px;">{{ __('التاريخ والوقت') }}</th>
                         <th style="width: 190px;">{{ __('المستخدم') }}</th>
-                        <th style="width: 120px;" class="text-center">{{ __('نوع الإجراء') }}</th>
-                        <th style="width: 180px;">{{ __('النموذج / السجل') }}</th>
-                        <th>{{ __('بيان العملية / الوصف') }}</th>
-                        <th style="width: 90px;" class="text-center">{{ __('التفاصيل') }}</th>
+                        <th style="width: 120px;" class="text-center">{{ __('Action Type') }}</th>
+                        <th style="width: 180px;">{{ __('Model / Record') }}</th>
+                        <th>{{ __('Action Statement / Description') }}</th>
+                        <th style="width: 90px;" class="text-center">{{ __('Details') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -117,7 +115,6 @@
         </div>
     </div>
 
-</div>
 
 <!-- Activity Log Details & Diff Modal -->
 <div class="modal fade" id="auditDetailModal" tabindex="-1" aria-hidden="true">
@@ -125,14 +122,14 @@
         <div class="modal-content">
             <div class="modal-header border-bottom py-3">
                 <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2 mb-0">
-                    <i class="bx bx-file-find text-primary"></i> {{ __('تفاصيل حركة السجل ومقارنة التعديل') }}
+                    <i class="bx bx-file-find text-primary"></i> {{ __('Record Activity Details and Modification Comparison') }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4" id="auditModalBody">
                 <div class="text-center py-5">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">{{ __('جارٍ التحميل...') }}</span>
+                        <span class="visually-hidden">{{ __('Loading...') }}</span>
                     </div>
                 </div>
             </div>
@@ -217,19 +214,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         ],
         language: {
-            search: "{{ __('بحث:') }}",
-            lengthMenu: "{{ __('عرض _MENU_ سجلات') }}",
-            info: "{{ __('عرض _START_ إلى _END_ من إجمالي _TOTAL_ سجل') }}",
-            infoEmpty: "{{ __('لا توجد سجلات متاحة') }}",
-            infoFiltered: "{{ __('(مصفى من إجمالي _MAX_ سجل)') }}",
-            zeroRecords: "{{ __('لم يتم العثور على سجلات مطابقة') }}",
-            emptyTable: "{{ __('لا توجد سجلات أنشطة مسجلة') }}",
-            processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"><span class="visually-hidden">{{ __("جارٍ التحميل...") }}</span></div> {{ __("جارٍ تحميل البيانات...") }}',
+            search: "{{ __('Search:') }}",
+            lengthMenu: "{{ __('Show _MENU_ records') }}",
+            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ records') }}",
+            infoEmpty: "{{ __('No records available') }}",
+            infoFiltered: "{{ __('(filtered from _MAX_ total records)') }}",
+            zeroRecords: "{{ __('No matching records found') }}",
+            emptyTable: "{{ __('No activity logs recorded') }}",
+            processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"><span class="visually-hidden">{{ __("Loading...") }}</span></div> {{ __("Loading data...") }}',
             paginate: {
-                first: "{{ __('الأول') }}",
-                last: "{{ __('الأخير') }}",
-                next: "{{ __('التالي') }}",
-                previous: "{{ __('السابق') }}"
+                first: "{{ __('First') }}",
+                last: "{{ __('Last') }}",
+                next: "{{ __('Next') }}",
+                previous: "{{ __('Previous') }}"
             }
         }
     });
@@ -269,9 +266,9 @@ document.addEventListener('DOMContentLoaded', function () {
         modalBody.innerHTML = `
             <div class="text-center py-5">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">{{ __('جارٍ التحميل...') }}</span>
+                    <span class="visually-hidden">{{ __('Loading...') }}</span>
                 </div>
-                <div class="mt-2 text-muted small">{{ __('جارٍ جلب تفاصيل السجل والفروقات...') }}</div>
+                <div class="mt-2 text-muted small">{{ __('Fetching record details and differences...') }}</div>
             </div>
         `;
         modal.show();
@@ -286,11 +283,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (res.success && res.html) {
                     modalBody.innerHTML = res.html;
                 } else {
-                    modalBody.innerHTML = `<div class="alert alert-danger mb-0">${res.error || '{{ __("فشل تحميل البيانات") }}'}</div>`;
+                    modalBody.innerHTML = `<div class="alert alert-danger mb-0">${res.error || '{{ __("Failed to load data") }}'}</div>`;
                 }
             },
             error: function (xhr) {
-                let err = '{{ __("حدث خطأ أثناء جلب التفاصيل") }}';
+                let err = '{{ __("An error occurred while fetching details") }}';
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     err = xhr.responseJSON.error;
                 }

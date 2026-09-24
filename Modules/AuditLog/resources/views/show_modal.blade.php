@@ -15,8 +15,8 @@
     <div class="row g-3 mb-3">
         <div class="col-md-6">
             <div class="p-2 border rounded bg-white">
-                <small class="text-muted d-block">{{ __('المستخدم المنفذ') }}</small>
-                <strong>{{ $log->causer?->name ?? __('نظام / تلقائي') }}</strong>
+                <small class="text-muted d-block">{{ __('User Executed') }}</small>
+                <strong>{{ $log->causer?->name ?? __('System / Auto') }}</strong>
                 @if($log->causer?->email)
                     <small class="text-muted d-block">({{ $log->causer->email }})</small>
                 @endif
@@ -24,7 +24,7 @@
         </div>
         <div class="col-md-6">
             <div class="p-2 border rounded bg-white">
-                <small class="text-muted d-block">{{ __('معلومات الاتصال') }}</small>
+                <small class="text-muted d-block">{{ __('Connection Info') }}</small>
                 <span class="badge bg-label-secondary font-monospace">{{ $log->properties['ip'] ?? request()->ip() }}</span>
                 <span class="text-muted small d-block text-truncate" title="{{ $log->properties['user_agent'] ?? '-' }}">
                     {{ $log->properties['user_agent'] ?? '-' }}
@@ -35,7 +35,7 @@
 
     <!-- Field Differences (Before vs After) Table -->
     <h6 class="fw-bold mb-2 text-dark d-flex align-items-center gap-1">
-        <i class="bx bx-git-compare text-primary"></i> {{ __('تفاصيل التغييرات والحقول (Before & After)') }}
+        <i class="bx bx-git-compare text-primary"></i> {{ __('Changes & Fields Details (Before & After)') }}
     </h6>
 
     @if(!empty($diffs) && count($diffs) > 0)
@@ -43,9 +43,9 @@
             <table class="table table-sm table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th style="width: 25%;">{{ __('الحقل') }}</th>
-                        <th style="width: 37%;" class="text-danger bg-label-danger bg-opacity-10">{{ __('القيمة السابقة (Before)') }}</th>
-                        <th style="width: 38%;" class="text-success bg-label-success bg-opacity-10">{{ __('القيمة الجديدة (After)') }}</th>
+                        <th style="width: 25%;">{{ __('Field') }}</th>
+                        <th style="width: 37%;" class="text-danger bg-label-danger bg-opacity-10">{{ __('Value (Before)') }}</th>
+                        <th style="width: 38%;" class="text-success bg-label-success bg-opacity-10">{{ __('Value (After)') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,7 +72,7 @@
             @if(!empty($log->properties) && count($log->properties) > 0)
                 <pre class="text-start bg-dark text-white p-3 rounded small mb-0" dir="ltr" style="max-height: 250px; overflow-y: auto;"><code>{{ json_encode($log->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</code></pre>
             @else
-                <p class="text-muted mb-0">{{ __('لا توجد حقول تفصيلية مسجلة لهذه العملية.') }}</p>
+                <p class="text-muted mb-0">{{ __('No detailed fields recorded for this operation.') }}</p>
             @endif
         </div>
     @endif
