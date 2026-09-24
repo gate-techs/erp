@@ -4,23 +4,25 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
-    <div>
-        <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
-            <i class="icon-base bx bx-buildings text-primary font-24"></i>
-            <span>{{ __('Nurseries') }}</span>
-        </h4>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 nursery-page-header">
+    <div class="d-flex flex-column justify-content-center">
+        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li>
-                <li class="breadcrumb-item active">{{ __('Nurseries List') }}</li>
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted fw-medium small">{{ __('Dashboard') }}</a></li>
+                <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ __('Nurseries List') }}</li>
             </ol>
         </nav>
+        <!-- Title -->
+        <div class="d-flex align-items-center gap-2 mt-1">
+            <i class="icon-base bx bx-buildings text-primary font-24"></i>
+            <h4 class="mb-0 fw-bold text-heading">{{ __('Nurseries') }}</h4>
+        </div>
     </div>
 
-    <div>
+    <div class="mt-3 mt-md-0">
         <!-- Button that opens the Side Offcanvas matching the user's design -->
-        <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddNursery" aria-controls="offcanvasAddNursery">
+        <button type="button" class="btn btn-primary btn-sm nursery-page-btn d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddNursery" aria-controls="offcanvasAddNursery">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New') }}</span>
         </button>
@@ -478,6 +480,17 @@ window.addEventListener('load', function () {
         processing: true,
         serverSide: true,
         pagingType: 'simple_numbers',
+        language: {
+            emptyTable: `
+                <div class="text-center py-5">
+                    <div class="avatar avatar-xl bg-label-secondary mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                        <i class="icon-base bx bx-buildings font-32 text-secondary"></i>
+                    </div>
+                    <h6 class="fw-bold mb-1">{{ __('No Nurseries Found') }}</h6>
+                    <p class="text-muted small mb-0">{{ __('Click "Add New" to create your first nursery.') }}</p>
+                </div>
+            `
+        },
         ajax: dataUrl,
         columns: [
             { 

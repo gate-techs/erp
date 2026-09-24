@@ -17,6 +17,7 @@
                     }
                     if (state.navbarType === 'sticky') document.documentElement.classList.add('layout-navbar-fixed');
                     else if (state.navbarType === 'static' || state.navbarType === 'hidden') document.documentElement.classList.remove('layout-navbar-fixed');
+                    if (state.menuCollapsed) document.documentElement.classList.add('layout-menu-collapsed');
                     if (state.footerType === 'sticky') document.documentElement.classList.add('layout-footer-fixed');
                     else if (state.footerType === 'static' || state.footerType === 'hidden') document.documentElement.classList.remove('layout-footer-fixed');
                 }

@@ -273,6 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.Helpers && window.Helpers.setCollapsed) {
             window.Helpers.setCollapsed(isCollapsed, false);
         }
+
+        // Force the class on HTML since this version of Vuexy helpers.js misses the large-screen block
+        if (isCollapsed) {
+            document.documentElement.classList.add('layout-menu-collapsed');
+        } else {
+            document.documentElement.classList.remove('layout-menu-collapsed');
+        }
     }
 
     function applyNavbarColor(colorClass) {
@@ -499,5 +506,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+});
+
+// --- Sidebar Menu Tooltips & Flyouts (Collapsed Mode) ---
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
+
+    const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+    const menuTooltips = document.querySelectorAll('[data-menu-tooltip]');
+
+    // 1. Tooltips
+    menuTooltips.forEach(function(el) {
+        const title = el.getAttribute('data-menu-tooltip');
+        if (!title) return;
+
+        const tooltip = new bootstrap.Tooltip(el, {
+            title: title,
+            placement: isRtl ? 'left' : 'right',
+            trigger: 'hover',
+            container: 'body'
+        });
+
+        el.addEventListener('show.bs.tooltip', function(e) {
+            const isCollapsed = document.documentElement.classList.contains('layout-menu-collapsed');
+            // Prevent tooltip if not collapsed
+            if (!isCollapsed) {
+                e.preventDefault();
+                return;
+            }
+
+            // Prevent tooltip if this is a parent item and its flyout is OPEN
+            if (el.classList.contains('menu-toggle')) {
+                const parentItem = el.closest('.menu-item');
+                if (parentItem && parentItem.classList.contains('open')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    });
+
+    // 2. Click Outside & Escape to close flyouts
+    document.addEventListener('click', function(e) {
+        const isCollapsed = document.documentElement.classList.contains('layout-menu-collapsed');
+        if (!isCollapsed) return;
+
+        const sidebar = document.getElementById('layout-menu');
+        // If click is NOT inside the sidebar, close all open flyouts instantly
+        if (sidebar && !sidebar.contains(e.target)) {
+            const openItems = sidebar.querySelectorAll('.menu-inner > .menu-item.open');
+            openItems.forEach(item => item.classList.remove('open'));
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const isCollapsed = document.documentElement.classList.contains('layout-menu-collapsed');
+            if (!isCollapsed) return;
+
+            const openItems = document.querySelectorAll('#layout-menu .menu-inner > .menu-item.open');
+            openItems.forEach(item => item.classList.remove('open'));
+        }
     });
 });
