@@ -65,19 +65,19 @@ class CostCenterController extends Controller
                 $name = $item->translate($locale)?->name ?? $item->translate('ar')?->name ?? $item->translate('en')?->name ?? '-';
 
                 $iconClass = match ($item->type) {
-                    CostCenterType::PROFIT => 'bx bx-trending-up text-success',
-                    CostCenterType::COST => 'bx bx-wallet text-warning',
-                    default => 'bx bx-pie-chart-alt-2 text-info',
+                    CostCenterType::PROFIT => 'bx-trending-up text-success',
+                    CostCenterType::COST => 'bx-wallet text-warning',
+                    default => 'bx-pie-chart-alt-2 text-info',
                 };
 
                 return '
                     <div class="d-flex align-items-center">
                         <div class="avatar avatar-sm bg-label-primary me-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded">
-                            <i class="icon-base ' . $iconClass . ' font-20"></i>
+                            <i class="icon-base bx ' . $iconClass . ' font-20"></i>
                         </div>
                         <div class="d-flex flex-column">
                             <span class="text-heading fw-bold fs-6">' . e($name) . '</span>
-                            <small class="text-muted"><code class="text-primary">' . e($item->code) . '</code></small>
+                            <small class="text-muted">' . e($item->code) . '</small>
                         </div>
                     </div>
                 ';
@@ -109,7 +109,7 @@ class CostCenterController extends Controller
                     return '<span class="fw-semibold text-heading">' . e($parentName) . '</span> <small class="text-muted">(' . e($item->parent->code) . ')</small>';
                 }
 
-                return '<span class="badge bg-label-light text-muted">' . __('Main Center') . '</span>';
+                return '<span class="badge bg-label-secondary"><i class="icon-base bx bx-minus me-1"></i>' . __('Main Center') . '</span>';
             })
             ->addColumn('branch_info', function (CostCenter $item) {
                 if ($item->branch) {
@@ -118,47 +118,37 @@ class CostCenterController extends Controller
                         ?? $item->branch->translate('ar')?->name
                         ?? '-';
 
-                    return '<span class="fw-semibold text-body">' . e($branchName) . '</span>';
+                    return '<span class="d-flex align-items-center gap-1 text-heading"><i class="icon-base bx bx-building-house text-primary font-16"></i><span>' . e($branchName) . '</span></span>';
                 }
 
                 return '<span class="text-muted small">' . __('All Branches') . '</span>';
             })
             ->addColumn('status_badge', function (CostCenter $item) {
-                $isActive = $item->status === CostCenterStatus::ACTIVE;
-                $badgeClass = $isActive ? 'bg-label-success' : 'bg-label-danger';
-                $label = $isActive ? __('Active') : __('Inactive');
+                if ($item->status === CostCenterStatus::ACTIVE) {
+                    return '<span class="badge bg-label-success d-inline-flex align-items-center"><i class="icon-base bx bx-check-circle me-1 font-12"></i>' . __('Active') . '</span>';
+                }
 
-                return '
-                    <span class="badge ' . $badgeClass . ' cursor-pointer btn-toggle-status"
-                          data-id="' . $item->id . '"
-                          data-status="' . $item->status->value . '"
-                          title="' . __('Click to toggle status') . '">
-                        ' . e($label) . '
-                    </span>
-                ';
+                return '<span class="badge bg-label-danger d-inline-flex align-items-center"><i class="icon-base bx bx-x-circle me-1 font-12"></i>' . __('Inactive') . '</span>';
             })
             ->addColumn('created_at', function (CostCenter $item) {
                 return $item->created_at ? $item->created_at->format('Y-m-d') : '-';
             })
             ->addColumn('actions', function (CostCenter $item) {
-                $editBtn = '
-                    <button type="button" class="btn btn-icon btn-text-secondary rounded-pill btn-edit-cost-center"
+                return '
+                    <div class="d-inline-flex gap-1">
+                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-cost-center"
                             data-id="' . $item->id . '"
                             title="' . __('Edit') . '">
-                        <i class="icon-base bx bx-edit text-info font-20"></i>
-                    </button>
-                ';
-
-                $deleteBtn = '
-                    <button type="button" class="btn btn-icon btn-text-secondary rounded-pill btn-delete-cost-center"
+                            <i class="icon-base bx bx-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-cost-center"
                             data-id="' . $item->id . '"
                             data-name="' . e($item->translate(app()->getLocale())?->name ?? $item->code) . '"
                             title="' . __('Delete') . '">
-                        <i class="icon-base bx bx-trash text-danger font-20"></i>
-                    </button>
+                            <i class="icon-base bx bx-trash"></i>
+                        </button>
+                    </div>
                 ';
-
-                return '<div class="d-flex align-items-center justify-content-center gap-1">' . $editBtn . $deleteBtn . '</div>';
             })
             ->rawColumns(['cost_center_info', 'entity_info', 'type_badge', 'parent_info', 'branch_info', 'status_badge', 'actions'])
             ->make(true);

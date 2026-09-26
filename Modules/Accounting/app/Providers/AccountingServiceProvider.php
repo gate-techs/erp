@@ -7,9 +7,11 @@ use Modules\Accounting\Repositories\Contracts\AccountRepositoryInterface;
 use Modules\Accounting\Repositories\Contracts\EntityRepositoryInterface;
 use Modules\Accounting\Repositories\Contracts\FiscalYearRepositoryInterface;
 use Modules\Accounting\Repositories\Contracts\LockDateRepositoryInterface;
+use Modules\Accounting\Repositories\Contracts\JournalRepositoryInterface;
 use Modules\Accounting\Repositories\EntityRepository;
 use Modules\Accounting\Repositories\FiscalYearRepository;
 use Modules\Accounting\Repositories\LockDateRepository;
+use Modules\Accounting\Repositories\JournalRepository;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
@@ -64,6 +66,39 @@ class AccountingServiceProvider extends ModuleServiceProvider
         $this->app->bind(
             \Modules\Accounting\Repositories\Contracts\CostCenterRepositoryInterface::class,
             \Modules\Accounting\Repositories\CostCenterRepository::class
+        );
+        $this->app->bind(JournalRepositoryInterface::class, JournalRepository::class);
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\JournalEntryRepositoryInterface::class,
+            \Modules\Accounting\Repositories\JournalEntryRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\FinancialReportRepositoryInterface::class,
+            \Modules\Accounting\Repositories\FinancialReportRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\CashAccountRepositoryInterface::class,
+            \Modules\Accounting\Repositories\CashAccountRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\OpeningBalanceRepositoryInterface::class,
+            \Modules\Accounting\Repositories\OpeningBalanceRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\BankReconciliationRepositoryInterface::class,
+            \Modules\Accounting\Repositories\BankReconciliationRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\PaymentMatchingRepositoryInterface::class,
+            \Modules\Accounting\Repositories\PaymentMatchingRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\AccountingDashboardRepositoryInterface::class,
+            \Modules\Accounting\Repositories\AccountingDashboardRepository::class
+        );
+        $this->app->bind(
+            \Modules\Accounting\Repositories\Contracts\AccountingAuditLogRepositoryInterface::class,
+            \Modules\Accounting\Repositories\AccountingAuditLogRepository::class
         );
     }
 

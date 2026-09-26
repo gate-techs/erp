@@ -45,6 +45,11 @@ class ActivityLog extends SpatieActivity
             'approved'      => __('اعتماد'),
             'rejected'      => __('رفض / استبعاد'),
             'disbursed'     => __('صرف مالي'),
+            'posted'        => __('ترحيل معتمد'),
+            'reversed'      => __('قيد عكسي'),
+            'reconciled'    => __('اعتماد تسوية'),
+            'reopened'      => __('إعادة فتح'),
+            'locked'        => __('إقفال فترة'),
             'login'         => __('تسجيل دخول'),
             'logout'        => __('تسجيل خروج'),
             'export'        => __('تصدير بيانات'),
@@ -58,16 +63,19 @@ class ActivityLog extends SpatieActivity
     public function getEventBadgeColorAttribute(): string
     {
         return match ($this->event) {
-            'created'              => 'bg-label-success',
-            'updated'              => 'bg-label-info',
-            'deleted'              => 'bg-label-danger',
-            'restored'             => 'bg-label-warning',
-            'approved', 'disbursed'=> 'bg-label-primary',
-            'rejected'             => 'bg-label-danger',
-            'login'                => 'bg-label-success',
-            'logout'               => 'bg-label-secondary',
-            'export'               => 'bg-label-dark',
-            default                => 'bg-label-primary',
+            'created'                                       => 'bg-label-success',
+            'updated'                                       => 'bg-label-info',
+            'deleted'                                       => 'bg-label-danger',
+            'restored'                                      => 'bg-label-warning',
+            'approved', 'disbursed', 'posted', 'reconciled' => 'bg-label-success',
+            'reversed'                                      => 'bg-label-danger',
+            'reopened'                                      => 'bg-label-warning',
+            'locked'                                        => 'bg-label-secondary',
+            'rejected'                                      => 'bg-label-danger',
+            'login'                                         => 'bg-label-success',
+            'logout'                                        => 'bg-label-secondary',
+            'export'                                        => 'bg-label-dark',
+            default                                         => 'bg-label-primary',
         };
     }
 
@@ -83,23 +91,36 @@ class ActivityLog extends SpatieActivity
         $base = class_basename($this->subject_type);
 
         return match ($base) {
-            'Employee'        => __('موظف'),
-            'Department'      => __('قسم / إدارة'),
-            'JobTitle'        => __('مسمى وظيفي'),
-            'Attendance'      => __('حضور وانصراف'),
-            'LeaveRequest'    => __('طلب إجازة'),
+            'Employee'          => __('موظف'),
+            'Department'        => __('قسم / إدارة'),
+            'JobTitle'          => __('مسمى وظيفي'),
+            'Attendance'        => __('حضور وانصراف'),
+            'LeaveRequest'      => __('طلب إجازة'),
             'PermissionRequest' => __('طلب إذن'),
-            'Loan'            => __('سلفة / قرض'),
-            'Payroll'         => __('مسير رواتب'),
-            'Reward'          => __('مكافأة'),
-            'Penalty'         => __('جزاء'),
-            'Candidate'       => __('مرشح توظيف'),
-            'JobOpening'      => __('شاغر وظيفي'),
-            'User'            => __('مستخدم'),
-            'Role'            => __('دور صلاحيات'),
-            'Setting'         => __('إعدادات'),
-            'NurseryBranch'   => __('فرع'),
-            default           => $base,
+            'Loan'              => __('سلفة / قرض'),
+            'Payroll'           => __('مسير رواتب'),
+            'Reward'            => __('مكافأة'),
+            'Penalty'           => __('جزاء'),
+            'Candidate'         => __('مرشح توظيف'),
+            'JobOpening'        => __('شاغر وظيفي'),
+            'User'              => __('مستخدم'),
+            'Role'              => __('دور صلاحيات'),
+            'Setting'           => __('إعدادات'),
+            'NurseryBranch'     => __('فرع'),
+            // Accounting Models
+            'Account'           => __('حساب مالي'),
+            'JournalEntry'      => __('قيد يومية'),
+            'JournalEntryLine'  => __('سطر قيد'),
+            'Journal'           => __('دفتر يومية'),
+            'CashAccount'       => __('خزينة / بنك'),
+            'CostCenter'        => __('مركز تكلفة'),
+            'BankReconciliation' => __('تسوية بنكية'),
+            'PaymentMatching'   => __('مطابقة مدفوعات'),
+            'FiscalYear'        => __('سنة مالية'),
+            'LockDate'          => __('تاريخ إقفال'),
+            'LockException'     => __('استثناء إقفال'),
+            'Entity'            => __('كيان محاسبي'),
+            default             => $base,
         };
     }
 
@@ -114,6 +135,15 @@ class ActivityLog extends SpatieActivity
 
         $s = $this->subject;
 
+        if (isset($s->entry_number)) {
+            return __('قيد رقم:') . ' ' . $s->entry_number;
+        }
+        if (isset($s->reconciliation_number)) {
+            return __('تسوية رقم:') . ' ' . $s->reconciliation_number;
+        }
+        if (isset($s->code) && isset($s->name)) {
+            return $s->code . ' - ' . $s->name;
+        }
         if (isset($s->name)) {
             return $s->name;
         }
@@ -189,6 +219,19 @@ class ActivityLog extends SpatieActivity
             'amount'           => __('المبلغ'),
             'reason'           => __('السبب / المبرر'),
             'notes'            => __('ملاحظات'),
+            // Accounting fields
+            'entry_number'     => __('رقم القيد'),
+            'entry_date'       => __('تاريخ القيد'),
+            'account_id'       => __('الحساب المالي'),
+            'debit'            => __('مدين'),
+            'credit'           => __('دائن'),
+            'code'             => __('كود / رمز الحساب'),
+            'account_type'     => __('نوع الحساب'),
+            'statement_balance'=> __('رصيد كشف الحساب'),
+            'statement_date'   => __('تاريخ كشف الحساب'),
+            'lock_date'        => __('تاريخ الإقفال'),
+            'fiscal_year_id'   => __('السنة المالية'),
+            'entity_id'        => __('الكيان المحاسبي'),
             default            => ucfirst(str_replace('_', ' ', $field)),
         };
     }

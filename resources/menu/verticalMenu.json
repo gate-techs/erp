@@ -237,13 +237,28 @@
       "icon": "menu-icon icon-base bx bx-calculator",
       "slug": [
         "accounting",
-        "accounting.accounts.index",
-        "accounting.entities.index",
-        "accounting.fiscal-years.index",
-        "accounting.lock-dates.index",
-        "accounting.cost-centers.index"
+        "accounting.guide",
+        "accounting.accounts",
+        "accounting.entities",
+        "accounting.fiscal-years",
+        "accounting.lock-dates",
+        "accounting.cost-centers",
+        "accounting.journals",
+        "accounting.cash-accounts",
+        "accounting.opening-balances",
+        "accounting.bank-reconciliations",
+        "accounting.payment-matchings",
+        "accounting.journal-entries",
+        "accounting.reports",
+        "accounting.audit-logs"
       ],
       "submenu": [
+        {
+          "name": "Dashboard",
+          "icon": "menu-icon icon-base bx bx-home-circle",
+          "slug": "accounting.dashboard",
+          "url": "/accounting"
+        },
         {
           "name": "Chart of Accounts",
           "icon": "menu-icon icon-base bx bx-git-repo-forked",
@@ -251,29 +266,130 @@
           "url": "/accounting/accounts"
         },
         {
-          "name": "Accounting Entities",
-          "icon": "menu-icon icon-base bx bx-buildings",
-          "slug": "accounting.entities.index",
-          "url": "/accounting/entities",
-          "permission": "accounting.entities.view"
+          "name": "Journal Entries",
+          "icon": "menu-icon icon-base bx bx-receipt",
+          "slug": "accounting.journal-entries.index",
+          "url": "/accounting/journal-entries"
         },
         {
-          "name": "Cost Centers",
-          "icon": "menu-icon icon-base bx bx-pie-chart-alt-2",
-          "slug": "accounting.cost-centers.index",
-          "url": "/accounting/cost-centers"
+          "name": "Reconciliations",
+          "icon": "menu-icon icon-base bx bx-check-shield",
+          "slug": [
+            "accounting.bank-reconciliations",
+            "accounting.payment-matchings"
+          ],
+          "submenu": [
+            {
+              "name": "Bank Reconciliations",
+              "slug": "accounting.bank-reconciliations",
+              "url": "/accounting/bank-reconciliations"
+            },
+            {
+              "name": "Payment Matching",
+              "slug": "accounting.payment-matchings",
+              "url": "/accounting/payment-matchings"
+            }
+          ]
         },
         {
-          "name": "Fiscal Years",
-          "icon": "menu-icon icon-base bx bx-calendar",
-          "slug": "accounting.fiscal-years.index",
-          "url": "/accounting/fiscal-years"
+          "name": "Financial Reports",
+          "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
+          "slug": [
+            "accounting.reports"
+          ],
+          "submenu": [
+            {
+              "name": "General Ledger",
+              "slug": "accounting.reports.general-ledger",
+              "url": "/accounting/reports/general-ledger"
+            },
+            {
+              "name": "Account Statement",
+              "slug": "accounting.reports.account-statement",
+              "url": "/accounting/reports/account-statement"
+            },
+            {
+              "name": "Trial Balance",
+              "slug": "accounting.reports.trial-balance",
+              "url": "/accounting/reports/trial-balance"
+            },
+            {
+              "name": "Income Statement",
+              "slug": "accounting.reports.income-statement",
+              "url": "/accounting/reports/income-statement"
+            },
+            {
+              "name": "Balance Sheet",
+              "slug": "accounting.reports.balance-sheet",
+              "url": "/accounting/reports/balance-sheet"
+            },
+            {
+              "name": "Cash Flow",
+              "slug": "accounting.reports.cash-flow",
+              "url": "/accounting/reports/cash-flow"
+            },
+            {
+              "name": "Cost Center Performance",
+              "slug": "accounting.reports.cost-center-report",
+              "url": "/accounting/reports/cost-center-report"
+            }
+          ]
         },
         {
-          "name": "Lock Dates",
-          "icon": "menu-icon icon-base bx bx-lock-alt",
-          "slug": "accounting.lock-dates.index",
-          "url": "/accounting/lock-dates"
+          "name": "Configuration & Settings",
+          "icon": "menu-icon icon-base bx bx-slider-alt",
+          "slug": [
+            "accounting.entities",
+            "accounting.fiscal-years",
+            "accounting.lock-dates",
+            "accounting.journals",
+            "accounting.cost-centers",
+            "accounting.cash-accounts",
+            "accounting.opening-balances",
+            "accounting.audit-logs"
+          ],
+          "submenu": [
+            {
+              "name": "Accounting Entities",
+              "slug": "accounting.entities.index",
+              "url": "/accounting/entities"
+            },
+            {
+              "name": "Opening Balances",
+              "slug": "accounting.opening-balances.index",
+              "url": "/accounting/opening-balances"
+            },
+            {
+              "name": "Journals",
+              "slug": "accounting.journals.index",
+              "url": "/accounting/journals"
+            },
+            {
+              "name": "Cash & Bank Accounts",
+              "slug": "accounting.cash-accounts.index",
+              "url": "/accounting/cash-accounts"
+            },
+            {
+              "name": "Cost Centers",
+              "slug": "accounting.cost-centers.index",
+              "url": "/accounting/cost-centers"
+            },
+            {
+              "name": "Fiscal Years",
+              "slug": "accounting.fiscal-years.index",
+              "url": "/accounting/fiscal-years"
+            },
+            {
+              "name": "Lock Dates",
+              "slug": "accounting.lock-dates.index",
+              "url": "/accounting/lock-dates"
+            },
+            {
+              "name": "Audit Trail",
+              "slug": "accounting.audit-logs.index",
+              "url": "/accounting/audit-logs"
+            }
+          ]
         }
       ]
     },

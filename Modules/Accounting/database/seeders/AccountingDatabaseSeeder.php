@@ -17,6 +17,9 @@ class AccountingDatabaseSeeder extends Seeder
         $this->call(AccountDatabaseSeeder::class);
         $this->call(LockDateDatabaseSeeder::class);
         $this->call(CostCenterDatabaseSeeder::class);
+        $this->call(JournalDatabaseSeeder::class);
+        $this->call(CashAccountDatabaseSeeder::class);
+        $this->call(JournalEntryDatabaseSeeder::class);
     }
 }
 

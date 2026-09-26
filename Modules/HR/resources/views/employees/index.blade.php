@@ -193,7 +193,7 @@
 
     <!-- Employees DataTable Card -->
     <div class="card shadow-sm border-0 employee-index-table-wrapper">
-        <div class="card-datatable">
+        <div class="card-datatable table-responsive">
             <table id="employeesTable" class="table table-hover border-top w-100 text-nowrap">
                 <thead>
                     <tr>

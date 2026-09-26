@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Modules\AuditLog\Traits\Auditable as TraitsAuditable;
+use Modules\Accounting\Traits\AccountingAuditable;
 use Modules\Nursery\Models\Nursery;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Entity extends Model implements TranslatableContract
 {
-    use HasFactory, SoftDeletes, Translatable, TraitsAuditable;
+    use HasFactory, SoftDeletes, Translatable, AccountingAuditable;
 
     protected $table = 'entities';
 

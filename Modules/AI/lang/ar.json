@@ -102,5 +102,7 @@
     "Invoice OCR": "استخراج بيانات الفواتير (OCR)",
     "Extract data from invoice images or files.": "التعرف الضوئي على المستندات واستخراج بيانات الفواتير والملفات تلقائياً.",
     "Forecasting": "التنبؤ والتحليلات المستقبلية",
-    "Forecast ERP metrics.": "التنبؤ بالمؤشرات والتدفقات المالية وسلوك البيانات."
+    "Forecast ERP metrics.": "التنبؤ بالمؤشرات والتدفقات المالية وسلوك البيانات.",
+    "Financial Smart Assistant": "المساعد المالي والمرشد الذكي",
+    "Financial Q&A and screen-by-screen guide for accounting operations.": "الرد المالي الذكي وتحليل التقارير وإرشاد المستخدم لمهام وشاشات النظام المحاسبي خطوة بخطوة."
 }

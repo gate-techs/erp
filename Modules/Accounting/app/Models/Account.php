@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Accounting\Enums\AccountType;
+use Modules\Accounting\Traits\AccountingAuditable;
 
 class Account extends Model implements TranslatableContract
 {
-    use HasFactory, SoftDeletes, Translatable;
+    use HasFactory, SoftDeletes, Translatable, AccountingAuditable;
 
     protected $table = 'accounts';
 

@@ -31,6 +31,7 @@ class AITask extends Model
             'report_summary' => 'bx bx-file-blank',
             'ocr_invoice' => 'bx bx-receipt',
             'forecasting' => 'bx bx-trending-up',
+            'financial_assistant' => 'bx bx-bot',
             default => 'bx bx-bot',
         };
     }
@@ -43,6 +44,7 @@ class AITask extends Model
             'report_summary' => 'info',
             'ocr_invoice' => 'warning',
             'forecasting' => 'danger',
+            'financial_assistant' => 'primary',
             default => 'secondary',
         };
     }

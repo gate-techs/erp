@@ -76,6 +76,17 @@ use Illuminate\Support\Facades\Route;
         </li>
         <!--/ Style Switcher -->
 
+        <!-- AI Financial Assistant (المساعد المالي والمرشد الذكي) -->
+        @if(request()->routeIs('accounting.*'))
+        <li class="nav-item">
+            <a class="nav-link hide-arrow btn-nav-circle position-relative" href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#aiFinancialAssistantOffcanvas" title="{{ __('المساعد المالي والمرشد الذكي') }}">
+                <i class="icon-base bx bx-bot fs-4 text-primary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" style="width: 8px; height: 8px; margin-top: 6px; margin-inline-start: -6px;"></span>
+            </a>
+        </li>
+        @endif
+
+
         <!-- User Profile Avatar -->
         <li class="nav-item navbar-dropdown dropdown-user dropdown ms-1">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">

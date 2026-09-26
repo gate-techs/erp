@@ -55,6 +55,7 @@ class EmployeeController extends Controller
                 $percent = (int) $completion['percentage'];
                 $color = $completion['color'];
                 $badgeClass = $completion['class'];
+                $showUrl = route('hr.employees.show', $item->id);
 
                 // SVG Circular Progress Ring (r = 21, Circumference = 2 * PI * 21 ≈ 131.95)
                 $circumference = 131.95;
@@ -62,16 +63,16 @@ class EmployeeController extends Controller
 
                 return '
                     <div class="d-flex align-items-center">
-                        <div class="position-relative d-inline-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 48px; height: 48px;" data-bs-toggle="tooltip" data-bs-placement="top" title="' . __('Profile Completion') . ': ' . $percent . '% (' . $completion['label'] . ')">
+                        <a href="' . $showUrl . '" class="position-relative d-inline-flex align-items-center justify-content-center me-3 flex-shrink-0 text-decoration-none" style="width: 48px; height: 48px;" data-bs-toggle="tooltip" data-bs-placement="top" title="' . __('Profile Completion') . ': ' . $percent . '% (' . $completion['label'] . ')">
                             <svg class="position-absolute top-0 start-0" width="48" height="48" viewBox="0 0 48 48" style="transform: rotate(-90deg);">
                                 <circle cx="24" cy="24" r="21" stroke="#e9ecef" stroke-width="3" fill="none" />
                                 <circle cx="24" cy="24" r="21" stroke="' . $color . '" stroke-width="3" stroke-dasharray="' . $circumference . '" stroke-dashoffset="' . $dashOffset . '" stroke-linecap="round" fill="none" style="transition: stroke-dashoffset 0.6s ease;" />
                             </svg>
                             <img src="' . e($avatar) . '" alt="' . e($displayName) . '" class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover; z-index: 1;">
                             <span class="position-absolute badge ' . $badgeClass . ' rounded-pill text-white fw-bold" style="bottom: -5px; font-size: 8.5px; padding: 1px 4.5px; line-height: 1.1; z-index: 2; box-shadow: 0 1px 3px rgba(0,0,0,0.18);">' . $percent . '%</span>
-                        </div>
+                        </a>
                         <div class="d-flex flex-column">
-                            <span class="text-heading fw-bold fs-6 text-truncate mb-1">' . e($displayName) . '</span>
+                            <a href="' . $showUrl . '" class="text-heading fw-bold fs-6 text-truncate mb-1 text-decoration-none hover-primary">' . e($displayName) . '</a>
                             <div class="d-flex align-items-center gap-1 flex-wrap">
                                 <span class="badge bg-label-primary py-0 px-2 font-11">' . $code . '</span>
                                 ' . ($item->is_teacher ? '<span class="badge bg-label-info py-0 px-2 font-11 d-inline-flex align-items-center gap-1"><i class="bx bx-book-reader font-12"></i> ' . __('Teacher') . '</span>' : '') . '

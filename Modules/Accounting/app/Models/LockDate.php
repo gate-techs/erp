@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Accounting\Traits\AccountingAuditable;
 
 class LockDate extends Model
 {
-    use HasFactory;
+    use HasFactory, AccountingAuditable;
 
     protected $table = 'accounting_lock_dates';
 

@@ -2089,43 +2089,11 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 
 
 
-/* ==========================================================================
-   GLOBAL FORM & SELECT2 CONSOLIDATION (SAFE BASELINE)
-   ========================================================================== */
-
-.select2-container--bootstrap-5.select2-container--focus .select2-selection {
-    border-color: var(--bs-primary) !important;
-    box-shadow: none !important;
-}
-
 /* Safely target default-sized form controls only */
 .form-control:not(.form-control-sm):not(.form-control-lg):not(textarea):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]),
 .form-select:not(.form-select-sm):not(.form-select-lg) {
     min-height: 38px; /* Safe default */
     border-radius: 0.375rem;
-}
-
-/* Global Select2 Bootstrap-5 theme alignment */
-.select2-container--bootstrap-5 .select2-selection {
-    min-height: 38px !important;
-    border-radius: 0.375rem !important;
-}
-.select2-container--bootstrap-5 .select2-selection--single {
-    display: flex !important;
-    align-items: center !important;
-}
-.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-    line-height: 1.5 !important;
-}
-.select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
-    height: 100% !important;
-    top: 0 !important;
-    display: flex;
-    align-items: center;
-}
-html[dir="rtl"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
-    right: auto !important;
-    left: 0.5rem !important;
 }
 
 /* ==========================================================================

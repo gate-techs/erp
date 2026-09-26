@@ -33,7 +33,7 @@
     @endif
 
     <div class="card shadow-sm border-0">
-        <div class="card-datatable">
+        <div class="card-datatable table-responsive">
             <table id="rolesTable" class="table table-hover border-top w-100 text-nowrap">
                 <thead>
                     <tr>
