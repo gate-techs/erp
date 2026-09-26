@@ -1018,20 +1018,20 @@ html[lang^="ar"] .theme-customizer-toggle {
     display: none;
 }
 .theme-customizer-backdrop.show { display: block; }
-.theme-customizer[dir="rtl"] .form-check {
+html[dir="rtl"] .theme-customizer .form-check {
     padding-right: 2.5em;
     padding-left: 0;
 }
-.theme-customizer[dir="rtl"] .form-check .form-check-input {
+html[dir="rtl"] .theme-customizer .form-check .form-check-input {
     float: right;
     margin-right: -2.5em;
     margin-left: 0;
 }
-.theme-customizer[dir="ltr"] .form-check {
+html[dir="ltr"] .theme-customizer .form-check {
     padding-left: 2.5em;
     padding-right: 0;
 }
-.theme-customizer[dir="ltr"] .form-check .form-check-input {
+html[dir="ltr"] .theme-customizer .form-check .form-check-input {
     float: left;
     margin-left: -2.5em;
     margin-right: 0;
@@ -1676,74 +1676,13 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
     font-weight: 500;
     margin-bottom: 0.25rem;
 }
-.employee-index-filters .form-control,
-.employee-index-filters .form-select {
-    height: 38px !important;
-    min-height: 38px !important;
-    border-radius: 0.375rem;
-}
-/* Select2 height fix in filters */
-.employee-index-filters .select2-container--bootstrap-5 .select2-selection {
-    height: 38px !important;
-    min-height: 38px !important;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-}
-.employee-index-filters .select2-container--bootstrap-5 .select2-selection__rendered {
-    line-height: 1.5 !important;
-    padding: 0 !important;
-}
-.employee-index-filters .select2-container--bootstrap-5 .select2-selection__arrow {
-    height: 36px !important;
-}
 
+/* Select2 height fix in filters */
 /* Reset Action */
 .employee-reset-btn {
     font-size: 0.8125rem;
     padding: 0.25rem 0.75rem;
     height: 32px;
-}
-
-/* Table Toolbar (Search & Length) */
-.employee-index-table-wrapper .dataTables_wrapper .row.py-3 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-}
-/* Length Selector */
-.employee-index-table-wrapper .dt-length select {
-    border-radius: 0.375rem !important;
-    border: 1px solid var(--bs-border-color) !important;
-    background-color: var(--bs-body-bg) !important;
-    color: var(--bs-heading-color) !important;
-    height: 38px !important;
-    padding: 0.375rem 2rem 0.375rem 0.75rem !important;
-    min-width: 70px;
-}
-.employee-index-table-wrapper .dt-length select:focus {
-    border-color: var(--bs-primary) !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Table Search */
-.employee-index-table-wrapper .dt-search input {
-    border-radius: 0.375rem !important;
-    border: 1px solid var(--bs-border-color) !important;
-    background-color: var(--bs-body-bg) !important; /* Fix for dark mode */
-    color: var(--bs-heading-color) !important;
-    height: 38px !important;
-    width: 250px !important;
-    padding: 0.375rem 0.75rem !important;
-}
-.employee-index-table-wrapper .dt-search input::placeholder {
-    color: var(--bs-secondary) !important;
-    opacity: 0.8;
-}
-.employee-index-table-wrapper .dt-search input:focus {
-    background-color: var(--bs-paper-bg) !important; /* Theme-aware focus */
-    border-color: var(--bs-primary) !important;
-    outline: none !important;
-    box-shadow: none !important;
 }
 
 /* Table Header & Rows */
@@ -1779,9 +1718,7 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 
 /* Responsive Table */
 @media (max-width: 767.98px) {
-    .employee-index-table-wrapper .dt-search input {
-        width: 100% !important;
-    }
+
     .employee-page-header {
         flex-direction: column !important;
         align-items: flex-start !important;
@@ -1804,18 +1741,6 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 
 /* Filter Panel */
 .attendance-index-filters .form-label { font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.25rem; }
-.attendance-index-filters .form-control, .attendance-index-filters .form-select { height: 38px !important; min-height: 38px !important; border-radius: 0.375rem; }
-.attendance-index-filters .select2-container--bootstrap-5 .select2-selection { height: 38px !important; min-height: 38px !important; padding: 0.375rem 0.75rem; border-radius: 0.375rem; }
-.attendance-index-filters .select2-container--bootstrap-5 .select2-selection__rendered { line-height: 1.5 !important; padding: 0 !important; }
-.attendance-index-filters .select2-container--bootstrap-5 .select2-selection__arrow { height: 36px !important; }
-
-/* Table Toolbar (Search & Length) */
-.attendance-index-table-wrapper .dataTables_wrapper .row.py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-.attendance-index-table-wrapper .dt-length select { border-radius: 0.375rem !important; border: 1px solid var(--bs-border-color) !important; background-color: var(--bs-body-bg) !important; color: var(--bs-heading-color) !important; height: 38px !important; padding: 0.375rem 2rem 0.375rem 0.75rem !important; min-width: 70px; }
-.attendance-index-table-wrapper .dt-length select:focus { border-color: var(--bs-primary) !important; outline: none !important; box-shadow: none !important; }
-.attendance-index-table-wrapper .dt-search input { border-radius: 0.375rem !important; border: 1px solid var(--bs-border-color) !important; background-color: var(--bs-body-bg) !important; color: var(--bs-heading-color) !important; height: 38px !important; width: 250px !important; padding: 0.375rem 0.75rem !important; }
-.attendance-index-table-wrapper .dt-search input::placeholder { color: var(--bs-secondary) !important; opacity: 0.8; }
-.attendance-index-table-wrapper .dt-search input:focus { background-color: var(--bs-paper-bg) !important; border-color: var(--bs-primary) !important; outline: none !important; box-shadow: none !important; }
 
 /* Table Header & Rows */
 .attendance-index-table-wrapper table th { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; background-color: var(--bs-body-bg) !important; border-bottom: 1px solid var(--bs-border-color) !important; padding-block: 0.75rem; }
@@ -1827,7 +1752,7 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 
 /* Responsive Table */
 @media (max-width: 767.98px) {
-    .attendance-index-table-wrapper .dt-search input { width: 100% !important; }
+
     .attendance-page-header { flex-direction: column !important; align-items: flex-start !important; }
     .attendance-page-btn { width: 100%; margin-top: 1rem; }
 }
@@ -2115,3 +2040,485 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 [data-bs-theme=dark] .employee-index-table-wrapper .text-info {
     color: var(--bs-info-text-emphasis) !important;
 }
+
+
+/* ==========================================================================
+   GLOBAL DATATABLES V2 CONSOLIDATION
+   ========================================================================== */
+.dataTables_wrapper .row.py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+.dt-length select {
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-heading-color) !important;
+    height: 38px !important;
+    padding: 0.375rem 2rem 0.375rem 0.75rem !important;
+    min-width: 70px;
+}
+.dt-length select:focus {
+    border-color: var(--bs-primary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.dt-search input {
+    border-radius: 0.375rem !important;
+    border: 1px solid var(--bs-border-color) !important;
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-heading-color) !important;
+    height: 38px !important;
+    width: 250px !important;
+    max-width: 100%;
+    padding: 0.375rem 0.75rem !important;
+}
+.dt-search input::placeholder {
+    color: var(--bs-secondary) !important;
+    opacity: 0.8;
+}
+.dt-search input:focus {
+    background-color: var(--bs-paper-bg) !important;
+    border-color: var(--bs-primary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 767.98px) {
+    .dt-search input { width: 100% !important; }
+}
+
+
+
+/* ==========================================================================
+   GLOBAL FORM & SELECT2 CONSOLIDATION (SAFE BASELINE)
+   ========================================================================== */
+
+.select2-container--bootstrap-5.select2-container--focus .select2-selection {
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+}
+
+/* Safely target default-sized form controls only */
+.form-control:not(.form-control-sm):not(.form-control-lg):not(textarea):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]):not([type="range"]),
+.form-select:not(.form-select-sm):not(.form-select-lg) {
+    min-height: 38px; /* Safe default */
+    border-radius: 0.375rem;
+}
+
+/* Global Select2 Bootstrap-5 theme alignment */
+.select2-container--bootstrap-5 .select2-selection {
+    min-height: 38px !important;
+    border-radius: 0.375rem !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single {
+    display: flex !important;
+    align-items: center !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5 !important;
+}
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    top: 0 !important;
+    display: flex;
+    align-items: center;
+}
+html[dir="rtl"] .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+    right: auto !important;
+    left: 0.5rem !important;
+}
+
+/* ==========================================================================
+   TRUE ICON-ONLY COLLAPSED SIDEBAR (Overrides Vuexy Hover Expansion)
+   ========================================================================== */
+@media (min-width: 1200px) {
+    /* 1. Sidebar Width */
+    html.layout-menu-collapsed .layout-menu,
+    html.layout-menu-collapsed.layout-menu-hover .layout-menu {
+        width: 76px !important;
+        overflow: visible !important; /* CRITICAL: Allow flyouts to escape sidebar */
+    }
+
+    html.layout-menu-collapsed .layout-menu .menu-inner,
+    html.layout-menu-collapsed.layout-menu-hover .layout-menu .menu-inner {
+        padding-inline: 0 !important;
+        overflow: visible !important; /* CRITICAL: Allow flyouts to escape */
+    }
+
+    /* Hide scrollbar rails when collapsed */
+    html.layout-menu-collapsed .layout-menu .ps__rail-y,
+    html.layout-menu-collapsed .layout-menu .ps__rail-x {
+        display: none !important;
+    }
+
+    /* 2. Hide top-level text, arrows, badges */
+    html.layout-menu-collapsed .layout-menu .app-brand-text,
+    html.layout-menu-collapsed .layout-menu .menu-header-text,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-link > div:not(.badge),
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-link .badge,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-link::after {
+        display: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 3. Brand Area (Centered, 64px fixed height) */
+    html.layout-menu-collapsed .layout-menu .app-brand,
+    html.layout-menu-collapsed.layout-menu-hover .layout-menu .app-brand {
+        justify-content: center !important;
+        padding: 0 !important;
+        height: 64px !important;
+        margin: 0 !important;
+    }
+
+    html.layout-menu-collapsed .layout-menu .app-brand-link,
+    html.layout-menu-collapsed.layout-menu-hover .layout-menu .app-brand-link {
+        justify-content: center !important;
+        width: 100% !important;
+        gap: 0 !important;
+    }
+
+    html.layout-menu-collapsed .layout-menu .app-brand-logo img,
+    html.layout-menu-collapsed.layout-menu-hover .layout-menu .app-brand-logo img {
+        max-width: 34px !important;
+        max-height: 34px !important;
+        object-fit: contain !important;
+    }
+
+    /* 4. Top-Level Item Spacing (Vertical 4px, Horizontal Center) */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item {
+        margin: 4px auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        position: relative !important; /* Anchor for absolute flyout */
+    }
+
+    /* 5. Top-Level Clickable Area (44x44 Centered) */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-link {
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        width: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+        height: 44px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        margin: 0 auto !important;
+    }
+
+    /* 6. Top-Level Icon Size and Default Color */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-link > .menu-icon {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 20px !important;
+        width: 20px !important;
+        min-width: 20px !important;
+        height: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: var(--bs-secondary-color, #6c757d) !important;
+    }
+
+    /* 7. Hover State (Subtle Surface) */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item:not(.active) > .menu-link:hover {
+        background-color: rgba(var(--bs-secondary-rgb, 100, 100, 100), 0.1) !important;
+    }
+
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item:not(.active) > .menu-link:hover .menu-icon {
+        color: var(--bs-heading-color) !important;
+    }
+
+    /* 8. Active State (Compact Navy Square) */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.active > .menu-link,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.active.open > .menu-link {
+        background-color: var(--bs-primary) !important;
+        box-shadow: 0 2px 6px rgba(var(--bs-primary-rgb, 0,0,0), 0.3) !important;
+    }
+
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.active > .menu-link .menu-icon,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.active.open > .menu-link .menu-icon {
+        color: #fff !important;
+    }
+
+    /* 9. Menu Headers (Clean Whitespace) */
+    html.layout-menu-collapsed .layout-menu .menu-header {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 12px !important; /* Whitespace gap instead of line */
+        background: transparent !important;
+        border: none !important;
+    }
+
+    html.layout-menu-collapsed .layout-menu .menu-header::before {
+        display: none !important;
+    }
+
+    /* ==========================================================================
+       NEUTRALIZE VUEXY ROOT ANIMATION (Prevent Submenu Slide/Jump)
+       ========================================================================== */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.menu-item-animating,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.menu-item-closing {
+        transition: none !important;
+        animation: none !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Immediately hide flyout when closing starts (overrides the 100ms Vuexy animation delay) */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.menu-item-closing > .menu-sub {
+        display: none !important;
+    }
+
+    /* ==========================================================================
+       FLYOUT SUBMENU LOGIC
+       ========================================================================== */
+
+    /* Hide submenus by default */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub {
+        display: none !important;
+        position: absolute !important;
+        top: 0 !important;
+        width: 260px !important;
+        background-color: var(--bs-body-bg) !important;
+        border: 1px solid var(--bs-border-color) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        border-radius: 10px !important;
+        padding: 0.5rem 0 !important;
+        z-index: 1000 !important;
+        margin: 0 !important;
+    }
+
+    /* Show submenu ONLY when parent has .open class */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item.open > .menu-sub {
+        display: block !important;
+    }
+
+    /* LTR Positioning */
+    html.layout-menu-collapsed[dir="ltr"] .layout-menu .menu-inner > .menu-item > .menu-sub {
+        left: 76px !important;
+        margin-left: 8px !important;
+    }
+
+    /* RTL Positioning */
+    html.layout-menu-collapsed[dir="rtl"] .layout-menu .menu-inner > .menu-item > .menu-sub {
+        right: 76px !important;
+        margin-right: 8px !important;
+    }
+
+    /* Restore normal layout for items INSIDE the flyout */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-item {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Restore links inside flyout */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-link {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 0.625rem 1rem !important;
+        margin: 0 0.5rem !important;
+        width: calc(100% - 1rem) !important;
+        height: auto !important;
+        border-radius: 0.375rem !important;
+    }
+
+    /* Restore text inside flyout */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-link > div,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-link .badge,
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-link::after {
+        display: block !important;
+        opacity: 1 !important;
+        width: auto !important;
+    }
+
+    /* Fix icon spacing inside flyout */
+    html.layout-menu-collapsed .layout-menu .menu-inner > .menu-item > .menu-sub .menu-icon {
+        font-size: 1.125rem !important;
+        width: 1.125rem !important;
+        height: 1.125rem !important;
+        display: inline-block !important;
+    }
+
+    html.layout-menu-collapsed[dir="ltr"] .layout-menu .menu-inner > .menu-item > .menu-sub .menu-icon {
+        margin-right: 0.5rem !important;
+    }
+
+    html.layout-menu-collapsed[dir="rtl"] .layout-menu .menu-inner > .menu-item > .menu-sub .menu-icon {
+        margin-left: 0.5rem !important;
+    }
+}
+
+/* ==========================================================================
+   GLOBAL UI FOUNDATION (AUTOMATIC INHERITANCE ON EXISTING SELECTORS)
+   ========================================================================== */
+
+/* 1. Safe Global Design Tokens */
+:root {
+    --app-transition-fast: 0.2s ease-in-out;
+}
+
+/* 2. Global Buttons (Existing .btn system) */
+.btn {
+    transition: color var(--app-transition-fast), background-color var(--app-transition-fast), border-color var(--app-transition-fast), box-shadow var(--app-transition-fast) !important;
+}
+.btn i.bx, .btn i.icon-base {
+    /* Safe icon alignment inside all buttons */
+    vertical-align: middle;
+}
+
+/* 3. Global Form Controls (Existing .form-control / .form-select) */
+input[type="text"].form-control,
+input[type="email"].form-control,
+input[type="number"].form-control,
+input[type="password"].form-control,
+input[type="search"].form-control,
+input[type="tel"].form-control,
+input[type="url"].form-control,
+select.form-select {
+    transition: border-color var(--app-transition-fast), box-shadow var(--app-transition-fast) !important;
+}
+
+/* 4. Global Dropdowns (Existing .dropdown-menu) */
+.dropdown-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Standardize icon-to-text gap */
+}
+html[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+/* 5. Global Validation (Existing .invalid-feedback) */
+.is-invalid ~ .invalid-feedback {
+    display: block; /* Ensure feedback always displays when input is invalid */
+}
+
+/* Note:
+   Cards (.card), Tables (.table), Modals (.modal-content), Alerts (.alert),
+   and Pagination (.pagination) intentionally inherit default Vuexy/Bootstrap
+   styles because their current baseline is already consistently applied across modules.
+*/
+
+/* ==========================================================================
+   GLOBAL COMPONENT ENHANCEMENTS (PASS 2)
+   ========================================================================== */
+
+/* 1. Modals (Safe Shared Polish) */
+.modal-content {
+    border-radius: var(--bs-border-radius-lg, 0.5rem);
+    border: none;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15); /* Safe shadow */
+}
+[data-bs-theme="dark"] .modal-content {
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--bs-border-color);
+}
+.modal-header {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.modal-footer {
+    border-top: 1px solid var(--bs-border-color);
+}
+
+/* 2. Disabled States (Globally uniform cursor/opacity) */
+/* Use safe native HTML disabled attribute for cursor (does not risk <a> tag click passthrough) */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.65;
+}
+
+/* ==========================================================================
+   GLOBAL UI FOUNDATION (PASS 3 - SHARED STATES & ACCESSIBILITY)
+   ========================================================================== */
+
+/* 1. Global Focus-Visible (Keyboard accessibility) */
+/* Suppress permanent mouse-click rings on custom buttons/inputs */
+.btn:focus:not(:focus-visible),
+.btn-close:focus:not(:focus-visible) {
+    box-shadow: none !important;
+    outline: none !important;
+}
+/* Ensure clear keyboard focus ring using existing theme variables */
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+.dropdown-item:focus-visible,
+.page-link:focus-visible,
+.nav-link:focus-visible,
+.btn-close:focus-visible {
+    outline: 2px solid var(--bs-primary) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important; /* Override Bootstrap's blurry shadow */
+}
+
+/* 2. Readonly Form Controls (Exclude Flatpickr) */
+.form-control[readonly]:not(.flatpickr-input) {
+    background-color: var(--bs-secondary-bg) !important;
+    color: var(--bs-body-color) !important;
+    opacity: 1; /* Ensure distinct from disabled */
+    cursor: default;
+}
+
+/* 3. Browser Autofill (Fix Chrome harsh yellow/white in Dark Mode) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--bs-body-bg) inset !important;
+    -webkit-text-fill-color: var(--bs-body-color) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* 4. Global Scrollbars (Subtle WebKit/Firefox scrollbars, avoiding bright white in dark mode) */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bs-border-color) transparent;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bs-border-color);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-secondary-color);
+}
+
+/* 5. Global Text Selection */
+::selection {
+    background-color: rgba(var(--bs-primary-rgb), 0.2); /* Soft primary selection */
+    color: var(--bs-heading-color);
+}
+
+/* 6. Reduced Motion (Cosmetic only) */
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .form-control,
+    .form-select,
+    .dropdown-item {
+        transition: none !important;
+    }
+}
+
+/* Note:
+   .btn-close sizing, links styling, and base disabled states
+   were audited and intentionally left untouched as Vuexy/Bootstrap
+   already handles them properly for RTL and themes.
+*/

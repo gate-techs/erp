@@ -589,7 +589,13 @@ document.addEventListener('DOMContentLoaded', function () {
              '<"col-sm-12 col-md-6"p>' +
              '>',
         language: {
-            url: isRtl ? 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/ar.json' : ''
+            search: "",
+            searchPlaceholder: "{{ __('Search...') }}",
+            lengthMenu: "_MENU_",
+            paginate: {
+                previous: '<i class="bx bx-chevron-left"></i>',
+                next: '<i class="bx bx-chevron-right"></i>'
+            }
         }
     });
 

@@ -486,6 +486,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const table = $('#costCentersTable').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        pagingType: 'simple_numbers',
         ajax: {
             url: dataUrl,
             data: function (d) {
@@ -495,32 +498,102 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         columns: [
-            { data: 'DT_RowIndex', name: 'id', orderable: false, searchable: false, className: 'text-center align-middle' },
-            { data: 'cost_center_info', name: 'cost_center_info', className: 'align-middle' },
-            { data: 'entity_info', name: 'accounting_cost_centers.entity_id', orderable: false, searchable: false, className: 'align-middle' },
-            { data: 'type_badge', name: 'accounting_cost_centers.type', className: 'text-center align-middle' },
-            { data: 'parent_info', name: 'accounting_cost_centers.parent_id', orderable: false, searchable: false, className: 'align-middle' },
-            { data: 'branch_info', name: 'accounting_cost_centers.branch_id', orderable: false, searchable: false, className: 'align-middle' },
-            { data: 'status_badge', name: 'accounting_cost_centers.status', className: 'text-center align-middle' },
-            { data: 'created_at', name: 'accounting_cost_centers.created_at', className: 'text-center align-middle' },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center align-middle' }
+            {
+                data: 'DT_RowIndex',
+                name: 'id',
+                orderable: false,
+                searchable: false,
+                className: 'text-center align-middle',
+                render: (data, type, row, meta) => `<strong class="text-muted">#${data || (meta.row + 1 + (meta.settings._iDisplayStart || 0))}</strong>`
+            },
+            {
+                data: 'cost_center_info',
+                name: 'cost_center_info',
+                className: 'align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'entity_info',
+                name: 'accounting_cost_centers.entity_id',
+                orderable: false,
+                searchable: false,
+                className: 'align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'type_badge',
+                name: 'accounting_cost_centers.type',
+                className: 'text-center align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'parent_info',
+                name: 'accounting_cost_centers.parent_id',
+                orderable: false,
+                searchable: false,
+                className: 'align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'branch_info',
+                name: 'accounting_cost_centers.branch_id',
+                orderable: false,
+                searchable: false,
+                className: 'align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'status_badge',
+                name: 'accounting_cost_centers.status',
+                className: 'text-center align-middle',
+                render: (data, type, row) => data
+            },
+            {
+                data: 'created_at',
+                name: 'accounting_cost_centers.created_at',
+                className: 'text-center align-middle',
+                render: data => `<span class="text-muted">${data || '-'}</span>`
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false,
+                className: 'text-center align-middle',
+                render: (data, type, row) => data
+            }
         ],
         order: [[1, 'asc']],
         language: {
-            url: document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl'
-                ? '//cdn.datatables.net/plug-ins/1.13.7/i18n/ar.json'
-                : undefined
+            search: "",
+            searchPlaceholder: "{{ __('Search...') }}",
+            lengthMenu: "_MENU_",
+            paginate: {
+                previous: '<i class="bx bx-chevron-left"></i>',
+                next: '<i class="bx bx-chevron-right"></i>'
+            }
+        },
+        drawCallback: function () {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('#costCentersTable [data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         }
     });
 
-    // Filter changes reload table
+    // Custom Filters Trigger Reload with debounce / reset guard
+    let isResetting = false;
+
     $('#filter_entity_id, #filter_type, #filter_status').on('change', function () {
+        if (isResetting) return;
         table.ajax.reload();
     });
 
     // Reset filters
     $('#btnResetFilters').on('click', function () {
+        isResetting = true;
         $('#filter_entity_id, #filter_type, #filter_status').val('').trigger('change');
+        isResetting = false;
         table.ajax.reload();
     });
 
