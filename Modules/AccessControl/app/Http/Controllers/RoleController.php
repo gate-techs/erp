@@ -82,10 +82,39 @@ class RoleController extends Controller
 
     private function validated(Request $request, ?int $roleId = null): array
     {
-        $nameRule = 'required|string|max:255|unique:roles,name,' . ($roleId ?? 'NULL') . ',id,guard_name,web';
+        $hasBilingual = $request->has('name_ar') || $request->has('name_en');
 
-        return $request->validate([
-            'name' => $nameRule,
-        ]) + ['guard_name' => 'web'];
+        if ($hasBilingual) {
+            $validated = $request->validate([
+                'name_ar' => 'required|string|max:255',
+                'name_en' => 'required|string|max:255',
+            ]);
+
+            $nameAr = $validated['name_ar'];
+            $nameEn = $validated['name_en'];
+        } else {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+            $nameAr = $validated['name'];
+            $nameEn = $validated['name'];
+        }
+
+        $role = $roleId ? Role::find($roleId) : null;
+        if ($role && $role->isSystem()) {
+            $name = $role->name;
+        } else {
+            $name = $nameEn ?: $nameAr;
+            if (!$roleId && Role::where('name', $name)->where('guard_name', 'web')->exists()) {
+                $name = $name . '_' . time();
+            }
+        }
+
+        return [
+            'name'       => $name,
+            'name_ar'    => $nameAr,
+            'name_en'    => $nameEn,
+            'guard_name' => 'web',
+        ];
     }
 }

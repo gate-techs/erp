@@ -3,7 +3,6 @@
 @section('title', __('Roles') . ' - ' . config('variables.templateName'))
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
@@ -49,7 +48,6 @@
             </table>
         </div>
     </div>
-</div>
 
 <div class="modal fade" id="roleModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -62,9 +60,12 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label required fw-semibold">{{ __('Role Name') }} <span class="text-danger">*</span></label>
-                    <input type="text" name="name" id="roleName" class="form-control" required placeholder="{{ __('e.g. مدير النظام / HR Manager') }}">
-                    <small class="text-muted">{{ __('You can enter the role name in Arabic or English.') }}</small>
+                    <label class="form-label required fw-semibold">{{ __('Role Name (Arabic)') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_ar" id="roleNameAr" class="form-control" required dir="rtl" placeholder="مثال: مدير النظام / محاسب">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label required fw-semibold">{{ __('Role Name (English)') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_en" id="roleNameEn" class="form-control" required dir="ltr" placeholder="e.g. System Administrator / Accountant">
                 </div>
             </div>
             <div class="modal-footer">
@@ -131,8 +132,11 @@ window.addEventListener('load', function () {
                         <div class="avatar avatar-xs bg-label-primary rounded d-inline-flex align-items-center justify-content-center">
                             <i class="icon-base bx bx-shield-quarter font-16"></i>
                         </div>
-                        <span class="fw-semibold text-heading">${escapeHtml(data || row.name)}</span>
-                        ${row.is_system ? `<span class="badge bg-label-secondary font-11 py-0 px-2"><i class="bx bx-lock-alt font-12 me-1"></i>{{ __('System') }}</span>` : ''}
+                        <div>
+                            <span class="fw-semibold text-heading">${escapeHtml(row.name_ar || data || row.name)}</span>
+                            ${row.name_en ? `<small class="text-muted d-block">${escapeHtml(row.name_en)}</small>` : (row.name && row.name !== row.name_ar ? `<small class="text-muted d-block">(${escapeHtml(row.name)})</small>` : '')}
+                        </div>
+                        ${row.is_system ? `<span class="badge bg-label-secondary font-11 py-0 px-2 ms-1"><i class="bx bx-lock-alt font-12 me-1"></i>{{ __('System') }}</span>` : ''}
                     </div>`
             },
             { 

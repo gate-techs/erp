@@ -3,14 +3,16 @@
 @section('title', __('Edit Role') . ' - ' . config('variables.templateName'))
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
     <!-- Header & Breadcrumb -->
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
         <div>
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
                 <i class="icon-base bx bx-shield-quarter text-primary font-22"></i>
                 <span>{{ __('Edit Role') }}:</span>
-                <span class="text-primary">{{ __($role->name) }}</span>
+                <span class="text-primary">{{ $role->name_ar ?: $role->display_name }}</span>
+                @if(!empty($role->name_en) && $role->name_en !== ($role->name_ar ?: $role->display_name))
+                    <span class="badge bg-label-secondary font-14 fw-normal">({{ $role->name_en }})</span>
+                @endif
             </h4>
             <p class="text-muted mb-0">{{ __('Configure role name and assign granular permissions for all system screens.') }}</p>
         </div>
@@ -48,20 +50,31 @@
             </div>
             <div class="card-body pt-3">
                 <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <label class="form-label required fw-semibold" for="roleName">
-                            {{ __('Role Name (Arabic or English)') }} <span class="text-danger">*</span>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label required fw-semibold" for="roleNameAr">
+                            {{ __('Role Name (Arabic)') }} <span class="text-danger">*</span>
                         </label>
                         <input type="text"
-                               name="name"
-                               id="roleName"
+                               name="name_ar"
+                               id="roleNameAr"
                                class="form-control form-control-lg fw-semibold"
-                               value="{{ old('name', $role->name) }}"
+                               value="{{ old('name_ar', $role->name_ar ?? $role->display_name) }}"
                                required
-                               placeholder="{{ __('e.g. مدير النظام / HR Manager / المحاسب') }}">
-                        <small class="text-muted">
-                            {{ __('You can enter the role name in Arabic or English freely.') }}
-                        </small>
+                               dir="rtl"
+                               placeholder="مثال: مدير النظام / محاسب عام">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label required fw-semibold" for="roleNameEn">
+                            {{ __('Role Name (English)') }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               name="name_en"
+                               id="roleNameEn"
+                               class="form-control form-control-lg fw-semibold"
+                               value="{{ old('name_en', $role->name_en ?? $role->name) }}"
+                               required
+                               dir="ltr"
+                               placeholder="e.g. System Administrator / Accountant">
                     </div>
                     <div class="col-12 col-md-6">
                         <label class="form-label fw-semibold">{{ __('Current Assigned Permissions') }}</label>
@@ -147,7 +160,6 @@
                                                 <span class="fw-semibold text-heading d-block">
                                                     {{ app()->getLocale() === 'ar' ? ($screen['name_ar'] ?? $screen['name']) : $screen['name'] }}
                                                 </span>
-                                                <small class="text-muted">{{ $screen['key'] }}</small>
                                             </div>
                                         </div>
                                     </td>
@@ -273,7 +285,6 @@
             </div>
         </div>
     </form>
-</div>
 @endsection
 
 @section('page-script')

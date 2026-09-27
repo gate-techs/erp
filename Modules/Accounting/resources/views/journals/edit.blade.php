@@ -132,8 +132,16 @@
                             <select name="default_account_id" id="default_account_id" class="form-select select2 account-select" data-control="select2" data-placeholder="{{ __('Select Account') }}" data-allow-clear="true">
                                 <option value="">{{ __('Select Account') }}</option>
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}" data-entity="{{ $account->entity_id }}" data-type="{{ $account->account_type?->value }}" data-code="{{ $account->code }}" @selected(old('default_account_id', $journal->default_account_id) == $account->id)>
-                                        {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} ({{ $account->account_type?->label() ?? '' }})
+                                    <option value="{{ $account->id }}"
+                                        data-entity="{{ $account->entity_id }}"
+                                        data-type="{{ $account->account_type?->value }}"
+                                        data-code="{{ $account->code }}"
+                                        data-is-group="{{ $account->is_group ? '1' : '0' }}"
+                                        data-allow-posting="{{ $account->allow_posting ? '1' : '0' }}"
+                                        data-level="{{ $account->level ?? 1 }}"
+                                        @disabled($account->is_group)
+                                        @selected(old('default_account_id', $journal->default_account_id) == $account->id)>
+                                        {{ str_repeat('— ', max(0, ($account->level ?? 1) - 1)) }} {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} {{ $account->is_group ? '[' . __('Group') . ']' : '(' . ($account->account_type?->label() ?? '') . ')' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -148,8 +156,16 @@
                             <select name="suspense_account_id" id="suspense_account_id" class="form-select select2 account-select" data-control="select2" data-placeholder="{{ __('Select Suspense Account') }}" data-allow-clear="true">
                                 <option value="">{{ __('Select Suspense Account') }}</option>
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}" data-entity="{{ $account->entity_id }}" data-type="{{ $account->account_type?->value }}" data-code="{{ $account->code }}" @selected(old('suspense_account_id', $journal->suspense_account_id) == $account->id)>
-                                        {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} ({{ $account->account_type?->label() ?? '' }})
+                                    <option value="{{ $account->id }}"
+                                        data-entity="{{ $account->entity_id }}"
+                                        data-type="{{ $account->account_type?->value }}"
+                                        data-code="{{ $account->code }}"
+                                        data-is-group="{{ $account->is_group ? '1' : '0' }}"
+                                        data-allow-posting="{{ $account->allow_posting ? '1' : '0' }}"
+                                        data-level="{{ $account->level ?? 1 }}"
+                                        @disabled($account->is_group)
+                                        @selected(old('suspense_account_id', $journal->suspense_account_id) == $account->id)>
+                                        {{ str_repeat('— ', max(0, ($account->level ?? 1) - 1)) }} {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} {{ $account->is_group ? '[' . __('Group') . ']' : '(' . ($account->account_type?->label() ?? '') . ')' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -164,8 +180,16 @@
                             <select name="profit_account_id" id="profit_account_id" class="form-select select2 account-select" data-control="select2" data-placeholder="{{ __('Select Profit Account') }}" data-allow-clear="true">
                                 <option value="">{{ __('Select Profit Account') }}</option>
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}" data-entity="{{ $account->entity_id }}" data-type="{{ $account->account_type?->value }}" data-code="{{ $account->code }}" @selected(old('profit_account_id', $journal->profit_account_id) == $account->id)>
-                                        {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} ({{ $account->account_type?->label() ?? '' }})
+                                    <option value="{{ $account->id }}"
+                                        data-entity="{{ $account->entity_id }}"
+                                        data-type="{{ $account->account_type?->value }}"
+                                        data-code="{{ $account->code }}"
+                                        data-is-group="{{ $account->is_group ? '1' : '0' }}"
+                                        data-allow-posting="{{ $account->allow_posting ? '1' : '0' }}"
+                                        data-level="{{ $account->level ?? 1 }}"
+                                        @disabled($account->is_group)
+                                        @selected(old('profit_account_id', $journal->profit_account_id) == $account->id)>
+                                        {{ str_repeat('— ', max(0, ($account->level ?? 1) - 1)) }} {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} {{ $account->is_group ? '[' . __('Group') . ']' : '(' . ($account->account_type?->label() ?? '') . ')' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -180,8 +204,16 @@
                             <select name="loss_account_id" id="loss_account_id" class="form-select select2 account-select" data-control="select2" data-placeholder="{{ __('Select Loss Account') }}" data-allow-clear="true">
                                 <option value="">{{ __('Select Loss Account') }}</option>
                                 @foreach ($accounts as $account)
-                                    <option value="{{ $account->id }}" data-entity="{{ $account->entity_id }}" data-type="{{ $account->account_type?->value }}" data-code="{{ $account->code }}" @selected(old('loss_account_id', $journal->loss_account_id) == $account->id)>
-                                        {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} ({{ $account->account_type?->label() ?? '' }})
+                                    <option value="{{ $account->id }}"
+                                        data-entity="{{ $account->entity_id }}"
+                                        data-type="{{ $account->account_type?->value }}"
+                                        data-code="{{ $account->code }}"
+                                        data-is-group="{{ $account->is_group ? '1' : '0' }}"
+                                        data-allow-posting="{{ $account->allow_posting ? '1' : '0' }}"
+                                        data-level="{{ $account->level ?? 1 }}"
+                                        @disabled($account->is_group)
+                                        @selected(old('loss_account_id', $journal->loss_account_id) == $account->id)>
+                                        {{ str_repeat('— ', max(0, ($account->level ?? 1) - 1)) }} {{ $account->code }} - {{ $account->translate(app()->getLocale())?->name ?? $account->translate('ar')?->name ?? $account->code }} {{ $account->is_group ? '[' . __('Group') . ']' : '(' . ($account->account_type?->label() ?? '') . ')' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -500,16 +532,24 @@ document.addEventListener('DOMContentLoaded', function () {
             if ($(this).val()) {
                 rawOptions[id].push({
                     value: String($(this).val()),
-                    text: $(this).text(),
+                    text: $(this).text().trim(),
                     entity: String($(this).data('entity') || ''),
                     type: String($(this).data('type') || ''),
-                    code: String($(this).data('code') || '')
+                    code: String($(this).data('code') || ''),
+                    isGroup: String($(this).data('is-group') || '0'),
+                    allowPosting: String($(this).data('allow-posting') || '1'),
+                    level: parseInt($(this).data('level') || '1')
                 });
             }
         });
     });
 
     function isAccountAllowedForField(opt, fieldId, journalType) {
+        // Group / parent accounts cannot be used as journal operational accounts
+        if (opt.isGroup === '1') {
+            return false;
+        }
+
         const code = opt.code || '';
         const type = opt.type || '';
         const text = opt.text || '';
@@ -517,15 +557,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (fieldId === 'default_account_id') {
             switch (journalType) {
                 case 'bank':
-                    return code.startsWith('1101') || text.includes('بنك') || text.toLowerCase().includes('bank');
+                    return (code.startsWith('110102') || code.startsWith('110402') || (type === 'asset' && (text.includes('بنك') || text.toLowerCase().includes('bank'))))
+                        && type !== 'expense' && !code.startsWith('5');
                 case 'cash':
-                    return code.startsWith('1101') || text.includes('صندوق') || text.includes('خزينة') || text.includes('عهدة');
+                    return (code.startsWith('110101') || code.startsWith('110103') || (type === 'asset' && (text.includes('صندوق') || text.includes('خزينة') || text.includes('عهدة'))))
+                        && type !== 'expense' && !code.startsWith('5');
                 case 'sale':
                     return type === 'income' || code.startsWith('4');
                 case 'purchase':
-                    return type === 'expense' || code.startsWith('5');
+                    return (type === 'expense' || code.startsWith('5')) && !code.startsWith('510101'); // exclude salaries
                 case 'credit_card':
-                    return code.startsWith('1101') || code.startsWith('21') || type === 'liability' || type === 'asset';
+                    return (code.startsWith('1101') || code.startsWith('21') || type === 'liability' || type === 'asset')
+                        && type !== 'expense' && !code.startsWith('5');
                 case 'general':
                 default:
                     return true;
@@ -535,34 +578,36 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (fieldId === 'loss_account_id') {
             return type === 'expense' || code.startsWith('5');
         } else if (fieldId === 'suspense_account_id') {
-            return code.startsWith('11') || code.startsWith('21') || type === 'asset' || type === 'liability';
+            return code.startsWith('9') || code.startsWith('11') || code.startsWith('21') || type === 'asset' || type === 'liability';
         }
         return true;
     }
 
     function getBestSuggestedAccount(journalType, entityId) {
         const options = (rawOptions['default_account_id'] || []).filter(opt => {
-            return (!entityId || !opt.entity || opt.entity === String(entityId));
+            return (!entityId || !opt.entity || opt.entity === String(entityId)) && opt.isGroup !== '1';
         });
 
         if (journalType === 'bank') {
-            const bankAcc = options.find(opt => opt.code === '110102' || opt.text.includes('بنك') || opt.text.toLowerCase().includes('bank'));
-            if (bankAcc) return bankAcc.value;
-            const any1101 = options.find(opt => opt.code.startsWith('1101'));
-            if (any1101) return any1101.value;
+            const specificBank = options.find(opt => opt.code === '1101020101' || opt.code === '1101020201');
+            if (specificBank) return specificBank.value;
+            const anyBank = options.find(opt => (opt.code.startsWith('110102') || opt.code.startsWith('110402')) && opt.type !== 'expense');
+            if (anyBank) return anyBank.value;
         } else if (journalType === 'cash') {
-            const cashAcc = options.find(opt => opt.code === '110101' || opt.text.includes('الصندوق الرئيسي') || opt.text.includes('خزينة'));
-            if (cashAcc) return cashAcc.value;
-            const any1101 = options.find(opt => opt.code.startsWith('1101'));
-            if (any1101) return any1101.value;
+            const safe = options.find(opt => opt.code === '11010101');
+            if (safe) return safe.value;
+            const anyCash = options.find(opt => opt.code.startsWith('110101') && opt.type !== 'expense');
+            if (anyCash) return anyCash.value;
         } else if (journalType === 'sale') {
-            const saleAcc = options.find(opt => opt.code === '41' || (opt.type === 'income' && !opt.text.includes('أخرى')));
-            if (saleAcc) return saleAcc.value;
+            const tuition = options.find(opt => opt.code === '41010101');
+            if (tuition) return tuition.value;
             const anyIncome = options.find(opt => opt.type === 'income' || opt.code.startsWith('4'));
             if (anyIncome) return anyIncome.value;
         } else if (journalType === 'purchase') {
-            const purchAcc = options.find(opt => opt.code === '5101' || opt.type === 'expense');
-            if (purchAcc) return purchAcc.value;
+            const purchaseAcc = options.find(opt => opt.code === '51010501' || opt.code === '51010401' || opt.code === '51010201');
+            if (purchaseAcc) return purchaseAcc.value;
+            const anyExpense = options.find(opt => (opt.type === 'expense' || opt.code.startsWith('5')) && !opt.code.startsWith('510101'));
+            if (anyExpense) return anyExpense.value;
         }
         return '';
     }

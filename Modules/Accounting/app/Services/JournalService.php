@@ -93,14 +93,22 @@ class JournalService
             return;
         }
 
-        $validCount = Account::query()
+        $validAccounts = Account::query()
             ->where('entity_id', $entityId)
             ->whereIn('id', $accountIds)
-            ->count();
+            ->get();
 
-        if ($validCount !== $accountIds->count()) {
+        if ($validAccounts->count() !== $accountIds->count()) {
             throw ValidationException::withMessages([
                 'default_account_id' => [__('All selected accounts must belong to the selected accounting entity.')],
+            ]);
+        }
+
+        $groupAccounts = $validAccounts->where('is_group', true);
+        if ($groupAccounts->isNotEmpty()) {
+            $groupNames = $groupAccounts->map(fn ($a) => $a->code . ' - ' . ($a->name ?? $a->code))->implode(', ');
+            throw ValidationException::withMessages([
+                'default_account_id' => [__('Cannot assign a parent/group account (:accounts) to a journal. Please select a sub-account.', ['accounts' => $groupNames])],
             ]);
         }
     }

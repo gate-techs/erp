@@ -204,7 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof state.menuCollapsed === 'boolean') overrides.menuCollapsed = state.menuCollapsed;
             if (typeof state.menuHidden === 'boolean') overrides.menuHidden = state.menuHidden;
             if (validNavbarColors.includes(state.navbarColor)) overrides.navbarColor = state.navbarColor;
-            if (['sticky', 'static', 'hidden'].includes(state.navbarType)) overrides.navbarType = state.navbarType;
+            if (['sticky', 'static', 'hidden'].includes(state.navbarType)) {
+                overrides.navbarType = state.navbarType === 'hidden' ? 'hidden' : 'sticky';
+            } else {
+                overrides.navbarType = 'sticky';
+            }
             if (['sticky', 'static', 'hidden'].includes(state.footerType)) overrides.footerType = state.footerType;
 
             return overrides;

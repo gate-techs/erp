@@ -20,6 +20,7 @@ class AccountingDatabaseSeeder extends Seeder
         $this->call(JournalDatabaseSeeder::class);
         $this->call(CashAccountDatabaseSeeder::class);
         $this->call(JournalEntryDatabaseSeeder::class);
+        $this->call(AccountingPermissionSeeder::class);
     }
 }
 

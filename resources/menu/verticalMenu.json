@@ -422,6 +422,27 @@
       ]
     },
     {
+      "name": "Inventory",
+      "icon": "menu-icon icon-base bx bx-package",
+      "slug": [
+        "inventory"
+      ],
+      "submenu": [
+        {
+          "name": "Warehouses",
+          "icon": "menu-icon icon-base bx bx-package",
+          "slug": "inventory.index",
+          "url": "/warehouses"
+        },
+        {
+          "name": "Item Categories",
+          "icon": "menu-icon icon-base bx bx-category",
+          "slug": "inventory.categories.index",
+          "url": "/item-categories"
+        }
+      ]
+    },
+    {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": [

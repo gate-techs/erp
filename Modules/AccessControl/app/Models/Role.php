@@ -35,6 +35,20 @@ class Role extends SpatieRole
      */
     public function getDisplayNameAttribute(): string
     {
+        $locale = app()->getLocale();
+        if ($locale === 'ar' && !empty($this->name_ar)) {
+            return $this->name_ar;
+        }
+        if ($locale !== 'ar' && !empty($this->name_en)) {
+            return $this->name_en;
+        }
+        if (!empty($this->name_ar)) {
+            return $this->name_ar;
+        }
+        if (!empty($this->name_en)) {
+            return $this->name_en;
+        }
+
         $key = strtolower(trim($this->name));
         $map = [
             'super_admin' => __('Super Administrator'),

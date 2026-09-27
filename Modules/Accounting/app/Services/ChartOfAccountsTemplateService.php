@@ -2,10 +2,12 @@
 
 namespace Modules\Accounting\Services;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Accounting\Enums\AccountType;
 use Modules\Accounting\Models\Account;
 use Modules\Accounting\Models\Entity;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ChartOfAccountsTemplateService
 {
@@ -345,19 +347,325 @@ class ChartOfAccountsTemplateService
     }
 
     /**
-     * Generate the standard chart of accounts for a given entity.
+     * Get default path for Astro chart of accounts excel file.
+     */
+    public function getDefaultExcelPath(): string
+    {
+        $base = base_path('file/دليل حسابات استرو النهائي.xlsx');
+        if (file_exists($base)) {
+            return $base;
+        }
+
+        $alt = 'D:\\xamp8.2\\htdocs\\gate\\erp\\file\\دليل حسابات استرو النهائي.xlsx';
+        if (file_exists($alt)) {
+            return $alt;
+        }
+
+        return $base;
+    }
+
+    /**
+     * Parse and structure accounts from the Excel file following project conventions.
+     *
+     * @param string|null $filePath
+     * @return array<int, array<string, mixed>>
+     * @throws Exception
+     */
+    public function loadAccountsFromExcel(?string $filePath = null): array
+    {
+        $path = $filePath ?: $this->getDefaultExcelPath();
+
+        if (!file_exists($path)) {
+            throw new Exception("Chart of accounts Excel file not found at: {$path}");
+        }
+
+        $spreadsheet = IOFactory::load($path);
+        $sheet = $spreadsheet->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+
+        $rawRows = [];
+        for ($r = 2; $r <= $highestRow; $r++) {
+            $kind = trim((string) $sheet->getCell('A' . $r)->getValue());
+            $code = trim((string) $sheet->getCell('B' . $r)->getValue());
+            $name = trim((string) $sheet->getCell('C' . $r)->getValue());
+
+            if ($code === '' && $name === '') {
+                continue;
+            }
+
+            if ($code === '') {
+                continue;
+            }
+
+            $rawRows[] = [
+                'row'  => $r,
+                'kind' => $kind,
+                'code' => $code,
+                'name' => $name,
+            ];
+        }
+
+        if (empty($rawRows)) {
+            throw new Exception("No account rows found in the Excel file.");
+        }
+
+        $codeMap = [];
+        foreach ($rawRows as $item) {
+            $codeMap[$item['code']] = $item;
+        }
+
+        $roots = ['1', '2', '3', '4', '5', '9'];
+
+        $englishNames = [
+            '1'      => 'Assets',
+            '11'     => 'Current Assets',
+            '1101'   => 'Cash and Cash Equivalents',
+            '110101' => 'Cash in Hand',
+            '110102' => 'Banks',
+            '110103' => 'Petty Cash & Custodies',
+            '1104'   => 'Accounts Receivable & Debtors',
+            '110401' => 'Debtors',
+            '12'     => 'Non-Current Assets (Fixed Assets)',
+            '2'      => 'Liabilities',
+            '21'     => 'Current Liabilities',
+            '2101'   => 'Trade Creditors & Suppliers',
+            '2102'   => 'Accrued Expenses & Provisions',
+            '2103'   => 'Unearned Revenues',
+            '22'     => 'Non-Current Liabilities',
+            '3'      => 'Equity',
+            '31'     => 'Capital',
+            '3101'   => 'Company Capital',
+            '32'     => 'Partners Accounts',
+            '33'     => 'Retained Earnings',
+            '34'     => 'Capital Reserves',
+            '4'      => 'Revenues',
+            '41'     => 'Operating Revenues',
+            '5'      => 'Expenses',
+            '51'     => 'Direct Operational Expenses',
+            '52'     => 'Salaries & Employee Benefits',
+            '53'     => 'Rent & Facility Expenses',
+            '54'     => 'General & Administrative Expenses',
+            '55'     => 'Bank Charges & Commission',
+            '56'     => 'Bad Debts',
+            '9'      => 'Clearing & Suspense Accounts',
+        ];
+
+        $parsed = [];
+        foreach ($rawRows as $item) {
+            $code = $item['code'];
+            $nameAr = $item['name'];
+            $kind = $item['kind'];
+
+            $firstDigit = substr($code, 0, 1);
+            $type = match ($firstDigit) {
+                '1'     => AccountType::ASSET,
+                '2'     => AccountType::LIABILITY,
+                '3'     => AccountType::EQUITY,
+                '4'     => AccountType::INCOME,
+                '5'     => AccountType::EXPENSE,
+                '9'     => AccountType::OFF_BALANCE,
+                default => AccountType::ASSET,
+            };
+
+            $parentCode = null;
+            if (!in_array($code, $roots, true)) {
+                for ($len = strlen($code) - 1; $len >= 1; $len--) {
+                    $prefix = substr($code, 0, $len);
+                    if (isset($codeMap[$prefix])) {
+                        $parentCode = $prefix;
+                        break;
+                    }
+                }
+            }
+
+            $isGroup = ($kind !== 'فرعي');
+            $allowPosting = !$isGroup;
+
+            $reconcile = false;
+            if (!$isGroup && (
+                str_starts_with($code, '1101') ||
+                str_contains($nameAr, 'بنك') ||
+                str_contains($nameAr, 'صندوق') ||
+                str_contains($nameAr, 'فيزا') ||
+                str_contains($nameAr, 'بوابة') ||
+                str_contains($nameAr, 'يوباي') ||
+                str_contains($nameAr, 'ديمة')
+            )) {
+                $reconcile = true;
+            }
+
+            $nameEn = $englishNames[$code] ?? $nameAr;
+
+            $parsed[] = [
+                'code'           => $code,
+                'name_ar'        => $nameAr,
+                'name_en'        => $nameEn,
+                'parent_code'    => $parentCode,
+                'type'           => $type,
+                'normal_balance' => $type->normalBalance(),
+                'is_group'       => $isGroup,
+                'allow_posting'  => $allowPosting,
+                'reconcile'      => $reconcile,
+            ];
+        }
+
+        // Calculate levels dynamically based on hierarchy
+        $levelMap = [];
+        $calcLevel = function (string $code) use (&$calcLevel, &$levelMap, $parsed): int {
+            if (isset($levelMap[$code])) {
+                return $levelMap[$code];
+            }
+            $parent = null;
+            foreach ($parsed as $p) {
+                if ($p['code'] === $code) {
+                    $parent = $p['parent_code'];
+                    break;
+                }
+            }
+            if (!$parent) {
+                $levelMap[$code] = 1;
+                return 1;
+            }
+            $levelMap[$code] = $calcLevel($parent) + 1;
+            return $levelMap[$code];
+        };
+
+        foreach ($parsed as &$p) {
+            $p['level'] = $calcLevel($p['code']);
+        }
+        unset($p);
+
+        // Sort accounts: lower levels first (parents first), then by code
+        usort($parsed, function ($a, $b) {
+            if ($a['level'] === $b['level']) {
+                return strcmp($a['code'], $b['code']);
+            }
+            return $a['level'] <=> $b['level'];
+        });
+
+        return $parsed;
+    }
+
+    /**
+     * Synchronize parsed accounts into the database for a specific entity.
      *
      * @param Entity|int $entity
+     * @param array<int, array<string, mixed>> $parsedAccounts
      * @param int|null $userId
-     * @return int Count of accounts created
+     * @return array{created: int, updated: int, total: int}
      */
-    public function generateTemplateForEntity(Entity|int $entity, ?int $userId = null): int
+    public function syncAccountsForEntity(Entity|int $entity, array $parsedAccounts, ?int $userId = null): array
+    {
+        $entityId = $entity instanceof Entity ? $entity->id : (int) $entity;
+        $created = 0;
+        $updated = 0;
+
+        DB::transaction(function () use ($parsedAccounts, $entityId, $userId, &$created, &$updated) {
+            $existing = Account::where('entity_id', $entityId)->get()->keyBy('code');
+            $codeToId = [];
+
+            foreach ($existing as $c => $acc) {
+                $codeToId[$c] = $acc->id;
+            }
+
+            foreach ($parsedAccounts as $item) {
+                $parentId = $item['parent_code'] ? ($codeToId[$item['parent_code']] ?? null) : null;
+
+                $data = [
+                    'entity_id'      => $entityId,
+                    'parent_id'      => $parentId,
+                    'code'           => $item['code'],
+                    'account_type'   => $item['type'] instanceof AccountType ? $item['type']->value : (string) $item['type'],
+                    'normal_balance' => $item['normal_balance'],
+                    'level'          => $item['level'],
+                    'is_group'       => (bool) $item['is_group'],
+                    'allow_posting'  => (bool) $item['allow_posting'],
+                    'reconcile'      => (bool) $item['reconcile'],
+                    'is_active'      => true,
+                    'is_deprecated'  => false,
+                    'sort_order'     => (int) substr($item['code'], 0, 8),
+                    'created_by'     => $userId,
+                ];
+
+                if (isset($existing[$item['code']])) {
+                    $acc = $existing[$item['code']];
+                    $acc->update($data);
+                    $updated++;
+                } else {
+                    $acc = Account::create($data);
+                    $created++;
+                }
+
+                $transAr = $acc->translateOrNew('ar');
+                $transAr->name = $item['name_ar'];
+
+                $transEn = $acc->translateOrNew('en');
+                $transEn->name = $item['name_en'];
+
+                $acc->save();
+                $codeToId[$item['code']] = $acc->id;
+            }
+
+            // Mark any previous accounts not in the final chart as deprecated
+            $excelCodes = array_column($parsedAccounts, 'code');
+            Account::where('entity_id', $entityId)
+                ->whereNotIn('code', $excelCodes)
+                ->update([
+                    'is_deprecated' => true,
+                    'is_active'     => false,
+                ]);
+        });
+
+        return [
+            'created' => $created,
+            'updated' => $updated,
+            'total'   => count($parsedAccounts),
+        ];
+    }
+
+    /**
+     * Generate or sync Chart of Accounts from Excel for an entity.
+     *
+     * @param Entity|int $entity
+     * @param string|null $filePath
+     * @param int|null $userId
+     * @param bool $force
+     * @return array{created: int, updated: int, total: int}
+     */
+    public function generateFromExcelForEntity(Entity|int $entity, ?string $filePath = null, ?int $userId = null, bool $force = true): array
     {
         $entityId = $entity instanceof Entity ? $entity->id : (int) $entity;
 
-        // Skip if accounts already exist to prevent duplicate creation
-        if (Account::where('entity_id', $entityId)->exists()) {
+        if (!$force && Account::where('entity_id', $entityId)->exists()) {
+            return ['created' => 0, 'updated' => 0, 'total' => 0];
+        }
+
+        $parsedAccounts = $this->loadAccountsFromExcel($filePath);
+        return $this->syncAccountsForEntity($entityId, $parsedAccounts, $userId);
+    }
+
+    /**
+     * Generate chart of accounts for a given entity.
+     * Prefers the Excel file if present; falls back to built-in standard template.
+     *
+     * @param Entity|int $entity
+     * @param int|null $userId
+     * @param bool $forceSync
+     * @param string|null $excelPath
+     * @return int Count of accounts processed/created
+     */
+    public function generateTemplateForEntity(Entity|int $entity, ?int $userId = null, bool $forceSync = false, ?string $excelPath = null): int
+    {
+        $entityId = $entity instanceof Entity ? $entity->id : (int) $entity;
+
+        if (!$forceSync && Account::where('entity_id', $entityId)->exists()) {
             return 0;
+        }
+
+        $path = $excelPath ?: $this->getDefaultExcelPath();
+        if (file_exists($path)) {
+            $result = $this->generateFromExcelForEntity($entityId, $path, $userId, true);
+            return $result['total'];
         }
 
         $chart = $this->getStandardTemplate();

@@ -16,7 +16,3 @@ $containerFooter = !empty($containerNav) ? $containerNav : 'container-fluid';
     </div>
 </footer>
 <!--/ Footer-->
-
-@if (request()->routeIs('accounting.*'))
-    @include('accounting::components.ai-assistant-widget')
-@endif

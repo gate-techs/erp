@@ -47,6 +47,14 @@ class RoleRepository implements RoleRepositoryInterface
     public function syncPermissions(int|Role $role, array $permissions): Role
     {
         $role = $role instanceof Role ? $role : Role::findOrFail($role);
+
+        $guardName = $role->guard_name ?? config('auth.defaults.guard', 'web');
+        foreach ($permissions as $permName) {
+            if (!empty($permName)) {
+                \Spatie\Permission\Models\Permission::findOrCreate($permName, $guardName);
+            }
+        }
+
         $role->syncPermissions($permissions);
 
         return $role->fresh('permissions');

@@ -5,61 +5,53 @@
     $screenContext = $assistantService->resolveScreenContext($currentRouteName, $currentUrl);
 @endphp
 
-<!-- AI Financial Assistant Offcanvas Drawer -->
-<div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg border-0" 
-     tabindex="-1" 
-     id="aiFinancialAssistantOffcanvas" 
-     aria-labelledby="aiFinancialAssistantOffcanvasLabel"
-     style="width: 440px; max-width: 95vw; z-index: 1090;">
+<!-- AI Financial Assistant standalone page -->
+<div class="card border shadow-sm overflow-hidden ai-assistant-page">
     
     <!-- Drawer Header -->
-    <div class="offcanvas-header bg-primary text-white py-3 px-4 align-items-center">
+    <div class="bg-white py-3 px-4 d-flex align-items-center justify-content-between border-bottom">
         <div class="d-flex align-items-center gap-3">
-            <div class="avatar avatar-sm bg-white text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm">
+            <div class="avatar avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
                 <i class="bx bx-bot fs-4"></i>
             </div>
             <div>
-                <h6 class="offcanvas-title mb-0 text-white fw-bold d-flex align-items-center gap-2" id="aiFinancialAssistantOffcanvasLabel">
-                    <span>{{ __('Smart Financial Assistant & Guide') }}</span>
+                <h6 class="mb-0 text-body fw-bold d-flex align-items-center gap-2" id="aiFinancialAssistantLabel">
+                    <span>{{ __('Financial Assistant') }}</span>
                 </h6>
-                <small class="text-white-50 d-block" style="font-size: 0.75rem;">
-                    {{ __('Scoped to system records and screen guidance') }}
+                <small class="text-muted d-flex align-items-center gap-1" style="font-size: 0.75rem;">
+                    <span class="ai-online-dot"></span>{{ __('Online · Scoped to system records') }}
                 </small>
             </div>
         </div>
         <div class="d-flex align-items-center gap-1">
+            <button type="button" class="btn btn-sm btn-icon btn-light" id="btn-clear-ai-chat" title="{{ __('Clear Chat') }}">
+                <i class="bx bx-trash"></i>
+            </button>
             <a href="{{ route('settings.ai.index') }}" 
-               class="btn btn-sm btn-icon text-white" 
+               class="btn btn-sm btn-icon btn-light" 
                title="{{ __('AI Model Settings & Task Routing') }}" 
                target="_blank">
                 <i class="bx bx-cog fs-5"></i>
             </a>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
     </div>
 
     <!-- Active Screen Bar -->
-    <div class="bg-light border-bottom px-3 py-2 d-flex align-items-center justify-content-between gap-2">
+    <div class="bg-light border-bottom px-4 py-2 d-flex align-items-center justify-content-between gap-2">
         <div class="d-flex align-items-center gap-2 text-truncate">
             <i class="bx bx-window-alt text-primary font-16"></i>
             <span class="small fw-semibold text-truncate" id="ai-current-screen-title">
                 {{ $screenContext['title'] ?? __('Accounting System') }}
             </span>
         </div>
-        <button type="button" 
-                class="btn btn-xs btn-outline-secondary py-0 px-2 rounded-pill" 
-                id="btn-clear-ai-chat" 
-                title="{{ __('Clear Chat') }}" 
-                style="font-size: 0.72rem;">
-            <i class="bx bx-trash me-1"></i>{{ __('Clear') }}
-        </button>
+        <span class="text-muted" style="font-size: 0.72rem;"><i class="bx bx-lock-alt me-1"></i>{{ __('Private') }}</span>
     </div>
 
     <!-- Drawer Body / Chat Stream -->
-    <div class="offcanvas-body p-3 d-flex flex-column" style="background-color: #f8f9fa;">
+    <div class="p-4 d-flex flex-column ai-chat-body">
         
         <!-- Messages Area -->
-        <div id="ai-chat-messages" class="flex-grow-1 overflow-auto pe-1" style="max-height: calc(100vh - 230px); min-height: 280px;">
+        <div id="ai-chat-messages" class="flex-grow-1 overflow-auto pe-1">
             
             <!-- Welcome Bot Card -->
             <div class="ai-msg ai-msg-bot mb-3">
@@ -67,7 +59,7 @@
                     <div class="avatar avatar-xs bg-primary text-white rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
                         <i class="bx bx-bot"></i>
                     </div>
-                    <div class="card border-0 shadow-sm p-3 rounded-3 bg-white text-dark flex-grow-1" style="max-width: 90%;">
+                    <div class="ai-bot-bubble p-3 text-dark flex-grow-1" style="max-width: 85%;">
                         <p class="mb-2 small fw-semibold text-primary">
                             {{ __('Welcome! I am your AI Financial Assistant and guide for GateTech ERP.') }}
                         </p>
@@ -116,18 +108,18 @@
     </div>
 
     <!-- Drawer Footer / Input Box -->
-    <div class="offcanvas-footer p-3 bg-white border-top">
+    <div class="p-3 bg-white border-top">
         <form id="ai-assistant-form" class="d-flex gap-2 align-items-center">
             <input type="text" 
                    id="ai-user-question-input" 
-                   class="form-control form-control-sm py-2 px-3 rounded-pill" 
+                   class="form-control py-3 px-3 rounded-3" 
                    placeholder="{{ __('Ask about this screen or request a financial summary...') }}" 
                    autocomplete="off" 
                    required>
             <button type="submit" 
                     id="btn-ai-send" 
-                    class="btn btn-primary btn-sm rounded-circle d-flex align-items-center justify-content-center p-0 flex-shrink-0" 
-                    style="width: 38px; height: 38px;" 
+                    class="btn btn-primary rounded-3 d-flex align-items-center justify-content-center p-0 flex-shrink-0" 
+                    style="width: 46px; height: 46px;" 
                     title="{{ __('Send') }}">
                 <i class="bx bx-paper-plane font-16"></i>
             </button>
@@ -136,9 +128,7 @@
             <span class="text-muted" style="font-size: 0.68rem;">
                 <i class="bx bx-shield-quarter me-1 text-success"></i>{{ __('Strictly scoped to accounting records') }}
             </span>
-            <a href="{{ route('settings.ai.index') }}" target="_blank" class="text-muted text-decoration-none" style="font-size: 0.68rem;">
-                <i class="bx bx-slider me-1"></i>{{ __('Task Routing') }}
-            </a>
+            <span></span>
         </div>
     </div>
 </div>
@@ -152,6 +142,40 @@
     display: inline-block;
     box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7);
     animation: aiPulse 2s infinite;
+}
+.ai-assistant-page {
+    width: min(100%, 980px);
+    height: calc(100vh - 145px);
+    min-height: 560px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.ai-chat-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #f7f8fa;
+}
+.ai-chat-body #ai-chat-messages {
+    min-height: 0;
+    max-height: none;
+}
+.ai-online-dot {
+    width: 7px;
+    height: 7px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #28c76f;
+}
+.ai-bot-bubble {
+    background: #fff;
+    border: 1px solid #e8e8ec;
+    border-radius: 4px 16px 16px 16px;
+    box-shadow: 0 2px 6px rgba(40, 40, 60, .04);
+}
+.ai-msg-user .card {
+    border-radius: 16px 4px 16px 16px !important;
+    box-shadow: none !important;
 }
 @keyframes aiPulse {
     0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 199, 111, 0.7); }

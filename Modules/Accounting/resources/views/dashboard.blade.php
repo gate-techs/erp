@@ -48,10 +48,10 @@
             </select>
         </form>
 
-        <button type="button" class="btn btn-outline-info d-flex align-items-center gap-1 shadow-xs text-nowrap" data-bs-toggle="offcanvas" data-bs-target="#aiFinancialAssistantOffcanvas">
+        <a href="{{ route('accounting.ai-assistant.index') }}" class="btn btn-outline-info d-flex align-items-center gap-1 shadow-xs text-nowrap">
             <i class="icon-base bx bx-bot font-18"></i>
             <span>{{ __('Smart Assistant') }}</span>
-        </button>
+        </a>
 
         <a href="{{ route('accounting.guide') }}" class="btn btn-outline-primary d-flex align-items-center gap-1 shadow-xs text-nowrap">
             <i class="icon-base bx bx-book-open font-18"></i>

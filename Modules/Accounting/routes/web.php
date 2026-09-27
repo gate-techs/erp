@@ -131,9 +131,9 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
 
     // AI Financial Assistant & Smart Guide (المساعد المالي والمرشد الذكي)
     Route::prefix('ai-assistant')->as('ai-assistant.')->group(function () {
+        Route::get('/', [\Modules\Accounting\Http\Controllers\FinancialAssistantController::class, 'index'])->name('index');
         Route::post('ask', [\Modules\Accounting\Http\Controllers\FinancialAssistantController::class, 'ask'])->name('ask');
         Route::get('screen-context', [\Modules\Accounting\Http\Controllers\FinancialAssistantController::class, 'screenContext'])->name('screen-context');
     });
 });
-
 

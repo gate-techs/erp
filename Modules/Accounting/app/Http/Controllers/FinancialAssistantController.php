@@ -5,6 +5,7 @@ namespace Modules\Accounting\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Modules\Accounting\Services\FinancialAssistantService;
 
 class FinancialAssistantController extends Controller
@@ -12,6 +13,20 @@ class FinancialAssistantController extends Controller
     public function __construct(
         protected FinancialAssistantService $assistantService
     ) {}
+
+    public function index(Request $request): View
+    {
+        $currentRoute = $request->query('screen') ?: ($request->route()?->getName() ?: 'accounting.dashboard');
+        $currentUrl = $request->fullUrl();
+
+        return view('accounting::assistant.index', [
+            'currentRouteName' => $currentRoute,
+            'currentUrl'       => $currentUrl,
+            'screenContext'    => $this->assistantService->resolveScreenContext($currentRoute, $currentUrl),
+            'screenCatalog'    => $this->assistantService->getScreenCatalog(),
+            'financialFacts'   => $this->assistantService->getRealtimeFinancialFacts(),
+        ]);
+    }
 
     /**
      * Ask a question to the Financial Assistant.

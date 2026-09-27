@@ -5,5 +5,6 @@
     "AccessControl": true,
     "AuditLog": true,
     "Accounting": true,
-    "AI": true
+    "AI": true,
+    "Inventory": true
 }

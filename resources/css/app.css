@@ -2490,3 +2490,48 @@ html {
    were audited and intentionally left untouched as Vuexy/Bootstrap
    already handles them properly for RTL and themes.
 */
+
+/* ==========================================================================
+   Fixed Detached Navbar Alignment & Padding Matching Form Container (.container-xxl)
+   ========================================================================== */
+html.layout-navbar-fixed .layout-content-navbar:not(.layout-without-menu) .layout-navbar.navbar-detached {
+    position: fixed !important;
+    inset-block-start: 0.75rem !important;
+    inset-inline-start: var(--bs-menu-width, 16.25rem) !important;
+    inset-inline-end: 0 !important;
+    margin-inline: auto !important;
+    width: calc(100% - var(--bs-menu-width, 16.25rem) - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
+    max-width: calc(1440px - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
+    padding-inline: 1.5rem !important;
+    z-index: 1075 !important;
+}
+
+html.layout-navbar-fixed.layout-menu-collapsed .layout-content-navbar:not(.layout-without-menu) .layout-navbar.navbar-detached {
+    inset-inline-start: var(--bs-menu-collapsed-width, 5rem) !important;
+    width: calc(100% - var(--bs-menu-collapsed-width, 5rem) - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
+}
+
+@media (max-width: 1199.98px) {
+    html.layout-navbar-fixed .layout-content-navbar .layout-navbar.navbar-detached {
+        inset-inline-start: 0 !important;
+        inset-inline-end: 0 !important;
+        width: calc(100% - 2rem) !important;
+        max-width: 100% !important;
+        margin-inline: auto !important;
+        padding-inline: 1rem !important;
+    }
+}
+
+html.layout-navbar-fixed .layout-without-menu .layout-navbar.navbar-detached {
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+    width: calc(100% - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
+    max-width: calc(1440px - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
+    margin-inline: auto !important;
+}
+
+/* Ensure proper top clearance for fixed detached navbar */
+html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
+    padding-top: 76px !important;
+}
+

@@ -43,7 +43,7 @@ class JournalController extends Controller
     public function data(Request $request): JsonResponse
     {
         $query = $this->service->getDataTableQuery($request->all())
-            ->with(['translations', 'entity.translations']);
+            ->with(['translations', 'entity.translations', 'defaultAccount.translations']);
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
@@ -61,6 +61,21 @@ class JournalController extends Controller
                     ?? '-';
 
                 return '<div class="d-flex align-items-center"><div class="avatar avatar-sm bg-label-primary me-3 flex-shrink-0 d-flex align-items-center justify-content-center rounded"><i class="icon-base bx bx-book-open font-20"></i></div><div class="d-flex flex-column"><span class="text-heading fw-bold fs-6">' . e($name) . '</span><small class="text-muted">' . e($journal->code) . '</small></div></div>';
+            })
+            ->addColumn('default_account_info', function (Journal $journal) {
+                if (!$journal->defaultAccount) {
+                    return '<span class="badge bg-label-secondary font-italic text-muted">-</span>';
+                }
+                $acc = $journal->defaultAccount;
+                $accName = $acc->translate(app()->getLocale())?->name
+                    ?? $acc->translate('ar')?->name
+                    ?? $acc->translate('en')?->name
+                    ?? $acc->code;
+
+                return '<div class="d-flex align-items-center gap-1">' .
+                    '<span class="badge bg-label-primary font-monospace">' . e($acc->code) . '</span>' .
+                    '<span class="text-truncate text-heading fw-medium" style="max-width: 220px;" title="' . e($accName) . '">' . e($accName) . '</span>' .
+                    '</div>';
             })
             ->addColumn('entity_info', function (Journal $journal) {
                 $name = $journal->entity?->translate(app()->getLocale())?->name
@@ -86,7 +101,7 @@ class JournalController extends Controller
                     '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-journal" data-id="' . $journal->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>' .
                     '</div>';
             })
-            ->rawColumns(['journal_info', 'entity_info', 'type_badge', 'status_badge', 'actions'])
+            ->rawColumns(['journal_info', 'default_account_info', 'entity_info', 'type_badge', 'status_badge', 'actions'])
             ->make(true);
     }
 

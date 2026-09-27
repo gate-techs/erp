@@ -85,6 +85,7 @@
                 <tr>
                     <th class="text-center" style="width:50px">#</th>
                     <th>{{ __('Journal') }}</th>
+                    <th>{{ __('Default Account') }}</th>
                     <th>{{ __('Accounting Entity') }}</th>
                     <th class="text-center">{{ __('Journal Type') }}</th>
                     <th class="text-center">{{ __('Status') }}</th>
@@ -157,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         columns: [
             { data: 'DT_RowIndex', name: 'id', orderable: false, searchable: false, className: 'text-center align-middle' },
             { data: 'journal_info', name: 'journal_info', className: 'align-middle' },
+            { data: 'default_account_info', name: 'default_account_id', orderable: false, searchable: false, className: 'align-middle' },
             { data: 'entity_info', name: 'journals.entity_id', orderable: false, searchable: false, className: 'align-middle' },
             { data: 'type_badge', name: 'journals.type', className: 'text-center align-middle' },
             { data: 'status_badge', name: 'journals.is_active', className: 'text-center align-middle' },

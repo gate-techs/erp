@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" class="layout-menu-fixed layout-compact" data-assets-path="{{ asset('/assets') . '/' }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-skin="default" data-base-url="{{ url('/') }}" data-framework="laravel" data-bs-theme="light" data-template="vertical-menu-template">
+<html lang="{{ app()->getLocale() }}" class="layout-navbar-fixed layout-menu-fixed layout-compact" data-assets-path="{{ asset('/assets') . '/' }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}" data-skin="default" data-base-url="{{ url('/') }}" data-framework="laravel" data-bs-theme="light" data-template="vertical-menu-template">
 
 <head>
     <script>
@@ -15,11 +15,16 @@
                         const dir = state.directionByLocale[locale];
                         if (dir === 'rtl' || dir === 'ltr') document.documentElement.setAttribute('dir', dir);
                     }
-                    if (state.navbarType === 'sticky') document.documentElement.classList.add('layout-navbar-fixed');
-                    else if (state.navbarType === 'static' || state.navbarType === 'hidden') document.documentElement.classList.remove('layout-navbar-fixed');
+                    if (state.navbarType === 'hidden') {
+                        document.documentElement.classList.remove('layout-navbar-fixed');
+                    } else {
+                        document.documentElement.classList.add('layout-navbar-fixed');
+                    }
                     if (state.menuCollapsed) document.documentElement.classList.add('layout-menu-collapsed');
                     if (state.footerType === 'sticky') document.documentElement.classList.add('layout-footer-fixed');
                     else if (state.footerType === 'static' || state.footerType === 'hidden') document.documentElement.classList.remove('layout-footer-fixed');
+                } else {
+                    document.documentElement.classList.add('layout-navbar-fixed');
                 }
             } catch (e) {}
             document.documentElement.setAttribute('data-bs-theme', theme);

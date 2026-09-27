@@ -34,44 +34,182 @@ class JournalDatabaseSeeder extends Seeder
         $entityId = $entity->id;
         $currency = $entity->currency ?? 'KWD';
 
-        // Fetch primary accounts for this entity
-        $bankAccount = Account::where('entity_id', $entityId)
-            ->where(function ($q) {
-                $q->where('code', '110102')
-                    ->orWhereTranslationLike('name', '%بنك%')
-                    ->orWhereTranslationLike('name', '%Bank%');
-            })
+        // 1. Primary Bank Accounts (boubyan, kfh, or general bank asset)
+        $boubyanAccount = Account::where('entity_id', $entityId)
             ->where('is_group', false)
+            ->where('account_type', AccountType::ASSET)
+            ->where(function ($q) {
+                $q->where('code', '1101020101')
+                    ->orWhere(function ($sub) {
+                        $sub->where('code', 'like', '110102%')
+                            ->whereTranslationLike('name', '%بوبيان%');
+                    });
+            })
             ->first();
 
+        $kfhAccount = Account::where('entity_id', $entityId)
+            ->where('is_group', false)
+            ->where('account_type', AccountType::ASSET)
+            ->where(function ($q) {
+                $q->where('code', '1101020201')
+                    ->orWhere(function ($sub) {
+                        $sub->where('code', 'like', '110102%')
+                            ->whereTranslationLike('name', '%التمويل%');
+                    });
+            })
+            ->first();
+
+        $primaryBankAccount = $boubyanAccount
+            ?? Account::where('entity_id', $entityId)
+                ->where('is_group', false)
+                ->where('account_type', AccountType::ASSET)
+                ->where('code', 'like', '110102%')
+                ->first()
+            ?? Account::where('entity_id', $entityId)
+                ->where('is_group', false)
+                ->where('account_type', AccountType::ASSET)
+                ->where(function ($q) {
+                    $q->whereTranslationLike('name', '%بنك%')
+                        ->orWhereTranslationLike('name', '%Bank%');
+                })
+                ->first();
+
+        // 2. Main Cash Safe (الصندوق الرئيسي)
         $cashAccount = Account::where('entity_id', $entityId)
-            ->where(function ($q) {
-                $q->where('code', '110101')
-                    ->orWhereTranslationLike('name', '%الصندوق%')
-                    ->orWhereTranslationLike('name', '%الخزينة%')
-                    ->orWhereTranslationLike('name', '%Cash%');
-            })
             ->where('is_group', false)
+            ->where('account_type', AccountType::ASSET)
+            ->where(function ($q) {
+                $q->where('code', '11010101')
+                    ->orWhere('code', '110101')
+                    ->orWhere(function ($sub) {
+                        $sub->where('code', 'like', '1101%')
+                            ->where(function ($w) {
+                                $w->whereTranslationLike('name', '%الصندوق%')
+                                    ->orWhereTranslationLike('name', '%الخزينة%')
+                                    ->orWhereTranslationLike('name', '%Cash%');
+                            });
+                    });
+            })
             ->first();
 
+        // 3. Petty Cash Custody (العهد النقدية)
         $pettyCashAccount = Account::where('entity_id', $entityId)
-            ->where(function ($q) {
-                $q->where('code', '110103')
-                    ->orWhereTranslationLike('name', '%عهدة%')
-                    ->orWhereTranslationLike('name', '%نثرية%')
-                    ->orWhereTranslationLike('name', '%Petty%');
-            })
             ->where('is_group', false)
+            ->where('account_type', AccountType::ASSET)
+            ->where(function ($q) {
+                $q->where('code', '11010301')
+                    ->orWhere('code', '110103')
+                    ->orWhere(function ($sub) {
+                        $sub->where('code', 'like', '1101%')
+                            ->where(function ($w) {
+                                $w->whereTranslationLike('name', '%عهدة%')
+                                    ->orWhereTranslationLike('name', '%نثرية%')
+                                    ->orWhereTranslationLike('name', '%Petty%');
+                            });
+                    });
+            })
             ->first() ?? $cashAccount;
 
+        // 4. Online Payment Gateways (بوابات الدفع الإلكتروني)
+        $paymentGatewayAccount = Account::where('entity_id', $entityId)
+            ->where('is_group', false)
+            ->where('account_type', AccountType::ASSET)
+            ->where(function ($q) {
+                $q->where('code', '1104020101')
+                    ->orWhere('code', '1104020102')
+                    ->orWhere('code', 'like', '11040201%');
+            })
+            ->orderBy('code')
+            ->first();
+
+        // 5. Tuition / Primary Sales Revenue (دخل الرسوم الدراسية / المبيعات)
         $incomeAccount = Account::where('entity_id', $entityId)
             ->where('account_type', AccountType::INCOME)
             ->where('is_group', false)
-            ->first();
+            ->where(function ($q) {
+                $q->where('code', '41010101')
+                    ->orWhere('code', 'like', '4101%')
+                    ->orWhere('code', 'like', '41%')
+                    ->orWhereTranslationLike('name', '%رسوم%')
+                    ->orWhereTranslationLike('name', '%دراسي%');
+            })
+            ->orderBy('code')
+            ->first() ?? Account::where('entity_id', $entityId)
+                ->where('account_type', AccountType::INCOME)
+                ->where('is_group', false)
+                ->first();
 
+        // 6. Direct / Educational Purchases and Supplies (مصروفات المستلزمات والمشتريات التشغيلية)
         $expenseAccount = Account::where('entity_id', $entityId)
             ->where('account_type', AccountType::EXPENSE)
             ->where('is_group', false)
+            ->where('code', 'not like', '510101%') // استبعاد الرواتب من دفتر المشتريات
+            ->where(function ($q) {
+                $q->where('code', '51010501') // كتب ومستلزمات
+                    ->orWhere('code', '51010401') // يونيفورم
+                    ->orWhere('code', 'like', '510105%')
+                    ->orWhere('code', 'like', '510102%')
+                    ->orWhereTranslationLike('name', '%مستلزمات%')
+                    ->orWhereTranslationLike('name', '%مشتريات%');
+            })
+            ->orderBy('code')
+            ->first() ?? Account::where('entity_id', $entityId)
+                ->where('account_type', AccountType::EXPENSE)
+                ->where('is_group', false)
+                ->where('code', 'not like', '510101%')
+                ->first();
+
+        // 7. Payroll / Teacher & Staff Salaries (رواتب واجور الكادر التعليمي)
+        $payrollAccount = Account::where('entity_id', $entityId)
+            ->where('account_type', AccountType::EXPENSE)
+            ->where('is_group', false)
+            ->where(function ($q) {
+                $q->where('code', '51010101')
+                    ->orWhereTranslationLike('name', '%رواتب%')
+                    ->orWhereTranslationLike('name', '%أجور%');
+            })
+            ->first();
+
+        // 8. Suspense Account (حساب وسيط للتسويات والمطابقة)
+        $suspenseAccount = Account::where('entity_id', $entityId)
+            ->where('is_group', false)
+            ->where('code', '900007') // حساب وسيط تسوية حسابات الطلاب
+            ->first()
+            ?? Account::where('entity_id', $entityId)
+                ->where('is_group', false)
+                ->where(function ($q) {
+                    $q->where('code', 'like', '9%')
+                        ->orWhereTranslationLike('name', '%تسوية%')
+                        ->orWhereTranslationLike('name', '%وسيط%');
+                })
+                ->orderBy('code')
+                ->first();
+
+        // 9. Bank Fees & Loss Account (العمولات البنكية ومصروفات الدفع الإلكتروني)
+        $bankFeeLossAccount = Account::where('entity_id', $entityId)
+            ->where('account_type', AccountType::EXPENSE)
+            ->where('is_group', false)
+            ->where(function ($q) {
+                $q->where('code', '5109')
+                    ->orWhere('code', '55')
+                    ->orWhereTranslationLike('name', '%مصروفات بنكية%')
+                    ->orWhereTranslationLike('name', '%رسوم دفع%')
+                    ->orWhereTranslationLike('name', '%عمولات%');
+            })
+            ->orderBy('code')
+            ->first();
+
+        // 10. Other Income / Currency Gain (أرباح فروق وإيرادات متنوعة)
+        $otherIncomeProfitAccount = Account::where('entity_id', $entityId)
+            ->where('account_type', AccountType::INCOME)
+            ->where('is_group', false)
+            ->where(function ($q) {
+                $q->where('code', '410301')
+                    ->orWhere('code', '45')
+                    ->orWhereTranslationLike('name', '%اخرى%')
+                    ->orWhereTranslationLike('name', '%أخرى%');
+            })
+            ->orderBy('code')
             ->first();
 
         $journals = [
@@ -94,7 +232,7 @@ class JournalDatabaseSeeder extends Seeder
                 'is_active' => true,
                 'ar' => [
                     'name' => 'فواتير العملاء والمبيعات',
-                    'description' => 'الدفتر المحاسبي الرئيسي لتسجيل فواتير المبيعات للعملاء وإشعارات الدائن.',
+                    'description' => 'الدفتر المحاسبي الرئيسي لتسجيل فواتير المبيعات والرسوم الدراسية للعملاء وإشعارات الدائن.',
                 ],
                 'en' => [
                     'name' => 'Customer Invoices & Sales',
@@ -129,7 +267,7 @@ class JournalDatabaseSeeder extends Seeder
                 ],
             ],
 
-            // 3. Bank Journal (الحساب البنكي)
+            // 3. Bank Journal - Boubyan / Commercial Bank (بنك بوبيان)
             [
                 'code' => 'BNK',
                 'type' => JournalType::BANK,
@@ -138,25 +276,79 @@ class JournalDatabaseSeeder extends Seeder
                 'sequence_number_next' => 1,
                 'refund_sequence' => false,
                 'payment_sequence' => true,
-                'default_account_id' => $bankAccount?->id,
-                'suspense_account_id' => $bankAccount?->id,
-                'profit_account_id' => null,
-                'loss_account_id' => null,
+                'default_account_id' => $boubyanAccount?->id ?? $primaryBankAccount?->id,
+                'suspense_account_id' => $suspenseAccount?->id,
+                'profit_account_id' => $otherIncomeProfitAccount?->id,
+                'loss_account_id' => $bankFeeLossAccount?->id,
                 'allow_manual_entries' => true,
                 'reconcile' => true,
                 'restrict_mode_hash_table' => false,
                 'is_active' => true,
                 'ar' => [
-                    'name' => 'البنك التجاري',
+                    'name' => $boubyanAccount ? 'بنك بوبيان' : 'البنك التجاري',
                     'description' => 'دفتر العمليات والحركات البنكية وكشوف الحساب والمطابقة والتسوية.',
                 ],
                 'en' => [
-                    'name' => 'Commercial Bank',
+                    'name' => $boubyanAccount ? 'Boubyan Bank' : 'Commercial Bank',
                     'description' => 'Bank operations, statements, and automated reconciliation journal.',
                 ],
             ],
 
-            // 4. Main Cash Safe (الصندوق الرئيسي)
+            // 4. KFH Bank (بنك بيت التمويل الكويتي)
+            [
+                'code' => 'KFH',
+                'type' => JournalType::BANK,
+                'currency' => $currency,
+                'sequence_prefix' => 'KFH/%Y/',
+                'sequence_number_next' => 1,
+                'refund_sequence' => false,
+                'payment_sequence' => true,
+                'default_account_id' => $kfhAccount?->id,
+                'suspense_account_id' => $suspenseAccount?->id,
+                'profit_account_id' => $otherIncomeProfitAccount?->id,
+                'loss_account_id' => $bankFeeLossAccount?->id,
+                'allow_manual_entries' => true,
+                'reconcile' => true,
+                'restrict_mode_hash_table' => false,
+                'is_active' => true,
+                'ar' => [
+                    'name' => 'بنك بيت التمويل الكويتي (KFH)',
+                    'description' => 'دفتر العمليات البنكية لحساب بيت التمويل الكويتي والتسويات والمطابقات.',
+                ],
+                'en' => [
+                    'name' => 'Kuwait Finance House (KFH)',
+                    'description' => 'Bank operations and statements journal for KFH account.',
+                ],
+            ],
+
+            // 5. Online Payment Gateways (بوابات الدفع الإلكتروني)
+            [
+                'code' => 'GATE',
+                'type' => JournalType::BANK,
+                'currency' => $currency,
+                'sequence_prefix' => 'GATE/%Y/',
+                'sequence_number_next' => 1,
+                'refund_sequence' => false,
+                'payment_sequence' => true,
+                'default_account_id' => $paymentGatewayAccount?->id,
+                'suspense_account_id' => $suspenseAccount?->id,
+                'profit_account_id' => $otherIncomeProfitAccount?->id,
+                'loss_account_id' => $bankFeeLossAccount?->id,
+                'allow_manual_entries' => true,
+                'reconcile' => true,
+                'restrict_mode_hash_table' => false,
+                'is_active' => true,
+                'ar' => [
+                    'name' => 'بوابات الدفع الإلكتروني (يوباي / ديمة)',
+                    'description' => 'دفتر تحصيلات وتسويات بوابات الدفع الإلكتروني والمدفوعات الإلكترونية.',
+                ],
+                'en' => [
+                    'name' => 'Online Payment Gateways (UPay / Deemah)',
+                    'description' => 'Payment gateway transactions and online collection settlements.',
+                ],
+            ],
+
+            // 6. Main Cash Safe (الصندوق الرئيسي)
             [
                 'code' => 'CSH',
                 'type' => JournalType::CASH,
@@ -166,9 +358,9 @@ class JournalDatabaseSeeder extends Seeder
                 'refund_sequence' => false,
                 'payment_sequence' => true,
                 'default_account_id' => $cashAccount?->id,
-                'suspense_account_id' => null,
-                'profit_account_id' => null,
-                'loss_account_id' => null,
+                'suspense_account_id' => $suspenseAccount?->id,
+                'profit_account_id' => $otherIncomeProfitAccount?->id,
+                'loss_account_id' => $bankFeeLossAccount?->id,
                 'allow_manual_entries' => true,
                 'reconcile' => true,
                 'restrict_mode_hash_table' => false,
@@ -183,7 +375,7 @@ class JournalDatabaseSeeder extends Seeder
                 ],
             ],
 
-            // 5. Petty Cash Custody (العهدة النقدية)
+            // 7. Petty Cash Custody (العهدة النقدية)
             [
                 'code' => 'PET',
                 'type' => JournalType::CASH,
@@ -210,7 +402,7 @@ class JournalDatabaseSeeder extends Seeder
                 ],
             ],
 
-            // 6. General Operations / Miscellaneous (العمليات العامة والتسويات)
+            // 8. General Operations / Miscellaneous (العمليات العامة والتسويات)
             [
                 'code' => 'GEN',
                 'type' => JournalType::GENERAL,
@@ -237,7 +429,7 @@ class JournalDatabaseSeeder extends Seeder
                 ],
             ],
 
-            // 7. Payroll & Salaries (الرواتب والأجور)
+            // 9. Payroll & Salaries (الرواتب والأجور)
             [
                 'code' => 'PAY',
                 'type' => JournalType::GENERAL,
@@ -246,7 +438,7 @@ class JournalDatabaseSeeder extends Seeder
                 'sequence_number_next' => 1,
                 'refund_sequence' => false,
                 'payment_sequence' => false,
-                'default_account_id' => null,
+                'default_account_id' => $payrollAccount?->id,
                 'suspense_account_id' => null,
                 'profit_account_id' => null,
                 'loss_account_id' => null,
@@ -264,7 +456,7 @@ class JournalDatabaseSeeder extends Seeder
                 ],
             ],
 
-            // 8. Opening Balances (الأرصدة الافتتاحية)
+            // 10. Opening Balances (الأرصدة الافتتاحية)
             [
                 'code' => 'OPEN',
                 'type' => JournalType::GENERAL,
