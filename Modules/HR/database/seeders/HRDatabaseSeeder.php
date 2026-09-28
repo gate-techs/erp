@@ -13,12 +13,13 @@ class HRDatabaseSeeder extends Seeder
     {
         $this->call([
             DepartmentSeeder::class,
-            JobTitleSeeder::class,
+            // JobTitleSeeder::class, // [موقوف: يتم توليد المسميات الوظيفية من ملف الإكسيل عبر EmployeeFromExcelSeeder]
             ShiftSeeder::class,
             WorkScheduleSeeder::class,
             OfficialHolidaySeeder::class,
             HrSettingSeeder::class,
-            EmployeeSeeder::class,
+            EmployeeFromExcelSeeder::class, // [جديد: استيراد الموظفين والوظائف والجنسيات والبنوك من Excel]
+            // EmployeeSeeder::class, // [موقوف: تم استبداله بـ EmployeeFromExcelSeeder]
             LeaveRequestSeeder::class,
             PermissionRequestSeeder::class,
             LoanSeeder::class,

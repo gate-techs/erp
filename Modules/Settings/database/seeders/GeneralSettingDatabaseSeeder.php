@@ -147,7 +147,8 @@ class GeneralSettingDatabaseSeeder extends Seeder
             }
         }
 
-        // 3. Nationalities (الجنسيات)
+        // 3. Nationalities (الجنسيات) - [موقوف: يتم إضافتها ديناميكياً من ملف الإكسيل عبر EmployeeFromExcelSeeder]
+        /*
         $nationalities = [
             ['code' => 'KWT', 'ar' => 'كويتي', 'en' => 'Kuwaiti'],
             ['code' => 'SAU', 'ar' => 'سعودي', 'en' => 'Saudi'],
@@ -184,6 +185,7 @@ class GeneralSettingDatabaseSeeder extends Seeder
                 'en' => ['name' => $nat['en']],
             ]);
         }
+        */
 
         // 4. Religions (الديانات)
         $religions = [

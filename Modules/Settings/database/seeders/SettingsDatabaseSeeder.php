@@ -58,6 +58,6 @@ class SettingsDatabaseSeeder extends Seeder
 
         $this->call(GeneralSettingDatabaseSeeder::class);
         $this->call(PrintTemplateSeeder::class);
-        $this->call(BankDatabaseSeeder::class);
+        // $this->call(BankDatabaseSeeder::class); // [موقوف: يتم إضافة البنوك ديناميكياً من ملف الإكسيل عبر EmployeeFromExcelSeeder]
     }
 }
