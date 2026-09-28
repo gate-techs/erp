@@ -73,15 +73,28 @@ class User extends Authenticatable
      */
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar)) {
-            return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar);
-        }
-
         if ($this->employee && $this->employee->avatar_url) {
             return $this->employee->avatar_url;
         }
 
-        return asset('assets/img/avatars/1.png');
+        if (!empty($this->avatar)) {
+            if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+                return $this->avatar;
+            }
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar);
+            }
+            if (file_exists(public_path($this->avatar))) {
+                return asset($this->avatar);
+            }
+            if (file_exists(public_path('storage/' . $this->avatar))) {
+                return asset('storage/' . $this->avatar);
+            }
+        }
+
+        return file_exists(public_path('assets/portal/teacher-avatar.png'))
+            ? asset('assets/portal/teacher-avatar.png')
+            : asset('assets/portal/header-emblem.png');
     }
 
     /**

@@ -6,5 +6,6 @@
     "AuditLog": true,
     "Accounting": true,
     "AI": true,
-    "Inventory": true
+    "Inventory": true,
+    "EmployeePortal": true
 }

@@ -360,8 +360,38 @@ class Employee extends Model implements TranslatableContract
      */
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
-            return Storage::disk('public')->url($this->avatar);
+        if (!empty($this->avatar)) {
+            if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+                return $this->avatar;
+            }
+            if (Storage::disk('public')->exists($this->avatar)) {
+                return Storage::disk('public')->url($this->avatar);
+            }
+            if (file_exists(public_path($this->avatar))) {
+                return asset($this->avatar);
+            }
+            if (file_exists(public_path('storage/' . $this->avatar))) {
+                return asset('storage/' . $this->avatar);
+            }
+        }
+
+        if ($this->user && !empty($this->user->avatar)) {
+            if (str_starts_with($this->user->avatar, 'http://') || str_starts_with($this->user->avatar, 'https://')) {
+                return $this->user->avatar;
+            }
+            if (Storage::disk('public')->exists($this->user->avatar)) {
+                return Storage::disk('public')->url($this->user->avatar);
+            }
+            if (file_exists(public_path($this->user->avatar))) {
+                return asset($this->user->avatar);
+            }
+            if (file_exists(public_path('storage/' . $this->user->avatar))) {
+                return asset('storage/' . $this->user->avatar);
+            }
+        }
+
+        if (file_exists(public_path('assets/portal/teacher-avatar.png'))) {
+            return asset('assets/portal/teacher-avatar.png');
         }
 
         $genderVal = strtolower($this->gender instanceof \BackedEnum ? $this->gender->value : ($this->gender ?? 'female'));

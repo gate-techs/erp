@@ -1,0 +1,11 @@
+{
+    "name": "EmployeePortal",
+    "alias": "employeeportal",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\EmployeePortal\\Providers\\EmployeePortalServiceProvider"
+    ],
+    "files": []
+}
