@@ -6,6 +6,10 @@ use Modules\Inventory\Repositories\Contracts\WarehouseRepositoryInterface;
 use Modules\Inventory\Repositories\WarehouseRepository;
 use Modules\Inventory\Repositories\Contracts\ItemCategoryRepositoryInterface;
 use Modules\Inventory\Repositories\ItemCategoryRepository;
+use Modules\Inventory\Repositories\Contracts\UnitRepositoryInterface;
+use Modules\Inventory\Repositories\UnitRepository;
+use Modules\Inventory\Repositories\Contracts\ItemRepositoryInterface;
+use Modules\Inventory\Repositories\ItemRepository;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 
@@ -55,6 +59,8 @@ class InventoryServiceProvider extends ModuleServiceProvider
 
         $this->app->bind(WarehouseRepositoryInterface::class, WarehouseRepository::class);
         $this->app->bind(ItemCategoryRepositoryInterface::class, ItemCategoryRepository::class);
+        $this->app->bind(UnitRepositoryInterface::class, UnitRepository::class);
+        $this->app->bind(ItemRepositoryInterface::class, ItemRepository::class);
     }
 
     //------------------------------------------

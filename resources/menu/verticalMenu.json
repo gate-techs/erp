@@ -429,16 +429,28 @@
       ],
       "submenu": [
         {
-          "name": "Warehouses",
-          "icon": "menu-icon icon-base bx bx-package",
-          "slug": "inventory.index",
-          "url": "/warehouses"
+          "name": "Items",
+          "icon": "menu-icon icon-base bx bx-box",
+          "slug": "inventory.items.index",
+          "url": "/items"
         },
         {
           "name": "Item Categories",
           "icon": "menu-icon icon-base bx bx-category",
           "slug": "inventory.categories.index",
           "url": "/item-categories"
+        },
+        {
+          "name": "Units",
+          "icon": "menu-icon icon-base bx bx-ruler",
+          "slug": "inventory.units.index",
+          "url": "/units"
+        },
+        {
+          "name": "Warehouses",
+          "icon": "menu-icon icon-base bx bx-package",
+          "slug": "inventory.index",
+          "url": "/warehouses"
         }
       ]
     },

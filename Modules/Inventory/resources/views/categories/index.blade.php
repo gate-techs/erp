@@ -20,7 +20,7 @@
 </div></div></div>
 
 <div class="card shadow-sm border-0"><div class="card-datatable table-responsive"><table id="categoriesTable" class="table table-hover border-top w-100 text-nowrap">
-    <thead><tr><th class="text-center" style="width:50px">#</th><th style="min-width:260px">{{ __('Category Name & Code') }}</th><th>{{ __('Parent Category') }}</th><th class="text-center">{{ __('Type') }}</th><th class="text-center">{{ __('Sort Order') }}</th><th class="text-center">{{ __('Status') }}</th><th class="text-center">{{ __('Created Date') }}</th><th class="text-center" style="width:120px">{{ __('Actions') }}</th></tr></thead>
+    <thead><tr><th class="text-center" style="width:50px">#</th><th style="min-width:260px">{{ __('Category Name & Code') }}</th><th>{{ __('Parent Category') }}</th><th class="text-center">{{ __('Type') }}</th><th class="text-center">{{ __('Status') }}</th><th class="text-center">{{ __('Created Date') }}</th><th class="text-center" style="width:120px">{{ __('Actions') }}</th></tr></thead>
     <tbody></tbody>
 </table></div></div>
 
@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function () {
             { data: 'name_ar', name: 'name_ar', className: 'align-middle', render: (data, type, row) => `<div><span class="fw-bold text-heading d-block">${data || '-'}</span><small class="text-muted" dir="ltr">${row.name_en || ''} · ${row.code || ''}</small></div>` },
             { data: 'parent_name', name: 'parent_id', orderable: false, className: 'align-middle' },
             { data: 'type_badge', name: 'parent_id', orderable: false, className: 'text-center align-middle' },
-            { data: 'sort_order', name: 'sort_order', className: 'text-center align-middle' },
             { data: 'status_badge', name: 'status', className: 'text-center align-middle' },
             { data: 'created_at', name: 'created_at', className: 'text-center align-middle' },
             { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center align-middle' }
