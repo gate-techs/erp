@@ -27,6 +27,7 @@ use Modules\AccessControl\Http\Controllers\ProfileController;
 
 Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'show'])->name('show');
+    Route::get('/print', [ProfileController::class, 'print'])->name('print');
     Route::put('/', [ProfileController::class, 'update'])->name('update');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('update-password');
 });

@@ -121,6 +121,7 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
 
     // Employees Management (إدارة الموظفين)
     Route::get('employees/data', [EmployeeController::class, 'data'])->name('employees.data');
+    Route::get('employees/{id}/print-profile', [EmployeeController::class, 'printProfile'])->name('employees.print-profile');
     Route::resource('employees', EmployeeController::class);
 
     // Workforce Planning (تخطيط القوى العاملة)

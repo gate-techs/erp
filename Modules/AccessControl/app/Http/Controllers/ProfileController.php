@@ -12,6 +12,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Modules\HR\Models\Employee;
 use Modules\HR\Services\EmployeeService;
+use Modules\Settings\Models\PrintTemplate;
+use Modules\Settings\Models\Setting;
 
 class ProfileController extends Controller
 {
@@ -28,6 +30,8 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
+        $printTemplates = PrintTemplate::where('is_active', true)->get();
+
         // Check if user is linked to an employee (by user_id or email)
         $employee = $user->employee ?? Employee::where('email', $user->email)->first();
 
@@ -35,14 +39,56 @@ class ProfileController extends Controller
             $profileData = $this->employeeService->getProfileData($employee->id);
             if ($profileData) {
                 return view('hr::employees.show', array_merge($profileData, [
-                    'isOwnProfile' => true,
+                    'isOwnProfile'   => true,
+                    'printTemplates' => $printTemplates,
                 ]));
             }
         }
 
         $user->load(['roles.permissions']);
 
-        return view('accesscontrol::profile.show', compact('user'));
+        return view('accesscontrol::profile.show', compact('user', 'printTemplates'));
+    }
+
+    /**
+     * Render the official printable profile using active print templates.
+     */
+    public function print(Request $request): View
+    {
+        $user = Auth::user();
+        $employee = $user->employee ?? Employee::where('email', $user->email)->first();
+
+        $templateId = $request->filled('template_id') ? (int) $request->template_id : null;
+        $availableTemplates = PrintTemplate::where('is_active', true)->get();
+        $template = null;
+
+        if ($templateId) {
+            $template = $availableTemplates->where('id', $templateId)->first();
+        }
+
+        $template = $template
+            ?? $availableTemplates->where('code', 'general_report')->first()
+            ?? $availableTemplates->where('is_default', true)->first()
+            ?? $availableTemplates->first();
+
+        $globalSetting = Setting::first();
+
+        if ($employee) {
+            $profileData = $this->employeeService->getProfileData($employee->id);
+            return view('hr::employees.print_profile', array_merge($profileData, [
+                'template'           => $template,
+                'availableTemplates' => $availableTemplates,
+                'globalSetting'      => $globalSetting,
+                'isOwnProfile'       => true,
+            ]));
+        }
+
+        return view('accesscontrol::profile.print', [
+            'user'               => $user,
+            'template'           => $template,
+            'availableTemplates' => $availableTemplates,
+            'globalSetting'      => $globalSetting,
+        ]);
     }
 
     /**

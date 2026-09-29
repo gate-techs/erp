@@ -514,10 +514,38 @@ body { background: var(--p-bg) !important; }
         @endif
     </div>
     <div class="d-flex gap-2">
-        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
-            <i class="icon-base bx bx-printer font-15"></i>
-            <span class="d-none d-sm-inline">{{ __('Print') }}</span>
-        </button>
+        @php
+            $printUrl = isset($isOwnProfile) && $isOwnProfile ? route('profile.print') : route('hr.employees.print-profile', $employee->id);
+            $activeTpls = $printTemplates ?? \Modules\Settings\Models\PrintTemplate::where('is_active', true)->get();
+        @endphp
+        <div class="btn-group">
+            <a href="{{ $printUrl }}" target="_blank" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 shadow-xs">
+                <i class="icon-base bx bx-printer font-15"></i>
+                <span class="d-none d-sm-inline">{{ __('Print') }}</span>
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" title="{{ __('Print Templates') }}">
+                <span class="visually-hidden">{{ __('Print Templates') }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li><h6 class="dropdown-header text-uppercase small">{{ __('اختر قالب الطباعة:') }}</h6></li>
+                @forelse($activeTpls as $tpl)
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center justify-content-between py-2" target="_blank" 
+                           href="{{ $printUrl }}?template_id={{ $tpl->id }}">
+                            <span>
+                                <i class="bx bx-file me-2 text-primary"></i> {{ $tpl->display_name }}
+                                <small class="text-muted d-block ps-4">({{ $tpl->page_size }} - {{ ucfirst($tpl->orientation) }})</small>
+                            </span>
+                            @if($tpl->is_default)
+                                <span class="badge bg-label-primary small">{{ __('افتراضي') }}</span>
+                            @endif
+                        </a>
+                    </li>
+                @empty
+                    <li><span class="dropdown-item text-muted">{{ __('لا توجد قوالب نشطة') }}</span></li>
+                @endforelse
+            </ul>
+        </div>
         @if(auth()->user() && auth()->user()->can('employees.edit'))
             <a href="{{ route('hr.employees.edit', $employee->id) }}" class="btn btn-sm btn-dark d-flex align-items-center gap-1 px-3">
                 <i class="icon-base bx bx-edit font-15"></i>

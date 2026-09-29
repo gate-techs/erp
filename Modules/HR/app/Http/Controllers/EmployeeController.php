@@ -12,6 +12,8 @@ use Modules\HR\Http\Requests\StoreEmployeeRequest;
 use Modules\HR\Http\Requests\UpdateEmployeeRequest;
 use Modules\HR\Models\Employee;
 use Modules\HR\Services\EmployeeService;
+use Modules\Settings\Models\PrintTemplate;
+use Modules\Settings\Models\Setting;
 use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
@@ -290,7 +292,45 @@ class EmployeeController extends Controller
                 ->with('error', __('Employee not found.'));
         }
 
-        return view('hr::employees.show', $profileData);
+        $printTemplates = PrintTemplate::where('is_active', true)->get();
+
+        return view('hr::employees.show', array_merge($profileData, compact('printTemplates')));
+    }
+
+    //======================
+    /**
+     * Render the official printable employee profile using active print templates.
+     */
+    public function printProfile(Request $request, int $id): View|RedirectResponse
+    {
+        $profileData = $this->employeeService->getProfileData($id);
+
+        if (!$profileData) {
+            return redirect()->route('hr.employees.index')
+                ->with('error', __('Employee not found.'));
+        }
+
+        $templateId = $request->filled('template_id') ? (int) $request->template_id : null;
+        $availableTemplates = PrintTemplate::where('is_active', true)->get();
+        $template = null;
+
+        if ($templateId) {
+            $template = $availableTemplates->where('id', $templateId)->first();
+        }
+
+        $template = $template
+            ?? $availableTemplates->where('code', 'general_report')->first()
+            ?? $availableTemplates->where('is_default', true)->first()
+            ?? $availableTemplates->first();
+
+        $globalSetting = Setting::first();
+
+        return view('hr::employees.print_profile', array_merge($profileData, [
+            'template'           => $template,
+            'availableTemplates' => $availableTemplates,
+            'globalSetting'      => $globalSetting,
+            'isOwnProfile'       => auth()->id() === $profileData['employee']->user_id,
+        ]));
     }
 
     //======================
