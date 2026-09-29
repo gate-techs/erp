@@ -13,8 +13,8 @@ class PortalPwaService implements PortalPwaServiceInterface
      */
     public function getManifest(): array
     {
-        $appName = 'أسترو ليدرز - بوابة الموظفين';
-        $shortName = 'أسترو ESS';
+        $appName = 'AstroLeaders';
+        $shortName = 'AstroLeaders';
 
         return [
             'name'                        => $appName,
@@ -63,7 +63,7 @@ class PortalPwaService implements PortalPwaServiceInterface
     public function getServiceWorkerScript(): string
     {
         return <<<'JS'
-const CACHE_NAME = 'astro-portal-v2';
+const CACHE_NAME = 'astro-portal-v3';
 const OFFLINE_URL = '/portal/offline';
 
 const PRECACHE_ASSETS = [
