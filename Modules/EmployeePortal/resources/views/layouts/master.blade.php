@@ -434,18 +434,11 @@
                     </div>
                 </a>
 
-                <!-- Left / Right: Lang Switcher & Notification Bell -->
-                <div class="d-flex align-items-center gap-2">
-                    <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-lang-btn" title="{{ app()->getLocale() === 'ar' ? 'English' : 'العربية' }}">
-                        <i class="bx bx-globe"></i>
-                        <span>{{ app()->getLocale() === 'ar' ? 'EN' : 'عربي' }}</span>
-                    </a>
-
-                    <a href="javascript:void(0)" class="notification-bell-btn">
-                        <i class="bx bxs-bell"></i>
-                        <span class="bell-badge-dot"></span>
-                    </a>
-                </div>
+                <!-- Left / Right: Notification Bell -->
+                <a href="javascript:void(0)" class="notification-bell-btn">
+                    <i class="bx bxs-bell"></i>
+                    <span class="bell-badge-dot"></span>
+                </a>
             </div>
         </header>
 

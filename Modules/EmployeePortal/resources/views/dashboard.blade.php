@@ -144,45 +144,6 @@
         font-size: 13px;
     }
 
-    /* Morning Discipline Policy Card (سياسة الانضباط الصباحي) */
-    .discipline-policy-card {
-        background: #FDF3E5;
-        border: 1px solid #FCE4C3;
-        border-radius: 18px;
-        padding: 14px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 12px;
-        text-align: right;
-    }
-
-    .discipline-policy-card .policy-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: #F59E0B;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        flex-shrink: 0;
-    }
-
-    .discipline-policy-card .policy-title {
-        font-size: 14px;
-        font-weight: 800;
-        color: #00334B;
-        margin-bottom: 2px;
-    }
-
-    .discipline-policy-card .policy-desc {
-        font-size: 11.5px;
-        font-weight: 600;
-        color: #78350F;
-        line-height: 1.5;
-    }
 
     /* Teacher Profile Card matching design */
     .teacher-status-card {
@@ -543,19 +504,6 @@
         <div id="punch-gps-status"></div>
         <input type="hidden" id="geoLat" />
         <input type="hidden" id="geoLng" />
-    </div>
-
-    <!-- 2. Morning Discipline Policy Card -->
-    <div class="discipline-policy-card">
-        <div class="policy-icon">
-            <i class="bx bx-info-circle"></i>
-        </div>
-        <div>
-            <div class="policy-title">{{ __('Morning Discipline Policy') }}</div>
-            <div class="policy-desc">
-                {{ __('According to Astro Leaders policy: Approved morning grace period is 15 minutes until 07:45 AM.') }}
-            </div>
-        </div>
     </div>
 
     <!-- 3. Teacher Profile Card -->

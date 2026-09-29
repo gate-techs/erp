@@ -500,14 +500,10 @@
             <span class="loading-dot dot-yellow"></span>
         </div>
 
-        <!-- Version & Country -->
-        <div class="footer-version">
-            {{ __('Version 1.0.0 • State of Kuwait') }}
-        </div>
-
+       
         <!-- Copyright -->
         <div class="footer-copyright">
-            {{ __('All rights reserved © 2026') }}
+            @GTABS
         </div>
 
         <div class="tap-hint">
