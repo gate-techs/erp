@@ -486,7 +486,7 @@
 
         <!-- Brand Typography -->
         <div class="splash-text-container">
-            <h1 class="splash-title">Astro Leaders Academy</h1>
+            <h1 class="splash-title">Astro Leaders </h1>
             <p class="splash-subtitle">{{ __('Smart HR & Employee Self-Service System') }}</p>
         </div>
     </main>
