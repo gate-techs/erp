@@ -41,6 +41,7 @@ class EmployeeController extends Controller
         $query = $this->employeeService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
+            ->skipAutoFilter()
             ->addIndexColumn()
             ->addColumn('employee_info', function (Employee $item) {
                 $avatar = $item->avatar_url;
@@ -215,8 +216,16 @@ class EmployeeController extends Controller
             })
             ->rawColumns(['employee_info', 'job_info', 'work_info', 'contact_info', 'salary_info', 'status', 'hire_date', 'actions'])
             ->filterColumn('employee_info', function ($query, $keyword) {
-                $query->whereTranslationLike('name', "%{$keyword}%")
+                $query->where(function ($q) use ($keyword) {
+                    $q->whereTranslationLike('name', "%{$keyword}%")
                       ->orWhere('employee_code', 'LIKE', "%{$keyword}%");
+                });
+            })
+            ->filterColumn('name', function ($query, $keyword) {
+                $query->where(function ($q) use ($keyword) {
+                    $q->whereTranslationLike('name', "%{$keyword}%")
+                      ->orWhere('employee_code', 'LIKE', "%{$keyword}%");
+                });
             })
             ->filterColumn('phone', function ($query, $keyword) {
                 $query->where('phone', 'LIKE', "%{$keyword}%");

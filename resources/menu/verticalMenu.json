@@ -257,19 +257,22 @@
           "name": "Dashboard",
           "icon": "menu-icon icon-base bx bx-home-circle",
           "slug": "accounting.dashboard",
-          "url": "/accounting"
+          "url": "/accounting",
+          "permission": "accounting.dashboard.view"
         },
         {
           "name": "Chart of Accounts",
           "icon": "menu-icon icon-base bx bx-git-repo-forked",
           "slug": "accounting.accounts.index",
-          "url": "/accounting/accounts"
+          "url": "/accounting/accounts",
+          "permission": "accounting.accounts.view"
         },
         {
           "name": "Journal Entries",
           "icon": "menu-icon icon-base bx bx-receipt",
           "slug": "accounting.journal-entries.index",
-          "url": "/accounting/journal-entries"
+          "url": "/accounting/journal-entries",
+          "permission": "accounting.journal-entries.view"
         },
         {
           "name": "Reconciliations",
@@ -278,16 +281,22 @@
             "accounting.bank-reconciliations",
             "accounting.payment-matchings"
           ],
+          "permission": [
+            "accounting.bank-reconciliations.view",
+            "accounting.payment-matchings.view"
+          ],
           "submenu": [
             {
               "name": "Bank Reconciliations",
               "slug": "accounting.bank-reconciliations",
-              "url": "/accounting/bank-reconciliations"
+              "url": "/accounting/bank-reconciliations",
+              "permission": "accounting.bank-reconciliations.view"
             },
             {
               "name": "Payment Matching",
               "slug": "accounting.payment-matchings",
-              "url": "/accounting/payment-matchings"
+              "url": "/accounting/payment-matchings",
+              "permission": "accounting.payment-matchings.view"
             }
           ]
         },
@@ -297,41 +306,79 @@
           "slug": [
             "accounting.reports"
           ],
+          "permission": [
+            "accounting.reports.view",
+            "accounting.reports.general-ledger",
+            "accounting.reports.account-statement",
+            "accounting.reports.trial-balance",
+            "accounting.reports.income-statement",
+            "accounting.reports.balance-sheet",
+            "accounting.reports.cash-flow",
+            "accounting.reports.cost-center"
+          ],
           "submenu": [
             {
               "name": "General Ledger",
               "slug": "accounting.reports.general-ledger",
-              "url": "/accounting/reports/general-ledger"
+              "url": "/accounting/reports/general-ledger",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.general-ledger"
+              ]
             },
             {
               "name": "Account Statement",
               "slug": "accounting.reports.account-statement",
-              "url": "/accounting/reports/account-statement"
+              "url": "/accounting/reports/account-statement",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.account-statement"
+              ]
             },
             {
               "name": "Trial Balance",
               "slug": "accounting.reports.trial-balance",
-              "url": "/accounting/reports/trial-balance"
+              "url": "/accounting/reports/trial-balance",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.trial-balance"
+              ]
             },
             {
               "name": "Income Statement",
               "slug": "accounting.reports.income-statement",
-              "url": "/accounting/reports/income-statement"
+              "url": "/accounting/reports/income-statement",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.income-statement"
+              ]
             },
             {
               "name": "Balance Sheet",
               "slug": "accounting.reports.balance-sheet",
-              "url": "/accounting/reports/balance-sheet"
+              "url": "/accounting/reports/balance-sheet",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.balance-sheet"
+              ]
             },
             {
               "name": "Cash Flow",
               "slug": "accounting.reports.cash-flow",
-              "url": "/accounting/reports/cash-flow"
+              "url": "/accounting/reports/cash-flow",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.cash-flow"
+              ]
             },
             {
               "name": "Cost Center Performance",
               "slug": "accounting.reports.cost-center-report",
-              "url": "/accounting/reports/cost-center-report"
+              "url": "/accounting/reports/cost-center-report",
+              "permission": [
+                "accounting.reports.view",
+                "accounting.reports.cost-center"
+              ]
             }
           ]
         },
@@ -348,46 +395,64 @@
             "accounting.opening-balances",
             "accounting.audit-logs"
           ],
+          "permission": [
+            "accounting.entities.view",
+            "accounting.opening-balances.view",
+            "accounting.journals.view",
+            "accounting.cash-accounts.view",
+            "accounting.cost-centers.view",
+            "accounting.fiscal-years.view",
+            "accounting.lock-dates.view",
+            "accounting.audit-logs.view"
+          ],
           "submenu": [
             {
               "name": "Accounting Entities",
               "slug": "accounting.entities.index",
-              "url": "/accounting/entities"
+              "url": "/accounting/entities",
+              "permission": "accounting.entities.view"
             },
             {
               "name": "Opening Balances",
               "slug": "accounting.opening-balances.index",
-              "url": "/accounting/opening-balances"
+              "url": "/accounting/opening-balances",
+              "permission": "accounting.opening-balances.view"
             },
             {
               "name": "Journals",
               "slug": "accounting.journals.index",
-              "url": "/accounting/journals"
+              "url": "/accounting/journals",
+              "permission": "accounting.journals.view"
             },
             {
               "name": "Cash & Bank Accounts",
               "slug": "accounting.cash-accounts.index",
-              "url": "/accounting/cash-accounts"
+              "url": "/accounting/cash-accounts",
+              "permission": "accounting.cash-accounts.view"
             },
             {
               "name": "Cost Centers",
               "slug": "accounting.cost-centers.index",
-              "url": "/accounting/cost-centers"
+              "url": "/accounting/cost-centers",
+              "permission": "accounting.cost-centers.view"
             },
             {
               "name": "Fiscal Years",
               "slug": "accounting.fiscal-years.index",
-              "url": "/accounting/fiscal-years"
+              "url": "/accounting/fiscal-years",
+              "permission": "accounting.fiscal-years.view"
             },
             {
               "name": "Lock Dates",
               "slug": "accounting.lock-dates.index",
-              "url": "/accounting/lock-dates"
+              "url": "/accounting/lock-dates",
+              "permission": "accounting.lock-dates.view"
             },
             {
               "name": "Audit Trail",
               "slug": "accounting.audit-logs.index",
-              "url": "/accounting/audit-logs"
+              "url": "/accounting/audit-logs",
+              "permission": "accounting.audit-logs.view"
             }
           ]
         }

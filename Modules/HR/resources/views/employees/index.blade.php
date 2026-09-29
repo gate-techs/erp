@@ -293,36 +293,42 @@
                     },
                     {
                         data: 'employee_info',
-                        name: 'name',
+                        name: 'employee_info',
                         orderable: false,
+                        searchable: true,
                         className: 'align-middle'
                     },
                     {
                         data: 'job_info',
-                        name: 'job_title_id',
+                        name: 'job_info',
                         orderable: false,
+                        searchable: false,
                         className: 'align-middle'
                     },
                     {
                         data: 'work_info',
-                        name: 'work_schedule_id',
+                        name: 'work_info',
                         orderable: false,
+                        searchable: false,
                         className: 'align-middle'
                     },
                     {
                         data: 'contact_info',
-                        name: 'phone',
+                        name: 'contact_info',
                         orderable: false,
+                        searchable: false,
                         className: 'align-middle'
                     },
                     {
                         data: 'status',
                         name: 'status',
+                        searchable: false,
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'hire_date',
                         name: 'hire_date',
+                        searchable: false,
                         className: 'align-middle'
                     },
                     {
