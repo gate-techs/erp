@@ -11,7 +11,12 @@ class Analytics extends Controller
   public function index()
   {
     $user = auth()->user();
-    if ($user && ($user->hasRole('employee') || $user->user_type === \App\Enums\UserType::EMPLOYEE) && ! $user->hasAnyRole(['super_admin', 'admin'])) {
+    $isAdmin = $user && (
+        $user->hasAnyRole(['super_admin', 'admin', 'Super Admin', 'Admin']) ||
+        $user->user_type === \App\Enums\UserType::ADMIN
+    );
+
+    if (! $isAdmin) {
         return redirect()->route('profile.show');
     }
 

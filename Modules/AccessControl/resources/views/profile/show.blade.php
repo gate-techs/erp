@@ -249,7 +249,6 @@
                                 </div>
                             @endif
 
-                            @can('profile.edit')
                             <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -311,11 +310,6 @@
                                     </button>
                                 </div>
                             </form>
-                            @else
-                            <div class="alert alert-warning mb-0">
-                                <i class="icon-base bx bx-lock me-2"></i>{{ __('You do not have permission to edit your profile details.') }}
-                            </div>
-                            @endcan
                         </div>
                     </div>
                 </div>
@@ -328,7 +322,6 @@
                             <small class="text-muted">{{ __('Ensure your account is using a long, random password to stay secure.') }}</small>
                         </div>
                         <div class="card-body pt-4">
-                            @can('profile.edit')
                             <form action="{{ route('profile.update-password') }}" method="POST">
                                 @csrf
                                 @method('PUT')
@@ -367,11 +360,6 @@
                                     </button>
                                 </div>
                             </form>
-                            @else
-                            <div class="alert alert-warning mb-0">
-                                <i class="icon-base bx bx-lock me-2"></i>{{ __('You do not have permission to change your password.') }}
-                            </div>
-                            @endcan
                         </div>
                     </div>
                 </div>

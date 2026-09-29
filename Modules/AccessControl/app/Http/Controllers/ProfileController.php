@@ -27,7 +27,6 @@ class ProfileController extends Controller
     public function show(): View|RedirectResponse
     {
         $user = Auth::user();
-        abort_unless($user && $user->can('profile.view'), 403, __('You do not have permission to view profile.'));
 
         // Check if user is linked to an employee (by user_id or email)
         $employee = $user->employee ?? Employee::where('email', $user->email)->first();
@@ -52,7 +51,6 @@ class ProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = Auth::user();
-        abort_unless($user && $user->can('profile.edit'), 403, __('You do not have permission to edit profile.'));
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -79,7 +77,6 @@ class ProfileController extends Controller
     public function updatePassword(Request $request): RedirectResponse
     {
         $user = Auth::user();
-        abort_unless($user && $user->can('profile.edit'), 403, __('You do not have permission to edit profile.'));
 
         $request->validate([
             'current_password' => ['required', 'current_password'],

@@ -21,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::before(function ($user, $ability) {
+            // Profile viewing and editing is universally allowed for all authenticated users
+            if ($user && in_array($ability, ['profile.view', 'profile.edit'], true)) {
+                return true;
+            }
+
             return method_exists($user, 'hasRole') && $user->hasRole('super_admin') ? true : null;
         });
     }
