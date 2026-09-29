@@ -450,6 +450,38 @@ class PermissionSeeder extends Seeder
             'accounting_guide' => [
                 'accounting.guide.view',
             ],
+
+            // ==========================================
+            // 7. Inventory Module (المخزون والمستودعات)
+            // ==========================================
+            'inventory_items' => [
+                'inventory.items.view',
+                'inventory.items.create',
+                'inventory.items.edit',
+                'inventory.items.delete',
+                'inventory.items.toggle-status',
+            ],
+            'inventory_categories' => [
+                'inventory.categories.view',
+                'inventory.categories.create',
+                'inventory.categories.edit',
+                'inventory.categories.delete',
+                'inventory.categories.toggle-status',
+            ],
+            'inventory_units' => [
+                'inventory.units.view',
+                'inventory.units.create',
+                'inventory.units.edit',
+                'inventory.units.delete',
+                'inventory.units.toggle-status',
+            ],
+            'inventory_warehouses' => [
+                'inventory.warehouses.view',
+                'inventory.warehouses.create',
+                'inventory.warehouses.edit',
+                'inventory.warehouses.delete',
+                'inventory.warehouses.toggle-status',
+            ],
         ];
 
         // Safely update or create each permission

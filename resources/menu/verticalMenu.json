@@ -492,30 +492,40 @@
       "slug": [
         "inventory"
       ],
+      "permission": [
+        "inventory.items.view",
+        "inventory.categories.view",
+        "inventory.units.view",
+        "inventory.warehouses.view"
+      ],
       "submenu": [
         {
           "name": "Items",
           "icon": "menu-icon icon-base bx bx-box",
           "slug": "inventory.items.index",
-          "url": "/items"
+          "url": "/items",
+          "permission": "inventory.items.view"
         },
         {
           "name": "Item Categories",
           "icon": "menu-icon icon-base bx bx-category",
           "slug": "inventory.categories.index",
-          "url": "/item-categories"
+          "url": "/item-categories",
+          "permission": "inventory.categories.view"
         },
         {
           "name": "Units",
           "icon": "menu-icon icon-base bx bx-ruler",
           "slug": "inventory.units.index",
-          "url": "/units"
+          "url": "/units",
+          "permission": "inventory.units.view"
         },
         {
           "name": "Warehouses",
           "icon": "menu-icon icon-base bx bx-package",
           "slug": "inventory.index",
-          "url": "/warehouses"
+          "url": "/warehouses",
+          "permission": "inventory.warehouses.view"
         }
       ]
     },

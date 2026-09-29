@@ -819,6 +819,65 @@ class AccessControlService
                     ],
                 ],
             ],
+            [
+                'module' => 'Inventory',
+                'module_ar' => 'إدارة المخزون والمستودعات',
+                'icon' => 'bx-package',
+                'screens' => [
+                    [
+                        'key' => 'inventory_items',
+                        'name' => 'Items & Products',
+                        'name_ar' => 'الأصناف والمنتجات',
+                        'icon' => 'bx-box',
+                        'view' => 'inventory.items.view',
+                        'create' => 'inventory.items.create',
+                        'edit' => 'inventory.items.edit',
+                        'delete' => 'inventory.items.delete',
+                        'custom' => [
+                            ['name' => 'inventory.items.toggle-status', 'label' => 'تفعيل/تعطيل', 'label_en' => 'Toggle Status'],
+                        ],
+                    ],
+                    [
+                        'key' => 'inventory_categories',
+                        'name' => 'Item Categories',
+                        'name_ar' => 'تصنيفات الأصناف',
+                        'icon' => 'bx-category',
+                        'view' => 'inventory.categories.view',
+                        'create' => 'inventory.categories.create',
+                        'edit' => 'inventory.categories.edit',
+                        'delete' => 'inventory.categories.delete',
+                        'custom' => [
+                            ['name' => 'inventory.categories.toggle-status', 'label' => 'تفعيل/تعطيل', 'label_en' => 'Toggle Status'],
+                        ],
+                    ],
+                    [
+                        'key' => 'inventory_units',
+                        'name' => 'Units of Measure',
+                        'name_ar' => 'وحدات القياس',
+                        'icon' => 'bx-ruler',
+                        'view' => 'inventory.units.view',
+                        'create' => 'inventory.units.create',
+                        'edit' => 'inventory.units.edit',
+                        'delete' => 'inventory.units.delete',
+                        'custom' => [
+                            ['name' => 'inventory.units.toggle-status', 'label' => 'تفعيل/تعطيل', 'label_en' => 'Toggle Status'],
+                        ],
+                    ],
+                    [
+                        'key' => 'inventory_warehouses',
+                        'name' => 'Warehouses',
+                        'name_ar' => 'المستودعات والمخازن',
+                        'icon' => 'bx-package',
+                        'view' => 'inventory.warehouses.view',
+                        'create' => 'inventory.warehouses.create',
+                        'edit' => 'inventory.warehouses.edit',
+                        'delete' => 'inventory.warehouses.delete',
+                        'custom' => [
+                            ['name' => 'inventory.warehouses.toggle-status', 'label' => 'تفعيل/تعطيل', 'label_en' => 'Toggle Status'],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
