@@ -311,11 +311,11 @@
     <!-- 2. Hero Profile Card -->
     <div class="profile-hero-card">
         <div class="profile-avatar-wrapper">
-            <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/teacher-avatar.png') }}" alt="Avatar" class="profile-avatar-img" />
+            <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}" alt="Avatar" class="profile-avatar-img" />
             <span class="profile-online-badge"></span>
         </div>
-        <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? __('Teacher') }}</h2>
-        <div class="profile-job-title">{{ $employee?->jobTitle?->name ?? __('Kindergarten Teacher') }}</div>
+        <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? __('Employee') }}</h2>
+        <div class="profile-job-title">{{ $employee?->jobTitle?->name ?? __('Staff Member') }}</div>
 
         <div class="profile-badges-row">
             <span class="profile-pill profile-pill-gold">

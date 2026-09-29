@@ -77,6 +77,8 @@ const PRECACHE_ASSETS = [
     '/assets/portal/splash-frame.svg',
     '/assets/portal/animated-splash.svg',
     '/assets/portal/teacher-avatar.png',
+    '/assets/portal/male-avatar.png',
+    '/assets/portal/female-avatar.png',
     '/assets/portal/header-emblem.png'
 ];
 

@@ -390,17 +390,22 @@ class Employee extends Model implements TranslatableContract
             }
         }
 
-        if (file_exists(public_path('assets/portal/teacher-avatar.png'))) {
-            return asset('assets/portal/teacher-avatar.png');
+        $genderVal = strtolower(trim((string) ($this->gender instanceof \BackedEnum ? $this->gender->value : ($this->gender ?? 'male'))));
+
+        if (in_array($genderVal, ['female', 'f', 'أنثى', 'انثى'])) {
+            if (file_exists(public_path('assets/portal/female-avatar.png'))) {
+                return asset('assets/portal/female-avatar.png');
+            }
+            if (file_exists(public_path('assets/portal/teacher-avatar.png'))) {
+                return asset('assets/portal/teacher-avatar.png');
+            }
+            return asset('assets/img/avatars/female-avatar.png');
         }
 
-        $genderVal = strtolower($this->gender instanceof \BackedEnum ? $this->gender->value : ($this->gender ?? 'female'));
-
-        if ($genderVal === 'male' || $genderVal === 'ذكر') {
-            return asset('assets/img/avatars/male-avatar.png');
+        if (file_exists(public_path('assets/portal/male-avatar.png'))) {
+            return asset('assets/portal/male-avatar.png');
         }
-
-        return asset('assets/img/avatars/female-avatar.png');
+        return asset('assets/img/avatars/male-avatar.png');
     }
 
     //======================

@@ -497,7 +497,7 @@
             <!-- Face ID Button -->
             <button type="button" class="btn-face-id" id="btnFaceId">
                 <span>{{ __('Face ID') }}</span>
-                <span class="face-badge-icon">🧕</span>
+                <i class="bx bx-scan" style="font-size: 16px; color: #00334B;"></i>
             </button>
         @endif
 
@@ -509,13 +509,13 @@
     <!-- 3. Teacher Profile Card -->
     <div class="teacher-status-card">
         <div class="teacher-info">
-            <img src="{{ auth()->user()?->employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/teacher-avatar.png') }}" alt="Avatar" class="teacher-avatar" />
+            <img src="{{ auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}" alt="Avatar" class="teacher-avatar" />
             <div>
                 <div class="teacher-name">
-                    {{ auth()->user()?->employee?->name ?? 'أ. نورة المطيري' }}
+                    {{ auth()->user()?->employee?->name ?? (auth()->user()?->name ?? __('Employee')) }}
                 </div>
                 <div class="teacher-dept">
-                    {{ auth()->user()?->employee?->jobTitle?->name ?? __('Kindergarten Teacher') }}
+                    {{ auth()->user()?->employee?->jobTitle?->name ?? __('Staff Member') }}
                 </div>
             </div>
         </div>

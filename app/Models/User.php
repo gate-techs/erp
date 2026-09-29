@@ -69,7 +69,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Accessor: Avatar URL with fallback to employee avatar or default.
+     * Accessor: Avatar URL with fallback to employee avatar or gender-aware default.
      */
     public function getAvatarUrlAttribute(): string
     {
@@ -92,9 +92,28 @@ class User extends Authenticatable
             }
         }
 
-        return file_exists(public_path('assets/portal/teacher-avatar.png'))
-            ? asset('assets/portal/teacher-avatar.png')
-            : asset('assets/portal/header-emblem.png');
+        // Gender-aware avatar fallback
+        $gender = strtolower(trim((string) ($this->employee?->gender ?? 'male')));
+        $isFemale = in_array($gender, ['female', 'f', 'أنثى', 'انثى']);
+
+        if ($isFemale) {
+            if (file_exists(public_path('assets/portal/female-avatar.png'))) {
+                return asset('assets/portal/female-avatar.png');
+            }
+            if (file_exists(public_path('assets/portal/teacher-avatar.png'))) {
+                return asset('assets/portal/teacher-avatar.png');
+            }
+            return asset('assets/img/avatars/female-avatar.png');
+        }
+
+        if (file_exists(public_path('assets/portal/male-avatar.png'))) {
+            return asset('assets/portal/male-avatar.png');
+        }
+        if (file_exists(public_path('assets/img/avatars/male-avatar.png'))) {
+            return asset('assets/img/avatars/male-avatar.png');
+        }
+
+        return asset('assets/portal/header-emblem.png');
     }
 
     /**

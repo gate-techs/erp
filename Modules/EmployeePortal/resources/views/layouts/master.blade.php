@@ -419,17 +419,19 @@
                 <a href="{{ route('portal.profile', [], false) }}" class="user-info-side"
                     style="text-decoration: none; color: inherit;">
                     <div class="user-avatar-ring">
-                        <img src="{{ auth()->user()?->employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/header-emblem.png') }}" alt="Avatar" />
+                        <img src="{{ auth()->user()?->avatar_url ?? asset('assets/portal/header-emblem.png') }}" alt="Avatar" />
                     </div>
 
                     <div class="greeting-text-col">
                         <div class="greeting-name">
-                            <span>{{ $greetingTime }}، {{ auth()->user()?->employee?->name ?? 'أ. نورة الخالد' }}</span>
+                            <span>{{ $greetingTime }}, {{ auth()->user()?->employee?->name ?? (auth()->user()?->name ?? __('Employee')) }}</span>
                             <span class="wave-hand">👋</span>
                         </div>
                         <div class="greeting-role">
-                            {{ auth()->user()?->employee?->jobTitle?->name ?? __('Kindergarten Teacher') }} •
-                            {{ auth()->user()?->employee?->primaryBranch?->name ?? __('Hawally Branch') }}
+                            {{ auth()->user()?->employee?->jobTitle?->name ?? __('Staff Member') }}
+                            @if(auth()->user()?->employee?->primaryBranch)
+                                • {{ auth()->user()?->employee?->primaryBranch?->name }}
+                            @endif
                         </div>
                     </div>
                 </a>
