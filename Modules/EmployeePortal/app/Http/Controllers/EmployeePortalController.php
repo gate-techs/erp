@@ -81,7 +81,7 @@ class EmployeePortalController extends Controller
         $this->authService->logout();
 
         return redirect()->route('portal.login')
-            ->with('success', 'تم تسجيل الخروج بنجاح.');
+            ->with('success', __('تم تسجيل الخروج بنجاح.'));
     }
 
     //==========================================================================

@@ -1,6 +1,6 @@
 @extends('employeeportal::layouts.master')
 
-@section('title', 'الملف الشخصي')
+@section('title', __('Profile'))
 
 @push('styles')
 <style>
@@ -217,8 +217,38 @@
     }
 
     .info-value-rtl {
-        direction: rtl;
-        text-align: right;
+        direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
+        text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};
+    }
+
+    .lang-switch-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .lang-switch-active {
+        background: rgba(0, 51, 75, 0.08);
+        color: #00334B;
+        border: 1px solid rgba(0, 51, 75, 0.15);
+    }
+
+    .lang-switch-btn {
+        background: #FDBB22;
+        color: #00334B;
+        border: 1px solid #F59E0B;
+        box-shadow: 0 2px 8px rgba(253, 187, 34, 0.35);
+    }
+
+    .lang-switch-btn:hover {
+        background: #F59E0B;
+        color: #00334B;
     }
 
     /* Logout Action Card */
@@ -269,10 +299,10 @@
 <div class="profile-page-container">
     <!-- 1. Header with back button -->
     <div class="profile-nav-header">
-        <a href="{{ route('portal.dashboard', [], false) }}" class="profile-back-btn" title="الرجوع للرئيسية">
-            <i class="bx bx-right-arrow-alt"></i>
+        <a href="{{ route('portal.dashboard', [], false) }}" class="profile-back-btn" title="{{ __('Back to Home') }}">
+            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-right-arrow-alt' : 'bx-left-arrow-alt' }}"></i>
         </a>
-        <h1 class="profile-header-title">الملف الشخصي</h1>
+        <h1 class="profile-header-title">{{ __('Profile') }}</h1>
         <div class="profile-header-action">
             <i class="bx bx-badge-check" style="color: #FDBB22;"></i>
         </div>
@@ -284,8 +314,8 @@
             <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/teacher-avatar.png') }}" alt="Avatar" class="profile-avatar-img" />
             <span class="profile-online-badge"></span>
         </div>
-        <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? 'أ. نورة المطيري' }}</h2>
-        <div class="profile-job-title">{{ $employee?->jobTitle?->name ?? 'معلمة رياض أطفال - فصل النجوم' }}</div>
+        <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? __('Teacher') }}</h2>
+        <div class="profile-job-title">{{ $employee?->jobTitle?->name ?? __('Kindergarten Teacher') }}</div>
 
         <div class="profile-badges-row">
             <span class="profile-pill profile-pill-gold">
@@ -294,7 +324,7 @@
             </span>
             <span class="profile-pill">
                 <i class="bx bx-building-house"></i>
-                <span>أسترو ليدرز</span>
+                <span>{{ __('Astro Leaders') }}</span>
             </span>
         </div>
     </div>
@@ -303,13 +333,13 @@
     <div class="profile-section-card">
         <div class="profile-section-header">
             <i class="bx bx-user-pin"></i>
-            <h3 class="profile-section-title">البيانات الوظيفية والتواصل</h3>
+            <h3 class="profile-section-title">{{ __('Job & Contact Information') }}</h3>
         </div>
 
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-envelope"></i>
-                <span>البريد الإلكتروني</span>
+                <span>{{ __('Email Address') }}</span>
             </span>
             <span class="info-value">{{ auth()->user()?->email ?? $employee?->email ?? 'teacher@astroleaders.com' }}</span>
         </div>
@@ -317,7 +347,7 @@
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-phone"></i>
-                <span>رقم الهاتف</span>
+                <span>{{ __('Phone Number') }}</span>
             </span>
             <span class="info-value">{{ $employee?->phone ?? '965-98765432' }}</span>
         </div>
@@ -325,7 +355,7 @@
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-calendar"></i>
-                <span>تاريخ التعيين</span>
+                <span>{{ __('Hire Date') }}</span>
             </span>
             <span class="info-value info-value-rtl">{{ $employee?->joining_date ?? '01-09-2024' }}</span>
         </div>
@@ -335,50 +365,76 @@
     <div class="profile-section-card">
         <div class="profile-section-header">
             <i class="bx bx-time-five"></i>
-            <h3 class="profile-section-title">جدول الدوام الرسمي</h3>
+            <h3 class="profile-section-title">{{ __('Official Work Schedule') }}</h3>
         </div>
 
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-sun"></i>
-                <span>الوردية الحالية</span>
+                <span>{{ __('Current Shift') }}</span>
             </span>
-            <span class="info-value info-value-rtl">{{ $employee?->shift?->name ?? 'الدوام الصباحي المدرسي' }}</span>
+            <span class="info-value info-value-rtl">{{ $employee?->shift?->name ?? __('Kindergarten Teacher') }}</span>
         </div>
 
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-stopwatch"></i>
-                <span>فترة السماح</span>
+                <span>{{ __('Grace Period') }}</span>
             </span>
-            <span class="info-value info-value-rtl">15 دقيقة (حتى 07:45 ص)</span>
+            <span class="info-value info-value-rtl">{{ __('15 minutes (until 07:45 AM)') }}</span>
         </div>
 
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-map-pin"></i>
-                <span>نطاق البصمة الجغرافي</span>
+                <span>{{ __('Geofence Range') }}</span>
             </span>
             <span class="info-value info-value-rtl" style="color: #10B981;">
-                <i class="bx bx-check-shield"></i> مفعّل (GPS)
+                <i class="bx bx-check-shield"></i> {{ __('Active (GPS)') }}
             </span>
         </div>
     </div>
 
-    <!-- 5. Logout Action Button (زر تسجيل الخروج كما طلب المستخدم) -->
+    <!-- 5. App Language Preferences -->
+    <div class="profile-section-card">
+        <div class="profile-section-header">
+            <i class="bx bx-globe"></i>
+            <h3 class="profile-section-title">{{ __('App Language') }}</h3>
+        </div>
+
+        <div class="info-list-item">
+            <span class="info-label">
+                <i class="bx bx-transfer-alt"></i>
+                <span>{{ app()->getLocale() === 'ar' ? 'اللغة الحالية: العربية' : 'Current Language: English' }}</span>
+            </span>
+            @if(app()->getLocale() === 'ar')
+                <a href="{{ route('lang.swap', 'en') }}" class="lang-switch-badge lang-switch-btn">
+                    <span>English</span>
+                    <i class="bx bx-right-arrow-alt"></i>
+                </a>
+            @else
+                <a href="{{ route('lang.swap', 'ar') }}" class="lang-switch-badge lang-switch-btn">
+                    <span>العربية</span>
+                    <i class="bx bx-left-arrow-alt"></i>
+                </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- 6. Logout Action Button -->
     <div class="logout-section-card">
         <form action="{{ route('portal.logout', [], false) }}" method="POST" id="portalLogoutForm">
             @csrf
-            <button type="submit" class="portal-logout-btn" onclick="return confirm('هل ترغب في تسجيل الخروج من بوابة الدوام؟')">
+            <button type="submit" class="portal-logout-btn" onclick="return confirm('{{ __('Are you sure you want to log out from the portal?') }}')">
                 <i class="bx bx-log-out"></i>
-                <span>تسجيل الخروج من البوابة</span>
+                <span>{{ __('Log Out from Portal') }}</span>
             </button>
         </form>
     </div>
 
     <!-- PWA App Version -->
     <div class="app-version-info">
-        حضانة أسترو ليدرز • إصدار التطبيق v1.2 PWA
+        {{ __('Astro Leaders Nursery • App Version v1.2 PWA') }}
     </div>
 </div>
 @endsection

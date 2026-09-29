@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>تسجيل الدخول | أسترو ليدرز - بوابة الموظفين</title>
+    <title>{{ __('Login | Astro Leaders - Employee Portal') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#00334B" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="أسترو ليدرز" />
-    <meta name="application-name" content="أسترو ليدرز" />
+    <meta name="apple-mobile-web-app-title" content="{{ __('Astro Leaders') }}" />
+    <meta name="application-name" content="{{ __('Astro Leaders') }}" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Cairo) -->
+    <!-- Google Fonts (Cairo & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <!-- Boxicons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
@@ -36,7 +36,7 @@
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif" }};
             background: linear-gradient(180deg, #F0F6FA 0%, #FFFFFF 35%, #F4F8FA 100%);
             color: #1E293B;
             min-height: 100vh;
@@ -60,6 +60,27 @@
             font-size: 13px;
             font-weight: 700;
             color: #00334B;
+        }
+
+        .portal-login-lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 51, 75, 0.06);
+            border: 1px solid rgba(0, 51, 75, 0.12);
+            color: #00334B;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .portal-login-lang-btn:hover {
+            background: #FDBB22;
+            color: #00334B;
+            border-color: #F59E0B;
         }
 
         .mobile-top-bar .icons-side {
@@ -420,7 +441,14 @@
 </head>
 
 <body>
-
+    <!-- Top Mobile Status Notch Bar preview with language switch -->
+    <div class="mobile-top-bar">
+        <span>{{ __('Astro Leaders') }}</span>
+        <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-login-lang-btn" title="{{ __('Change Language') }}">
+            <i class="bx bx-globe"></i>
+            <span>{{ app()->getLocale() === 'ar' ? 'English' : 'عربي' }}</span>
+        </a>
+    </div>
 
     <!-- Main Login Card Content -->
     <div class="login-wrapper">
@@ -435,20 +463,19 @@
         </div>
 
         <!-- App Title & Subtitle -->
-        <h1 class="app-title">أسترو ليدرز</h1>
+        <h1 class="app-title">{{ __('Astro Leaders') }}</h1>
         <div class="app-subtitle-badge">
              <i class="bx bxs-badge-check"></i>
-            <span>بوابة موظفي الحضانة • الكويت</span>
-           
+            <span>{{ __('Nursery Employee Portal • Kuwait') }}</span>
         </div>
 
         <!-- Administrative Notice (تنويه إداري معتمد - ليس كارد) -->
         <div class="admin-notice-row">
             <div class="notice-icon">i</div>
             <div class="notice-text-col">
-                <div class="notice-text-title">تنويه إداري معتمد</div>
+                <div class="notice-text-title">{{ __('Official Administrative Notice') }}</div>
                 <div class="notice-text-desc">
-                    يتم تسليم بيانات الدخول (البريد الإلكتروني وكلمة المرور)
+                    {{ __('Login credentials (email & password) are issued by HR Administration') }}
                 </div>
             </div>
         </div>
@@ -466,11 +493,11 @@
             <form action="{{ route('portal.login.submit', [], false) }}" method="POST">
                 @csrf
 
-                <!-- Email Input (بدل الرقم الوظيفي هيبقي الemail كما طلب المستخدم) -->
+                <!-- Email Input -->
                 <div class="form-group">
                     <div class="form-label-row">
-                        <span class="form-label-title">البريد الإلكتروني</span>
-                        <span class="form-label-hint">مثال: user@example.com</span>
+                        <span class="form-label-title">{{ __('Email Address') }}</span>
+                        <span class="form-label-hint">{{ __('e.g.: user@example.com') }}</span>
                     </div>
 
                     <div class="custom-input-box">
@@ -483,14 +510,14 @@
                                autocomplete="email" 
                                placeholder="name@astroleaders.com" 
                                dir="ltr" 
-                               style="text-align: right;" />
+                               style="text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};" />
                     </div>
                 </div>
 
                 <!-- Password Input -->
                 <div class="form-group">
                     <div class="form-label-row">
-                        <span class="form-label-title">كلمة المرور</span>
+                        <span class="form-label-title">{{ __('Password') }}</span>
                     </div>
 
                     <div class="custom-input-box">
@@ -502,8 +529,8 @@
                                autocomplete="current-password" 
                                placeholder="••••••••••••" 
                                dir="ltr" 
-                               style="text-align: right;" />
-                        <i class="bx bx-show toggle-pass" id="btnTogglePass" title="إظهار / إخفاء كلمة المرور"></i>
+                               style="text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};" />
+                        <i class="bx bx-show toggle-pass" id="btnTogglePass" title="{{ __('Show / Hide Password') }}"></i>
                     </div>
                 </div>
 
@@ -511,17 +538,17 @@
                 <div class="form-extra-row">
                     <label class="remember-checkbox-label">
                         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }} />
-                        <span>تذكّر هذا الجهاز</span>
+                        <span>{{ __('Remember this device') }}</span>
                     </label>
 
-                    <a href="javascript:void(0)" class="forgot-pass-link" onclick="alert('يرجى التواصل مع مسؤول الموارد البشرية لإعادة تعيين كلمة المرور')">
-                        نسيت كلمة المرور؟
+                    <a href="javascript:void(0)" class="forgot-pass-link" onclick="alert('{{ __('Please contact the HR administrator to reset your password') }}')">
+                        {{ __('Forgot password?') }}
                     </a>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn-submit-login">
-                    <span>تسجيل الدخول</span>
+                    <span>{{ __('Sign In') }}</span>
                     <i class="bx bx-log-in fs-4"></i>
                 </button>
             </form>
@@ -530,12 +557,12 @@
 
     <!-- Footer Help & Version -->
     <div class="login-footer">
-        <div class="footer-help-text">لم تستلم بيانات حسابك؟</div>
+        <div class="footer-help-text">{{ __("Didn't receive your account details?") }}</div>
         <a href="mailto:hr@astroleaders.com" class="footer-hr-link">
-            تواصل مع إدارة الموارد البشرية بالحضانة
+            {{ __('Contact Nursery HR Administration') }}
         </a>
         <div class="footer-version-tag">
-            الإصدار الداخلي V2.4 • دولة الكويت
+            {{ __('Internal Release V2.4 • State of Kuwait') }}
         </div>
     </div>
 

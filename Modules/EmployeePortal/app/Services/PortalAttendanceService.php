@@ -81,7 +81,7 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
         if (!$employee) {
             return [
                 'success' => false,
-                'message' => 'لم يتم العثور على سجل موظف مرتبط بهذا الحساب.',
+                'message' => __('لم يتم العثور على سجل موظف مرتبط بهذا الحساب.'),
                 'data'    => null,
                 'status'  => 404,
             ];
@@ -131,18 +131,18 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
             }
 
             $timeNow = now('Asia/Kuwait');
-            $formattedTime = $timeNow->format('h:i') . ' ' . ($timeNow->format('A') === 'AM' ? 'ص' : 'م');
-            $empName = $employee->first_name ?? $employee->name ?? 'أستاذة نورة';
+            $period = $timeNow->format('A') === 'AM' ? __('صباحاً') : __('مساءً');
+            $formattedTime = $timeNow->format('h:i') . ' ' . $period;
+            $empName = $employee->first_name ?? $employee->name ?? __('أستاذة');
 
             if ($isCheckIn) {
-                $greetingPrefix = $timeNow->hour < 12 ? 'صباح الخير' : 'مساء الخير';
-                $greeting = "{$greetingPrefix} يا {$empName}، يوم دراسي سعيد";
-                $title = 'تم تسجيل حضورك بنجاح!';
-                $statusLabel = 'حضور مبكر ومنتظم';
+                $greeting = __('مرحباً :name، نتمنى لك يوماً سعيداً', ['name' => $empName]);
+                $title = __('تم تسجيل حضورك بنجاح!');
+                $statusLabel = __('حضور مبكر ومنتظم');
             } else {
-                $greeting = "مع السلامة يا {$empName}، تم تسجيل انصرافك";
-                $title = 'تم تسجيل انصرافك بنجاح!';
-                $statusLabel = 'انصراف مسائي معتمد';
+                $greeting = __('مع السلامة :name، تم تسجيل انصرافك', ['name' => $empName]);
+                $title = __('تم تسجيل انصرافك بنجاح!');
+                $statusLabel = __('انصراف مسائي معتمد');
             }
 
             return [
@@ -162,7 +162,7 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage() ?: 'فشل في تسجيل البصمة.',
+                'message' => $e->getMessage() ?: __('فشل في تسجيل البصمة.'),
                 'data'    => null,
                 'status'  => 500,
             ];

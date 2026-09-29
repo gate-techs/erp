@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@yield('title', 'بوابة الحضور') | أسترو ليدرز</title>
+    <title>@yield('title', __('Attendance Portal')) | {{ __('Astro Leaders') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#00334B" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="أسترو ليدرز" />
-    <meta name="application-name" content="أسترو ليدرز" />
+    <meta name="apple-mobile-web-app-title" content="{{ __('Astro Leaders') }}" />
+    <meta name="application-name" content="{{ __('Astro Leaders') }}" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Cairo) -->
+    <!-- Google Fonts (Cairo & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
 
     <!-- Boxicons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    <!-- Bootstrap 5 CSS (RTL / LTR) -->
+    @if(app()->getLocale() === 'ar')
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    @else
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    @endif
 
     <style>
         :root {
@@ -53,7 +57,7 @@
         }
 
         body {
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', 'Cairo', sans-serif" }};
             background-color: var(--portal-bg);
             color: #1F2937;
             margin: 0;
@@ -167,7 +171,7 @@
         .greeting-text-col {
             display: flex;
             flex-direction: column;
-            text-align: right;
+            text-align: {{ app()->getLocale() === 'ar' ? 'right' : 'left' }};
         }
 
         .greeting-name {
@@ -190,6 +194,38 @@
             font-weight: 600;
             color: #8FB2C5;
             line-height: 1.2;
+        }
+
+        /* Language Switcher Pill Button */
+        .portal-lang-btn {
+            height: 38px;
+            padding: 0 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .portal-lang-btn:hover, .portal-lang-btn:active {
+            background: rgba(253, 187, 34, 0.25);
+            border-color: #FDBB22;
+            color: #FDBB22;
+        }
+
+        .portal-lang-btn i {
+            font-size: 15px;
+            color: #FDBB22;
         }
 
         /* Left: Notification Bell */
@@ -329,49 +365,57 @@
 <body>
     <div class="portal-app-wrapper">
         @php
-            $portalCurrentDate = 'الكويت';
-            try {
-                if (class_exists('IntlDateFormatter')) {
-                    $hijriFormatter = new \IntlDateFormatter('ar_SA@calendar=islamic-umalqura', \IntlDateFormatter::FULL, \IntlDateFormatter::NONE, 'Asia/Kuwait', \IntlDateFormatter::TRADITIONAL, 'EEEE، d MMMM y هـ');
-                    $portalCurrentDate = $hijriFormatter->format(now('Asia/Kuwait')) . ' • الكويت';
-                } else {
+            $portalCurrentDate = '';
+            if (app()->getLocale() === 'ar') {
+                try {
+                    if (class_exists('IntlDateFormatter')) {
+                        $hijriFormatter = new \IntlDateFormatter('ar_SA@calendar=islamic-umalqura', \IntlDateFormatter::FULL, \IntlDateFormatter::NONE, 'Asia/Kuwait', \IntlDateFormatter::TRADITIONAL, 'EEEE، d MMMM y هـ');
+                        $portalCurrentDate = $hijriFormatter->format(now('Asia/Kuwait')) . ' • الكويت';
+                    } else {
+                        \Carbon\Carbon::setLocale('ar');
+                        $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l، d F Y') . ' • الكويت';
+                    }
+                } catch (\Throwable $e) {
                     \Carbon\Carbon::setLocale('ar');
                     $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l، d F Y') . ' • الكويت';
                 }
-            } catch (\Throwable $e) {
-                \Carbon\Carbon::setLocale('ar');
-                $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l، d F Y') . ' • الكويت';
+            } else {
+                \Carbon\Carbon::setLocale('en');
+                $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l, d F Y') . ' • Kuwait';
             }
+
+            $currentHour = now('Asia/Kuwait')->hour;
+            $greetingTime = $currentHour < 12 ? __('Good Morning') : __('Good Evening');
         @endphp
 
         <!-- Top Mobile App Header matching design -->
         <header class="portal-header">
             <!-- Date Badge & Status Badge Row -->
             <div class="header-top-badges">
-                <!-- 1. Right: Date Badge (Kuwait) -->
+                <!-- 1. Date Badge (Kuwait) -->
                 <div class="badge-date-pill">
                     <i class="bx bxs-calendar"></i>
                     <span>{{ $portalCurrentDate }}</span>
                 </div>
 
-                <!-- 2. Left: Status Pill with dot -->
+                <!-- 2. Status Pill with dot -->
                 <div class="badge-status-pill">
                     @if(isset($todayAttendance) && !empty($todayAttendance->check_out))
                         <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                        <span>اكتمل دوام اليوم ✓</span>
+                        <span>{{ __("Today's shift completed ✓") }}</span>
                     @elseif(isset($todayAttendance) && !empty($todayAttendance->check_in))
                         <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                        <span>تم الحضور {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i') }}</span>
+                        <span>{{ __('Checked in') }} {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i A') }}</span>
                     @else
                         <span class="status-dot"></span>
-                        <span>في انتظار التسجيل</span>
+                        <span>{{ __('Awaiting Punch') }}</span>
                     @endif
                 </div>
             </div>
 
-            <!-- User Greeting & Avatar & Notification Bell -->
+            <!-- User Greeting & Avatar & Notification Bell & Lang Switcher -->
             <div class="header-user-row">
-                <!-- 1. Right: Avatar ring + Teacher greeting -->
+                <!-- Avatar ring + Teacher greeting -->
                 <a href="{{ route('portal.profile', [], false) }}" class="user-info-side"
                     style="text-decoration: none; color: inherit;">
                     <div class="user-avatar-ring">
@@ -380,21 +424,28 @@
 
                     <div class="greeting-text-col">
                         <div class="greeting-name">
-                            <span>صباح الخير، {{ auth()->user()?->employee?->name ?? 'أ. نورة الخالد' }}</span>
+                            <span>{{ $greetingTime }}، {{ auth()->user()?->employee?->name ?? 'أ. نورة الخالد' }}</span>
                             <span class="wave-hand">👋</span>
                         </div>
                         <div class="greeting-role">
-                            {{ auth()->user()?->employee?->jobTitle?->name ?? 'معلمة رياض أطفال' }} •
-                            {{ auth()->user()?->employee?->primaryBranch?->name ?? 'فرع حولي' }}
+                            {{ auth()->user()?->employee?->jobTitle?->name ?? __('Kindergarten Teacher') }} •
+                            {{ auth()->user()?->employee?->primaryBranch?->name ?? __('Hawally Branch') }}
                         </div>
                     </div>
                 </a>
 
-                <!-- 2. Left: Notification Bell -->
-                <a href="javascript:void(0)" class="notification-bell-btn">
-                    <i class="bx bxs-bell"></i>
-                    <span class="bell-badge-dot"></span>
-                </a>
+                <!-- Left / Right: Lang Switcher & Notification Bell -->
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-lang-btn" title="{{ app()->getLocale() === 'ar' ? 'English' : 'العربية' }}">
+                        <i class="bx bx-globe"></i>
+                        <span>{{ app()->getLocale() === 'ar' ? 'EN' : 'عربي' }}</span>
+                    </a>
+
+                    <a href="javascript:void(0)" class="notification-bell-btn">
+                        <i class="bx bxs-bell"></i>
+                        <span class="bell-badge-dot"></span>
+                    </a>
+                </div>
             </div>
         </header>
 
@@ -404,6 +455,13 @@
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 fs-7" role="alert">
                     <i class="bx bx-error me-1"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 fs-7" role="alert">
+                    <i class="bx bx-check-circle me-1"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
@@ -419,16 +477,16 @@
                 <div class="tab-icon-wrapper">
                     <i class="bx {{ request()->routeIs('portal.dashboard') ? 'bxs-home' : 'bx-home' }}"></i>
                 </div>
-                <span>الرئيسية</span>
+                <span>{{ __('Home') }}</span>
             </a>
 
             <!-- 2. الطلبات (Requests) with yellow dot badge -->
-            <a href="javascript:void(0)" class="portal-nav-tab" onclick="alert('شاشة الطلبات قيد التجهيز')">
+            <a href="javascript:void(0)" class="portal-nav-tab" onclick="alert('{{ __('Requests screen is under development') }}')">
                 <div class="tab-icon-wrapper">
                     <i class="bx bx-receipt"></i>
                     <span class="dot-badge"></span>
                 </div>
-                <span>الطلبات</span>
+                <span>{{ __('Requests') }}</span>
             </a>
 
             <!-- 3. الحضور (Attendance) -->
@@ -436,7 +494,7 @@
                 <div class="tab-icon-wrapper">
                     <i class="bx bx-time-five"></i>
                 </div>
-                <span>الحضور</span>
+                <span>{{ __('Attendance') }}</span>
             </a>
 
             <!-- 4. الملف الشخصي (Profile) -->
@@ -445,7 +503,7 @@
                 <div class="tab-icon-wrapper">
                     <i class="bx {{ request()->routeIs('portal.profile') ? 'bxs-user' : 'bx-user' }}"></i>
                 </div>
-                <span>الملف الشخصي</span>
+                <span>{{ __('Profile') }}</span>
             </a>
         </nav>
     </div>

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>لا يوجد اتصال بالإنترنت | أسترو ليدرز</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <title>{{ __('No Internet Connection') }} | {{ __('Astro Leaders') }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/{{ app()->getLocale() === 'ar' ? 'bootstrap.rtl.min.css' : 'bootstrap.min.css' }}" rel="stylesheet" />
 
     <style>
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif" }};
             background-color: #00334B;
             color: #ffffff;
             min-height: 100vh;
@@ -64,13 +64,13 @@
             <i class="bx bx-wifi-off"></i>
         </div>
 
-        <h4 class="fw-bold mb-2">لا يوجد اتصال بالإنترنت</h4>
+        <h4 class="fw-bold mb-2">{{ __('No Internet Connection') }}</h4>
         <p class="text-muted fs-7 mb-4">
-            يرجى التأكد من اتصال هاتفك بالإنترنت ثم المحاولة مجدداً.
+            {{ __('Please check your internet connection and try again.') }}
         </p>
 
         <button type="button" class="btn-retry" onclick="window.location.reload()">
-            <i class="bx bx-refresh me-1"></i> إعادة المحاولة
+            <i class="bx bx-refresh me-1"></i> {{ __('Try Again') }}
         </button>
     </div>
 </body>

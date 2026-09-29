@@ -68,5 +68,15 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
             \Modules\EmployeePortal\Services\PortalPwaService::class
         );
     }
+
+    /**
+     * Boot the application events and load module translations.
+     */
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../../lang');
+    }
 }
 

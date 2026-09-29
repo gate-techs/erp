@@ -23,7 +23,7 @@ class PortalAuthService implements PortalAuthServiceInterface
                 Auth::logout();
                 return [
                     'success' => false,
-                    'message' => 'تم تعطيل هذا الحساب. يرجى التواصل مع إدارة الموارد البشرية.',
+                    'message' => __('تم تعطيل هذا الحساب. يرجى التواصل مع إدارة الموارد البشرية.'),
                     'user'    => null,
                 ];
             }
@@ -32,14 +32,14 @@ class PortalAuthService implements PortalAuthServiceInterface
 
             return [
                 'success' => true,
-                'message' => 'تم تسجيل الدخول بنجاح. مرحباً بك!',
+                'message' => __('تم تسجيل الدخول بنجاح. مرحباً بك!'),
                 'user'    => $user,
             ];
         }
 
         return [
             'success' => false,
-            'message' => 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+            'message' => __('البريد الإلكتروني أو كلمة المرور غير صحيحة.'),
             'user'    => null,
         ];
     }

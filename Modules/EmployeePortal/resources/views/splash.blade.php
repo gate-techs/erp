@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Astro Leaders Academy | منظومة الموارد البشرية والخدمات الذاتية الذكية</title>
+    <title>{{ __('Astro Leaders') }} | {{ __('Smart HR & Employee Self-Service System') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#012436" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="أسترو ليدرز" />
-    <meta name="application-name" content="أسترو ليدرز" />
+    <meta name="apple-mobile-web-app-title" content="{{ __('Astro Leaders') }}" />
+    <meta name="application-name" content="{{ __('Astro Leaders') }}" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Cairo) -->
+    <!-- Google Fonts (Cairo & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
         * {
@@ -53,7 +53,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif" }};
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -487,7 +487,7 @@
         <!-- Brand Typography -->
         <div class="splash-text-container">
             <h1 class="splash-title">Astro Leaders Academy</h1>
-            <p class="splash-subtitle">منظومة الموارد البشرية والخدمات الذاتية الذكية</p>
+            <p class="splash-subtitle">{{ __('Smart HR & Employee Self-Service System') }}</p>
         </div>
     </main>
 
@@ -502,16 +502,16 @@
 
         <!-- Version & Country -->
         <div class="footer-version">
-            الإصدار 1.0.0 • دولة الكويت
+            {{ __('Version 1.0.0 • State of Kuwait') }}
         </div>
 
         <!-- Copyright -->
         <div class="footer-copyright">
-            جميع الحقوق محفوظة © 2026
+            {{ __('All rights reserved © 2026') }}
         </div>
 
         <div class="tap-hint">
-            انقر في أي مكان للدخول
+            {{ __('Tap anywhere to enter') }}
         </div>
     </footer>
 

@@ -5,12 +5,12 @@
             <img src="{{ asset('assets/portal/icon-192.png') }}" alt="App Icon" class="pwa-app-icon" />
         </div>
         <div class="banner-content">
-            <div class="banner-title">تثبيت تطبيق أسترو ليدرز 📲</div>
-            <div class="banner-desc">ثبّت التطبيق على شاشة هاتفك الرئيسية كبرنامج مستقل وسريع</div>
+            <div class="banner-title">{{ __('Install Astro Leaders App 📲') }}</div>
+            <div class="banner-desc">{{ __('Install the app on your home screen for quick, standalone access') }}</div>
         </div>
         <div class="banner-actions">
-            <button type="button" id="btnInstallPwa" class="btn-install-now">تثبيت الآن</button>
-            <button type="button" id="btnDismissPwa" class="btn-dismiss-banner" aria-label="إغلاق">✕</button>
+            <button type="button" id="btnInstallPwa" class="btn-install-now">{{ __('Install Now') }}</button>
+            <button type="button" id="btnDismissPwa" class="btn-dismiss-banner" aria-label="✕">✕</button>
         </div>
     </div>
 </div>
@@ -21,8 +21,8 @@
         <div class="ios-modal-header">
             <img src="{{ asset('assets/portal/icon-192.png') }}" alt="App Icon" class="ios-app-icon" />
             <div>
-                <h5>تثبيت التطبيق على الآيفون</h5>
-                <p>خطوتان فقط لإضافة التطبيق إلى شاشة هاتفك</p>
+                <h5>{{ __('Install App on iPhone') }}</h5>
+                <p>{{ __('Just 2 steps to add the app to your home screen') }}</p>
             </div>
             <button type="button" class="btn-close-ios" onclick="closeIosInstallModal()">✕</button>
         </div>
@@ -30,23 +30,23 @@
             <div class="ios-step-item">
                 <div class="step-num">1</div>
                 <div class="step-text">
-                    اضغط على زر المشاركة <strong>(Share <span class="share-icon-symbol">⎋</span>)</strong> في شريط متصفح سفاري بالأسفل.
+                    {{ __('Tap the Share button') }} <strong>(Share <span class="share-icon-symbol">⎋</span>)</strong> {{ __("in Safari's bottom bar.") }}
                 </div>
             </div>
             <div class="ios-step-item">
                 <div class="step-num">2</div>
                 <div class="step-text">
-                    مرر للأسفل بالقائمة واختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen ➕)</strong>.
+                    {{ __('Scroll down and choose') }} <strong>"{{ __('Add to Home Screen') }}" (➕)</strong>.
                 </div>
             </div>
             <div class="ios-step-item">
                 <div class="step-num">3</div>
                 <div class="step-text">
-                    اضغط على <strong>"إضافة" (Add)</strong> بالأعلى ليظهر التطبيق مع تطبيقات هاتفك!
+                    {{ __('Tap') }} <strong>"{{ __('Add') }}"</strong> {{ __('at the top to add the app to your home screen!') }}
                 </div>
             </div>
         </div>
-        <button type="button" class="btn-confirm-ios" onclick="closeIosInstallModal()">فهمت ذلك 👍</button>
+        <button type="button" class="btn-confirm-ios" onclick="closeIosInstallModal()">{{ __('Got it 👍') }}</button>
     </div>
 </div>
 
@@ -70,7 +70,7 @@
         display: none;
         animation: pwaSlideUp 0.35s ease forwards;
         color: #ffffff;
-        direction: rtl;
+        direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
     }
 
     .pwa-install-banner.show {
@@ -177,7 +177,7 @@
         align-items: flex-end;
         justify-content: center;
         padding: 16px;
-        direction: rtl;
+        direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
     }
 
     .ios-install-modal.show {

@@ -1,6 +1,6 @@
 @extends('employeeportal::layouts.master')
 
-@section('title', 'بصمة الدوام')
+@section('title', __('Attendance Punch'))
 
 @push('styles')
 <style>
@@ -463,8 +463,10 @@
 @php
     $hasCheckIn = !empty($todayAttendance?->check_in);
     $hasCheckOut = !empty($todayAttendance?->check_out);
-    $checkInTimeFormatted = $hasCheckIn ? \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i') . ' ' . (\Carbon\Carbon::parse($todayAttendance->check_in)->format('A') === 'AM' ? 'ص' : 'م') : null;
-    $checkOutTimeFormatted = $hasCheckOut ? \Carbon\Carbon::parse($todayAttendance->check_out)->format('h:i') . ' ' . (\Carbon\Carbon::parse($todayAttendance->check_out)->format('A') === 'AM' ? 'ص' : 'م') : null;
+    $inPeriod = $hasCheckIn ? (\Carbon\Carbon::parse($todayAttendance->check_in)->format('A') === 'AM' ? __('AM') : __('PM')) : '';
+    $outPeriod = $hasCheckOut ? (\Carbon\Carbon::parse($todayAttendance->check_out)->format('A') === 'AM' ? __('AM') : __('PM')) : '';
+    $checkInTimeFormatted = $hasCheckIn ? \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i') . ' ' . $inPeriod : null;
+    $checkOutTimeFormatted = $hasCheckOut ? \Carbon\Carbon::parse($todayAttendance->check_out)->format('h:i') . ' ' . $outPeriod : null;
 @endphp
 
     <!-- 1. Central Punch Center Card -->
@@ -472,7 +474,7 @@
         <!-- Top Badge -->
         <div class="punch-time-badge">
             <i class="bx bx-time-five" style="color: #D97706;"></i>
-            <span>توقيت الحضور الرسمي</span>
+            <span>{{ __('Official Attendance Time') }}</span>
         </div>
 
         <!-- Digital Live Clock -->
@@ -480,14 +482,14 @@
             {{ now('Asia/Kuwait')->format('H:i:s') }}
         </div>
         <div class="clock-timezone-label">
-            {{ now('Asia/Kuwait')->hour < 12 ? 'صباحاً' : 'مساءً' }} بتوقيت دولة الكويت
+            {{ now('Asia/Kuwait')->hour < 12 ? __('AM') : __('PM') }} {{ __('Kuwait Local Time') }}
         </div>
 
         <!-- Big Concentric Fingerprint Button -->
         <div class="fingerprint-outer-halo" style="{{ $hasCheckIn && !$hasCheckOut ? 'background: radial-gradient(circle, #FEE2E2 0%, #FFF5F5 65%, #FDE8E8 100%); box-shadow: 0 0 0 10px rgba(254, 226, 226, 0.4);' : ($hasCheckIn && $hasCheckOut ? 'background: radial-gradient(circle, #D1FAE5 0%, #ECFDF5 65%, #E6FBF0 100%); box-shadow: 0 0 0 10px rgba(209, 250, 229, 0.4);' : '') }}">
             <button type="button" class="fingerprint-inner-btn" id="btnFingerprintPunch"
                 {{ $hasCheckIn && $hasCheckOut ? 'disabled' : '' }}
-                title="{{ $hasCheckIn && !$hasCheckOut ? 'المس لتسجيل الانصراف' : ($hasCheckIn && $hasCheckOut ? 'اكتمل الدوام' : 'المس للبصمة') }}"
+                title="{{ $hasCheckIn && !$hasCheckOut ? __('Touch to record check-out') : ($hasCheckIn && $hasCheckOut ? __('Shift Completed') : __('Touch to Punch')) }}"
                 style="{{ $hasCheckIn && !$hasCheckOut ? 'background: #991B1B; box-shadow: 0 12px 30px rgba(153, 27, 27, 0.35);' : ($hasCheckIn && $hasCheckOut ? 'background: #065F46; box-shadow: 0 12px 30px rgba(6, 95, 70, 0.35); opacity: 0.85;' : '') }}">
                 <!-- Golden Fingerprint Icon -->
                 <svg class="fingerprint-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -502,11 +504,11 @@
                 </svg>
                 <span class="fingerprint-label-text">
                     @if($hasCheckIn && $hasCheckOut)
-                        اكتمل الدوام
+                        {{ __('Shift Completed') }}
                     @elseif($hasCheckIn)
-                        بصمة الانصراف
+                        {{ __('Check-Out Punch') }}
                     @else
-                        المس للبصمة
+                        {{ __('Touch to Punch') }}
                     @endif
                 </span>
             </button>
@@ -514,26 +516,26 @@
 
         <!-- Punch Title & Subtitle -->
         @if($hasCheckIn && $hasCheckOut)
-            <h4 class="punch-prompt-title" style="color: #059669;">تم إتمام دوام اليوم بنجاح</h4>
+            <h4 class="punch-prompt-title" style="color: #059669;">{{ __("Today's shift completed successfully") }}</h4>
             <p class="punch-prompt-desc">
-                تم تسجيل الحضور في ({{ $checkInTimeFormatted }}) والانصراف في ({{ $checkOutTimeFormatted }})
+                {{ __('Checked in at (:in) and checked out at (:out)', ['in' => $checkInTimeFormatted, 'out' => $checkOutTimeFormatted]) }}
             </p>
         @elseif($hasCheckIn)
-            <h4 class="punch-prompt-title" style="color: #DC2626;">اضغطي لتسجيل الانصراف</h4>
+            <h4 class="punch-prompt-title" style="color: #DC2626;">{{ __('Tap to record check-out') }}</h4>
             <p class="punch-prompt-desc">
-                تم تسجيل حضورك في ({{ $checkInTimeFormatted }}). يرجى وضع الإبهام على الشاشة لتسجيل نهاية الدوام المدرسي.
+                {{ __('Your check-in was recorded at (:time). Please place your thumb on the screen to end your work shift.', ['time' => $checkInTimeFormatted]) }}
             </p>
         @else
-            <h4 class="punch-prompt-title">اضغطي للتسجيل بالبصمة</h4>
+            <h4 class="punch-prompt-title">{{ __('Tap to record punch') }}</h4>
             <p class="punch-prompt-desc">
-                يرجى وضع الإبهام على الشاشة لتسجيل بدء الدوام المدرسي
+                {{ __('Please place your thumb on the screen to start your work shift') }}
             </p>
         @endif
 
         @if(!$hasCheckIn || !$hasCheckOut)
             <!-- Face ID Button -->
             <button type="button" class="btn-face-id" id="btnFaceId">
-                <span>بصمة الوجه</span>
+                <span>{{ __('Face ID') }}</span>
                 <span class="face-badge-icon">🧕</span>
             </button>
         @endif
@@ -543,20 +545,20 @@
         <input type="hidden" id="geoLng" />
     </div>
 
-    <!-- 2. Morning Discipline Policy Card (سياسة الانضباط الصباحي) -->
+    <!-- 2. Morning Discipline Policy Card -->
     <div class="discipline-policy-card">
         <div class="policy-icon">
             <i class="bx bx-info-circle"></i>
         </div>
         <div>
-            <div class="policy-title">سياسة الانضباط الصباحي</div>
+            <div class="policy-title">{{ __('Morning Discipline Policy') }}</div>
             <div class="policy-desc">
-                وفق لائحة حضانة أسترو ليدرز: فترة السماح الصباحية المعتمدة هي 15 دقيقة حتى 07:45 ص.
+                {{ __('According to Astro Leaders policy: Approved morning grace period is 15 minutes until 07:45 AM.') }}
             </div>
         </div>
     </div>
 
-    <!-- 3. Teacher Profile Card matching design -->
+    <!-- 3. Teacher Profile Card -->
     <div class="teacher-status-card">
         <div class="teacher-info">
             <img src="{{ auth()->user()?->employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/teacher-avatar.png') }}" alt="Avatar" class="teacher-avatar" />
@@ -565,26 +567,26 @@
                     {{ auth()->user()?->employee?->name ?? 'أ. نورة المطيري' }}
                 </div>
                 <div class="teacher-dept">
-                    {{ auth()->user()?->employee?->jobTitle?->name ?? 'معلمة رياض أطفال' }} - فصل النجوم المبدعة
+                    {{ auth()->user()?->employee?->jobTitle?->name ?? __('Kindergarten Teacher') }}
                 </div>
             </div>
         </div>
 
         <div class="status-side">
-            <span class="status-label">حالة اليوم</span>
+            <span class="status-label">{{ __("Today's Status") }}</span>
             <span class="status-value" style="{{ $hasCheckIn ? 'color: #059669;' : '' }}">
                 @if($hasCheckIn && $hasCheckOut)
-                    اكتمل دوام اليوم ✓
+                    {{ __("Today's shift completed ✓") }}
                 @elseif($hasCheckIn)
-                    حضور: {{ $checkInTimeFormatted }}
+                    {{ __('Checked in') }}: {{ $checkInTimeFormatted }}
                 @else
-                    في انتظار التسجيل
+                    {{ __('Awaiting Punch') }}
                 @endif
             </span>
         </div>
     </div>
 
-    <!-- 4. Success Modal / Bottom Sheet (مطابق للصورة تماماً) -->
+    <!-- 4. Success Modal / Bottom Sheet -->
     <div class="punch-success-overlay" id="punchSuccessModal">
         <div class="punch-success-sheet">
 
@@ -603,44 +605,38 @@
             <!-- Pill Badge with Yellow Dot -->
             <div class="punch-pill-badge">
                 <span class="dot"></span>
-                <span>تم اعتماد البصمة الرقمية</span>
+                <span>{{ __('Digital Punch Approved') }}</span>
             </div>
 
             <!-- Title -->
-            <h2 class="punch-modal-title" id="punchModalTitle">تم تسجيل حضورك بنجاح!</h2>
+            <h2 class="punch-modal-title" id="punchModalTitle">{{ __('Your check-in was successfully recorded!') }}</h2>
 
             <!-- Subtitle Greeting -->
             <p class="punch-modal-subtitle" id="punchModalSubtitle">
-                صباح الخير يا {{ $employee->first_name ?? $employee->name ?? 'أستاذة نورة' }}، يوم دراسي سعيد
+                {{ __('Hello :name, have a great day!', ['name' => $employee->first_name ?? $employee->name ?? __('Teacher')]) }}
             </p>
 
             <!-- 2-Column Stats Box -->
             <div class="punch-stats-box">
-                <!-- Right: وقت البصمة الفعلي -->
+                <!-- وقت البصمة الفعلي -->
                 <div class="stat-col">
-                    <span class="stat-label">وقت البصمة الفعلي</span>
+                    <span class="stat-label">{{ __('Actual Punch Time') }}</span>
                     <span class="stat-val-time" id="punchModalTime">
-                        {{ now('Asia/Kuwait')->format('h:i') }} {{ now('Asia/Kuwait')->format('A') === 'AM' ? 'ص' : 'م' }}
+                        {{ now('Asia/Kuwait')->format('h:i') }} {{ now('Asia/Kuwait')->format('A') === 'AM' ? __('AM') : __('PM') }}
                     </span>
                 </div>
 
                 <div class="stat-divider"></div>
 
-                <!-- Left: حالة الحضور -->
+                <!-- حالة الحضور -->
                 <div class="stat-col">
-                    <span class="stat-label">حالة الحضور</span>
+                    <span class="stat-label">{{ __('Attendance Status') }}</span>
                     <div class="stat-val-status">
                         <i class="bx bx-check-circle"></i>
-                        <span id="punchModalStatus">حضور مبكر ومنتظم</span>
+                        <span id="punchModalStatus">{{ __('Early & On-Time Check-In') }}</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Action to Profile -->
-            <!-- <a href="{{ route('portal.profile', [], false) }}" class="punch-redirect-btn">
-                <span>الانتقال إلى الملف الشخصي</span>
-                <i class="bx bx-left-arrow-alt" style="font-size: 19px;"></i>
-            </a> -->
         </div>
     </div>
 @endsection
@@ -732,14 +728,14 @@
                         window.location.href = "{{ route('portal.profile', [], false) }}";
                     }, 2000);
                 } else {
-                    const errorMsg = data?.message || ('فشل تسجيل البصمة (رمز الاستجابة: ' + response.status + ')');
+                    const errorMsg = data?.message || ('{{ __("Punch failed") }} (' + response.status + ')');
                     alert('⚠️ ' + errorMsg);
                     punchBtn.disabled = false;
                     punchBtn.style.opacity = '1';
                 }
             } catch (err) {
                 console.error('Punch request failed:', err);
-                alert('⚠️ حدث خطأ في الاتصال بالخادم: ' + (err.message || 'يرجى التحقق من الشبكة'));
+                alert('⚠️ {{ __("Connection error with server") }}: ' + (err.message || '{{ __("Please check your network connection") }}'));
                 punchBtn.disabled = false;
                 punchBtn.style.opacity = '1';
             }
@@ -750,7 +746,7 @@
     const faceBtn = document.getElementById('btnFaceId');
     if (faceBtn) {
         faceBtn.addEventListener('click', () => {
-            alert('📸 جاري تفعيل كاميرا الهاتف لمسح بصمة الوجه...');
+            alert('📸 {{ __("Activating camera for Face ID scan...") }}');
             if (punchBtn) punchBtn.click();
         });
     }
