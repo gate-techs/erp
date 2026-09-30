@@ -32,17 +32,44 @@
     <!-- Filters Card (نفس تصميم nursery-branches تماماً) -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body py-3">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="mb-0 fw-semibold text-heading d-flex align-items-center gap-2">
-                    <i class="icon-base bx bx-filter-alt text-secondary"></i>
-                    {{ __('Filter Employees') }}
-                </h6>
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <h6 class="mb-0 fw-semibold text-heading d-flex align-items-center gap-2">
+                        <i class="icon-base bx bx-filter-alt text-secondary"></i>
+                        {{ __('Filter Employees') }}
+                    </h6>
+                    <!-- Quick Teachers Only Filter Pills -->
+                    <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Teaching Staff Filter') }}">
+                        <input type="radio" class="btn-check" name="quick_teacher_filter" id="teacher_all" value="" checked>
+                        <label class="btn btn-outline-primary btn-sm px-3" for="teacher_all">{{ __('All Staff') }}</label>
+
+                        <input type="radio" class="btn-check" name="quick_teacher_filter" id="teacher_only" value="1">
+                        <label class="btn btn-outline-primary btn-sm px-3 d-flex align-items-center gap-1" for="teacher_only">
+                            <i class="bx bx-book-reader font-14"></i>
+                            <span>{{ __('Teachers Only') }}</span>
+                        </label>
+
+                        <input type="radio" class="btn-check" name="quick_teacher_filter" id="teacher_none" value="0">
+                        <label class="btn btn-outline-primary btn-sm px-3" for="teacher_none">{{ __('Non-Teachers') }}</label>
+                    </div>
+                </div>
                 <button type="button" id="btnResetFilters" class="btn btn-sm btn-label-secondary employee-reset-btn d-flex align-items-center gap-1" title="{{ __('Reset Filters') }}">
                     <i class="icon-base bx bx-reset font-16"></i>
                     <span>{{ __('Reset') }}</span>
                 </button>
             </div>
             <div class="row g-3 align-items-end employee-index-filters">
+                <!-- 0. Teaching Staff Filter -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <label class="form-label fw-semibold text-heading small mb-1">{{ __('Teaching Staff') }}</label>
+                    <select id="filter_is_teacher" class="select2 form-select" data-placeholder="{{ __('All Staff') }}"
+                        data-allow-clear="true">
+                        <option value="">{{ __('All Staff') }}</option>
+                        <option value="1">{{ __('Teachers Only') }}</option>
+                        <option value="0">{{ __('Non-Teachers') }}</option>
+                    </select>
+                </div>
+
                 <!-- 1. Branch Filter -->
                 <div class="col-12 col-sm-6 col-lg-3">
                     <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
@@ -269,6 +296,7 @@
                 ajax: {
                     url: dataUrl,
                     data: function (d) {
+                        d.is_teacher = $('#filter_is_teacher').val();
                         d.branch_id = $('#filter_branch_id').val();
                         d.department_id = $('#filter_department_id').val();
                         d.job_title_id = $('#filter_job_title_id').val();
@@ -351,7 +379,26 @@
             // 2. Custom Filters Trigger Reload with debounce / reset guard
             let isResetting = false;
 
-            $('#filter_branch_id, #filter_department_id, #filter_job_title_id, #filter_status, #filter_employment_type, #filter_gender, #filter_work_schedule_id, #filter_shift_id, #filter_nationality, #filter_marital_status, #filter_hire_date_from, #filter_hire_date_to').on('change', function () {
+            // Sync Quick Teacher Pills with Select2 Filter
+            $('input[name="quick_teacher_filter"]').on('change', function () {
+                const val = $(this).val();
+                if ($('#filter_is_teacher').val() !== val) {
+                    $('#filter_is_teacher').val(val).trigger('change');
+                }
+            });
+
+            $('#filter_is_teacher').on('change', function () {
+                const val = $(this).val();
+                if (val === '1') {
+                    $('#teacher_only').prop('checked', true);
+                } else if (val === '0') {
+                    $('#teacher_none').prop('checked', true);
+                } else {
+                    $('#teacher_all').prop('checked', true);
+                }
+            });
+
+            $('#filter_is_teacher, #filter_branch_id, #filter_department_id, #filter_job_title_id, #filter_status, #filter_employment_type, #filter_gender, #filter_work_schedule_id, #filter_shift_id, #filter_nationality, #filter_marital_status, #filter_hire_date_from, #filter_hire_date_to').on('change', function () {
                 if (isResetting) return;
                 table.ajax.reload();
             });
@@ -359,8 +406,9 @@
             // 3. Reset Filters Handler (Single clean reload)
             $('#btnResetFilters').on('click', function () {
                 isResetting = true;
-                $('#filter_branch_id, #filter_department_id, #filter_job_title_id, #filter_status, #filter_employment_type, #filter_gender, #filter_work_schedule_id, #filter_shift_id, #filter_nationality, #filter_marital_status').val('').trigger('change');
+                $('#filter_is_teacher, #filter_branch_id, #filter_department_id, #filter_job_title_id, #filter_status, #filter_employment_type, #filter_gender, #filter_work_schedule_id, #filter_shift_id, #filter_nationality, #filter_marital_status').val('').trigger('change');
                 $('#filter_hire_date_from, #filter_hire_date_to').val('');
+                $('#teacher_all').prop('checked', true);
                 isResetting = false;
                 table.ajax.reload();
             });

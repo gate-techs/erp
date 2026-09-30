@@ -67,6 +67,10 @@ class EmployeeRepository implements EmployeeRepositoryInterface
             $query->where('status', $filters['status']);
         }
 
+        if (isset($filters['is_teacher']) && $filters['is_teacher'] !== '' && $filters['is_teacher'] !== null) {
+            $query->where('is_teacher', (bool) (int) $filters['is_teacher']);
+        }
+
         if (!empty($filters['branch_id'])) {
             $query->byBranch((int) $filters['branch_id']);
         }
