@@ -7,5 +7,6 @@
     "Accounting": true,
     "AI": true,
     "Inventory": true,
-    "EmployeePortal": true
+    "EmployeePortal": true,
+    "CRM": true
 }

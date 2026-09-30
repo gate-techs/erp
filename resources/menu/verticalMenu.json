@@ -530,6 +530,22 @@
       ]
     },
     {
+      "name": "CRM",
+      "icon": "menu-icon icon-base bx bx-group",
+      "slug": [
+        "crm",
+        "crm.leads"
+      ],
+      "submenu": [
+        {
+          "name": "Leads",
+          "icon": "menu-icon icon-base bx bx-user-plus",
+          "slug": "crm.leads.index",
+          "url": "/crm/leads"
+        }
+      ]
+    },
+    {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": [
