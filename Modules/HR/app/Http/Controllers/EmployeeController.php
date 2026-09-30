@@ -150,12 +150,23 @@ class EmployeeController extends Controller
                        </a>' 
                     : '';
 
+                $waUrl = $item->whatsapp_url;
+                $waBadge = $waUrl
+                    ? '<a href="' . $waUrl . '" target="_blank" rel="noopener noreferrer" class="badge bg-label-success d-inline-flex align-items-center gap-1 text-decoration-none py-1 px-2" data-bs-toggle="tooltip" title="' . __('Chat on WhatsApp') . '">
+                           <i class="bx bxl-whatsapp font-14"></i>
+                           <span>' . __('WhatsApp') . '</span>
+                       </a>'
+                    : '';
+
                 return '
-                    <div class="d-flex flex-column align-items-start">
-                        <a href="tel:' . $phone . '" class="fw-bold text-heading d-inline-flex align-items-center gap-1 text-decoration-none">
-                            <i class="bx bx-phone-call text-success font-15 flex-shrink-0"></i>
-                            <span dir="ltr">' . $phone . '</span>
-                        </a>
+                    <div class="d-flex flex-column align-items-start gap-1">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <a href="tel:' . $phone . '" class="fw-bold text-heading d-inline-flex align-items-center gap-1 text-decoration-none">
+                                <i class="bx bx-phone-call text-success font-15 flex-shrink-0"></i>
+                                <span dir="ltr">' . $phone . '</span>
+                            </a>
+                            ' . $waBadge . '
+                        </div>
                         ' . $email . '
                     </div>
                 ';
@@ -199,8 +210,16 @@ class EmployeeController extends Controller
             })
             ->addColumn('actions', function (Employee $item) {
                 $name = e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '');
+                $waUrl = $item->whatsapp_url;
+                $waButton = $waUrl
+                    ? '<a href="' . $waUrl . '" target="_blank" rel="noopener noreferrer" class="btn btn-icon btn-sm btn-outline-success" title="' . __('Chat on WhatsApp') . '" data-bs-toggle="tooltip">
+                           <i class="icon-base bx bxl-whatsapp font-18"></i>
+                       </a>'
+                    : '';
+
                 return '
                     <div class="d-inline-flex gap-1">
+                        ' . $waButton . '
                         <a href="' . route('hr.employees.show', $item->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Profile') . '">
                             <i class="icon-base bx bx-user"></i>
                         </a>

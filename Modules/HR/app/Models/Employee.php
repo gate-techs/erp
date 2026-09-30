@@ -523,4 +523,53 @@ class Employee extends Model implements TranslatableContract
     {
         return (bool) $this->is_teacher;
     }
+
+    //======================
+    /**
+     * Format a phone number into a WhatsApp URL with Kuwait country code (965).
+     */
+    public static function formatWhatsappUrl(?string $phone): ?string
+    {
+        if (empty($phone)) {
+            return null;
+        }
+
+        // Convert Eastern Arabic / Persian numerals to Western digits
+        $phone = strtr($phone, [
+            '٠'=>'0', '١'=>'1', '٢'=>'2', '٣'=>'3', '٤'=>'4',
+            '٥'=>'5', '٦'=>'6', '٧'=>'7', '٨'=>'8', '٩'=>'9',
+            '۰'=>'0', '۱'=>'1', '۲'=>'2', '۳'=>'3', '۴'=>'4',
+            '۵'=>'5', '۶'=>'6', '۷'=>'7', '۸'=>'8', '۹'=>'9',
+        ]);
+
+        $clean = preg_replace('/[^0-9]/', '', $phone);
+        if (empty($clean)) {
+            return null;
+        }
+
+        // Strip leading 00965 or 00
+        if (str_starts_with($clean, '00965')) {
+            $clean = substr($clean, 2);
+        } elseif (str_starts_with($clean, '00')) {
+            $clean = substr($clean, 2);
+        } elseif (str_starts_with($clean, '0')) {
+            $clean = ltrim($clean, '0');
+        }
+
+        // Prepend Kuwait country code (965) if not already starting with 965
+        if (!str_starts_with($clean, '965')) {
+            $clean = '965' . $clean;
+        }
+
+        return 'https://wa.me/' . $clean;
+    }
+
+    //======================
+    /**
+     * Get WhatsApp URL for primary phone with Kuwait country code.
+     */
+    public function getWhatsappUrlAttribute(): ?string
+    {
+        return self::formatWhatsappUrl($this->phone);
+    }
 }

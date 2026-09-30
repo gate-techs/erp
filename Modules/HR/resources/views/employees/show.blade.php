@@ -686,9 +686,17 @@ body { background: var(--p-bg) !important; }
             @if($employee->phone)
             <div class="sb-row">
                 <div class="sb-icon" style="background:#ecfdf5;color:#10b981;"><i class="bx bx-phone"></i></div>
-                <div>
+                <div class="flex-grow-1">
                     <div class="sb-label">{{ __('Mobile') }}</div>
-                    <a href="tel:{{ $employee->phone }}" class="sb-value text-decoration-none" dir="ltr" style="color:var(--p-slate2);">{{ $employee->phone }}</a>
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <a href="tel:{{ $employee->phone }}" class="sb-value text-decoration-none" dir="ltr" style="color:var(--p-slate2);">{{ $employee->phone }}</a>
+                        @if($employee->whatsapp_url)
+                        <a href="{{ $employee->whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="badge bg-label-success d-inline-flex align-items-center gap-1 text-decoration-none py-1 px-2" title="{{ __('Chat on WhatsApp') }}">
+                            <i class="bx bxl-whatsapp font-14"></i>
+                            <span style="font-size: 11px;">{{ __('WhatsApp') }}</span>
+                        </a>
+                        @endif
+                    </div>
                 </div>
             </div>
             @endif
