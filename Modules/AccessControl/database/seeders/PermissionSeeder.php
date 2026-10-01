@@ -191,8 +191,15 @@ class PermissionSeeder extends Seeder
                 'hr.reports.attendance.export',
                 'hr.reports.attendance.print',
                 'hr.reports.leaves.view',
+                'hr.reports.leaves.export',
+                'hr.reports.leaves.print',
                 'hr.reports.payrolls.view',
+                'hr.reports.payrolls.export',
+                'hr.reports.payrolls.print',
+                'hr.reports.payrolls.payslip',
                 'hr.reports.employees.view',
+                'hr.reports.employees.export',
+                'hr.reports.employees.print',
             ],
 
             // ==========================================
