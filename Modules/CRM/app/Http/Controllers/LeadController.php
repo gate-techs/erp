@@ -32,8 +32,17 @@ class LeadController extends Controller
             ->editColumn('job_title', fn (Lead $lead) => $lead->job_title ?: '-')
             ->editColumn('created_at', fn (Lead $lead) => $lead->created_at?->format('Y-m-d') ?? '-')
             ->addColumn('actions', function (Lead $lead) {
-                return '<div class="d-inline-flex gap-1">
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-lead"
+                $user = auth()->user();
+                $canEdit = $user?->can('crm.leads.edit');
+                $canDelete = $user?->can('crm.leads.delete');
+
+                if (! $canEdit && ! $canDelete) {
+                    return '<span class="text-muted">-</span>';
+                }
+
+                $buttons = '<div class="d-inline-flex gap-1">';
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-lead"
                         data-id="' . $lead->id . '"
                         data-name="' . e($lead->name) . '"
                         data-phone="' . e($lead->phone) . '"
@@ -44,12 +53,17 @@ class LeadController extends Controller
                         data-notes="' . e($lead->notes ?? '') . '"
                         title="' . __('Edit') . '">
                         <i class="icon-base bx bx-edit-alt"></i>
-                    </button>
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-lead"
+                    </button>';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-lead"
                         data-id="' . $lead->id . '" data-name="' . e($lead->name) . '" title="' . __('Delete') . '">
                         <i class="icon-base bx bx-trash"></i>
-                    </button>
-                </div>';
+                    </button>';
+                }
+                $buttons .= '</div>';
+
+                return $buttons;
             })
             ->rawColumns(['actions'])
             ->make(true);

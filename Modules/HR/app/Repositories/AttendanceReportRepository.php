@@ -127,7 +127,7 @@ class AttendanceReportRepository implements AttendanceReportRepositoryInterface
      */
     public function getPaginatedRecords(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getFilteredQuery($filters)->paginate($perPage);
+        return $this->getFilteredQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**
@@ -235,12 +235,12 @@ class AttendanceReportRepository implements AttendanceReportRepositoryInterface
         $page = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
         $sliced = $allSummary->slice(($page - 1) * $perPage, $perPage)->values();
 
-        return new \Illuminate\Pagination\LengthAwarePaginator(
+        return (new \Illuminate\Pagination\LengthAwarePaginator(
             $sliced,
             $allSummary->count(),
             $perPage,
             $page,
             ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(), 'query' => request()->query()]
-        );
+        ))->withQueryString();
     }
 }

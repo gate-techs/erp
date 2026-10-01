@@ -81,7 +81,7 @@ class PayrollReportRepository implements PayrollReportRepositoryInterface
      */
     public function getPayrollSheetPaginated(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getPayrollSheetQuery($filters)->paginate($perPage);
+        return $this->getPayrollSheetQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**
@@ -189,7 +189,7 @@ class PayrollReportRepository implements PayrollReportRepositoryInterface
      */
     public function getLoansPaginated(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getLoansQuery($filters)->paginate($perPage);
+        return $this->getLoansQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**

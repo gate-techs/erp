@@ -558,20 +558,7 @@
             </table>
         </div>
 
-        @if($attendances->hasPages())
-            <div class="card-footer bg-transparent border-top py-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="text-muted">
-                        {{ __('عرض السجلات من :from إلى :to من إجمالي :total', [
-                            'from'  => $attendances->firstItem() ?? 0,
-                            'to'    => $attendances->lastItem() ?? 0,
-                            'total' => $attendances->total(),
-                        ]) }}
-                    </small>
-                    {{ $attendances->links() }}
-                </div>
-            </div>
-        @endif
+        @include('hr::reports._pagination', ['records' => $attendances])
     </div>
 
 </div>

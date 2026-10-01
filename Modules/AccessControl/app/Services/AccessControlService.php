@@ -878,6 +878,39 @@ class AccessControlService
                     ],
                 ],
             ],
+            [
+                'module' => 'CRM',
+                'module_ar' => 'إدارة علاقات العملاء (CRM)',
+                'icon' => 'bx-group',
+                'screens' => [
+                    [
+                        'key' => 'crm_leads',
+                        'name' => 'Leads',
+                        'name_ar' => 'العملاء المحتملين',
+                        'icon' => 'bx-user-plus',
+                        'view' => 'crm.leads.view',
+                        'create' => 'crm.leads.create',
+                        'edit' => 'crm.leads.edit',
+                        'delete' => 'crm.leads.delete',
+                        'custom' => [
+                            ['name' => 'crm.leads.export', 'label' => 'تصدير إكسيل', 'label_en' => 'Export'],
+                        ],
+                    ],
+                    [
+                        'key' => 'crm_service_requests',
+                        'name' => 'Service Requests',
+                        'name_ar' => 'طلبات الخدمة والشكاوى',
+                        'icon' => 'bx-conversation',
+                        'view' => 'crm.service-requests.view',
+                        'create' => 'crm.service-requests.create',
+                        'edit' => 'crm.service-requests.edit',
+                        'delete' => 'crm.service-requests.delete',
+                        'custom' => [
+                            ['name' => 'crm.service-requests.export', 'label' => 'تصدير إكسيل', 'label_en' => 'Export'],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

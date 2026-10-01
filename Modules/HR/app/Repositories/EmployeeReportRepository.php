@@ -109,7 +109,7 @@ class EmployeeReportRepository implements EmployeeReportRepositoryInterface
      */
     public function getEmployeeMasterPaginated(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getEmployeeMasterQuery($filters)->paginate($perPage);
+        return $this->getEmployeeMasterQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**

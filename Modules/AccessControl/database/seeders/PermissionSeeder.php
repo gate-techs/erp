@@ -482,6 +482,24 @@ class PermissionSeeder extends Seeder
                 'inventory.warehouses.delete',
                 'inventory.warehouses.toggle-status',
             ],
+
+            // ==========================================
+            // 8. CRM Module (إدارة علاقات العملاء)
+            // ==========================================
+            'crm_leads' => [
+                'crm.leads.view',
+                'crm.leads.create',
+                'crm.leads.edit',
+                'crm.leads.delete',
+                'crm.leads.export',
+            ],
+            'crm_service_requests' => [
+                'crm.service-requests.view',
+                'crm.service-requests.create',
+                'crm.service-requests.edit',
+                'crm.service-requests.delete',
+                'crm.service-requests.export',
+            ],
         ];
 
         // Safely update or create each permission

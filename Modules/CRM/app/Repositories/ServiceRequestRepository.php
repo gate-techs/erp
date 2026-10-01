@@ -57,7 +57,7 @@ class ServiceRequestRepository implements ServiceRequestRepositoryInterface
     protected function buildQuery(array $filters = []): Builder
     {
         $query = ServiceRequest::query()
-            ->with(['lead', 'branch', 'department'])
+            ->with(['lead', 'branch.translations', 'department.translations', 'attachments'])
             ->latest('id');
 
         foreach (['type', 'status', 'branch_id', 'department_id'] as $field) {

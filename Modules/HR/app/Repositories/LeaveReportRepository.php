@@ -96,7 +96,7 @@ class LeaveReportRepository implements LeaveReportRepositoryInterface
      */
     public function getLeaveRequestsPaginated(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getLeaveRequestsQuery($filters)->paginate($perPage);
+        return $this->getLeaveRequestsQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**
@@ -179,7 +179,7 @@ class LeaveReportRepository implements LeaveReportRepositoryInterface
      */
     public function getPermissionsPaginated(array $filters = [], int $perPage = 25): LengthAwarePaginator
     {
-        return $this->getPermissionsQuery($filters)->paginate($perPage);
+        return $this->getPermissionsQuery($filters)->paginate($perPage)->withQueryString();
     }
 
     /**

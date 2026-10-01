@@ -692,20 +692,7 @@
             </table>
         </div>
 
-        @if(method_exists($records, 'hasPages') && $records->hasPages())
-            <div class="card-footer bg-transparent border-top py-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="text-muted">
-                        {{ __('عرض السجلات من :from إلى :to من إجمالي :total', [
-                            'from'  => $records->firstItem() ?? 0,
-                            'to'    => $records->lastItem() ?? 0,
-                            'total' => $records->total(),
-                        ]) }}
-                    </small>
-                    {{ $records->links() }}
-                </div>
-            </div>
-        @endif
+        @include('hr::reports._pagination', ['records' => $records])
     </div>
 
 </div>

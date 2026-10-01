@@ -534,14 +534,27 @@
       "icon": "menu-icon icon-base bx bx-group",
       "slug": [
         "crm",
-        "crm.leads"
+        "crm.leads",
+        "crm.service-requests"
+      ],
+      "permission": [
+        "crm.leads.view",
+        "crm.service-requests.view"
       ],
       "submenu": [
         {
           "name": "Leads",
           "icon": "menu-icon icon-base bx bx-user-plus",
           "slug": "crm.leads.index",
-          "url": "/crm/leads"
+          "url": "/crm/leads",
+          "permission": "crm.leads.view"
+        },
+        {
+          "name": "Service Requests",
+          "icon": "menu-icon icon-base bx bx-conversation",
+          "slug": "crm.service-requests.index",
+          "url": "/crm/service-requests",
+          "permission": "crm.service-requests.view"
         }
       ]
     },

@@ -11,11 +11,13 @@
             </h4>
             <p class="text-muted mb-0">{{ __('Manage your potential customers.') }}</p>
         </div>
+        @can('crm.leads.create')
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2"
             data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddLead">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Lead') }}</span>
         </button>
+        @endcan
     </div>
 
     @if (session('success'))
