@@ -27,6 +27,19 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/{id}/toggle-status', [\Modules\Settings\Http\Controllers\PrintTemplateController::class, 'toggleStatus'])->name('toggle-status');
     });
 
+    // Email Templates Manager
+    Route::prefix('settings/email-templates')->name('settings.email-templates.')->group(function () {
+        Route::get('/', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'index'])->name('index');
+        Route::get('/create', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'create'])->name('create');
+        Route::post('/', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/preview', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'preview'])->name('preview');
+        Route::post('/{id}/test', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'sendTest'])->name('send-test');
+        Route::patch('/{id}/toggle-status', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
     // General Settings Root
     Route::get('settings/general', [GeneralSettingController::class, 'index'])->name('settings.general');
 

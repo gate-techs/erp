@@ -8,5 +8,7 @@
     "AI": true,
     "Inventory": true,
     "EmployeePortal": true,
-    "CRM": true
+    "CRM": true,
+    "Tasks": true,
+    "SiteManagement": true
 }

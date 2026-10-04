@@ -507,6 +507,24 @@ class PermissionSeeder extends Seeder
                 'crm.service-requests.delete',
                 'crm.service-requests.export',
             ],
+
+            // ==========================================
+            // 9. Tasks Module (إدارة المهام)
+            // ==========================================
+            'tasks_task_groups' => [
+                'tasks.task-groups.view',
+                'tasks.task-groups.create',
+                'tasks.task-groups.edit',
+                'tasks.task-groups.delete',
+                'tasks.task-groups.toggle-status',
+            ],
+            'tasks' => [
+                'tasks.view',
+                'tasks.create',
+                'tasks.edit',
+                'tasks.delete',
+                'tasks.toggle-status',
+            ],
         ];
 
         // Safely update or create each permission

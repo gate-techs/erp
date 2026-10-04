@@ -559,6 +559,36 @@
       ]
     },
     {
+      "name": "Tasks Management",
+      "icon": "menu-icon icon-base bx bx-task",
+      "slug": [
+        "tasks",
+        "tasks.monitoring.index",
+        "tasks.task-groups.index",
+        "tasks.tasks.index"
+      ],
+      "submenu": [
+        {
+          "name": "Task Monitoring",
+          "icon": "menu-icon icon-base bx bx-pie-chart-alt-2",
+          "slug": "tasks.monitoring.index",
+          "url": "/tasks/monitoring"
+        },
+        {
+          "name": "Task Groups",
+          "icon": "menu-icon icon-base bx bx-folder-open",
+          "slug": "tasks.task-groups.index",
+          "url": "/tasks/task-groups"
+        },
+        {
+          "name": "All Tasks",
+          "icon": "menu-icon icon-base bx bx-list-check",
+          "slug": "tasks.tasks.index",
+          "url": "/tasks/tasks"
+        }
+      ]
+    },
+    {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": [
@@ -604,6 +634,12 @@
           "slug": "settings.print-templates.index",
           "url": "/settings/print-templates",
           "permission": "settings.print-templates.view"
+        },
+        {
+          "name": "Email Templates",
+          "icon": "menu-icon icon-base bx bx-envelope",
+          "slug": "settings.email-templates.index",
+          "url": "/settings/email-templates"
         },
         {
           "name": "AI Settings",
