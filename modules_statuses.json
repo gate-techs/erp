@@ -10,5 +10,6 @@
     "EmployeePortal": true,
     "CRM": true,
     "Tasks": true,
+    "Academic": true,
     "SiteManagement": true
 }

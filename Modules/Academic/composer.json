@@ -1,0 +1,28 @@
+{
+    "name": "nwidart/academic",
+    "description": "Academic management for educational institutions",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Academic\\": "app/",
+            "Modules\\Academic\\Database\\Factories\\": "database/factories/",
+            "Modules\\Academic\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Academic\\Tests\\": "tests/"
+        }
+    }
+}
