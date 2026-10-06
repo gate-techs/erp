@@ -338,7 +338,7 @@
                 } else if (isIosSafari()) {
                     showIosInstallModal();
                 } else {
-                    alert('لتثبيت التطبيق على جهازك:\nافتح قائمة المتصفح (⋮) ثم اضغط "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".');
+                    alert("{{ __('To install the app on your device: open browser menu and click Install App or Add to Home Screen.') }}");
                 }
             });
         }

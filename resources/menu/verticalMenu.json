@@ -28,6 +28,37 @@
       ]
     },
     {
+      "name": "Academic Management",
+      "icon": "menu-icon icon-base bx bxs-graduation",
+      "slug": "academic",
+      "submenu": [
+        {
+          "name": "Academic Years",
+          "icon": "menu-icon icon-base bx bx-calendar",
+          "slug": "academic.academic-years.index",
+          "url": "/academic/academic-years"
+        },
+        {
+          "name": "Academic Stages",
+          "icon": "menu-icon icon-base bx bx-layer",
+          "slug": "academic.stages.index",
+          "url": "/academic/stages"
+        },
+        {
+          "name": "Academic Classes",
+          "icon": "menu-icon icon-base bx bx-chalkboard",
+          "slug": "academic.classes.index",
+          "url": "/academic/classes"
+        },
+        {
+          "name": "Academic Subjects",
+          "icon": "menu-icon icon-base bx bx-book",
+          "slug": "academic.subjects.index",
+          "url": "/academic/subjects"
+        }
+      ]
+    },
+    {
       "name": "Human Resources",
       "icon": "menu-icon icon-base bx bx-user-pin",
       "slug": "hr",

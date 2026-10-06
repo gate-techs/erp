@@ -66,6 +66,41 @@ class AcademicStage extends Model implements TranslatableContract
         ];
     }
 
+    protected $appends = [
+        'name_ar',
+        'name_en',
+        'description_ar',
+        'description_en',
+    ];
+
+    public function getNameArAttribute(): ?string
+    {
+        return $this->translate('ar')?->name;
+    }
+
+    public function getNameEnAttribute(): ?string
+    {
+        return $this->translate('en')?->name;
+    }
+
+    public function getDescriptionArAttribute(): ?string
+    {
+        return $this->translate('ar')?->description;
+    }
+
+    public function getDescriptionEnAttribute(): ?string
+    {
+        return $this->translate('en')?->description;
+    }
+
+    /**
+     * The educational institution (nursery/school) that owns this stage.
+     */
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Nursery\Models\Nursery::class, 'institution_id');
+    }
+
     /**
      * The user who created the stage.
      */

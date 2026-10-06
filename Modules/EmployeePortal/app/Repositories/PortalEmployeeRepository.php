@@ -43,4 +43,17 @@ class PortalEmployeeRepository implements PortalEmployeeRepositoryInterface
             ->where('status', 'active')
             ->first();
     }
+
+    /**
+     * Update employee record with translations.
+     *
+     * @param Employee $employee
+     * @param array $data
+     * @return Employee
+     */
+    public function update(Employee $employee, array $data): Employee
+    {
+        $employee->update($data);
+        return $employee->fresh($this->relations);
+    }
 }

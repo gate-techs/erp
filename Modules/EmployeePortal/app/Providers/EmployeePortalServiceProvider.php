@@ -67,6 +67,16 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
             \Modules\EmployeePortal\Services\Contracts\PortalPwaServiceInterface::class,
             \Modules\EmployeePortal\Services\PortalPwaService::class
         );
+
+        $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalProfileService::class
+        );
+
+        $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalLeaveService::class
+        );
     }
 
     /**

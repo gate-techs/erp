@@ -41,7 +41,42 @@ class PermissionSeeder extends Seeder
             ],
 
             // ==========================================
-            // 2. Human Resources Module (الموارد البشرية)
+            // 2. Academic Module (الإدارة الأكاديمية)
+            // ==========================================
+            'academic_years' => [
+                'academic.years.view',
+                'academic.years.create',
+                'academic.years.edit',
+                'academic.years.delete',
+                'academic.years.toggle-status',
+                'academic.years.set-current',
+            ],
+            'academic_stages' => [
+                'academic.stages.view',
+                'academic.stages.create',
+                'academic.stages.edit',
+                'academic.stages.delete',
+                'academic.stages.toggle-status',
+            ],
+            'academic_classes' => [
+                'academic.classes.view',
+                'academic.classes.create',
+                'academic.classes.edit',
+                'academic.classes.delete',
+                'academic.classes.toggle-status',
+            ],
+            'academic_subjects' => [
+                'academic.subjects.view',
+                'academic.subjects.create',
+                'academic.subjects.edit',
+                'academic.subjects.delete',
+                'academic.subjects.toggle-status',
+                'academic.subjects.clone',
+                'academic.subjects.board',
+            ],
+
+            // ==========================================
+            // 3. Human Resources Module (الموارد البشرية)
             // ==========================================
             'hr_dashboard' => [
                 'hr.dashboard.view',

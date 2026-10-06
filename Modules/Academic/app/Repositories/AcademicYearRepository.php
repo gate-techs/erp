@@ -12,14 +12,14 @@ class AcademicYearRepository implements AcademicYearRepositoryInterface
     public function getAll(array $filters = []): Collection
     {
         return $this->getDataTableQuery($filters)
-            ->with('creator')
+            ->with(['creator', 'translations', 'institution'])
             ->get();
     }
 
     public function getDataTableQuery(array $filters = []): Builder
     {
         $query = AcademicYear::query()
-            ->with('creator')
+            ->with(['creator', 'translations', 'institution'])
             ->orderByDesc('start_date')
             ->orderByDesc('id');
 
@@ -32,7 +32,7 @@ class AcademicYearRepository implements AcademicYearRepositoryInterface
 
     public function findById(int $id): ?AcademicYear
     {
-        return AcademicYear::with('creator')->find($id);
+        return AcademicYear::with(['creator', 'translations', 'institution'])->find($id);
     }
 
     public function create(array $data): AcademicYear

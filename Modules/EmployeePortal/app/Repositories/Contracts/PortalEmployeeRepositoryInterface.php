@@ -20,4 +20,13 @@ interface PortalEmployeeRepositoryInterface
      * @return Employee|null
      */
     public function getActiveFallback(): ?Employee;
+
+    /**
+     * Update employee record with translations.
+     *
+     * @param Employee $employee
+     * @param array $data
+     * @return Employee
+     */
+    public function update(Employee $employee, array $data): Employee;
 }

@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Modules\Academic\Http\Requests\StoreAcademicStageRequest;
 use Modules\Academic\Http\Requests\UpdateAcademicStageRequest;
 use Modules\Academic\Models\AcademicStage;
 use Modules\Academic\Services\AcademicStageService;
+use Modules\Nursery\Models\Nursery;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicStageController extends Controller
@@ -18,25 +20,31 @@ class AcademicStageController extends Controller
         protected AcademicStageService $service
     ) {}
 
+    public function index(): View
+    {
+        $institutions = Nursery::with('translations')->get();
+        $statuses = AcademicStage::statuses();
+
+        return view('academic::academic-stages.index', compact('institutions', 'statuses'));
+    }
+
     public function data(Request $request): JsonResponse
     {
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
-            ->addColumn('stage_info', function (AcademicStage $item) {
-                $name = $item->translate(app()->getLocale())?->name
-                    ?? $item->translate('ar')?->name
-                    ?? $item->translate('en')?->name
-                    ?? '-';
-
-                return '<div class="d-flex flex-column">
-                    <span class="text-heading fw-semibold">' . e($name) . '</span>
-                    <small class="text-muted">' . e($item->code) . '</small>
-                </div>';
+            ->addColumn('name', function (AcademicStage $item) {
+                return e(
+                    $item->translate(app()->getLocale())?->name
+                        ?? $item->translate('ar')?->name
+                        ?? $item->translate('en')?->name
+                        ?? '-'
+                );
             })
+            ->addColumn('institution_name', fn (AcademicStage $item) => e($item->institution?->name ?? '-'))
             ->addColumn('age_range', fn (AcademicStage $item) => $this->ageRange($item))
             ->addColumn('status_badge', fn (AcademicStage $item) => $this->statusBadge($item))
             ->addColumn('actions', fn (AcademicStage $item) => $this->actionsColumn($item))
-            ->rawColumns(['stage_info', 'age_range', 'status_badge', 'actions'])
+            ->rawColumns(['age_range', 'status_badge', 'actions'])
             ->make(true);
     }
 
@@ -132,6 +140,10 @@ class AcademicStageController extends Controller
         );
 
         return '<div class="d-inline-flex gap-1">
+            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-stage"
+                data-id="' . $academicStage->id . '" title="' . e(__('Edit')) . '">
+                <i class="icon-base bx bx-edit"></i>
+            </button>
             <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-stage-status"
                 data-id="' . $academicStage->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>

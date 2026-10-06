@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(\Modules\HR\Database\Seeders\HRDatabaseSeeder::class);
         $this->call(\Modules\Accounting\Database\Seeders\AccountingDatabaseSeeder::class);
         $this->call(\Modules\Inventory\Database\Seeders\InventoryDatabaseSeeder::class);
+        $this->call(\Modules\Academic\Database\Seeders\AcademicDatabaseSeeder::class);
     }
 }

@@ -31,6 +31,8 @@ class AcademicClass extends Model implements TranslatableContract
         'academic_year_id',
         'academic_stage_id',
         'capacity',
+        'color',
+        'image',
         'status',
         'created_by',
     ];
@@ -53,6 +55,61 @@ class AcademicClass extends Model implements TranslatableContract
             self::STATUS_ACTIVE,
             self::STATUS_INACTIVE,
         ];
+    }
+
+    protected $appends = [
+        'name_ar',
+        'name_en',
+        'description_ar',
+        'description_en',
+        'image_url',
+    ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+
+        if (str_starts_with($this->image, 'assets/')) {
+            return asset($this->image);
+        }
+
+        return asset('storage/' . $this->image);
+    }
+
+    public function getNameArAttribute(): ?string
+    {
+        return $this->translate('ar')?->name;
+    }
+
+    public function getNameEnAttribute(): ?string
+    {
+        return $this->translate('en')?->name;
+    }
+
+    public function getDescriptionArAttribute(): ?string
+    {
+        return $this->translate('ar')?->description;
+    }
+
+    public function getDescriptionEnAttribute(): ?string
+    {
+        return $this->translate('en')?->description;
+    }
+
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Nursery\Models\Nursery::class, 'institution_id');
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Nursery\Models\NurseryBranch::class, 'branch_id');
     }
 
     public function academicYear(): BelongsTo

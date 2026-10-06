@@ -3,6 +3,7 @@
 namespace Modules\Academic\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Modules\Academic\Http\Requests\StoreAcademicYearRequest;
 use Modules\Academic\Http\Requests\UpdateAcademicYearRequest;
 use Modules\Academic\Models\AcademicYear;
 use Modules\Academic\Services\AcademicYearService;
+use Modules\Nursery\Models\Nursery;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicYearController extends Controller
@@ -18,15 +20,41 @@ class AcademicYearController extends Controller
         protected AcademicYearService $service
     ) {}
 
+    public function index(): View
+    {
+        $institutions = Nursery::all();
+        $statuses = AcademicYear::statuses();
+
+        return view('academic::academic-years.index', compact('institutions', 'statuses'));
+    }
+
     public function data(Request $request): JsonResponse
     {
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
+            ->addColumn('name', fn (AcademicYear $item) => e(
+                $item->translate(app()->getLocale())?->name
+                    ?? $item->translate('ar')?->name
+                    ?? $item->translate('en')?->name
+                    ?? '-'
+            ))
+            ->addColumn('institution_name', fn (AcademicYear $item) => e($item->institution?->name ?? '-'))
+            ->editColumn('code', fn (AcademicYear $item) => '<span class="badge bg-label-primary font-monospace">' . e($item->code) . '</span>')
             ->editColumn('start_date', fn (AcademicYear $item) => $item->start_date?->format('Y-m-d') ?? '-')
             ->editColumn('end_date', fn (AcademicYear $item) => $item->end_date?->format('Y-m-d') ?? '-')
-            ->addColumn('status_label', fn (AcademicYear $item) => __($item->status))
+            ->addColumn('is_current_badge', fn (AcademicYear $item) => $item->is_current
+                ? '<span class="badge bg-label-success"><i class="bx bx-check me-1"></i>' . __('Yes') . '</span>'
+                : '<span class="badge bg-label-secondary">' . __('No') . '</span>'
+            )
+            ->addColumn('status_badge', fn (AcademicYear $item) => match ($item->status) {
+                AcademicYear::STATUS_ACTIVE => '<span class="badge bg-label-success">' . __('Active') . '</span>',
+                AcademicYear::STATUS_DRAFT => '<span class="badge bg-label-warning">' . __('Draft') . '</span>',
+                AcademicYear::STATUS_CLOSED => '<span class="badge bg-label-danger">' . __('Closed') . '</span>',
+                AcademicYear::STATUS_ARCHIVED => '<span class="badge bg-label-dark">' . __('Archived') . '</span>',
+                default => '<span class="badge bg-label-secondary">' . e($item->status) . '</span>',
+            })
             ->addColumn('actions', fn (AcademicYear $item) => $this->actionsColumn($item))
-            ->rawColumns(['actions'])
+            ->rawColumns(['code', 'is_current_badge', 'status_badge', 'actions'])
             ->make(true);
     }
 
@@ -111,17 +139,23 @@ class AcademicYearController extends Controller
                 ?? __('Academic Year')
         );
 
+        $isCurrent = (bool) $academicYear->is_current;
+
         return '<div class="d-inline-flex gap-1">
+            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-year"
+                data-id="' . $academicYear->id . '" title="' . e(__('Edit')) . '">
+                <i class="icon-base bx bx-edit"></i>
+            </button>
             <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-year-status"
                 data-id="' . $academicYear->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>
             </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-success btn-set-current-academic-year"
-                data-id="' . $academicYear->id . '" title="' . e(__('Set as current')) . '">
+            <button type="button" class="btn btn-icon btn-sm ' . ($isCurrent ? 'btn-success' : 'btn-outline-success') . ' btn-set-current-academic-year"
+                data-id="' . $academicYear->id . '" title="' . e(__('Set as current')) . '" ' . ($isCurrent ? 'disabled' : '') . '>
                 <i class="icon-base bx bx-check-circle"></i>
             </button>
             <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-year"
-                data-id="' . $academicYear->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '">
+                data-id="' . $academicYear->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '" ' . ($isCurrent ? 'disabled' : '') . '>
                 <i class="icon-base bx bx-trash"></i>
             </button>
         </div>';

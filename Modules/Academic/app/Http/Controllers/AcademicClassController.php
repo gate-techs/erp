@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Modules\Academic\Http\Requests\StoreAcademicClassRequest;
 use Modules\Academic\Http\Requests\UpdateAcademicClassRequest;
 use Modules\Academic\Models\AcademicClass;
+use Modules\Academic\Models\AcademicStage;
+use Modules\Academic\Models\AcademicYear;
 use Modules\Academic\Services\AcademicClassService;
+use Modules\Nursery\Models\Nursery;
+use Modules\Nursery\Models\NurseryBranch;
 use Yajra\DataTables\Facades\DataTables;
 
 class AcademicClassController extends Controller
@@ -18,15 +23,85 @@ class AcademicClassController extends Controller
         protected AcademicClassService $service
     ) {}
 
+    public function index(): View
+    {
+        $institutions = Nursery::with('translations')->get();
+        $branches = NurseryBranch::with('translations')->get();
+        $academicYears = AcademicYear::with('translations')->get();
+        $academicStages = AcademicStage::with('translations')->get();
+        $statuses = AcademicClass::statuses();
+
+        return view('academic::academic-classes.index', compact(
+            'institutions',
+            'branches',
+            'academicYears',
+            'academicStages',
+            'statuses'
+        ));
+    }
+
     public function data(Request $request): JsonResponse
     {
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
-            ->addColumn('class_info', fn (AcademicClass $item) => $this->classInfo($item))
-            ->addColumn('context_info', fn (AcademicClass $item) => $this->contextInfo($item))
+            ->addColumn('name', function (AcademicClass $item) {
+                $name = $item->translate(app()->getLocale())?->name
+                    ?? $item->translate('ar')?->name
+                    ?? $item->translate('en')?->name
+                    ?? '-';
+                $imageUrl = $item->image_url;
+                $stageCode = $item->academicStage?->code ?? '';
+                $stageColors = [
+                    'MINITOTS' => '#03c3ec',
+                    'TODDLER' => '#71dd37',
+                    'PRE-K' => '#ffab00',
+                    'KG1' => '#696cff',
+                    'KG2' => '#e83e8c',
+                ];
+                $color = $item->color ?: ($stageColors[$stageCode] ?? '#696cff');
+
+                if ($imageUrl) {
+                    $avatar = '<div class="avatar avatar-sm me-2 rounded flex-shrink-0" style="width: 36px; height: 36px;">
+                        <img src="' . e($imageUrl) . '" alt="' . e($name) . '" class="w-100 h-100 rounded object-fit-cover">
+                    </div>';
+                } else {
+                    $initial = $stageCode ? strtoupper(substr($stageCode, 0, 4)) : strtoupper(substr($name, 0, 2));
+                    $avatar = '<div class="avatar avatar-sm me-2 rounded d-flex align-items-center justify-content-center flex-shrink-0 text-white fw-bold shadow-xs" style="width: 36px; height: 36px; background-color: ' . e($color) . '; font-size: 11px; letter-spacing: 0.5px;">'
+                        . e($initial) .
+                    '</div>';
+                }
+
+                return '<div class="d-flex align-items-center">' . $avatar . '<span class="fw-semibold text-heading">' . e($name) . '</span></div>';
+            })
+            ->addColumn('institution_name', fn (AcademicClass $item) => e($item->institution?->name ?? '-'))
+            ->addColumn('branch_name', fn (AcademicClass $item) => e(
+                $item->branch?->translate(app()->getLocale())?->name
+                    ?? $item->branch?->translate('ar')?->name
+                    ?? $item->branch?->translate('en')?->name
+                    ?? '-'
+            ))
+            ->addColumn('stage_name', function (AcademicClass $item) {
+                return e(
+                    $item->academicStage?->translate(app()->getLocale())?->name
+                        ?? $item->academicStage?->translate('ar')?->name
+                        ?? $item->academicStage?->translate('en')?->name
+                        ?? $item->academicStage?->code
+                        ?? '-'
+                );
+            })
+            ->addColumn('year_name', function (AcademicClass $item) {
+                return e(
+                    $item->academicYear?->translate(app()->getLocale())?->name
+                        ?? $item->academicYear?->translate('ar')?->name
+                        ?? $item->academicYear?->translate('en')?->name
+                        ?? $item->academicYear?->code
+                        ?? '-'
+                );
+            })
+            ->addColumn('capacity_text', fn (AcademicClass $item) => $item->capacity ? e((string) $item->capacity) : '<span class="text-muted">' . e(__('Unlimited')) . '</span>')
             ->addColumn('status_badge', fn (AcademicClass $item) => $this->statusBadge($item))
             ->addColumn('actions', fn (AcademicClass $item) => $this->actionsColumn($item))
-            ->rawColumns(['class_info', 'context_info', 'status_badge', 'actions'])
+            ->rawColumns(['name', 'capacity_text', 'status_badge', 'actions'])
             ->make(true);
     }
 
@@ -134,6 +209,10 @@ class AcademicClassController extends Controller
         );
 
         return '<div class="d-inline-flex gap-1">
+            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-class"
+                data-id="' . $academicClass->id . '" title="' . e(__('Edit')) . '">
+                <i class="icon-base bx bx-edit"></i>
+            </button>
             <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-class-status"
                 data-id="' . $academicClass->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>

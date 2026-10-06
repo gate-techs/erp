@@ -1,0 +1,20 @@
+<?php
+
+namespace Modules\Academic\Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class AcademicDatabaseSeeder extends Seeder
+{
+    /**
+     * Run the database seeds for Academic Module.
+     */
+    public function run(): void
+    {
+        $this->call([
+            AcademicPermissionSeeder::class,
+            AcademicStageDatabaseSeeder::class,
+            AcademicClassDatabaseSeeder::class,
+        ]);
+    }
+}

@@ -19,7 +19,7 @@ class AcademicStageRepository implements AcademicStageRepositoryInterface
     public function getDataTableQuery(array $filters = []): Builder
     {
         $query = AcademicStage::query()
-            ->with(['translations', 'creator'])
+            ->with(['translations', 'creator', 'institution'])
             ->orderByDesc('id');
 
         $this->applyInstitutionFilter($query, $filters);
@@ -31,19 +31,19 @@ class AcademicStageRepository implements AcademicStageRepositoryInterface
 
     public function findById(int $id): ?AcademicStage
     {
-        return AcademicStage::with(['translations', 'creator'])->find($id);
+        return AcademicStage::with(['translations', 'creator', 'institution'])->find($id);
     }
 
     public function create(array $data): AcademicStage
     {
-        return AcademicStage::create($data)->load(['translations', 'creator']);
+        return AcademicStage::create($data)->load(['translations', 'creator', 'institution']);
     }
 
     public function update(AcademicStage $academicStage, array $data): AcademicStage
     {
         $academicStage->update($data);
 
-        return $academicStage->fresh(['translations', 'creator']);
+        return $academicStage->fresh(['translations', 'creator', 'institution']);
     }
 
     public function delete(AcademicStage $academicStage): bool

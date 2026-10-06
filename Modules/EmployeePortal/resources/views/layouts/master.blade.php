@@ -21,10 +21,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Cairo & Inter) -->
+    <!-- Google Fonts (Tajawal & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
 
     <!-- Boxicons CDN -->
@@ -54,10 +54,11 @@
             -webkit-tap-highlight-color: transparent;
             margin: 0;
             padding: 0;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Tajawal', sans-serif" : "'Tajawal', 'Inter', sans-serif" }};
         }
 
         body {
-            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', 'Cairo', sans-serif" }};
+            font-family: {{ app()->getLocale() === 'ar' ? "'Tajawal', sans-serif" : "'Tajawal', 'Inter', sans-serif" }};
             background-color: var(--portal-bg);
             color: #1F2937;
             margin: 0;
@@ -388,7 +389,8 @@
             $greetingTime = $currentHour < 12 ? __('Good Morning') : __('Good Evening');
         @endphp
 
-        <!-- Top Mobile App Header matching design -->
+        <!-- Top Mobile App Header matching design (only on dashboard / main screen) -->
+        @if(request()->routeIs('portal.dashboard') || (isset($showPortalHeader) && $showPortalHeader))
         <header class="portal-header">
             <!-- Date Badge & Status Badge Row -->
             <div class="header-top-badges">
@@ -443,24 +445,10 @@
                 </a>
             </div>
         </header>
+        @endif
 
         <!-- Main Content Container -->
         <main id="portalMainContent" class="container-fluid px-3 pt-1">
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show rounded-4 py-2 px-3 fs-7" role="alert">
-                    <i class="bx bx-error me-1"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show rounded-4 py-2 px-3 fs-7" role="alert">
-                    <i class="bx bx-check-circle me-1"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
             @yield('content')
         </main>
 
@@ -476,9 +464,10 @@
             </a>
 
             <!-- 2. الطلبات (Requests) with yellow dot badge -->
-            <a href="javascript:void(0)" class="portal-nav-tab" onclick="alert('{{ __('Requests screen is under development') }}')">
+            <a href="{{ route('portal.requests', [], false) }}"
+                class="portal-nav-tab {{ request()->routeIs('portal.requests') ? 'active' : '' }}">
                 <div class="tab-icon-wrapper">
-                    <i class="bx bx-receipt"></i>
+                    <i class="bx {{ request()->routeIs('portal.requests') ? 'bxs-receipt' : 'bx-receipt' }}"></i>
                     <span class="dot-badge"></span>
                 </div>
                 <span>{{ __('Requests') }}</span>
@@ -508,6 +497,9 @@
 
     <!-- PWA Install Prompt & Service Worker Component -->
     @include('employeeportal::components.pwa-installer')
+
+    <!-- Animated Mobile Toast (Success / Error) Component -->
+    @include('employeeportal::components.portal-toast')
 
     @stack('scripts')
 </body>

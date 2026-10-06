@@ -107,6 +107,10 @@ class AcademicClassService
 
     private function prepareCreateData(array $data, ?int $userId): array
     {
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['image'] = $data['image']->store('academic-classes', 'public');
+        }
+
         return array_merge([
             'status' => AcademicClass::STATUS_ACTIVE,
             'created_by' => $userId,
@@ -115,6 +119,10 @@ class AcademicClassService
 
     private function mergeWithExistingData(AcademicClass $academicClass, array $data): array
     {
+        if (isset($data['image']) && $data['image'] instanceof \Illuminate\Http\UploadedFile) {
+            $data['image'] = $data['image']->store('academic-classes', 'public');
+        }
+
         return array_merge([
             'institution_id' => $academicClass->institution_id,
             'branch_id' => $academicClass->branch_id,
@@ -125,6 +133,8 @@ class AcademicClassService
             'description_ar' => $academicClass->translate('ar')?->description,
             'description_en' => $academicClass->translate('en')?->description,
             'capacity' => $academicClass->capacity,
+            'color' => $academicClass->color,
+            'image' => $academicClass->image,
             'status' => $academicClass->status,
         ], $data);
     }

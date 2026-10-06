@@ -7,7 +7,8 @@ use Modules\Academic\Repositories\Contracts\AcademicClassRepositoryInterface;
 use Modules\Academic\Repositories\AcademicStageRepository;
 use Modules\Academic\Repositories\Contracts\AcademicStageRepositoryInterface;
 use Modules\Academic\Repositories\AcademicYearRepository;
-use Modules\Academic\Repositories\Contracts\AcademicYearRepositoryInterface;
+use Modules\Academic\Repositories\AcademicSubjectRepository;
+use Modules\Academic\Repositories\Contracts\AcademicSubjectRepositoryInterface;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class AcademicServiceProvider extends ModuleServiceProvider
@@ -44,6 +45,11 @@ class AcademicServiceProvider extends ModuleServiceProvider
         $this->app->bind(
             AcademicClassRepositoryInterface::class,
             AcademicClassRepository::class
+        );
+
+        $this->app->bind(
+            AcademicSubjectRepositoryInterface::class,
+            AcademicSubjectRepository::class
         );
     }
 }

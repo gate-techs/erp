@@ -74,6 +74,29 @@ class AcademicYear extends Model implements TranslatableContract
         ];
     }
 
+    protected $appends = [
+        'name_ar',
+        'name_en',
+    ];
+
+    public function getNameArAttribute(): ?string
+    {
+        return $this->translate('ar')?->name;
+    }
+
+    public function getNameEnAttribute(): ?string
+    {
+        return $this->translate('en')?->name;
+    }
+
+    /**
+     * The educational institution (nursery/school) that owns this academic year.
+     */
+    public function institution(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Nursery\Models\Nursery::class, 'institution_id');
+    }
+
     /**
      * The user who created the academic year.
      */

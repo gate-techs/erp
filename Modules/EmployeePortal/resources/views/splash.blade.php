@@ -19,10 +19,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Cairo & Inter) -->
+    <!-- Google Fonts (Tajawal & Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
         * {
@@ -31,6 +31,7 @@
             padding: 0;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            font-family: {{ app()->getLocale() === 'ar' ? "'Tajawal', sans-serif" : "'Tajawal', 'Inter', sans-serif" }};
         }
 
         html {
@@ -53,7 +54,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif" }};
+            font-family: {{ app()->getLocale() === 'ar' ? "'Tajawal', sans-serif" : "'Tajawal', 'Inter', sans-serif" }};
             color: #ffffff;
             display: flex;
             flex-direction: column;

@@ -58,96 +58,189 @@
         font-size: 18px;
     }
 
-    /* Hero Profile Card */
+    /* Hero Profile Card - Custom Figma Spec */
     .profile-hero-card {
-        background: linear-gradient(135deg, #00334B 0%, #004B6B 100%);
+        width: 100%;
+        margin: 0 0 16px 0;
+        background: linear-gradient(135deg, #053146 0%, #00334B 50%, #0C4663 100%);
         border-radius: 24px;
-        padding: 24px 20px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 14px;
+        box-shadow: 0px 2px 6px -1px rgba(0, 51, 75, 0.03), 0px 4px 20px -2px rgba(0, 51, 75, 0.06);
         color: #ffffff;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 51, 75, 0.22);
-        margin-bottom: 18px;
         position: relative;
         overflow: hidden;
+        box-sizing: border-box;
     }
 
-    .profile-hero-card::after {
-        content: '';
-        position: absolute;
-        top: -40px;
-        left: -40px;
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(253, 187, 34, 0.15) 0%, transparent 70%);
-        pointer-events: none;
+    .profile-hero-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        direction: rtl;
+    }
+
+    [dir="ltr"] .profile-hero-top {
+        direction: ltr;
+    }
+
+    .profile-hero-info {
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+    }
+
+    [dir="ltr"] .profile-hero-info {
+        text-align: left;
+    }
+
+    .profile-name {
+        font-size: 16.5px;
+        font-weight: 800;
+        color: #FDBB22;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-job-title {
+        font-size: 12px;
+        color: #E2E8F0;
+        font-weight: 600;
+        margin-bottom: 4px;
+        line-height: 1.35;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .profile-location-sub {
+        font-size: 11px;
+        color: #94A3B8;
+        font-weight: 500;
+        line-height: 1.3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .profile-avatar-wrapper {
         position: relative;
-        width: 86px;
-        height: 86px;
-        margin: 0 auto 12px auto;
+        width: 76px;
+        height: 76px;
+        flex-shrink: 0;
     }
 
     .profile-avatar-img {
-        width: 86px;
-        height: 86px;
-        border-radius: 50%;
+        width: 76px;
+        height: 76px;
+        border-radius: 18px;
         object-fit: cover;
-        border: 3.5px solid #ffffff;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        border: 2.5px solid #FDBB22;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        display: block;
     }
 
-    .profile-online-badge {
+    .profile-camera-btn {
         position: absolute;
-        bottom: 2px;
-        left: 4px;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #10B981;
-        border: 2.5px solid #00334B;
+        bottom: -3px;
+        left: -3px;
+        width: 26px;
+        height: 26px;
+        border-radius: 9px;
+        background: #FDBB22;
+        color: #00334B;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        border: 2px solid #00334B;
+        cursor: pointer;
+        transition: transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
-    .profile-name {
-        font-size: 19px;
-        font-weight: 800;
-        margin: 0 0 4px 0;
-        letter-spacing: -0.2px;
+    [dir="ltr"] .profile-camera-btn {
+        left: auto;
+        right: -3px;
     }
 
-    .profile-job-title {
-        font-size: 13px;
+    .profile-camera-btn:hover {
+        transform: scale(1.08);
+    }
+
+    /* 3 Compact Metric Pills */
+    .profile-hero-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        direction: rtl;
+    }
+
+    [dir="ltr"] .profile-hero-stats {
+        direction: ltr;
+    }
+
+    .profile-stat-box {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 14px;
+        padding: 8px 4px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        min-height: 48px;
+    }
+
+    .profile-stat-label {
+        font-size: 9.5px;
+        color: #94A3B8;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .profile-stat-val {
+        font-size: 11.5px;
+        color: #FFFFFF;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* Bottom Edit Action Button */
+    .profile-hero-edit-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 14px;
+        padding: 9px 12px;
         color: #E2E8F0;
+        font-size: 12px;
         font-weight: 600;
-        margin-bottom: 12px;
-    }
-
-    .profile-badges-row {
+        text-decoration: none;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
     }
 
-    .profile-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 11.5px;
-        font-weight: 700;
-        color: #ffffff;
+    .profile-hero-edit-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(253, 187, 34, 0.5);
+        color: #FFFFFF;
     }
 
-    .profile-pill-gold {
-        background: rgba(253, 187, 34, 0.2);
-        border-color: rgba(253, 187, 34, 0.4);
+    .profile-hero-edit-btn i {
         color: #FDBB22;
+        font-size: 15px;
     }
 
     /* Section Card */
@@ -310,23 +403,35 @@
 
     <!-- 2. Hero Profile Card -->
     <div class="profile-hero-card">
-        <div class="profile-avatar-wrapper">
-            <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}" alt="Avatar" class="profile-avatar-img" />
-            <span class="profile-online-badge"></span>
-        </div>
-        <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? __('Employee') }}</h2>
-        <div class="profile-job-title">{{ $employee?->jobTitle?->name ?? __('Staff Member') }}</div>
+        <!-- Top Section: Squircle Avatar (Right) & Info (Left) in RTL -->
+        <div class="profile-hero-top">
+            <div class="profile-avatar-wrapper">
+                <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}" alt="Avatar" class="profile-avatar-img" />
+                <button type="button" class="profile-camera-btn" title="{{ __('Change Photo') }}" onclick="document.getElementById('avatar-upload-input')?.click()">
+                    <i class="bx bxs-camera"></i>
+                </button>
+            </div>
 
-        <div class="profile-badges-row">
-            <span class="profile-pill profile-pill-gold">
-                <i class="bx bx-id-card"></i>
-                <span>{{ $employee?->employee_code ?? 'EMP-' . (auth()->id() ?? '101') }}</span>
-            </span>
-            <span class="profile-pill">
-                <i class="bx bx-building-house"></i>
-                <span>{{ __('Astro Leaders') }}</span>
-            </span>
+            <div class="profile-hero-info">
+                <h2 class="profile-name">{{ $employee?->name ?? auth()->user()?->name ?? 'Nourah Al-Kandari' }}</h2>
+                <div class="profile-job-title">
+                    {{ $employee?->jobTitle?->name ?? __('Kindergarten Teacher') }}
+                    • {{ __('Astronauts Class') }}
+                </div>
+                <div class="profile-location-sub">
+                    {{ __('Hawally Main Branch') }} • {{ __('State of Kuwait') }}
+                </div>
+            </div>
         </div>
+
+        <!-- Middle Section: 3 Stats Cards -->
+        
+
+        <!-- Bottom Action: Edit Personal & Contact Data -->
+        <a href="{{ route('portal.profile.edit') }}" class="profile-hero-edit-btn">
+            <i class="bx bx-edit-alt"></i>
+            <span>{{ __('Edit Personal & Contact Data') }}</span>
+        </a>
     </div>
 
     <!-- 3. Personal & Contact Information -->
@@ -373,7 +478,7 @@
                 <i class="bx bx-sun"></i>
                 <span>{{ __('Current Shift') }}</span>
             </span>
-            <span class="info-value info-value-rtl">{{ $employee?->shift?->name ?? __('Kindergarten Teacher') }}</span>
+            <span class="info-value info-value-rtl">{{ $employee?->shift?->name ?? __('Morning Duty (06:45 AM - 01:45 PM)') }}</span>
         </div>
 
         <div class="info-list-item">
@@ -381,7 +486,7 @@
                 <i class="bx bx-stopwatch"></i>
                 <span>{{ __('Grace Period') }}</span>
             </span>
-            <span class="info-value info-value-rtl">{{ __('15 minutes (until 07:45 AM)') }}</span>
+            <span class="info-value info-value-rtl">{{ __('15 minutes (until 07:00 AM)') }}</span>
         </div>
 
         <div class="info-list-item">
@@ -405,7 +510,7 @@
         <div class="info-list-item">
             <span class="info-label">
                 <i class="bx bx-transfer-alt"></i>
-                <span>{{ app()->getLocale() === 'ar' ? 'اللغة الحالية: العربية' : 'Current Language: English' }}</span>
+                <span>{{ app()->getLocale() === 'ar' ? __('Current Language: Arabic') : __('Current Language: English') }}</span>
             </span>
             @if(app()->getLocale() === 'ar')
                 <a href="{{ route('lang.swap', 'en') }}" class="lang-switch-badge lang-switch-btn">

@@ -23,7 +23,9 @@ class EmployeePortalController extends Controller
     public function __construct(
         protected PortalAuthServiceInterface $authService,
         protected PortalAttendanceServiceInterface $attendanceService,
-        protected PortalPwaServiceInterface $pwaService
+        protected PortalPwaServiceInterface $pwaService,
+        protected \Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface $profileService,
+        protected \Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface $leaveService
     ) {}
 
     //==========================================================================
@@ -134,6 +136,123 @@ class EmployeePortalController extends Controller
             'employee' => $employee,
             'user'     => Auth::user(),
         ]);
+    }
+
+    /**
+     * Render Edit Profile Screen (تعديل المعلومات الشخصية).
+     */
+    public function editProfile(): View
+    {
+        $data = $this->profileService->getProfileEditData(Auth::user());
+
+        return view('employeeportal::edit-profile', [
+            'employee' => $data['employee'],
+            'user'     => $data['user'],
+            'branches' => $data['branches'] ?? [],
+        ]);
+    }
+
+    /**
+     * Update Profile Data (حفظ التغييرات).
+     */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name_ar'                   => 'nullable|string|max:190',
+            'name_en'                   => 'nullable|string|max:190',
+            'date_of_birth'             => 'nullable|date',
+            'nationality'               => 'nullable|string|max:100',
+            'marital_status'            => 'nullable|string|max:50',
+            'primary_branch_id'         => 'nullable|exists:nursery_branches,id',
+            'phone'                     => 'nullable|string|max:30',
+            'alternate_phone'           => 'nullable|string|max:30',
+            'email'                     => 'nullable|email|max:190',
+            'emergency_contact_name'    => 'nullable|string|max:190',
+            'emergency_contact_relation'=> 'nullable|string|max:100',
+            'emergency_contact_phone'   => 'nullable|string|max:30',
+            'avatar'                    => 'nullable|image|max:4096',
+            'password'                  => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $result = $this->profileService->updateProfile($validated, Auth::user());
+
+        if ($result['success']) {
+            return redirect()->route('portal.profile')->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message'])->withInput();
+    }
+
+    /**
+     * Render Employee Requests Screen (صفحة الطلبات).
+     */
+    public function requests(): View
+    {
+        $employee = $this->attendanceService->resolveCurrentEmployee(Auth::user());
+
+        return view('employeeportal::requests', [
+            'employee' => $employee,
+            'user'     => Auth::user(),
+        ]);
+    }
+
+    /**
+     * Render Submit New Leave Request Screen (طلب إجازة جديد).
+     */
+    public function createLeave(): View
+    {
+        $context = $this->leaveService->getLeaveFormContext(Auth::user());
+
+        return view('employeeportal::leaves.create', [
+            'employee'      => $context['employee'],
+            'user'          => $context['user'],
+            'annualBalance' => $context['annualBalance'],
+            'leaveTypes'    => $context['leaveTypes'],
+        ]);
+    }
+
+    /**
+     * AJAX Real-time working days and balance calculation.
+     */
+    public function calculateLeave(Request $request): JsonResponse
+    {
+        $request->validate([
+            'leave_type' => 'required|string',
+            'start_date' => 'required|date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $result = $this->leaveService->calculateDaysAndBalance(
+            Auth::user(),
+            $request->leave_type,
+            $request->start_date,
+            $request->end_date
+        );
+
+        return response()->json($result);
+    }
+
+    /**
+     * Handle Leave Request Submission.
+     */
+    public function storeLeave(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'leave_type'              => 'required|string',
+            'start_date'              => 'required|date',
+            'end_date'                => 'required|date|after_or_equal:start_date',
+            'emergency_contact_phone' => 'nullable|string|max:30',
+            'reason'                  => 'nullable|string|max:1000',
+            'attachment'              => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $result = $this->leaveService->submitLeaveRequest($validated, Auth::user());
+
+        if ($result['success']) {
+            return redirect()->route('portal.requests')->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message'])->withInput();
     }
 
     //==========================================================================

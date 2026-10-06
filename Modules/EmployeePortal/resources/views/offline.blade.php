@@ -5,13 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>{{ __('No Internet Connection') }} | {{ __('Astro Leaders') }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/{{ app()->getLocale() === 'ar' ? 'bootstrap.rtl.min.css' : 'bootstrap.min.css' }}" rel="stylesheet" />
 
     <style>
         body {
-            font-family: {{ app()->getLocale() === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif" }};
+            font-family: {{ app()->getLocale() === 'ar' ? "'Tajawal', sans-serif" : "'Tajawal', 'Inter', sans-serif" }};
             background-color: #00334B;
             color: #ffffff;
             min-height: 100vh;

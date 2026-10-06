@@ -372,7 +372,7 @@
         color: #FFFFFF;
         font-size: 18px;
         font-weight: 800;
-        font-family: 'Cairo', sans-serif;
+        font-family: 'Tajawal', sans-serif;
     }
 
     .stat-val-status {

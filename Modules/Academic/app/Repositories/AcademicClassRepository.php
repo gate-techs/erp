@@ -12,14 +12,14 @@ class AcademicClassRepository implements AcademicClassRepositoryInterface
     public function getAll(array $filters = []): Collection
     {
         return $this->getDataTableQuery($filters)
-            ->with(['translations', 'academicYear.translations', 'academicStage.translations', 'creator'])
+            ->with(['translations', 'academicYear.translations', 'academicStage.translations', 'creator', 'institution.translations', 'branch.translations'])
             ->get();
     }
 
     public function getDataTableQuery(array $filters = []): Builder
     {
         $query = AcademicClass::query()
-            ->with(['translations', 'academicYear.translations', 'academicStage.translations', 'creator'])
+            ->with(['translations', 'academicYear.translations', 'academicStage.translations', 'creator', 'institution.translations', 'branch.translations'])
             ->orderByDesc('id');
 
         $this->applyScopeFilters($query, $filters);
@@ -36,6 +36,8 @@ class AcademicClassRepository implements AcademicClassRepositoryInterface
             'academicYear.translations',
             'academicStage.translations',
             'creator',
+            'institution.translations',
+            'branch.translations',
         ])->find($id);
     }
 
@@ -46,6 +48,8 @@ class AcademicClassRepository implements AcademicClassRepositoryInterface
             'academicYear.translations',
             'academicStage.translations',
             'creator',
+            'institution',
+            'branch',
         ]);
     }
 
@@ -58,6 +62,8 @@ class AcademicClassRepository implements AcademicClassRepositoryInterface
             'academicYear.translations',
             'academicStage.translations',
             'creator',
+            'institution',
+            'branch',
         ]);
     }
 

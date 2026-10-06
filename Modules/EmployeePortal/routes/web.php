@@ -30,8 +30,20 @@ Route::prefix('portal')->name('portal.')->group(function () {
         // Attendance & GPS Punch Action
         Route::post('attendance/punch', [EmployeePortalController::class, 'recordPunch'])->name('attendance.punch');
 
-        // Profile Screen (الملف الشخصي و زر تسجيل الخروج)
+        // Profile Screen (الملف الشخصي)
         Route::get('profile', [EmployeePortalController::class, 'profile'])->name('profile');
+
+        // Edit Profile Screen & Update (تعديل المعلومات الشخصية)
+        Route::get('profile/edit', [EmployeePortalController::class, 'editProfile'])->name('profile.edit');
+        Route::post('profile/update', [EmployeePortalController::class, 'updateProfile'])->name('profile.update');
+
+        // Requests Screen (صفحة الطلبات)
+        Route::get('requests', [EmployeePortalController::class, 'requests'])->name('requests');
+
+        // Leave Requests (تقديم طلب إجازة)
+        Route::get('leaves/create', [EmployeePortalController::class, 'createLeave'])->name('leaves.create');
+        Route::post('leaves/calculate', [EmployeePortalController::class, 'calculateLeave'])->name('leaves.calculate');
+        Route::post('leaves/store', [EmployeePortalController::class, 'storeLeave'])->name('leaves.store');
     });
 });
 

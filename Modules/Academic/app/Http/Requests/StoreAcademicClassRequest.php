@@ -25,6 +25,8 @@ class StoreAcademicClassRequest extends FormRequest
             'description_ar' => ['nullable', 'string'],
             'description_en' => ['nullable', 'string'],
             'capacity' => ['nullable', 'integer', 'min:0'],
+            'color' => ['nullable', 'string', 'max:30'],
+            'image' => ['nullable'],
             'status' => ['nullable', Rule::in(AcademicClass::statuses())],
         ];
     }
@@ -41,6 +43,8 @@ class StoreAcademicClassRequest extends FormRequest
             'description_ar' => __('Description (Arabic)'),
             'description_en' => __('Description (English)'),
             'capacity' => __('Class capacity'),
+            'color' => __('Color'),
+            'image' => __('Image'),
             'status' => __('Status'),
         ];
     }
