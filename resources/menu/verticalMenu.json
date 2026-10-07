@@ -29,8 +29,16 @@
     },
     {
       "name": "Academic Management",
-      "icon": "menu-icon icon-base bx bxs-graduation",
-      "slug": "academic",
+      "icon": "menu-icon icon-base bx bx-book-open",
+      "slug": [
+        "academic.academic-years",
+        "academic.stages",
+        "academic.classes",
+        "academic.subjects",
+        "academic.lessons",
+        "academic.weekly-plans",
+        "academic.monthly-plans"
+      ],
       "submenu": [
         {
           "name": "Academic Years",
@@ -55,6 +63,46 @@
           "icon": "menu-icon icon-base bx bx-book",
           "slug": "academic.subjects.index",
           "url": "/academic/subjects"
+        },
+        {
+          "name": "Academic Lessons",
+          "icon": "menu-icon icon-base bx bx-book-reader",
+          "slug": "academic.lessons.index",
+          "url": "/academic/lessons"
+        },
+        {
+          "name": "Academic Weekly Plans",
+          "icon": "menu-icon icon-base bx bx-calendar-week",
+          "slug": "academic.weekly-plans.index",
+          "url": "/academic/weekly-plans"
+        },
+        {
+          "name": "Academic Monthly Plans",
+          "icon": "menu-icon icon-base bx bx-calendar-event",
+          "slug": "academic.monthly-plans.index",
+          "url": "/academic/monthly-plans"
+        }
+      ]
+    },
+    {
+      "name": "Fees & Packages",
+      "icon": "menu-icon icon-base bx bx-wallet",
+      "slug": [
+        "academic.fee-types",
+        "academic.fees"
+      ],
+      "submenu": [
+        {
+          "name": "Fee Types",
+          "icon": "menu-icon icon-base bx bx-category",
+          "slug": "academic.fee-types.index",
+          "url": "/academic/fee-types"
+        },
+        {
+          "name": "Academic Fees",
+          "icon": "menu-icon icon-base bx bx-money",
+          "slug": "academic.fees.index",
+          "url": "/academic/fees"
         }
       ]
     },
@@ -620,6 +668,28 @@
       ]
     },
     {
+      "name": "Notifications",
+      "icon": "menu-icon icon-base bx bx-bell",
+      "slug": [
+        "notifications.index",
+        "notifications.broadcasts"
+      ],
+      "submenu": [
+        {
+          "name": "Notifications List",
+          "icon": "menu-icon icon-base bx bx-list-ul",
+          "slug": "notifications.index",
+          "url": "/notifications"
+        },
+        {
+          "name": "General Notifications",
+          "icon": "menu-icon icon-base bx bx-broadcast",
+          "slug": "notifications.broadcasts",
+          "url": "/notifications/broadcasts"
+        }
+      ]
+    },
+    {
       "name": "System Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": [
@@ -671,6 +741,12 @@
           "icon": "menu-icon icon-base bx bx-envelope",
           "slug": "settings.email-templates.index",
           "url": "/settings/email-templates"
+        },
+        {
+          "name": "Notification Templates",
+          "icon": "menu-icon icon-base bx bx-bell",
+          "slug": "settings.notification-templates.index",
+          "url": "/settings/notification-templates"
         },
         {
           "name": "AI Settings",

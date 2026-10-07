@@ -74,6 +74,45 @@ class PermissionSeeder extends Seeder
                 'academic.subjects.clone',
                 'academic.subjects.board',
             ],
+            'academic_lessons' => [
+                'academic.lessons.view',
+                'academic.lessons.create',
+                'academic.lessons.edit',
+                'academic.lessons.delete',
+                'academic.lessons.toggle-status',
+            ],
+            'academic_weekly_plans' => [
+                'academic.weekly-plans.view',
+                'academic.weekly-plans.create',
+                'academic.weekly-plans.edit',
+                'academic.weekly-plans.delete',
+                'academic.weekly-plans.toggle-status',
+            ],
+            'academic_monthly_plans' => [
+                'academic.monthly-plans.view',
+                'academic.monthly-plans.create',
+                'academic.monthly-plans.edit',
+                'academic.monthly-plans.delete',
+                'academic.monthly-plans.toggle-status',
+            ],
+
+            // ==========================================
+            // 2.1 Fees & Packages Module (الرسوم والباقات)
+            // ==========================================
+            'academic_fee_types' => [
+                'academic.fee-types.view',
+                'academic.fee-types.create',
+                'academic.fee-types.edit',
+                'academic.fee-types.delete',
+                'academic.fee-types.toggle-status',
+            ],
+            'academic_fees' => [
+                'academic.fees.view',
+                'academic.fees.create',
+                'academic.fees.edit',
+                'academic.fees.delete',
+                'academic.fees.toggle-status',
+            ],
 
             // ==========================================
             // 3. Human Resources Module (الموارد البشرية)
@@ -559,6 +598,18 @@ class PermissionSeeder extends Seeder
                 'tasks.edit',
                 'tasks.delete',
                 'tasks.toggle-status',
+            ],
+
+            // ==========================================
+            // 10. Notifications Module (الإشعارات)
+            // ==========================================
+            'notifications' => [
+                'notifications.view',
+                'notifications.broadcasts.view',
+                'notifications.broadcasts.create',
+                'notifications.broadcasts.send',
+                'settings.notification-templates.view',
+                'settings.notification-templates.edit',
             ],
         ];
 

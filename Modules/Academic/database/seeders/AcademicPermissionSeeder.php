@@ -50,6 +50,41 @@ class AcademicPermissionSeeder extends Seeder
             'academic.subjects.toggle-status',
             'academic.subjects.clone',
             'academic.subjects.board',
+
+            // 5. Academic Lessons
+            'academic.lessons.view',
+            'academic.lessons.create',
+            'academic.lessons.edit',
+            'academic.lessons.delete',
+            'academic.lessons.toggle-status',
+
+            // 6. Academic Weekly Plans
+            'academic.weekly-plans.view',
+            'academic.weekly-plans.create',
+            'academic.weekly-plans.edit',
+            'academic.weekly-plans.delete',
+            'academic.weekly-plans.toggle-status',
+
+            // 7. Academic Monthly Plans
+            'academic.monthly-plans.view',
+            'academic.monthly-plans.create',
+            'academic.monthly-plans.edit',
+            'academic.monthly-plans.delete',
+            'academic.monthly-plans.toggle-status',
+
+            // 8. Academic Fee Types
+            'academic.fee-types.view',
+            'academic.fee-types.create',
+            'academic.fee-types.edit',
+            'academic.fee-types.delete',
+            'academic.fee-types.toggle-status',
+
+            // 9. Academic Fees
+            'academic.fees.view',
+            'academic.fees.create',
+            'academic.fees.edit',
+            'academic.fees.delete',
+            'academic.fees.toggle-status',
         ];
 
         // Create or update permissions

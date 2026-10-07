@@ -78,5 +78,15 @@ class SettingsServiceProvider extends ModuleServiceProvider
             \Modules\Settings\Repositories\Contracts\PrintTemplateRepositoryInterface::class,
             \Modules\Settings\Repositories\PrintTemplateRepository::class
         );
+
+        $this->app->bind(
+            \Modules\Settings\Repositories\Contracts\NotificationRepositoryInterface::class,
+            \Modules\Settings\Repositories\NotificationRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Settings\Services\Contracts\NotificationServiceInterface::class,
+            \Modules\Settings\Services\NotificationService::class
+        );
     }
 }

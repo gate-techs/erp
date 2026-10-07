@@ -1,0 +1,19 @@
+@extends('layouts/contentNavbarLayout')
+@section('title', __('New General Notification'))
+@section('content')
+<div class="d-flex align-items-center justify-content-between mb-4"><div><h4 class="fw-bold mb-1"><i class="bx bx-broadcast text-primary me-2"></i>{{ __('New General Notification') }}</h4><p class="text-muted mb-0">{{ __('Send a message to a selected audience.') }}</p></div><a href="{{ route('notifications.broadcasts') }}" class="btn btn-outline-secondary btn-sm">{{ __('Back') }}</a></div>
+<form method="POST" action="{{ route('notifications.broadcasts.store') }}" id="broadcastForm">@csrf
+<div class="row g-4"><div class="col-xl-8"><div class="card border-0 shadow-sm mb-3"><div class="card-header"><strong>{{ __('Message Details') }}</strong></div><div class="card-body"><div class="row g-3"><div class="col-md-6"><label class="form-label">{{ __('Title (Arabic)') }}</label><input name="title_ar" class="form-control" required value="{{ old('title_ar') }}"></div><div class="col-md-6"><label class="form-label">{{ __('Title (English)') }}</label><input name="title_en" class="form-control" value="{{ old('title_en') }}"></div><div class="col-md-6"><label class="form-label">{{ __('Message (Arabic)') }}</label><textarea name="message_ar" class="form-control" rows="5" maxlength="5000" required placeholder="{{ __('You can use emojis here 😊') }}">{{ old('message_ar') }}</textarea></div><div class="col-md-6"><label class="form-label">{{ __('Message (English)') }}</label><textarea name="message_en" class="form-control" rows="5" maxlength="5000" placeholder="{{ __('You can use emojis here 😊') }}">{{ old('message_en') }}</textarea></div><div class="col-12"><label class="form-label">{{ __('Action URL (Optional)') }}</label><input name="action_url" class="form-control" placeholder="/portal/dashboard" value="{{ old('action_url') }}"></div></div></div></div><div class="d-flex justify-content-end gap-2"><a href="{{ route('notifications.broadcasts') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a><button class="btn btn-primary"><i class="bx bx-send me-1"></i>{{ __('Save and Send') }}</button></div></div>
+<div class="col-xl-4"><div class="card border-0 shadow-sm"><div class="card-header"><strong>{{ __('Audience and Schedule') }}</strong></div><div class="card-body"><label class="form-label">{{ __('Send To') }}</label><select name="audience_type" class="form-select mb-3" required>@foreach($audiences as $audience)<option value="{{ $audience->value }}" {{ old('audience_type') === $audience->value ? 'selected' : '' }}>{{ $audience->label() }}</option>@endforeach</select><div class="form-check form-switch mb-3"><input class="form-check-input" type="checkbox" name="is_scheduled" id="isScheduled" value="1" {{ old('is_scheduled') ? 'checked' : '' }}><label class="form-check-label" for="isScheduled">{{ __('Schedule notification') }}</label></div><div id="scheduleBox" class="d-none"><label class="form-label">{{ __('Scheduled Date and Time') }}</label><input type="datetime-local" name="scheduled_at" class="form-control" value="{{ old('scheduled_at') }}"><small class="text-muted">{{ __('The message will be saved and sent by the scheduler at this time.') }}</small></div><div class="alert alert-info small mt-3 mb-0"><i class="bx bx-info-circle me-1"></i>{{ __('The message will be sent to all active users in the selected group.') }}</div></div></div></div></div></form>
+@endsection
+@section('page-script')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.getElementById('isScheduled');
+    const box = document.getElementById('scheduleBox');
+    function toggleSchedule() { box.classList.toggle('d-none', !checkbox.checked); }
+    checkbox.addEventListener('change', toggleSchedule);
+    toggleSchedule();
+});
+</script>
+@endsection

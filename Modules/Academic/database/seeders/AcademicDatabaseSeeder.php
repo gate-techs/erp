@@ -15,6 +15,10 @@ class AcademicDatabaseSeeder extends Seeder
             AcademicPermissionSeeder::class,
             AcademicStageDatabaseSeeder::class,
             AcademicClassDatabaseSeeder::class,
+            AcademicSubjectDatabaseSeeder::class,
+            AcademicLessonDatabaseSeeder::class,
+            AcademicWeeklyPlanDatabaseSeeder::class,
+            AcademicMonthlyPlanDatabaseSeeder::class,
         ]);
     }
 }

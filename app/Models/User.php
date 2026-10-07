@@ -69,6 +69,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Browsers/devices registered for Web Push delivery.
+     */
+    public function pushSubscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\Modules\Settings\Models\PushSubscription::class, 'user_id');
+    }
+
+    /**
      * Accessor: Avatar URL with fallback to employee avatar or gender-aware default.
      */
     public function getAvatarUrlAttribute(): string

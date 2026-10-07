@@ -4,6 +4,7 @@ namespace Modules\Settings\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Settings\Models\Setting;
+use Modules\Settings\Database\Seeders\NotificationTemplateSeeder;
 
 class SettingsDatabaseSeeder extends Seeder
 {
@@ -58,6 +59,7 @@ class SettingsDatabaseSeeder extends Seeder
 
         $this->call(GeneralSettingDatabaseSeeder::class);
         $this->call(PrintTemplateSeeder::class);
+        $this->call(NotificationTemplateSeeder::class);
         // $this->call(BankDatabaseSeeder::class); // [موقوف: يتم إضافة البنوك ديناميكياً من ملف الإكسيل عبر EmployeeFromExcelSeeder]
     }
 }

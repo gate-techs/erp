@@ -6,6 +6,13 @@ use Modules\Settings\Http\Controllers\SettingsController;
 use Modules\Settings\Http\Controllers\TranslationController;
 
 Route::middleware(['auth'])->group(function () {
+    // Notifications center
+    Route::get('notifications', [\Modules\Settings\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/broadcasts', [\Modules\Settings\Http\Controllers\NotificationController::class, 'broadcasts'])->name('notifications.broadcasts');
+    Route::get('notifications/broadcasts/data', [\Modules\Settings\Http\Controllers\NotificationController::class, 'broadcastsData'])->name('notifications.broadcasts.data');
+    Route::get('notifications/broadcasts/create', [\Modules\Settings\Http\Controllers\NotificationController::class, 'createBroadcast'])->name('notifications.broadcasts.create');
+    Route::post('notifications/broadcasts', [\Modules\Settings\Http\Controllers\NotificationController::class, 'storeBroadcast'])->name('notifications.broadcasts.store');
+
     // Company / General Settings
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
@@ -38,6 +45,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}/preview', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'preview'])->name('preview');
         Route::post('/{id}/test', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'sendTest'])->name('send-test');
         Route::patch('/{id}/toggle-status', [\Modules\Settings\Http\Controllers\EmailTemplateController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // In-app / PWA Notification Templates Manager
+    Route::prefix('settings/notification-templates')->name('settings.notification-templates.')->group(function () {
+        Route::get('/', [\Modules\Settings\Http\Controllers\NotificationTemplateController::class, 'index'])->name('index');
+        Route::get('/{id}/edit', [\Modules\Settings\Http\Controllers\NotificationTemplateController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\Modules\Settings\Http\Controllers\NotificationTemplateController::class, 'update'])->name('update');
+        Route::patch('/{id}/toggle-status', [\Modules\Settings\Http\Controllers\NotificationTemplateController::class, 'toggleStatus'])->name('toggle-status');
     });
 
     // General Settings Root
