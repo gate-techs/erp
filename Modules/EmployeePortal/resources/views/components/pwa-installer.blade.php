@@ -333,6 +333,7 @@
                 window.portalServiceWorkerRegistration = navigator.serviceWorker.register('{{ route("portal.sw") }}', { scope: '/portal/' })
                     .then((reg) => {
                         console.log('✅ Astro PWA ServiceWorker registered with scope:', reg.scope);
+                        return reg;
                     })
                     .catch((err) => {
                         console.warn('⚠️ Astro PWA ServiceWorker registration failed:', err);
@@ -365,6 +366,9 @@
             }
 
             const registration = await (window.portalServiceWorkerRegistration || navigator.serviceWorker.ready);
+            if (!registration || !registration.pushManager) {
+                throw new Error('{{ __('The notification service is not ready. Please reload the app and try again.') }}');
+            }
             const options = { userVisibleOnly: true };
             if (!pushPublicKey) {
                 throw new Error('{{ __('VAPID public key is not configured.') }}');
