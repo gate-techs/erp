@@ -37,6 +37,9 @@ class NotificationController extends Controller
 
     public function broadcastsData(Request $request): JsonResponse
     {
+
+
+    
         $result = $this->service->getBroadcastData([
             'search' => $request->input('search.value'),
             'start' => (int) $request->input('start', 0),
