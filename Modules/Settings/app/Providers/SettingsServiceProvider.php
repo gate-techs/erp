@@ -85,8 +85,18 @@ class SettingsServiceProvider extends ModuleServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Settings\Repositories\Contracts\PushSubscriptionRepositoryInterface::class,
+            \Modules\Settings\Repositories\PushSubscriptionRepository::class
+        );
+
+        $this->app->bind(
             \Modules\Settings\Services\Contracts\NotificationServiceInterface::class,
             \Modules\Settings\Services\NotificationService::class
+        );
+
+        $this->app->bind(
+            \Modules\Settings\Services\Contracts\PushNotificationServiceInterface::class,
+            \Modules\Settings\Services\PushNotificationService::class
         );
     }
 }

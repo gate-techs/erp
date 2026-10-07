@@ -13,6 +13,7 @@
     "astrotomic/laravel-translatable": "^11.17",
     "laravel/framework": "^12.0",
     "laravel/tinker": "^2.10.1",
+    "minishlink/web-push": "^11.0",
     "nwidart/laravel-modules": "^12.0",
     "phpoffice/phpspreadsheet": "^5.10",
     "spatie/laravel-activitylog": "*",

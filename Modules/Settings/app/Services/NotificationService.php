@@ -8,10 +8,14 @@ use Illuminate\Support\Str;
 use Modules\Settings\Enums\NotificationAudience;
 use Modules\Settings\Repositories\Contracts\NotificationRepositoryInterface;
 use Modules\Settings\Services\Contracts\NotificationServiceInterface;
+use Modules\Settings\Services\Contracts\PushNotificationServiceInterface;
 
 class NotificationService implements NotificationServiceInterface
 {
-    public function __construct(private readonly NotificationRepositoryInterface $repository) {}
+    public function __construct(
+        private readonly NotificationRepositoryInterface $repository,
+        private readonly PushNotificationServiceInterface $pushService
+    ) {}
 
     public function getUserNotifications(int $userId): LengthAwarePaginator
     {
@@ -71,6 +75,10 @@ class NotificationService implements NotificationServiceInterface
                 }
             }
         });
+
+        if (! $scheduled) {
+            $this->pushService->sendToUsers($users->pluck('id')->all(), $payload);
+        }
 
         return ['scheduled' => $scheduled, 'recipients' => $users->count()];
     }
