@@ -100,6 +100,44 @@ self.addEventListener('activate', (event) => {
     );
 });
 
+self.addEventListener('push', (event) => {
+    let payload = { title: 'Astro Leaders', body: 'You have a new notification.' };
+
+    try {
+        if (event.data) payload = event.data.json();
+    } catch (error) {
+        payload.body = event.data ? event.data.text() : payload.body;
+    }
+
+    event.waitUntil(
+        self.registration.showNotification(payload.title || 'Astro Leaders', {
+            body: payload.body || '',
+            icon: '/assets/portal/icon-192.png',
+            badge: '/assets/portal/icon-192.png',
+            data: { url: payload.action_url || '/portal/dashboard' },
+            dir: 'auto',
+            lang: 'ar'
+        })
+    );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const targetUrl = event.notification.data?.url || '/portal/dashboard';
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+            for (const client of clientList) {
+                if ('focus' in client) {
+                    client.navigate(targetUrl);
+                    return client.focus();
+                }
+            }
+            return clients.openWindow(targetUrl);
+        })
+    );
+});
+
 self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
 

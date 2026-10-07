@@ -50,6 +50,18 @@
     </div>
 </div>
 
+@auth
+<div id="pushPermissionBanner" class="push-permission-banner" role="status">
+    <div class="push-permission-icon"><i class="bx bxs-bell-ring"></i></div>
+    <div class="push-permission-content">
+        <div class="push-permission-title">{{ __('Enable notifications') }}</div>
+        <div class="push-permission-desc">{{ __('Receive leave requests, tasks and important updates.') }}</div>
+    </div>
+    <button type="button" id="btnEnablePush" class="btn-enable-push">{{ __('Enable') }}</button>
+    <button type="button" id="btnDismissPush" class="btn-dismiss-push" aria-label="{{ __('Close') }}">&times;</button>
+</div>
+@endauth
+
 <style>
     /* PWA Install Banner Styles */
     .pwa-install-banner {
@@ -284,6 +296,33 @@
         cursor: pointer;
         margin-top: 8px;
     }
+
+    .push-permission-banner {
+        position: fixed; left: 12px; right: 12px; bottom: 132px;
+        max-width: 430px; margin: 0 auto; z-index: 10001;
+        display: none; align-items: center; gap: 10px; padding: 12px;
+        border-radius: 16px; background: #ffffff;
+        box-shadow: 0 12px 32px rgba(0, 30, 45, .24);
+        border: 1px solid rgba(0, 51, 75, .12);
+        direction: {{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }};
+    }
+    .push-permission-banner.show { display: flex !important; }
+    .push-permission-icon {
+        width: 38px; height: 38px; flex: 0 0 38px; display: grid;
+        place-items: center; border-radius: 12px; color: #00334B;
+        background: #FDBB22; font-size: 20px;
+    }
+    .push-permission-content { flex: 1; min-width: 0; }
+    .push-permission-title { color: #00334B; font-weight: 800; font-size: 13px; }
+    .push-permission-desc { color: #64748B; font-size: 11px; line-height: 1.35; }
+    .btn-enable-push {
+        border: 0; border-radius: 9px; padding: 8px 11px; color: #ffffff;
+        background: #00334B; font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .btn-dismiss-push {
+        border: 0; background: transparent; color: #94A3B8;
+        font-size: 20px; line-height: 1; padding: 2px 4px;
+    }
 </style>
 
 <script>
@@ -291,7 +330,7 @@
         // 1. Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('{{ route("portal.sw") }}', { scope: '/portal/' })
+                window.portalServiceWorkerRegistration = navigator.serviceWorker.register('{{ route("portal.sw") }}', { scope: '/portal/' })
                     .then((reg) => {
                         console.log('✅ Astro PWA ServiceWorker registered with scope:', reg.scope);
                     })
@@ -300,6 +339,79 @@
                     });
             });
         }
+
+        @auth
+        // Push permission is requested only after the user clicks Enable.
+        const pushBanner = document.getElementById('pushPermissionBanner');
+        const enablePushBtn = document.getElementById('btnEnablePush');
+        const dismissPushBtn = document.getElementById('btnDismissPush');
+        const pushPublicKey = @json(config('services.vapid.public_key'));
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            return Uint8Array.from([...rawData].map((character) => character.charCodeAt(0)));
+        }
+
+        async function savePushSubscription() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return false;
+
+            if (Notification.permission !== 'granted') {
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') return false;
+            }
+
+            const registration = await (window.portalServiceWorkerRegistration || navigator.serviceWorker.ready);
+            const options = { userVisibleOnly: true };
+            if (pushPublicKey) options.applicationServerKey = urlBase64ToUint8Array(pushPublicKey);
+            const subscription = await registration.pushManager.subscribe(options);
+            const json = subscription.toJSON();
+            const response = await fetch(@json(route('portal.push.subscribe')), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({ endpoint: json.endpoint, keys: json.keys, content_encoding: 'aes128gcm' })
+            });
+
+            if (!response.ok) throw new Error('Push subscription could not be saved.');
+            localStorage.setItem('astro_push_enabled', '1');
+            return true;
+        }
+
+        async function initializePushPrompt() {
+            if (!pushBanner || !enablePushBtn || !('Notification' in window)) return;
+            if (Notification.permission === 'denied' || localStorage.getItem('astro_push_dismissed_at')) return;
+
+            if (Notification.permission === 'granted') {
+                try { await savePushSubscription(); pushBanner.remove(); } catch (error) { console.warn(error); }
+                return;
+            }
+
+            pushBanner.classList.add('show');
+        }
+
+        enablePushBtn?.addEventListener('click', async () => {
+            enablePushBtn.disabled = true;
+            try {
+                if (await savePushSubscription()) pushBanner?.remove();
+                else enablePushBtn.disabled = false;
+            } catch (error) {
+                console.error(error);
+                enablePushBtn.disabled = false;
+            }
+        });
+
+        dismissPushBtn?.addEventListener('click', () => {
+            pushBanner?.classList.remove('show');
+            localStorage.setItem('astro_push_dismissed_at', Date.now().toString());
+        });
+
+        window.addEventListener('load', () => setTimeout(initializePushPrompt, 700));
+        @endauth
 
         // 2. Standalone Check
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;

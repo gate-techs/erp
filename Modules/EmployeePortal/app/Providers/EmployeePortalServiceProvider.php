@@ -52,6 +52,11 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
             \Modules\EmployeePortal\Repositories\PortalAttendanceRepository::class
         );
 
+        $this->app->bind(
+            \Modules\EmployeePortal\Repositories\Contracts\PortalPushSubscriptionRepositoryInterface::class,
+            \Modules\EmployeePortal\Repositories\PortalPushSubscriptionRepository::class
+        );
+
         // 2. Services Bindings
         $this->app->bind(
             \Modules\EmployeePortal\Services\Contracts\PortalAuthServiceInterface::class,
@@ -77,6 +82,11 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
             \Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface::class,
             \Modules\EmployeePortal\Services\PortalLeaveService::class
         );
+
+        $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalPushSubscriptionServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalPushSubscriptionService::class
+        );
     }
 
     /**
@@ -89,4 +99,3 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
         $this->loadJsonTranslationsFrom(__DIR__ . '/../../lang');
     }
 }
-

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\EmployeePortal\Http\Controllers\EmployeePortalController;
+use Modules\EmployeePortal\Http\Controllers\PortalPushSubscriptionController;
 
 Route::prefix('portal')->name('portal.')->group(function () {
     // 0. Entrypoint (Redirects to Splash Every Time App Opens)
@@ -44,6 +45,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('leaves/create', [EmployeePortalController::class, 'createLeave'])->name('leaves.create');
         Route::post('leaves/calculate', [EmployeePortalController::class, 'calculateLeave'])->name('leaves.calculate');
         Route::post('leaves/store', [EmployeePortalController::class, 'storeLeave'])->name('leaves.store');
+
+        Route::post('push-subscriptions', [PortalPushSubscriptionController::class, 'store'])->name('push.subscribe');
+        Route::delete('push-subscriptions', [PortalPushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
     });
 });
-
