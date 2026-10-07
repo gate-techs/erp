@@ -5,6 +5,7 @@ namespace Modules\EmployeePortal\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\EmployeePortal\Services\Contracts\PortalPushSubscriptionServiceInterface;
 
 class PortalPushSubscriptionController extends Controller
@@ -15,6 +16,10 @@ class PortalPushSubscriptionController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        Log::info('Portal push subscription request received', [
+            'user_id' => $request->user()?->id,
+        ]);
+
         $validated = $request->validate([
             'endpoint' => ['required', 'url', 'max:2000'],
             'keys.p256dh' => ['required', 'string', 'max:500'],
@@ -27,6 +32,11 @@ class PortalPushSubscriptionController extends Controller
             'public_key' => $validated['keys']['p256dh'],
             'auth_token' => $validated['keys']['auth'],
             'content_encoding' => $validated['content_encoding'] ?? 'aes128gcm',
+        ]);
+
+        Log::info('Portal push subscription saved', [
+            'user_id' => $request->user()->id,
+            'endpoint_hash' => hash('sha256', $validated['endpoint']),
         ]);
 
         return response()->json([

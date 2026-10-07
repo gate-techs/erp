@@ -355,7 +355,9 @@
         }
 
         async function savePushSubscription() {
-            if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) return false;
+            if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+                throw new Error('{{ __('Push notifications are not supported on this device.') }}');
+            }
 
             if (Notification.permission !== 'granted') {
                 const permission = await Notification.requestPermission();
@@ -364,7 +366,10 @@
 
             const registration = await (window.portalServiceWorkerRegistration || navigator.serviceWorker.ready);
             const options = { userVisibleOnly: true };
-            if (pushPublicKey) options.applicationServerKey = urlBase64ToUint8Array(pushPublicKey);
+            if (!pushPublicKey) {
+                throw new Error('{{ __('VAPID public key is not configured.') }}');
+            }
+            options.applicationServerKey = urlBase64ToUint8Array(pushPublicKey);
             const subscription = await registration.pushManager.subscribe(options);
             const json = subscription.toJSON();
             const response = await fetch(@json(route('portal.push.subscribe')), {
@@ -377,7 +382,11 @@
                 body: JSON.stringify({ endpoint: json.endpoint, keys: json.keys, content_encoding: 'aes128gcm' })
             });
 
-            if (!response.ok) throw new Error('Push subscription could not be saved.');
+            if (!response.ok) {
+                let details = '';
+                try { details = await response.text(); } catch (error) { }
+                throw new Error(`{{ __('Could not save notification subscription.') }} (${response.status}) ${details}`);
+            }
             localStorage.setItem('astro_push_enabled', '1');
             return true;
         }
@@ -387,7 +396,7 @@
             if (Notification.permission === 'denied' || localStorage.getItem('astro_push_dismissed_at')) return;
 
             if (Notification.permission === 'granted') {
-                try { await savePushSubscription(); pushBanner.remove(); } catch (error) { console.warn(error); }
+                try { await savePushSubscription(); pushBanner.remove(); } catch (error) { showPushError(error); }
                 return;
             }
 
@@ -400,10 +409,19 @@
                 if (await savePushSubscription()) pushBanner?.remove();
                 else enablePushBtn.disabled = false;
             } catch (error) {
-                console.error(error);
+                showPushError(error);
                 enablePushBtn.disabled = false;
             }
         });
+
+        function showPushError(error) {
+            const description = pushBanner?.querySelector('.push-permission-desc');
+            if (description) {
+                description.textContent = error?.message || '{{ __('Could not enable notifications.') }}';
+                description.style.color = '#B91C1C';
+            }
+            pushBanner?.classList.add('show');
+        }
 
         dismissPushBtn?.addEventListener('click', () => {
             pushBanner?.classList.remove('show');
