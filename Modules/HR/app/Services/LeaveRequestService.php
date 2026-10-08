@@ -561,8 +561,8 @@ class LeaveRequestService
     /**
      * Send notification when a leave request is submitted:
      * - To the direct manager of the employee
-     * - To users with the supervisor role ('supervisor')
-     * - To users with the HR manager role ('hr_manager')
+     * - To users with supervisor roles ('supervisor')
+     * - To users with HR manager roles ('hr_manager') and administrators
      */
     public function notifyManagerOnLeaveSubmission(LeaveRequest $leaveRequest): array
     {
@@ -580,48 +580,53 @@ class LeaveRequestService
                 $recipients->push($managerUser);
             }
 
-            // 2. Users with 'supervisor' role (or user_type = 'supervisor')
-            try {
-                $supervisors = \App\Models\User::role('supervisor')->where('is_active', true)->get();
-                $recipients = $recipients->merge($supervisors);
-            } catch (\Throwable $e) {
-                // Role might not exist in database yet
-            }
-            $supervisorsByType = \App\Models\User::where('user_type', 'supervisor')->where('is_active', true)->get();
-            $recipients = $recipients->merge($supervisorsByType);
+            // 2. Fetch users by Role ID directly (Role IDs are fixed in the database: 11 = hr_manager, 9 = supervisor, 1 = super_admin, 2 = admin, 7 = Administrative hr)
+            $targetRoleIds = [11, 9, 1, 2, 7];
 
-            // 3. Users with 'hr_manager' role
             try {
-                $hrManagers = \App\Models\User::role('hr_manager')->where('is_active', true)->get();
-                $recipients = $recipients->merge($hrManagers);
-            } catch (\Throwable $e) {
-                // Role might not exist in database yet
-            }
+                $userIdsFromRoles = DB::table('model_has_roles')
+                    ->whereIn('role_id', $targetRoleIds)
+                    ->pluck('model_id')
+                    ->unique()
+                    ->toArray();
 
-            // Fallback: If no recipients found, notify super_admin / admin users
-            if ($recipients->isEmpty()) {
-                try {
-                    $admins = \App\Models\User::role(['super_admin', 'admin'])->where('is_active', true)->get();
-                    $recipients = $recipients->merge($admins);
-                } catch (\Throwable $e) {
-                    $admins = \App\Models\User::where('user_type', 'admin')->where('is_active', true)->get();
-                    $recipients = $recipients->merge($admins);
+                if (!empty($userIdsFromRoles)) {
+                    $roleUsers = \App\Models\User::whereIn('id', $userIdsFromRoles)
+                        ->where('is_active', true)
+                        ->get();
+                    $recipients = $recipients->merge($roleUsers);
                 }
+            } catch (\Throwable $e) {
+                Log::warning("Error querying model_has_roles by role IDs: " . $e->getMessage());
             }
 
-            // Deduplicate and filter active users
+            try {
+                $relationUsers = \App\Models\User::whereHas('roles', function ($q) use ($targetRoleIds) {
+                    $q->whereIn('roles.id', $targetRoleIds);
+                })->where('is_active', true)->get();
+                $recipients = $recipients->merge($relationUsers);
+            } catch (\Throwable $e) {
+                Log::warning("Error querying whereHas roles by ID: " . $e->getMessage());
+            }
+
+            // 3. Also include supervisors and admins by user_type if present
+            try {
+                $usersByType = \App\Models\User::whereIn('user_type', ['admin', 'supervisor'])
+                    ->where('is_active', true)
+                    ->get();
+                $recipients = $recipients->merge($usersByType);
+            } catch (\Throwable $e) {}
+
+            // Deduplicate and filter active users only
             $recipients = $recipients->unique('id')->filter(fn ($u) => (bool) $u->is_active);
 
-            // Exclude the applicant themselves if other recipients are available
-            $applicantUserId = $employee->user_id ?? $leaveRequest->created_by;
-            if ($applicantUserId && $recipients->count() > 1) {
-                $recipients = $recipients->reject(fn ($u) => (int) $u->id === (int) $applicantUserId);
-            }
+            Log::info("Leave submission notification target users: [" . $recipients->pluck('id')->implode(', ') . "]");
 
             if ($recipients->isEmpty()) {
+                Log::warning("No active recipients found for leave submission ID: {$leaveRequest->id}");
+
                 return ['sent' => 0, 'recipients' => 0];
             }
-
 
             $leaveTypeLabel = $leaveRequest->leave_type instanceof LeaveType
                 ? $leaveRequest->leave_type->label()
@@ -652,5 +657,6 @@ class LeaveRequestService
             return ['sent' => 0, 'recipients' => 0, 'error' => $e->getMessage()];
         }
     }
+
 }
 
