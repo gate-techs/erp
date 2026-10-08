@@ -144,6 +144,9 @@ class PortalLeaveService implements PortalLeaveServiceInterface
 
             DB::commit();
 
+            // Trigger notification to direct manager using leave_submitted template
+            $this->hrLeaveService->notifyManagerOnLeaveSubmission($leaveRequest);
+
             return [
                 'success' => true,
                 'message' => __('تم تقديم طلب الإجازة بنجاح وهو قيد الاعتماد!'),

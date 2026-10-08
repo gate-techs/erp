@@ -20,6 +20,9 @@ class Role extends SpatieRole
         'employee',
         'guardian',
         'student',
+        'hr_manager',
+        'accountant_manager',
+        'head_office',
     ];
 
     /**
@@ -51,15 +54,19 @@ class Role extends SpatieRole
 
         $key = strtolower(trim($this->name));
         $map = [
-            'super_admin' => __('Super Administrator'),
-            'admin'       => __('System Administrator'),
-            'supervisor'  => __('Academic Supervisor'),
-            'teacher'     => __('Academic Teacher'),
-            'nurse'       => __('Nurse'),
-            'employee'    => __('Administrative Employee'),
-            'guardian'    => __('Guardian'),
-            'student'     => __('Student'),
+            'super_admin'        => __('Super Administrator'),
+            'admin'              => __('System Administrator'),
+            'supervisor'         => __('Academic Supervisor'),
+            'teacher'            => __('Academic Teacher'),
+            'nurse'              => __('Nurse'),
+            'employee'           => __('Administrative Employee'),
+            'guardian'           => __('Guardian'),
+            'student'            => __('Student'),
+            'hr_manager'         => __('HR Manager'),
+            'accountant_manager' => __('Accounting Manager'),
+            'head_office'        => __('Head Office'),
         ];
+
 
         return $map[$key] ?? __($this->name);
     }

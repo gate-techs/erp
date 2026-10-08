@@ -7,6 +7,7 @@ use Carbon\CarbonPeriod;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Modules\HR\Enums\AttendanceSource;
 use Modules\HR\Enums\AttendanceStatus;
@@ -20,13 +21,17 @@ use Modules\HR\Models\LeaveRequest;
 use Modules\HR\Models\OfficialHoliday;
 use Modules\HR\Models\WorkScheduleDay;
 use Modules\HR\Repositories\Contracts\LeaveRequestRepositoryInterface;
+use Modules\Settings\Services\Contracts\NotificationServiceInterface;
 
 class LeaveRequestService
 {
     //======================
     public function __construct(
-        protected LeaveRequestRepositoryInterface $leaveRepo
-    ) {}
+        protected LeaveRequestRepositoryInterface $leaveRepo,
+        protected ?NotificationServiceInterface $notificationService = null
+    ) {
+        $this->notificationService = $notificationService ?? app(NotificationServiceInterface::class);
+    }
 
     //======================
     /**
@@ -345,9 +350,14 @@ class LeaveRequestService
                 'created_by'              => $userId,
             ];
 
-            return $this->leaveRepo->create($payload);
+            $created = $this->leaveRepo->create($payload);
+
+            $this->notifyManagerOnLeaveSubmission($created);
+
+            return $created;
         });
     }
+
 
     //======================
     /**
@@ -546,4 +556,101 @@ class LeaveRequestService
             }
         }
     }
+
+    //======================
+    /**
+     * Send notification when a leave request is submitted:
+     * - To the direct manager of the employee
+     * - To users with the supervisor role ('supervisor')
+     * - To users with the HR manager role ('hr_manager')
+     */
+    public function notifyManagerOnLeaveSubmission(LeaveRequest $leaveRequest): array
+    {
+        try {
+            $employee = Employee::with(['translations', 'manager.user'])->find($leaveRequest->employee_id);
+            if (! $employee) {
+                return ['sent' => 0, 'recipients' => 0];
+            }
+
+            $recipients = collect();
+
+            // 1. Direct manager's linked user account
+            $managerUser = $employee->manager?->user;
+            if ($managerUser && $managerUser->is_active) {
+                $recipients->push($managerUser);
+            }
+
+            // 2. Users with 'supervisor' role (or user_type = 'supervisor')
+            try {
+                $supervisors = \App\Models\User::role('supervisor')->where('is_active', true)->get();
+                $recipients = $recipients->merge($supervisors);
+            } catch (\Throwable $e) {
+                // Role might not exist in database yet
+            }
+            $supervisorsByType = \App\Models\User::where('user_type', 'supervisor')->where('is_active', true)->get();
+            $recipients = $recipients->merge($supervisorsByType);
+
+            // 3. Users with 'hr_manager' role
+            try {
+                $hrManagers = \App\Models\User::role('hr_manager')->where('is_active', true)->get();
+                $recipients = $recipients->merge($hrManagers);
+            } catch (\Throwable $e) {
+                // Role might not exist in database yet
+            }
+
+            // Fallback: If no recipients found, notify super_admin / admin users
+            if ($recipients->isEmpty()) {
+                try {
+                    $admins = \App\Models\User::role(['super_admin', 'admin'])->where('is_active', true)->get();
+                    $recipients = $recipients->merge($admins);
+                } catch (\Throwable $e) {
+                    $admins = \App\Models\User::where('user_type', 'admin')->where('is_active', true)->get();
+                    $recipients = $recipients->merge($admins);
+                }
+            }
+
+            // Deduplicate and filter active users
+            $recipients = $recipients->unique('id')->filter(fn ($u) => (bool) $u->is_active);
+
+            // Exclude the applicant themselves if other recipients are available
+            $applicantUserId = $employee->user_id ?? $leaveRequest->created_by;
+            if ($applicantUserId && $recipients->count() > 1) {
+                $recipients = $recipients->reject(fn ($u) => (int) $u->id === (int) $applicantUserId);
+            }
+
+            if ($recipients->isEmpty()) {
+                return ['sent' => 0, 'recipients' => 0];
+            }
+
+
+            $leaveTypeLabel = $leaveRequest->leave_type instanceof LeaveType
+                ? $leaveRequest->leave_type->label()
+                : (LeaveType::tryFrom((string) $leaveRequest->leave_type)?->label() ?? (string) $leaveRequest->leave_type);
+
+            $actionUrl = route('hr.leaves.index');
+
+            $variables = [
+                'employee_name' => $employee->name ?? __('Employee'),
+                'leave_type'    => $leaveTypeLabel,
+                'start_date'    => Carbon::parse($leaveRequest->start_date)->format('Y-m-d'),
+                'end_date'      => Carbon::parse($leaveRequest->end_date)->format('Y-m-d'),
+                'total_days'    => $leaveRequest->days_count,
+                'action_url'    => $actionUrl,
+            ];
+
+            return $this->notificationService->sendTemplateNotification(
+                'leave_submitted',
+                $variables,
+                $recipients,
+                $actionUrl
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Leave submission notification failed: ' . $e->getMessage(), [
+                'leave_request_id' => $leaveRequest->id ?? null,
+            ]);
+
+            return ['sent' => 0, 'recipients' => 0, 'error' => $e->getMessage()];
+        }
+    }
 }
+

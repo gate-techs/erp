@@ -11,4 +11,12 @@ interface NotificationServiceInterface
     public function getBroadcastData(array $filters): array;
 
     public function sendBroadcast(array $data, int $createdBy): array;
+
+    public function sendTemplateNotification(
+        string $templateCode,
+        array $variables = [],
+        mixed $recipients = [],
+        ?string $actionUrl = null
+    ): array;
 }
+

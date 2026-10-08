@@ -635,6 +635,12 @@ class PermissionSeeder extends Seeder
         $employeeRole = Role::findOrCreate('employee', $guardName);
         $guardianRole = Role::findOrCreate('guardian', $guardName);
         $studentRole = Role::findOrCreate('student', $guardName);
+        $teacherRole = Role::findOrCreate('teacher', $guardName);
+        $supervisorRole = Role::findOrCreate('supervisor', $guardName);
+        $nurseRole = Role::findOrCreate('nurse', $guardName);
+        $hrManagerRole = Role::findOrCreate('hr_manager', $guardName);
+        $accountantManagerRole = Role::findOrCreate('accountant_manager', $guardName);
+        $headOfficeRole = Role::findOrCreate('head_office', $guardName);
 
         // Super Admin gets all permissions
         $allPermissions = Permission::where('guard_name', $guardName)->get();
@@ -645,9 +651,10 @@ class PermissionSeeder extends Seeder
 
         // All roles can view and edit their own profile
         $profilePermissions = Permission::where('guard_name', $guardName)->whereIn('name', ['profile.view', 'profile.edit'])->get();
-        $employeeRole->givePermissionTo($profilePermissions);
-        $guardianRole->givePermissionTo($profilePermissions);
-        $studentRole->givePermissionTo($profilePermissions);
+        foreach ([$employeeRole, $guardianRole, $studentRole, $teacherRole, $supervisorRole, $nurseRole, $hrManagerRole, $accountantManagerRole, $headOfficeRole] as $roleItem) {
+            $roleItem->givePermissionTo($profilePermissions);
+        }
+
 
         // Assign super_admin role to default admin user if exists
         $adminUser = User::where('email', 'admin@gatetech.com')->first();
