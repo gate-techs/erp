@@ -590,6 +590,9 @@ class PermissionSeeder extends Seeder
             // ==========================================
             // 9. Tasks Module (إدارة المهام)
             // ==========================================
+            'tasks_monitoring' => [
+                'tasks.monitoring.view',
+            ],
             'tasks_task_groups' => [
                 'tasks.task-groups.view',
                 'tasks.task-groups.create',

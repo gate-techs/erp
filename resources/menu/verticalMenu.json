@@ -787,24 +787,32 @@
         "tasks.task-groups.index",
         "tasks.tasks.index"
       ],
+      "permission": [
+        "tasks.monitoring.view",
+        "tasks.task-groups.view",
+        "tasks.view"
+      ],
       "submenu": [
         {
           "name": "Task Monitoring",
           "icon": "menu-icon icon-base bx bx-pie-chart-alt-2",
           "slug": "tasks.monitoring.index",
-          "url": "/tasks/monitoring"
+          "url": "/tasks/monitoring",
+          "permission": "tasks.monitoring.view"
         },
         {
           "name": "Task Groups",
           "icon": "menu-icon icon-base bx bx-folder-open",
           "slug": "tasks.task-groups.index",
-          "url": "/tasks/task-groups"
+          "url": "/tasks/task-groups",
+          "permission": "tasks.task-groups.view"
         },
         {
           "name": "All Tasks",
           "icon": "menu-icon icon-base bx bx-list-check",
           "slug": "tasks.tasks.index",
-          "url": "/tasks/tasks"
+          "url": "/tasks/tasks",
+          "permission": "tasks.view"
         }
       ]
     },
