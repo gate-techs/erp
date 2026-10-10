@@ -39,48 +39,64 @@
         "academic.weekly-plans",
         "academic.monthly-plans"
       ],
+      "permission": [
+        "academic.years.view",
+        "academic.stages.view",
+        "academic.classes.view",
+        "academic.subjects.view",
+        "academic.lessons.view",
+        "academic.weekly-plans.view",
+        "academic.monthly-plans.view"
+      ],
       "submenu": [
         {
           "name": "Academic Years",
           "icon": "menu-icon icon-base bx bx-calendar",
           "slug": "academic.academic-years.index",
-          "url": "/academic/academic-years"
+          "url": "/academic/academic-years",
+          "permission": "academic.years.view"
         },
         {
           "name": "Academic Stages",
           "icon": "menu-icon icon-base bx bx-layer",
           "slug": "academic.stages.index",
-          "url": "/academic/stages"
+          "url": "/academic/stages",
+          "permission": "academic.stages.view"
         },
         {
           "name": "Academic Classes",
           "icon": "menu-icon icon-base bx bx-chalkboard",
           "slug": "academic.classes.index",
-          "url": "/academic/classes"
+          "url": "/academic/classes",
+          "permission": "academic.classes.view"
         },
         {
           "name": "Academic Subjects",
           "icon": "menu-icon icon-base bx bx-book",
           "slug": "academic.subjects.index",
-          "url": "/academic/subjects"
+          "url": "/academic/subjects",
+          "permission": "academic.subjects.view"
         },
         {
           "name": "Academic Lessons",
           "icon": "menu-icon icon-base bx bx-book-reader",
           "slug": "academic.lessons.index",
-          "url": "/academic/lessons"
+          "url": "/academic/lessons",
+          "permission": "academic.lessons.view"
         },
         {
           "name": "Academic Weekly Plans",
           "icon": "menu-icon icon-base bx bx-calendar-week",
           "slug": "academic.weekly-plans.index",
-          "url": "/academic/weekly-plans"
+          "url": "/academic/weekly-plans",
+          "permission": "academic.weekly-plans.view"
         },
         {
           "name": "Academic Monthly Plans",
           "icon": "menu-icon icon-base bx bx-calendar-event",
           "slug": "academic.monthly-plans.index",
-          "url": "/academic/monthly-plans"
+          "url": "/academic/monthly-plans",
+          "permission": "academic.monthly-plans.view"
         }
       ]
     },
