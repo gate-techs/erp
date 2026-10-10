@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AcademicStage extends Model implements TranslatableContract
@@ -120,8 +122,21 @@ class AcademicStage extends Model implements TranslatableContract
     /**
      * Determine whether the stage is active.
      */
+    //------------------------------------------
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    //------------------------------------------
+    public function classes(): HasMany
+    {
+        return $this->hasMany(AcademicClass::class, 'academic_stage_id');
+    }
+
+    //------------------------------------------
+    public function subjects(): BelongsToMany
+    {
+        return $this->belongsToMany(AcademicSubject::class, 'academic_subject_stage', 'academic_stage_id', 'academic_subject_id');
     }
 }

@@ -113,6 +113,11 @@ class PermissionSeeder extends Seeder
                 'academic.fees.delete',
                 'academic.fees.toggle-status',
             ],
+            'academic_student_fees' => [
+                'academic.student-fees.view',
+                'academic.student-fees.create',
+                'academic.student-fees.payments.create',
+            ],
 
             // ==========================================
             // 3. Human Resources Module (الموارد البشرية)

@@ -85,24 +85,149 @@
       ]
     },
     {
+      "name": "Student Services",
+      "icon": "menu-icon icon-base bx bx-group",
+      "slug": [
+        "academic.students",
+        "academic.guardians",
+        "academic.attendance",
+        "academic.teachers",
+        "academic.galleries"
+      ],
+      "permission": [
+        "academic.students.view",
+        "academic.guardians.view",
+        "academic.teachers.view",
+        "academic.attendance.view",
+        "academic.galleries.view"
+      ],
+      "submenu": [
+        {
+          "name": "Students",
+          "icon": "menu-icon icon-base bx bx-user",
+          "slug": "academic.students.index",
+          "url": "/academic/students",
+          "permission": "academic.students.view"
+        },
+        {
+          "name": "Guardians",
+          "icon": "menu-icon icon-base bx bx-user-check",
+          "slug": "academic.guardians.index",
+          "url": "/academic/guardians",
+          "permission": "academic.guardians.view"
+        },
+        {
+          "name": "Teachers",
+          "icon": "menu-icon icon-base bx bx-chalkboard",
+          "slug": "academic.teachers.index",
+          "url": "/academic/teachers",
+          "permission": "academic.teachers.view"
+        },
+        {
+          "name": "Student Attendance Report",
+          "icon": "menu-icon icon-base bx bx-calendar-check",
+          "slug": "academic.attendance.index",
+          "url": "/academic/attendance",
+          "permission": "academic.attendance.view"
+        },
+        {
+          "name": "Student Galleries",
+          "icon": "menu-icon icon-base bx bx-images",
+          "slug": "academic.galleries.index",
+          "url": "/academic/galleries",
+          "permission": "academic.galleries.view"
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs",
+      "icon": "menu-icon icon-base bx bx-briefcase-alt-2",
+      "slug": [
+        "academic.daily-reports",
+        "academic.incident-reports",
+        "academic.medication-requests",
+        "academic.withdrawal-requests"
+      ],
+      "permission": [
+        "academic.daily-reports.view",
+        "academic.incident-reports.view",
+        "academic.medication-requests.view",
+        "academic.withdrawal-requests.view"
+      ],
+      "submenu": [
+        {
+          "name": "Daily Reports",
+          "icon": "menu-icon icon-base bx bx-clipboard",
+          "slug": "academic.daily-reports.index",
+          "url": "/academic/daily-reports",
+          "permission": "academic.daily-reports.view"
+        },
+        {
+          "name": "Incident Reports",
+          "icon": "menu-icon icon-base bx bx-first-aid",
+          "slug": "academic.incident-reports.index",
+          "url": "/academic/incident-reports",
+          "permission": "academic.incident-reports.view"
+        },
+        {
+          "name": "Medication Requests",
+          "icon": "menu-icon icon-base bx bx-capsule",
+          "slug": "academic.medication-requests.index",
+          "url": "/academic/medication-requests",
+          "permission": "academic.medication-requests.view"
+        },
+        {
+          "name": "Student Withdrawal Requests",
+          "icon": "menu-icon icon-base bx bx-log-out-circle",
+          "slug": "academic.withdrawal-requests.index",
+          "url": "/academic/withdrawal-requests",
+          "permission": "academic.withdrawal-requests.view"
+        }
+      ]
+    },
+    {
       "name": "Fees & Packages",
       "icon": "menu-icon icon-base bx bx-wallet",
       "slug": [
         "academic.fee-types",
-        "academic.fees"
+        "academic.fees",
+        "academic.student-fees",
+        "packages.index"
+      ],
+      "permission": [
+        "academic.fee-types.view",
+        "academic.fees.view",
+        "academic.student-fees.view",
+        "nursery.packages.view"
       ],
       "submenu": [
         {
           "name": "Fee Types",
           "icon": "menu-icon icon-base bx bx-category",
           "slug": "academic.fee-types.index",
-          "url": "/academic/fee-types"
+          "url": "/academic/fee-types",
+          "permission": "academic.fee-types.view"
         },
         {
           "name": "Academic Fees",
           "icon": "menu-icon icon-base bx bx-money",
           "slug": "academic.fees.index",
-          "url": "/academic/fees"
+          "url": "/academic/fees",
+          "permission": "academic.fees.view"
+        },
+        {
+          "name": "Student Fees",
+          "icon": "menu-icon icon-base bx bx-receipt",
+          "slug": "academic.student-fees.index",
+          "url": "/academic/student-fees",
+          "permission": "academic.student-fees.view"
+        },
+        {
+          "name": "Packages",
+          "icon": "menu-icon icon-base bx bx-package",
+          "slug": "packages.index",
+          "url": "/packages",
+          "permission": "nursery.packages.view"
         }
       ]
     },

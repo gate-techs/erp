@@ -19,6 +19,7 @@ class AcademicDatabaseSeeder extends Seeder
             AcademicLessonDatabaseSeeder::class,
             AcademicWeeklyPlanDatabaseSeeder::class,
             AcademicMonthlyPlanDatabaseSeeder::class,
+            AcademicGuardianAndStudentsSeeder::class,
         ]);
     }
 }

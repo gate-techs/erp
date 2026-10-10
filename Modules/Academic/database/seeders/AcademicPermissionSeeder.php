@@ -85,6 +85,18 @@ class AcademicPermissionSeeder extends Seeder
             'academic.fees.edit',
             'academic.fees.delete',
             'academic.fees.toggle-status',
+
+            // 9.1 Student Fees, Installments & Payments
+            'academic.student-fees.view',
+            'academic.student-fees.create',
+            'academic.student-fees.payments.create',
+
+            // 10. Academic Guardians
+            'academic.guardians.view',
+            'academic.guardians.create',
+            'academic.guardians.edit',
+            'academic.guardians.delete',
+            'academic.guardians.toggle-status',
         ];
 
         // Create or update permissions

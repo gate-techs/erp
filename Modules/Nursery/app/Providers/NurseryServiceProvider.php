@@ -4,8 +4,10 @@ namespace Modules\Nursery\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Modules\Nursery\Repositories\Contracts\NurseryBranchRepositoryInterface;
+use Modules\Nursery\Repositories\Contracts\PackageRepositoryInterface;
 use Modules\Nursery\Repositories\Contracts\NurseryRepositoryInterface;
 use Modules\Nursery\Repositories\NurseryBranchRepository;
+use Modules\Nursery\Repositories\PackageRepository;
 use Modules\Nursery\Repositories\NurseryRepository;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
@@ -41,6 +43,7 @@ class NurseryServiceProvider extends ModuleServiceProvider
 
         $this->app->bind(NurseryRepositoryInterface::class, NurseryRepository::class);
         $this->app->bind(NurseryBranchRepositoryInterface::class, NurseryBranchRepository::class);
+        $this->app->bind(PackageRepositoryInterface::class, PackageRepository::class);
     }
 
     //======================

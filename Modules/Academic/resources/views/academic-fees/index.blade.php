@@ -272,7 +272,7 @@
 
             <!-- 12. Amount / Fees (Single row) -->
             <div class="mb-3">
-                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Fee Amount') }} ({{ __('SAR') }}) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Fee Amount') }} <span class="text-danger">*</span></label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="icon-base bx bx-money"></i></span>
                     <input type="number" step="0.01" min="0" name="amount" id="add_amount" class="form-control" required>
@@ -437,7 +437,7 @@
 
             <!-- 12. Amount / Fees (Single row) -->
             <div class="mb-3">
-                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Fee Amount') }} ({{ __('SAR') }}) <span class="text-danger">*</span></label>
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Fee Amount') }} <span class="text-danger">*</span></label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="icon-base bx bx-money"></i></span>
                     <input type="number" step="0.01" min="0" name="amount" id="edit_amount" class="form-control" required>
@@ -570,6 +570,10 @@ function previewFeeImage(input, previewId) {
             setTimeout(initAcademicFees, 50);
             return;
         }
+        if (window.__academicFeesInitialized) {
+            return;
+        }
+        window.__academicFeesInitialized = true;
 
         const baseUrl = "{{ url('academic/fees') }}";
         const dataUrl = "{{ route('academic.fees.data') }}";
@@ -685,7 +689,7 @@ function previewFeeImage(input, previewId) {
                     className: 'text-center',
                     render: (data, type, row, meta) => `<strong class="text-muted">#${data || (meta.row + 1 + (meta.settings._iDisplayStart || 0))}</strong>`
                 },
-                { data: 'fee_info', name: 'translations.name', className: 'fw-semibold text-heading' },
+                { data: 'fee_info', name: 'academic_fees.id', className: 'fw-semibold text-heading' },
                 { data: 'institution_name', name: 'institution_id', defaultContent: '-' },
                 { data: 'branch_name', name: 'branch_id', defaultContent: '-' },
                 { data: 'period_name', name: 'academic_year_id', defaultContent: '-' },
@@ -696,7 +700,7 @@ function previewFeeImage(input, previewId) {
                 { data: 'status_badge', name: 'status', className: 'text-center' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center' }
             ],
-            order: [[1, 'asc']]
+            order: [[1, 'desc']]
         });
 
         // Filter Change Listeners

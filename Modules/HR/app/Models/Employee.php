@@ -300,6 +300,18 @@ class Employee extends Model implements TranslatableContract
         return $this->hasMany(Attendance::class, 'employee_id');
     }
 
+    //------------------------------------------
+    public function academicTeacherClasses(): HasMany
+    {
+        return $this->hasMany(\Modules\Academic\Models\AcademicTeacherClass::class, 'employee_id');
+    }
+
+    //------------------------------------------
+    public function academicTeacherSubjects(): HasMany
+    {
+        return $this->hasMany(\Modules\Academic\Models\AcademicTeacherSubject::class, 'employee_id');
+    }
+
     //======================
     /**
      * Relationship: Leave Requests.

@@ -20,6 +20,20 @@ use Modules\Academic\Repositories\AcademicFeeRepository;
 use Modules\Academic\Repositories\Contracts\AcademicFeeRepositoryInterface;
 use Modules\Academic\Repositories\AcademicFeeTypeRepository;
 use Modules\Academic\Repositories\Contracts\AcademicFeeTypeRepositoryInterface;
+use Modules\Academic\Repositories\AcademicGuardianRepository;
+use Modules\Academic\Repositories\Contracts\AcademicGuardianRepositoryInterface;
+use Modules\Academic\Repositories\AcademicStudentRepository;
+use Modules\Academic\Repositories\Contracts\AcademicStudentRepositoryInterface;
+use Modules\Academic\Repositories\AcademicStudentFeeRepository;
+use Modules\Academic\Repositories\Contracts\AcademicStudentFeeRepositoryInterface;
+use Modules\Academic\Repositories\AcademicStudentAttendanceRepository;
+use Modules\Academic\Repositories\Contracts\AcademicStudentAttendanceRepositoryInterface;
+use Modules\Academic\Repositories\Contracts\DailyReportRepositoryInterface;
+use Modules\Academic\Repositories\DailyReportRepository;
+use Modules\Academic\Repositories\Contracts\StudentWithdrawalRequestRepositoryInterface;
+use Modules\Academic\Repositories\StudentWithdrawalRequestRepository;
+use Modules\Academic\Repositories\Contracts\MedicationRequestRepositoryInterface;
+use Modules\Academic\Repositories\MedicationRequestRepository;
 use Nwidart\Modules\Support\ModuleServiceProvider;
 
 class AcademicServiceProvider extends ModuleServiceProvider
@@ -86,6 +100,45 @@ class AcademicServiceProvider extends ModuleServiceProvider
         $this->app->bind(
             AcademicFeeTypeRepositoryInterface::class,
             AcademicFeeTypeRepository::class
+        );
+
+        $this->app->bind(
+            AcademicGuardianRepositoryInterface::class,
+            AcademicGuardianRepository::class
+        );
+
+        $this->app->bind(
+            AcademicStudentRepositoryInterface::class,
+            AcademicStudentRepository::class
+        );
+
+        $this->app->bind(
+            AcademicStudentFeeRepositoryInterface::class,
+            AcademicStudentFeeRepository::class
+        );
+
+        $this->app->bind(
+            AcademicStudentAttendanceRepositoryInterface::class,
+            AcademicStudentAttendanceRepository::class
+        );
+
+        $this->app->bind(DailyReportRepositoryInterface::class, DailyReportRepository::class);
+        $this->app->bind(StudentWithdrawalRequestRepositoryInterface::class, StudentWithdrawalRequestRepository::class);
+        $this->app->bind(MedicationRequestRepositoryInterface::class, MedicationRequestRepository::class);
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\AcademicTeacherRepositoryInterface::class,
+            \Modules\Academic\Repositories\AcademicTeacherRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\TeacherGalleryRepositoryInterface::class,
+            \Modules\Academic\Repositories\TeacherGalleryRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\IncidentReportRepositoryInterface::class,
+            \Modules\Academic\Repositories\IncidentReportRepository::class
         );
     }
 }

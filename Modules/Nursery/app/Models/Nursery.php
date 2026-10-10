@@ -175,6 +175,15 @@ class Nursery extends Model implements TranslatableContract
 
     //======================
     /**
+     * Get packages for this nursery.
+     */
+    public function packages(): HasMany
+    {
+        return $this->hasMany(Package::class, 'nursery_id');
+    }
+
+    //======================
+    /**
      * Get the accounting entity linked to this nursery.
      */
     //--------------------------------------------------

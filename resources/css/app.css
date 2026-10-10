@@ -2955,5 +2955,34 @@ html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
     font-size: 0.875rem !important;
 }
 
+/* ==========================================================================
+   Global Universal Form & Row Spacing Standard
+   ========================================================================== */
+.row + .row {
+    margin-top: 1.5rem;
+}
+
+form .row {
+    margin-bottom: 1.5rem;
+}
+
+form .row:last-child {
+    margin-bottom: 0;
+}
+
+form .row:not([class*="g-0"]):not([class*="gy-"]) {
+    --bs-gutter-y: 1.25rem;
+}
+
+.form-section-header {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #4b5563;
+    margin-top: 2.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+}
+
+
 
 

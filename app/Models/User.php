@@ -5,9 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
+use Modules\Academic\Models\AcademicGuardian;
+use Modules\HR\Models\Employee;
+use Modules\Settings\Models\PushSubscription;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -43,7 +49,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    //==================================
+    //------------------------------------------
     /**
      * Get the attributes that should be cast.
      *
@@ -53,29 +59,41 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'user_type' => UserType::class,
-            'is_active' => 'boolean',
-            'last_login_at' => 'datetime',
+            'password'          => 'hashed',
+            'user_type'         => UserType::class,
+            'is_active'         => 'boolean',
+            'last_login_at'     => 'datetime',
         ];
     }
 
+    //------------------------------------------
     /**
      * Relationship: Linked employee profile if user is an employee.
      */
-    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function employee(): HasOne
     {
-        return $this->hasOne(\Modules\HR\Models\Employee::class, 'user_id');
+        return $this->hasOne(Employee::class, 'user_id');
     }
 
+    //------------------------------------------
+    /**
+     * Relationship: Linked guardian profile if user is a guardian.
+     */
+    public function guardian(): HasOne
+    {
+        return $this->hasOne(AcademicGuardian::class, 'user_id');
+    }
+
+    //------------------------------------------
     /**
      * Browsers/devices registered for Web Push delivery.
      */
-    public function pushSubscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function pushSubscriptions(): HasMany
     {
-        return $this->hasMany(\Modules\Settings\Models\PushSubscription::class, 'user_id');
+        return $this->hasMany(PushSubscription::class, 'user_id');
     }
 
+    //------------------------------------------
     /**
      * Accessor: Avatar URL with fallback to employee avatar or gender-aware default.
      */
@@ -85,16 +103,19 @@ class User extends Authenticatable
             return $this->employee->avatar_url;
         }
 
-        if (!empty($this->avatar)) {
+        if (! empty($this->avatar)) {
             if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
                 return $this->avatar;
             }
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar)) {
-                return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar);
+
+            if (Storage::disk('public')->exists($this->avatar)) {
+                return Storage::disk('public')->url($this->avatar);
             }
+
             if (file_exists(public_path($this->avatar))) {
                 return asset($this->avatar);
             }
+
             if (file_exists(public_path('storage/' . $this->avatar))) {
                 return asset('storage/' . $this->avatar);
             }
@@ -117,6 +138,7 @@ class User extends Authenticatable
         if (file_exists(public_path('assets/portal/male-avatar.png'))) {
             return asset('assets/portal/male-avatar.png');
         }
+
         if (file_exists(public_path('assets/img/avatars/male-avatar.png'))) {
             return asset('assets/img/avatars/male-avatar.png');
         }
@@ -124,11 +146,12 @@ class User extends Authenticatable
         return asset('assets/portal/header-emblem.png');
     }
 
+    //------------------------------------------
     /**
      * Check if user is a developer.
      */
     public function isDeveloper(): bool
     {
-        return $this->user_type === \App\Enums\UserType::DEVELOPER || $this->user_type?->value === 'developer';
+        return $this->user_type === UserType::DEVELOPER || $this->user_type?->value === 'developer';
     }
 }

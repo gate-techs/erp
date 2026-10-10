@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AcademicClass extends Model implements TranslatableContract
@@ -122,9 +123,24 @@ class AcademicClass extends Model implements TranslatableContract
         return $this->belongsTo(AcademicStage::class, 'academic_stage_id');
     }
 
+    public function stage(): BelongsTo
+    {
+        return $this->academicStage();
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function students(): HasMany
+    {
+        return $this->hasMany(AcademicStudent::class, 'academic_class_id');
+    }
+
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(AcademicStudentAttendance::class, 'academic_class_id');
     }
 
     public function scopeActive(Builder $query): Builder

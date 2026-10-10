@@ -13,6 +13,8 @@ class AcademicFeeRepository implements AcademicFeeRepositoryInterface
     public function getFilteredQuery(array $filters = []): Builder
     {
         $query = AcademicFee::query()
+            ->select('academic_fees.*')
+            ->distinct()
             ->with([
                 'translations',
                 'institution.translations',

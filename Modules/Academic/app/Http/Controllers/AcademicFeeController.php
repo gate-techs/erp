@@ -121,7 +121,7 @@ class AcademicFeeController extends Controller
                 return '<span class="badge ' . $cfg['class'] . '">' . $cfg['label'] . '</span>';
             })
             ->addColumn('amount_formatted', function (AcademicFee $fee) {
-                return '<span class="fw-bold text-success font-16">' . number_format($fee->amount, 2) . '</span> <small class="text-muted">' . __('SAR') . '</small>';
+                return '<span class="fw-bold text-success font-16">' . number_format($fee->amount, 2) . '</span>';
             })
             ->addColumn('status_badge', function (AcademicFee $fee) {
                 $isActive = $fee->status === AcademicFee::STATUS_ACTIVE;
@@ -204,7 +204,7 @@ class AcademicFeeController extends Controller
                     default => $fee->billing_period
                 },
                 'amount'               => $fee->amount,
-                'amount_formatted'     => number_format($fee->amount, 2) . ' ' . __('SAR'),
+                'amount_formatted'     => number_format($fee->amount, 2),
                 'image_url'            => $fee->image_url,
                 'status'               => $fee->status,
                 'name_ar'              => $fee->translate('ar')?->name ?? '',

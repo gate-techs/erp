@@ -113,6 +113,7 @@
         info: (message, title) => createToast({ type: 'info', message, title }),
         show: (options) => createToast(options)
     };
+    window.toastr = window.notify;
 
     // Auto trigger on server sessions
     document.addEventListener('DOMContentLoaded', () => {

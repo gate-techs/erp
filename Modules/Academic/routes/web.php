@@ -10,11 +10,36 @@ use Modules\Academic\Http\Controllers\AcademicWeeklyPlanController;
 use Modules\Academic\Http\Controllers\AcademicYearController;
 use Modules\Academic\Http\Controllers\AcademicFeeController;
 use Modules\Academic\Http\Controllers\AcademicFeeTypeController;
+use Modules\Academic\Http\Controllers\AcademicGuardianController;
+use Modules\Academic\Http\Controllers\AcademicStudentController;
+use Modules\Academic\Http\Controllers\AcademicStudentFeeController;
+use Modules\Academic\Http\Controllers\AcademicStudentAttendanceController;
+use Modules\Academic\Http\Controllers\AcademicTeacherController;
+use Modules\Academic\Http\Controllers\TeacherGalleryController;
+use Modules\Academic\Http\Controllers\DailyReportController;
+use Modules\Academic\Http\Controllers\StudentWithdrawalRequestController;
+use Modules\Academic\Http\Controllers\IncidentReportController;
+use Modules\Academic\Http\Controllers\MedicationRequestController;
 
 Route::middleware(['auth', 'verified'])
     ->prefix('academic')
     ->name('academic.')
     ->group(function () {
+        Route::get('medication-requests/data',[MedicationRequestController::class,'data'])->name('medication-requests.data');
+        Route::patch('medication-requests/{id}/done',[MedicationRequestController::class,'done'])->name('medication-requests.done');
+        Route::resource('medication-requests',MedicationRequestController::class)->only(['index','store','show','update','destroy']);
+
+        Route::get('withdrawal-requests/data',[StudentWithdrawalRequestController::class,'data'])->name('withdrawal-requests.data');
+        Route::get('withdrawal-requests/branches/{institutionId}',[StudentWithdrawalRequestController::class,'branches'])->name('withdrawal-requests.branches');
+        Route::get('withdrawal-requests/students',[StudentWithdrawalRequestController::class,'students'])->name('withdrawal-requests.students');
+        Route::resource('withdrawal-requests',StudentWithdrawalRequestController::class)->except(['destroy']);
+        Route::delete('withdrawal-requests/{id}',[StudentWithdrawalRequestController::class,'destroy'])->name('withdrawal-requests.destroy');
+
+        Route::get('daily-reports/data', [DailyReportController::class, 'data'])->name('daily-reports.data');
+        Route::get('daily-reports/branches/{institutionId}', [DailyReportController::class, 'branches'])->name('daily-reports.branches');
+        Route::resource('daily-reports', DailyReportController::class)->except(['destroy']);
+        Route::delete('daily-reports/{id}', [DailyReportController::class, 'destroy'])->name('daily-reports.destroy');
+
         Route::get('academic-years', [AcademicYearController::class, 'index'])
             ->name('academic-years.index');
         Route::get('academic-years/data', [AcademicYearController::class, 'data'])
@@ -202,4 +227,151 @@ Route::middleware(['auth', 'verified'])
             ->name('fees.ajax.years');
         Route::get('fees-ajax/stages/{institutionId}', [AcademicFeeController::class, 'getStages'])
             ->name('fees.ajax.stages');
+
+        // Student Fees, Installments & Payments
+        Route::get('student-fees', [AcademicStudentFeeController::class, 'index'])
+            ->name('student-fees.index');
+        Route::get('student-fees/data', [AcademicStudentFeeController::class, 'data'])
+            ->name('student-fees.data');
+        Route::post('student-fees', [AcademicStudentFeeController::class, 'store'])
+            ->name('student-fees.store');
+        Route::put('student-fees/{id}', [AcademicStudentFeeController::class, 'update'])
+            ->name('student-fees.update');
+        Route::delete('student-fees/{id}', [AcademicStudentFeeController::class, 'destroy'])
+            ->name('student-fees.destroy');
+        Route::get('student-fee-payments', [AcademicStudentFeeController::class, 'paymentsIndex'])
+            ->name('student-fees.payments.index');
+        Route::get('student-fee-payments/data', [AcademicStudentFeeController::class, 'paymentsData'])
+            ->name('student-fees.payments.data');
+        Route::get('student-fees/{id}', [AcademicStudentFeeController::class, 'show'])
+            ->name('student-fees.show');
+        Route::post('student-fees/{id}/payments', [AcademicStudentFeeController::class, 'storePayment'])
+            ->name('student-fees.payments.store');
+        Route::put('student-fee-payments/{paymentId}', [AcademicStudentFeeController::class, 'updatePayment'])
+            ->name('student-fees.payments.update');
+        Route::delete('student-fee-payments/{paymentId}', [AcademicStudentFeeController::class, 'destroyPayment'])
+            ->name('student-fees.payments.destroy');
+        Route::patch('student-fee-payments/{paymentId}/toggle-status', [AcademicStudentFeeController::class, 'togglePaymentStatus'])
+            ->name('student-fees.payments.toggle-status');
+
+        // Academic Guardians
+        Route::get('guardians', [AcademicGuardianController::class, 'index'])
+            ->name('guardians.index');
+        Route::get('guardians/data', [AcademicGuardianController::class, 'data'])
+            ->name('guardians.data');
+        Route::post('guardians', [AcademicGuardianController::class, 'store'])
+            ->name('guardians.store');
+        Route::get('guardians/available-employees', [AcademicGuardianController::class, 'getAvailableEmployees'])
+            ->name('guardians.available-employees');
+        Route::get('guardians/branches/{institutionId}', [AcademicGuardianController::class, 'getBranches'])
+            ->name('guardians.branches');
+        Route::get('guardians/{id}', [AcademicGuardianController::class, 'show'])
+            ->name('guardians.show');
+        Route::get('guardians/{id}/edit', [AcademicGuardianController::class, 'edit'])
+            ->name('guardians.edit');
+        Route::put('guardians/{id}', [AcademicGuardianController::class, 'update'])
+            ->name('guardians.update');
+        Route::delete('guardians/{id}', [AcademicGuardianController::class, 'destroy'])
+            ->name('guardians.destroy');
+        Route::patch('guardians/{id}/toggle-status', [AcademicGuardianController::class, 'toggleStatus'])
+            ->name('guardians.toggle-status');
+
+        // Academic Students
+        Route::get('students', [AcademicStudentController::class, 'index'])
+            ->name('students.index');
+        Route::get('students/data', [AcademicStudentController::class, 'data'])
+            ->name('students.data');
+        Route::get('students/create', [AcademicStudentController::class, 'create'])
+            ->name('students.create');
+        Route::post('students', [AcademicStudentController::class, 'store'])
+            ->name('students.store');
+        Route::get('students/{id}', [AcademicStudentController::class, 'show'])
+            ->name('students.show');
+        Route::get('students/{id}/edit', [AcademicStudentController::class, 'edit'])
+            ->name('students.edit');
+        Route::put('students/{id}', [AcademicStudentController::class, 'update'])
+            ->name('students.update');
+        Route::delete('students/{id}', [AcademicStudentController::class, 'destroy'])
+            ->name('students.destroy');
+        Route::patch('students/{id}/toggle-status', [AcademicStudentController::class, 'toggleStatus'])
+            ->name('students.toggle-status');
+
+        // Student AJAX Dynamic Dropdowns
+        Route::get('students-ajax/branches/{institutionId}', [AcademicStudentController::class, 'getBranches'])
+            ->name('students.ajax.branches');
+        Route::get('students-ajax/years/{institutionId}', [AcademicStudentController::class, 'getYears'])
+            ->name('students.ajax.years');
+        Route::get('students-ajax/stages/{institutionId}', [AcademicStudentController::class, 'getStages'])
+            ->name('students.ajax.stages');
+        Route::get('students-ajax/classes/{stageId}', [AcademicStudentController::class, 'getClasses'])
+            ->name('students.ajax.classes');
+        Route::get('students-ajax/guardians/{institutionId}', [AcademicStudentController::class, 'getGuardians'])
+            ->name('students.ajax.guardians');
+        Route::get('students-ajax/guardian-family/{guardianId}', [AcademicStudentController::class, 'getGuardianFamily'])
+            ->name('students.ajax.guardian-family');
+
+        // Student Attendance (تسجيل وحالات الحضور والغياب)
+        Route::get('attendance', [AcademicStudentAttendanceController::class, 'index'])
+            ->name('attendance.index');
+        Route::get('attendance/data', [AcademicStudentAttendanceController::class, 'data'])
+            ->name('attendance.data');
+        Route::get('attendance/class/{classId}/roster', [AcademicStudentAttendanceController::class, 'classRoster'])
+            ->name('attendance.class-roster');
+        Route::post('attendance/multi', [AcademicStudentAttendanceController::class, 'storeMulti'])
+            ->name('attendance.store-multi');
+        Route::post('attendance/single', [AcademicStudentAttendanceController::class, 'storeSingle'])
+            ->name('attendance.store-single');
+        Route::post('attendance/approve', [AcademicStudentAttendanceController::class, 'approve'])
+            ->name('attendance.approve');
+        Route::post('attendance/reject', [AcademicStudentAttendanceController::class, 'reject'])
+            ->name('attendance.reject');
+        Route::get('attendance/student/{studentId}/report', [AcademicStudentAttendanceController::class, 'studentReport'])
+            ->name('attendance.student-report');
+        Route::get('attendance/guardian/{guardianId}/report', [AcademicStudentAttendanceController::class, 'guardianReport'])
+            ->name('attendance.guardian-report');
+
+        // Academic Teachers (المعلمين وتسكين المراحل والفصول والمواد)
+        Route::get('teachers', [AcademicTeacherController::class, 'index'])
+            ->name('teachers.index');
+        Route::get('teachers/data', [AcademicTeacherController::class, 'data'])
+            ->name('teachers.data');
+        Route::post('teachers', [AcademicTeacherController::class, 'store'])
+            ->name('teachers.store');
+        Route::get('teachers/{id}', [AcademicTeacherController::class, 'show'])
+            ->name('teachers.show');
+        Route::put('teachers/{id}', [AcademicTeacherController::class, 'update'])
+            ->name('teachers.update');
+        Route::delete('teachers/{id}', [AcademicTeacherController::class, 'destroy'])
+            ->name('teachers.destroy');
+        Route::patch('teachers/{id}/toggle-status', [AcademicTeacherController::class, 'toggleStatus'])
+            ->name('teachers.toggle-status');
+        Route::get('teachers/{id}/allocation', [AcademicTeacherController::class, 'getAllocation'])
+            ->name('teachers.allocation');
+        Route::post('teachers/{id}/allocation', [AcademicTeacherController::class, 'saveAllocation'])
+            ->name('teachers.save-allocation');
+
+        // Student Galleries / معرض صور وفيديوهات الطلاب
+        Route::get('galleries', [TeacherGalleryController::class, 'index'])
+            ->name('galleries.index');
+        Route::get('galleries/data', [TeacherGalleryController::class, 'data'])
+            ->name('galleries.data');
+        Route::post('galleries', [TeacherGalleryController::class, 'store'])
+            ->name('galleries.store');
+        Route::get('galleries/{id}', [TeacherGalleryController::class, 'show'])
+            ->name('galleries.show');
+        Route::put('galleries/{id}', [TeacherGalleryController::class, 'update'])
+            ->name('galleries.update');
+        Route::delete('galleries/{id}', [TeacherGalleryController::class, 'destroy'])
+            ->name('galleries.destroy');
+        Route::delete('galleries/images/{id}', [TeacherGalleryController::class, 'deleteImage'])
+            ->name('galleries.images.destroy');
+        Route::get('galleries/class-students/{classroomId}', [TeacherGalleryController::class, 'getClassStudents'])
+            ->name('galleries.class-students');
+
+        // Incident Reports / تقارير الحوادث والإصابات
+        Route::get('incident-reports/data', [IncidentReportController::class, 'data'])
+            ->name('incident-reports.data');
+        Route::get('incident-reports/{id}/print', [IncidentReportController::class, 'print'])
+            ->name('incident-reports.print');
+        Route::resource('incident-reports', IncidentReportController::class);
     });
