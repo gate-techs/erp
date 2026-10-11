@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
     <div class="navbar-nav align-items-center global-navbar-search-wrapper">
         <div class="nav-item d-flex align-items-center w-100">
             <i class="icon-base bx bx-search icon-md"></i>
-            <input type="text" class="form-control border-0 shadow-none global-navbar-search-input d-none d-md-inline-block" placeholder="{{ __('Search...') }}" aria-label="{{ __('Search...') }}">
+            <input type="text" class="form-control border-0 shadow-none global-navbar-search-input" placeholder="{{ __('Search...') }}" aria-label="{{ __('Search...') }}">
         </div>
     </div>
     <!-- /Search -->

@@ -154,7 +154,7 @@
       margin-inline: 0;
     }
     &:not(.disabled) > :not(:first-child):not(.dropdown-menu):not(.btn):not(.dropdown-menu + .form-control):not(.btn + .form-control) {
-      margin-inline-start: calc($input-focus-border-width - 4px);
+      margin-inline-start: -2px;
     }
     .input-group-text,
     .form-control,

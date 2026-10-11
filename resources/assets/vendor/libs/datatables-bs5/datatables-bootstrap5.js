@@ -10,6 +10,28 @@ try {
 window.DataTable = DataTable;
 window.jQuery = window.$ = $;
 
+// Locale-aware texts, picked from <html lang="...">
+const dtTranslations = {
+  ar: {
+    sEmptyTable: 'لا توجد بيانات متاحة',
+    sZeroRecords: 'لم يعثر على أي نتائج مطابقة',
+    sInfo: 'عرض _START_ إلى _END_ من _TOTAL_ سجل',
+    sInfoEmpty: 'عرض 0 إلى 0 من 0 سجل',
+    sInfoFiltered: '(تمت التصفية من _MAX_ سجل)',
+    sSearchPlaceholder: 'بحث...'
+  },
+  en: {
+    sEmptyTable: 'No data available in table',
+    sZeroRecords: 'No matching records found',
+    sInfo: 'Showing _START_ to _END_ of _TOTAL_ entries',
+    sInfoEmpty: 'Showing 0 to 0 of 0 entries',
+    sInfoFiltered: '(filtered from _MAX_ total entries)',
+    sSearchPlaceholder: 'Search...'
+  }
+};
+const dtLocale = (document.documentElement.lang || 'en').split('-')[0].toLowerCase();
+const dtTexts = dtTranslations[dtLocale] || dtTranslations.en;
+
 // Global DataTables Defaults
 if ($.fn && $.fn.dataTable) {
   $.extend(true, $.fn.dataTable.defaults, {
@@ -17,19 +39,15 @@ if ($.fn && $.fn.dataTable) {
     responsive: true,
     pagingType: 'simple_numbers',
     dom:
-      "<'row mx-0 px-4 pt-4 pb-3 align-items-center justify-content-between g-3'<'col-auto'l><'col-12 col-md-7 col-lg-6'f>>" +
+      "<'row dt-header-row mx-0 px-4 pt-4 pb-3 align-items-center justify-content-between g-3'<'col-auto'l><'col-12 col-md-7 col-lg-6'f>>" +
       "<'table-responsive'tr>" +
-      "<'row mx-0 px-4 py-3 border-top align-items-center justify-content-between'<'col-auto'i><'col-auto'p>>",
+      "<'row dt-footer-row mx-0 px-4 py-3 border-top align-items-center justify-content-between'<'col-auto'i><'col-auto'p>>",
     language: {
       sProcessing: '',
       sLengthMenu: '_MENU_',
       lengthMenu: '_MENU_',
-      sZeroRecords: 'لم يعثر على أي نتائج مطابقة',
-      sInfo: 'عرض _START_ إلى _END_ من _TOTAL_ سجل',
-      sInfoEmpty: 'عرض 0 إلى 0 من 0 سجل',
-      sInfoFiltered: '(تمت التصفية من _MAX_ سجل)',
       sSearch: '',
-      sSearchPlaceholder: 'بحث...',
+      ...dtTexts,
       oPaginate: {
         sPrevious: '<i class="icon-base bx bx-chevron-left"></i>',
         sNext: '<i class="icon-base bx bx-chevron-right"></i>'

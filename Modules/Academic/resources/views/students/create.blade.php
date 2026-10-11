@@ -309,8 +309,8 @@
     box-shadow: none;
 }
 .health-med-input:focus {
-    border-color: #696cff;
-    box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, 0.2);
+    border-color: var(--bs-primary);
+    box-shadow: none;
 }
 .health-q10-box {
     background-color: #f6f7f9;
@@ -439,8 +439,8 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .form-info-input:focus {
-    border-color: #696cff;
-    box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, 0.15);
+    border-color: var(--bs-primary);
+    box-shadow: none;
 }
 
 /* Photo Consent Tab matching user screenshot */
@@ -503,8 +503,8 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .notes-textarea:focus {
-    border-color: #696cff;
-    box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, 0.15);
+    border-color: var(--bs-primary);
+    box-shadow: none;
 }
 </style>
 @endsection

@@ -95,8 +95,8 @@
     }
     .line-debit:focus, .line-credit:focus {
         background-color: #fff !important;
-        border-color: #696cff !important;
-        box-shadow: 0 0 0 0.15rem rgba(105, 108, 255, 0.12) !important;
+        border-color: var(--bs-primary) !important;
+        box-shadow: none !important;
     }
     /* Hide spin buttons */
     input[type=number]::-webkit-inner-spin-button,

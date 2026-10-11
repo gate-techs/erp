@@ -23,7 +23,7 @@
         <div class="col-md-4"><select id="filter_nursery_id" class="form-select select2"><option value="">{{ __('All Nurseries') }}</option>@foreach($nurseries as $nursery)<option value="{{ $nursery->id }}">{{ $nursery->name }}</option>@endforeach</select></div>
         <div class="col-md-3"><select id="filter_status" class="form-select select2"><option value="">{{ __('All Statuses') }}</option><option value="active">{{ __('Active') }}</option><option value="inactive">{{ __('Inactive') }}</option></select></div>
     </div></div>
-    <div class="table-responsive"><table id="packagesTable" class="table table-hover border-top w-100 text-nowrap"><thead><tr>
+    <div class="card-datatable table-responsive"><table id="packagesTable" class="table table-hover border-top w-100 text-nowrap"><thead><tr>
         <th>#</th><th>{{ __('Image') }}</th><th>{{ __('Package Name') }}</th><th>{{ __('Nursery') }}</th><th>{{ __('Price') }}</th><th>{{ __('Discount') }}</th><th>{{ __('Order') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th>
     </tr></thead><tbody></tbody></table></div>
 </div>

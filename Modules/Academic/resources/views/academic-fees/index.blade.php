@@ -94,7 +94,7 @@
 
             <!-- 6. Billing Period Filter & Reset -->
             <div class="col-12 col-md-4">
-                <div class="row g-2">
+                <div class="row g-2 align-items-end">
                     <div class="col-8">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Billing Period') }}</label>
                         <select id="filter_billing_period" class="select2 select2-selection__rendered form-select" data-allow-clear="true">
@@ -106,8 +106,7 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <label class="form-label d-none d-md-block">&nbsp;</label>
-                        <button type="button" id="btn_reset_filters" class="btn btn-label-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                        <button type="button" id="btn_reset_filters" class="btn btn-label-secondary w-100 d-flex align-items-center justify-content-center gap-1">
                             <i class="icon-base bx bx-reset font-18"></i>
                             <span>{{ __('Reset') }}</span>
                         </button>

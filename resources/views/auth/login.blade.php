@@ -138,8 +138,8 @@
     }
 
     .auth-input-field:focus {
-        border-color: #0b284e;
-        box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.12);
+        border-color: var(--bs-primary);
+        box-shadow: none;
         outline: none;
     }
 

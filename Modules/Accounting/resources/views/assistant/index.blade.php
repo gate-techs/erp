@@ -380,7 +380,7 @@
 
 .ai-input-box-focus:focus-within {
     border-color: var(--bs-primary) !important;
-    box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb), 0.15) !important;
+    box-shadow: none !important;
 }
 
 .ai-btn-send {

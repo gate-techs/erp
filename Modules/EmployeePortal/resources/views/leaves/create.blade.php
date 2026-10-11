@@ -261,7 +261,7 @@
     .leave-select-control:focus {
         background-color: #ffffff;
         border-color: #002A44;
-        box-shadow: 0 0 0 3px rgba(0, 42, 68, 0.08);
+        box-shadow: none;
     }
 
     .leave-hint-box {
@@ -333,7 +333,7 @@
     .flatpickr-custom-input:focus {
         background: #ffffff;
         border-color: #002A44;
-        box-shadow: 0 0 0 3px rgba(0, 42, 68, 0.08);
+        box-shadow: none;
     }
 
     /* Total Working Days Box */
@@ -385,7 +385,7 @@
     .emergency-phone-input:focus {
         background: #ffffff;
         border-color: #002A44;
-        box-shadow: 0 0 0 3px rgba(0, 42, 68, 0.08);
+        box-shadow: none;
     }
 
     /* intl-tel-input Custom Overrides */
@@ -437,7 +437,7 @@
     .leave-textarea:focus {
         background: #ffffff;
         border-color: #002A44;
-        box-shadow: 0 0 0 3px rgba(0, 42, 68, 0.08);
+        box-shadow: none;
     }
 
     /* Upload Area */
