@@ -1,4 +1,11 @@
 {
+    "Deleted Employees": "الموظفون المحذوفون",
+    "Employee restored successfully.": "تم استرجاع الموظف بنجاح.",
+    "Search by name or employee code": "البحث بالاسم أو الكود الوظيفي",
+    "Deleted At": "تاريخ الحذف",
+    "Unnamed Employee": "موظف بدون اسم",
+    "Restore": "استرجاع",
+    "No deleted employees found.": "لا يوجد موظفون محذوفون.",
     "Filter Employees": "تصفية الموظفين",
     "Teachers Only": "المعلمين فقط",
     "Non-Teachers": "غير المعلمين",

@@ -1,4 +1,11 @@
 {
+    "Deleted Employees": "Deleted Employees",
+    "Employee restored successfully.": "Employee restored successfully.",
+    "Search by name or employee code": "Search by name or employee code",
+    "Deleted At": "Deleted At",
+    "Unnamed Employee": "Unnamed Employee",
+    "Restore": "Restore",
+    "No deleted employees found.": "No deleted employees found.",
     "Filter Employees": "Filter Employees",
     "Teachers Only": "Teachers Only",
     "Non-Teachers": "Non-Teachers",
