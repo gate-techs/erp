@@ -20,6 +20,7 @@ use Modules\Academic\Http\Controllers\DailyReportController;
 use Modules\Academic\Http\Controllers\StudentWithdrawalRequestController;
 use Modules\Academic\Http\Controllers\IncidentReportController;
 use Modules\Academic\Http\Controllers\MedicationRequestController;
+use Modules\Academic\Http\Controllers\EventController;
 
 Route::middleware(['auth', 'verified'])
     ->prefix('academic')
@@ -374,4 +375,11 @@ Route::middleware(['auth', 'verified'])
         Route::get('incident-reports/{id}/print', [IncidentReportController::class, 'print'])
             ->name('incident-reports.print');
         Route::resource('incident-reports', IncidentReportController::class);
+
+        // App Calendar & Events / رزنامة التطبيق والفعاليات
+        Route::get('events/calendar-data', [EventController::class, 'calendarEvents'])
+            ->name('events.calendar-data');
+        Route::patch('events/{id}/toggle-status', [EventController::class, 'toggleStatus'])
+            ->name('events.toggle-status');
+        Route::resource('events', EventController::class);
     });

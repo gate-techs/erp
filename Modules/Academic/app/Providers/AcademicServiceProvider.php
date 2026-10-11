@@ -140,5 +140,10 @@ class AcademicServiceProvider extends ModuleServiceProvider
             \Modules\Academic\Repositories\Contracts\IncidentReportRepositoryInterface::class,
             \Modules\Academic\Repositories\IncidentReportRepository::class
         );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\EventRepositoryInterface::class,
+            \Modules\Academic\Repositories\EventRepository::class
+        );
     }
 }

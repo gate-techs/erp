@@ -101,6 +101,21 @@
       ]
     },
     {
+      "name": "Schedules & Events",
+      "icon": "menu-icon icon-base bx bx-calendar-event",
+      "slug": [
+        "academic.events"
+      ],
+      "submenu": [
+        {
+          "name": "App Calendar",
+          "icon": "menu-icon icon-base bx bx-calendar",
+          "slug": "academic.events.index",
+          "url": "/academic/events"
+        }
+      ]
+    },
+    {
       "name": "Student Services",
       "icon": "menu-icon icon-base bx bx-group",
       "slug": [
