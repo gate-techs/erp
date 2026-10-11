@@ -330,7 +330,8 @@ $caret-spacing: .5em !default;
 
 // scss-docs-start font-variables
 $font-family-sans-serif:
-  "Public Sans",
+  "Almarai",
+  "Tajawal",
   -apple-system,
   blinkmacsystemfont,
   "Segoe UI",
@@ -604,9 +605,9 @@ $input-color: var(--#{$prefix}heading-color) !default;
 $input-border-color: color-mix(in sRGB, var(--#{$prefix}base-color) 22%, var(--#{$prefix}paper-bg)) !default;
 $input-hover-border-color: var(--#{$prefix}gray-600) !default; // (C)
 
-$input-focus-border-width: 2px !default; // (C)
+$input-focus-border-width: 1px !default; // (C) single thin border on focus, same as resting border
 $input-focus-border-color: $component-active-bg !default;
-$input-focus-box-shadow: 0 .125rem .25rem 0 rgba(var(--#{$prefix}primary-rgb), .4) !default;
+$input-focus-box-shadow: none !default;
 
 $input-plaintext-color: var(--#{$prefix}heading-color) !default;
 

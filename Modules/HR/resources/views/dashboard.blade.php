@@ -82,6 +82,77 @@
         border-color: #5c3c53 !important;
         color: #ffffff !important;
     }
+
+    /* Empty-state rows: let the message wrap even though tables use text-nowrap */
+    .table-clean td[colspan] {
+        white-space: normal;
+    }
+
+    /* ---------- Mobile / tablet ---------- */
+    @media (max-width: 767.98px) {
+        .hr-header-box {
+            padding: 1rem !important;
+        }
+
+        /* Card headers: title block + badges/actions wrap instead of overflowing */
+        .hr-odoo-card > .card-header {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem !important;
+        }
+        .hr-odoo-card > .card-header > :first-child {
+            flex: 1 1 14rem;
+            min-width: 0;
+        }
+        .hr-odoo-card > .card-header > :not(:first-child) {
+            flex-wrap: wrap;
+        }
+        .hr-odoo-card > .card-header .stat-icon-wrapper {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+        }
+
+        /* Pending-requests tabs: one scrollable line instead of overflowing the card */
+        .hr-odoo-card > .card-header .card-header-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            width: 100%;
+            margin: 0 !important;
+            scrollbar-width: none;
+        }
+        .hr-odoo-card > .card-header .card-header-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .hr-odoo-card > .card-header .card-header-tabs .nav-link {
+            white-space: nowrap;
+            padding: 8px 12px;
+        }
+
+        /* KPI cards footer: wrap the small stats */
+        .hr-stat-card > .border-top {
+            flex-wrap: wrap;
+            gap: 0.25rem 0.75rem;
+        }
+
+        /* Attendance card: columns stack, so swap the vertical dividers for spacing */
+        .hr-odoo-card .card-body > .row > .border-end {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+        .hr-odoo-card .card-body.p-4 {
+            padding: 1rem !important;
+        }
+
+        /* Status badges bar + gender split row */
+        .hr-odoo-card .bg-light.border-bottom.d-flex {
+            padding: 0.75rem 1rem !important;
+        }
+        .hr-odoo-card .card-body .d-flex.justify-content-between.small {
+            flex-wrap: wrap;
+            gap: 0.25rem 0.75rem;
+        }
+    }
 </style>
 @endsection
 
@@ -100,20 +171,20 @@
                 <i class="bx bx-home-circle font-22"></i>
             </div>
             <div>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center flex-wrap gap-2">
                     <h4 class="fw-bold text-heading mb-0">{{ __('Dashboard') }}</h4>
                     <span class="badge px-2 py-1 rounded-pill font-11" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">
                         {{ __('HR Operations') }}
                     </span>
                 </div>
-                <small class="text-muted d-block font-12 mt-1">
+                <small class="text-muted d-block font-12 mt-1 text-nowrap">
                     <i class="bx bx-calendar me-1"></i> {{ now()->translatedFormat('l، d F Y') }}
                 </small>
             </div>
         </div>
 
-        <!-- 4 Action Buttons strictly in one line (flex-nowrap) -->
-        <div class="d-flex align-items-center flex-nowrap gap-2" style="white-space: nowrap;">
+        <!-- 4 Action Buttons: one line on large screens, wrap evenly on smaller ones -->
+        <div class="d-flex align-items-center flex-wrap flex-lg-nowrap gap-2 hr-header-actions">
             <a href="{{ route('hr.attendances.index') }}" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1 px-3 py-2 rounded-2">
                 <i class="bx bx-time-five font-16"></i>
                 <span class="font-13">{{ __('Record Attendance') }}</span>
@@ -293,7 +364,7 @@
 
     <!-- Requisitions Table -->
     <div class="table-responsive">
-        <table class="table table-clean table-hover align-middle mb-0">
+        <table class="table table-clean text-nowrap table-hover align-middle mb-0">
             <thead>
                 <tr>
                     <th>{{ __('Requisition Code') }}</th>
@@ -431,7 +502,7 @@
                     <a href="{{ route('hr.attendances.index') }}" class="font-12 text-primary text-decoration-none">{{ __('View All') }} &rarr;</a>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-sm table-clean align-middle mb-0">
+                    <table class="table table-sm table-clean text-nowrap align-middle mb-0">
                         <thead>
                             <tr>
                                 <th>{{ __('Employee') }}</th>
@@ -493,7 +564,7 @@
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-clean table-hover align-middle mb-0">
+            <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                 <thead>
                     <tr>
                         <th>{{ __('Employee') }}</th>
@@ -604,7 +675,7 @@
         <!-- 1. Leaves Tab -->
         <div class="tab-pane fade show active" id="tabLeaves" role="tabpanel">
             <div class="table-responsive">
-                <table class="table table-clean table-hover align-middle mb-0">
+                <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>{{ __('Employee') }}</th>
@@ -655,7 +726,7 @@
         <!-- 2. Permissions Tab -->
         <div class="tab-pane fade" id="tabPermissions" role="tabpanel">
             <div class="table-responsive">
-                <table class="table table-clean table-hover align-middle mb-0">
+                <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>{{ __('Employee') }}</th>
@@ -706,7 +777,7 @@
         <!-- 3. Loans Tab -->
         <div class="tab-pane fade" id="tabLoans" role="tabpanel">
             <div class="table-responsive">
-                <table class="table table-clean table-hover align-middle mb-0">
+                <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>{{ __('Employee') }}</th>
@@ -829,7 +900,7 @@
                 </a>
             </div>
             <div class="table-responsive">
-                <table class="table table-clean table-hover align-middle mb-0">
+                <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>{{ __('Candidate') }}</th>
@@ -891,7 +962,7 @@
                 </a>
             </div>
             <div class="table-responsive">
-                <table class="table table-clean table-hover align-middle mb-0">
+                <table class="table table-clean text-nowrap table-hover align-middle mb-0">
                     <thead>
                         <tr>
                             <th>{{ __('Candidate') }}</th>

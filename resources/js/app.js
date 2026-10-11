@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (contentContainer) {
             domState.contentWidth = contentContainer.classList.contains('container-fluid') ? 'full' : 'boxed';
         } else {
-            domState.contentWidth = 'boxed';
+            domState.contentWidth = 'full'; // Default to full if not found
         }
 
         // Direction

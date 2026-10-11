@@ -269,7 +269,7 @@
         .custom-input-box:focus-within {
             border-color: #004B6B;
             background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(0, 75, 107, 0.1);
+            box-shadow: none;
         }
 
         .custom-input-box input {

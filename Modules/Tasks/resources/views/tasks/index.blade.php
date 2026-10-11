@@ -20,7 +20,7 @@
         .select2-container--bootstrap-5.select2-container--focus .select2-selection,
         .select2-container--bootstrap-5.select2-container--open .select2-selection {
             border-color: var(--bs-primary) !important;
-            box-shadow: 0 0 0.25rem 0.05rem rgba(var(--bs-primary-rgb), 0.25) !important;
+            box-shadow: none !important;
         }
     </style>
 @endsection

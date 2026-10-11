@@ -1,7 +1,7 @@
 <?php
 // Variables
 return [
-  "creatorName" => "ThemeSelection",
+  "creatorName" => "GTABS",
   "creatorUrl" => "https://gatetechs.com/en/",
   "templateName" => "GateTech",
   "templateSuffix" => "GateTech",
@@ -15,7 +15,7 @@ return [
   "support" => "https://gatetechs.com/en/",
   "adminTemplates" => "https://gatetechs.com/en/",
   "bootstrapDashboard" => "https://gatetechs.com/en/",
-  "ogTitle" => "Sneat Bootstrap 5 HTML + Laravel Admin Template by ThemeSelection",
+  "ogTitle" => "Sneat Bootstrap 5 HTML + Laravel Admin Template by GTABS",
   "ogImage" => "https://gatetechs.com/en/storage/settings/September2026/gWnSw2WpM6lW9Rj1v5Wb.png",
   "ogType" => "product",
   "documentation" => "https://gatetechs.com/en/",

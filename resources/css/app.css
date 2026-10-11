@@ -181,8 +181,8 @@ div.dt-length select.dt-input,
 
 div.dt-length select:focus,
 .dataTables_wrapper .dataTables_length select:focus {
-    border-color: #0b284e !important;
-    box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.15) !important;
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
     outline: 0 !important;
 }
 
@@ -258,40 +258,62 @@ div.dt-search input:focus,
 #dt-search-0:focus,
 div.dataTables_filter input:focus,
 .dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #0b284e !important;
-    box-shadow: 0 0 0 0.2rem rgba(11, 40, 78, 0.15) !important;
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
     outline: 0 !important;
 }
 
-/* Responsive adjustments for Header Controls on Mobile */
-@media (max-width: 576px) {
+/* Responsive Header Controls on Mobile/Tablet:
+   page-length select stays compact at the start, search fills the rest of the same row.
+   Extra controls (if a page adds any) wrap to the next line. */
+@media (max-width: 767.98px) {
 
-    .card-datatable .dt-container>.row:first-child,
-    .card-datatable .dataTables_wrapper>.row:first-child {
-        flex-direction: column-reverse !important;
-        align-items: stretch !important;
+    .dt-header-row,
+    .dt-container>.row:first-child,
+    .dataTables_wrapper>.row:first-child {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
         padding: 1rem !important;
+        margin: 0 !important;
         gap: 0.75rem !important;
     }
 
-    .card-datatable .dt-container>.row:first-child>[class*="col-"],
-    .card-datatable .dataTables_wrapper>.row:first-child>[class*="col-"] {
-        width: 100% !important;
+    .dt-header-row>[class*="col"],
+    .dt-container>.row:first-child>[class*="col"],
+    .dataTables_wrapper>.row:first-child>[class*="col"] {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* The column holding the search box grows to fill the remaining space */
+    .dt-header-row>[class*="col"]:has(.dt-search, .dataTables_filter),
+    .dt-container>.row:first-child>[class*="col"]:has(.dt-search),
+    .dataTables_wrapper>.row:first-child>[class*="col"]:has(.dataTables_filter) {
+        flex: 1 1 160px !important;
+        min-width: 0 !important;
     }
 
     div.dt-search,
     div.dt-search label,
     div.dt-search input,
-    #dt-search-0 {
+    #dt-search-0,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_filter label,
+    .dataTables_wrapper .dataTables_filter input {
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
     }
 
-    div.dt-length {
+    div.dt-length,
+    .dataTables_wrapper .dataTables_length {
         display: flex !important;
-        justify-content: flex-end !important;
-        width: 100% !important;
+        width: auto !important;
     }
 }
 
@@ -446,11 +468,12 @@ div.dt-paging .pagination .page-item.disabled span.page-link,
     color: #6b7280 !important;
 }
 
-/* Responsive Footer on Mobile */
-@media (max-width: 576px) {
+/* Responsive Footer on Mobile: stack info + pagination and center both.
+   .dt-footer-row is set in the global DataTables dom; :last-child covers pages with their own dom. */
+@media (max-width: 767.98px) {
 
-    .card-datatable .dt-container>.row:last-child,
-    .card-datatable .dataTables_wrapper>.row:last-child,
+    .dt-footer-row,
+    .dt-container>.row:last-child,
     .dataTables_wrapper>.row:last-child {
         flex-direction: column !important;
         align-items: center !important;
@@ -459,12 +482,14 @@ div.dt-paging .pagination .page-item.disabled span.page-link,
         gap: 0.75rem !important;
     }
 
-    .card-datatable .dt-container>.row:last-child>[class*="col-"],
-    .card-datatable .dataTables_wrapper>.row:last-child>[class*="col-"],
-    .dataTables_wrapper>.row:last-child>[class*="col-"] {
+    .dt-footer-row>[class*="col"],
+    .dt-container>.row:last-child>[class*="col"],
+    .dataTables_wrapper>.row:last-child>[class*="col"] {
         width: 100% !important;
         display: flex !important;
         justify-content: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     div.dt-info,
@@ -558,18 +583,124 @@ table.dataTable tbody {
 /* ==========================================================================
    Mobile Top Navbar & Action Bar Enhancements
    ========================================================================== */
-@media (max-width: 576px) {
-    #navbar-collapse .nav-item .form-control {
-        max-width: 130px !important;
+/* Page header (title + add button): stay on one row with space-between on mobile,
+   wrap to a new line only when the content doesn't fit.
+   Targets the "d-flex flex-column flex-{sm|md|lg}-row justify-content-between" header
+   pattern used across pages, but not rows inside cards / modals / offcanvas. */
+@media (max-width: 991.98px) {
+    .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 0.75rem !important;
     }
+    .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) .btn.w-100 {
+        width: auto !important;
+    }
+    /* Title block (breadcrumb + title) may shrink so the breadcrumb wraps inside it instead of
+       pushing the action button to a new line; wrap only happens when there is truly no room */
+    .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :first-child {
+        flex: 1 1 0;
+        min-width: min(100%, 9rem);
+    }
+    .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :last-child:not(:first-child) {
+        flex: 0 1 auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        max-width: 100%;
+        min-width: 0;
+        margin-top: 0 !important;
+    }
+    /* Several header buttons: when the group runs out of room the buttons wrap and share the width evenly */
+    .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :last-child:not(:first-child) > .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
 
+/* Page header action buttons never break their label onto two lines */
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :last-child:not(:first-child) .btn,
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > .btn:last-child {
+    white-space: nowrap;
+}
+
+/* Page header with a breadcrumb: breadcrumb gets its own full-width line, then title + action buttons
+   share the next line (space-between). The wrapper around breadcrumb + title is flattened with
+   display: contents so its children become items of the header row. All screen sizes. */
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    column-gap: 0.75rem !important;
+    row-gap: 0.5rem !important;
+}
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :first-child {
+    display: contents !important;
+}
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :first-child > nav {
+    flex: 0 0 100%;
+    min-width: 0;
+    order: -1; /* breadcrumb always first, even on pages that put it under the title */
+}
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :first-child > nav .breadcrumb {
+    margin-bottom: 0 !important;
+}
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :first-child > :not(nav) {
+    flex: 1 1 auto;
+    min-width: min(100%, 9rem);
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :last-child:not(:first-child) {
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 100%;
+    min-width: 0;
+    margin-top: 0 !important;
+}
+
+@media (max-width: 1199.98px) {
+    /* Burger: keep it compact and evenly spaced from the search */
+    .layout-navbar .layout-menu-toggle {
+        margin-inline-end: 0.5rem !important;
+        flex-shrink: 0;
+    }
+}
+
+@media (max-width: 576px) {
     .layout-navbar .navbar-nav-right {
         gap: 0.35rem !important;
+        min-width: 0;
     }
 
-    .layout-navbar {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
+    .layout-navbar.navbar-detached {
+        padding-inline: 0.75rem !important;
+    }
+
+    /* Actions (lang, theme, profile): smaller circles and tighter gaps */
+    .layout-navbar .navbar-nav-right > .navbar-nav.flex-row {
+        gap: 0.35rem !important;
+        flex-shrink: 0;
+    }
+    .layout-navbar .btn-nav-circle {
+        width: 34px !important;
+        height: 34px !important;
+    }
+    .layout-navbar .btn-nav-circle .nav-icon-svg {
+        width: 19px;
+        height: 19px;
+    }
+    .layout-navbar .btn-nav-circle i.icon-base {
+        font-size: 1.15rem !important;
+    }
+    .layout-navbar .dropdown-user .avatar,
+    .layout-navbar .dropdown-user .avatar img {
+        width: 34px !important;
+        height: 34px !important;
+    }
+    .layout-navbar .dropdown-user {
+        margin-inline-start: 0.15rem !important;
     }
 }
 
@@ -1637,6 +1768,92 @@ html[dir="rtl"] .employee-page-header .employee-back-btn i {
     transform: scaleX(-1);
 }
 
+/* Icon action buttons (edit / delete / view ...): on hover fill with the button's own color and turn the icon white.
+   Applies to outline and label (soft) variants everywhere. */
+.btn-icon[class*="btn-outline-"],
+.btn-icon[class*="btn-label-"] {
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.btn-icon:is(.btn-outline-primary, .btn-label-primary):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-primary); }
+.btn-icon:is(.btn-outline-secondary, .btn-label-secondary):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-secondary); }
+.btn-icon:is(.btn-outline-success, .btn-label-success):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-success); }
+.btn-icon:is(.btn-outline-info, .btn-label-info):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-info); }
+.btn-icon:is(.btn-outline-warning, .btn-label-warning):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-warning); }
+.btn-icon:is(.btn-outline-danger, .btn-label-danger):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-danger); }
+.btn-icon:is(.btn-outline-dark, .btn-label-dark):is(:hover, :focus-visible, :active) { --erp-action-bg: var(--bs-dark); }
+.btn-icon:is([class*="btn-outline-"], [class*="btn-label-"]):not(:disabled, .disabled):is(:hover, :focus-visible, :active) {
+    background-color: var(--erp-action-bg) !important;
+    border-color: var(--erp-action-bg) !important;
+    color: #fff !important;
+}
+.btn-icon:is([class*="btn-outline-"], [class*="btn-label-"]):not(:disabled, .disabled):is(:hover, :focus-visible, :active) :is(i, svg, span) {
+    color: #fff !important;
+}
+
+/* Form labels with a title + hint side by side (".form-label.d-flex.justify-content-between"):
+   in narrow forms/offcanvas the hint wraps under the title instead of squeezing both into broken lines */
+.form-label.d-flex.justify-content-between {
+    flex-wrap: wrap;
+    column-gap: 0.75rem;
+    row-gap: 0.15rem;
+}
+.form-label.d-flex.justify-content-between > :first-child {
+    flex: 0 1 auto;
+}
+.form-label.d-flex.justify-content-between > small,
+.form-label.d-flex.justify-content-between > .text-muted {
+    flex: 0 1 auto;
+    font-weight: 400;
+}
+
+/* HR dashboard header actions: below lg, buttons wrap into an even 2-column grid */
+.hr-header-actions .btn {
+    white-space: nowrap;
+}
+@media (max-width: 991.98px) {
+    .hr-header-actions {
+        width: 100%;
+    }
+    .hr-header-actions .btn {
+        flex: 1 1 calc(50% - 0.5rem);
+        justify-content: center;
+        min-width: 0;
+    }
+    .hr-header-actions .btn > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Filter "Reset" buttons: keep icon + label on one line even in narrow columns */
+#btn_reset_filters {
+    white-space: nowrap;
+    padding-inline: 0.5rem !important;
+    min-width: 0;
+}
+#btn_reset_filters > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* DataTables empty / no-results row: centered message (DT2 uses .dt-empty, DT1 .dataTables_empty) */
+/* (html body ... tbody) raises specificity above the RTL "td { text-align: right }" rules */
+html body table.dataTable tbody td.dt-empty,
+html body table.dataTable tbody td.dataTables_empty,
+html body .card-datatable table tbody td:is(.dt-empty, .dataTables_empty) {
+    text-align: center !important;
+    padding-block: 1.5rem !important;
+    color: var(--bs-secondary-color);
+}
+
+/* RTL: mirror pagination arrows (DataTables + Laravel paginator) so "previous" points right and "next" points left */
+html[dir="rtl"] .pagination .bx-chevron-left,
+html[dir="rtl"] .pagination .bx-chevron-right,
+html[dir="rtl"] .pagination .bx-chevrons-left,
+html[dir="rtl"] .pagination .bx-chevrons-right {
+    transform: scaleX(-1);
+}
+
 /* ==========================================================================
    Phase 5B: Sidebar Polish & Global Search (Vuexy Restored)
    ========================================================================== */
@@ -1735,15 +1952,21 @@ html[dir="rtl"] .layout-menu .menu-sub .menu-item {
 }
 .global-navbar-search-input:focus {
     background-color: var(--bs-paper-bg) !important; /* Uses actual existing theme surface */
-    border-color: var(--bs-border-color) !important;
+    border-color: var(--bs-primary) !important;
     box-shadow: none !important;
     outline: none !important;
 }
 
-/* Mobile Search behavior */
+/* Mobile Search behavior: search takes the leftover space between burger and actions */
 @media (max-width: 767.98px) {
     .global-navbar-search-wrapper {
-        width: 100%;
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+    }
+    .global-navbar-search-input {
+        min-width: 0;
+        height: 36px !important;
     }
 }
 
@@ -2436,18 +2659,46 @@ i.icon-base,
     flex-shrink: 0;
 }
 
-/* Universal Icon & Typography Sizing Helper Utilities */
-.font-12 { font-size: 0.75rem !important; width: 0.75rem !important; height: 0.75rem !important; }
-.font-14 { font-size: 0.875rem !important; width: 0.875rem !important; height: 0.875rem !important; }
-.font-16, .icon-xs { font-size: 1rem !important; width: 1rem !important; height: 1rem !important; }
-.font-18, .icon-sm { font-size: 1.125rem !important; width: 1.125rem !important; height: 1.125rem !important; }
-.font-20 { font-size: 1.25rem !important; width: 1.25rem !important; height: 1.25rem !important; }
-.font-22, .icon-md { font-size: 1.375rem !important; width: 1.375rem !important; height: 1.375rem !important; }
-.font-24, .icon-lg { font-size: 1.5rem !important; width: 1.5rem !important; height: 1.5rem !important; }
-.font-28 { font-size: 1.75rem !important; width: 1.75rem !important; height: 1.75rem !important; }
-.font-32, .icon-xl { font-size: 2rem !important; width: 2rem !important; height: 2rem !important; }
-.font-36 { font-size: 2.25rem !important; width: 2.25rem !important; height: 2.25rem !important; }
-.font-48 { font-size: 3rem !important; width: 3rem !important; height: 3rem !important; }
+/* Keep Bootstrap's .d-none working on icons despite the forced inline-flex above */
+i.bx.d-none,
+i.icon-base.d-none,
+.icon-base.d-none {
+    display: none !important;
+}
+
+/* Universal Icon & Typography Sizing Helper Utilities
+   font-N sets the font size on anything (text, badges, links).
+   The fixed square box (width/height) is applied ONLY to icons — on text it squeezed
+   labels/badges into a tiny box and broke them character by character. */
+.font-10 { font-size: 0.625rem !important; }
+.font-11 { font-size: 0.6875rem !important; }
+.font-12 { font-size: 0.75rem !important; }
+.font-13 { font-size: 0.8125rem !important; }
+.font-14 { font-size: 0.875rem !important; }
+.font-16, .icon-xs { font-size: 1rem !important; }
+.font-18, .icon-sm { font-size: 1.125rem !important; }
+.font-20 { font-size: 1.25rem !important; }
+.font-22, .icon-md { font-size: 1.375rem !important; }
+.font-24, .icon-lg { font-size: 1.5rem !important; }
+.font-28 { font-size: 1.75rem !important; }
+.font-32, .icon-xl { font-size: 2rem !important; }
+.font-36 { font-size: 2.25rem !important; }
+.font-48 { font-size: 3rem !important; }
+
+:is(i, svg, .bx, .icon-base).font-10 { width: 0.625rem !important; height: 0.625rem !important; }
+:is(i, svg, .bx, .icon-base).font-11 { width: 0.6875rem !important; height: 0.6875rem !important; }
+:is(i, svg, .bx, .icon-base).font-12 { width: 0.75rem !important; height: 0.75rem !important; }
+:is(i, svg, .bx, .icon-base).font-13 { width: 0.8125rem !important; height: 0.8125rem !important; }
+:is(i, svg, .bx, .icon-base).font-14 { width: 0.875rem !important; height: 0.875rem !important; }
+:is(i, svg, .bx, .icon-base):is(.font-16, .icon-xs) { width: 1rem !important; height: 1rem !important; }
+:is(i, svg, .bx, .icon-base):is(.font-18, .icon-sm) { width: 1.125rem !important; height: 1.125rem !important; }
+:is(i, svg, .bx, .icon-base).font-20 { width: 1.25rem !important; height: 1.25rem !important; }
+:is(i, svg, .bx, .icon-base):is(.font-22, .icon-md) { width: 1.375rem !important; height: 1.375rem !important; }
+:is(i, svg, .bx, .icon-base):is(.font-24, .icon-lg) { width: 1.5rem !important; height: 1.5rem !important; }
+:is(i, svg, .bx, .icon-base).font-28 { width: 1.75rem !important; height: 1.75rem !important; }
+:is(i, svg, .bx, .icon-base):is(.font-32, .icon-xl) { width: 2rem !important; height: 2rem !important; }
+:is(i, svg, .bx, .icon-base).font-36 { width: 2.25rem !important; height: 2.25rem !important; }
+:is(i, svg, .bx, .icon-base).font-48 { width: 3rem !important; height: 3rem !important; }
 
 /* In Buttons */
 .btn {
@@ -2554,8 +2805,6 @@ textarea:disabled {
 }
 /* Ensure clear keyboard focus ring using existing theme variables */
 .btn:focus-visible,
-.form-control:focus-visible,
-.form-select:focus-visible,
 .dropdown-item:focus-visible,
 .page-link:focus-visible,
 .nav-link:focus-visible,
@@ -2563,6 +2812,29 @@ textarea:disabled {
     outline: 2px solid var(--bs-primary) !important;
     outline-offset: 2px !important;
     box-shadow: none !important; /* Override Bootstrap's blurry shadow */
+}
+
+/* Unified calm focus for every input/select: a single border tint, no outline ring, no glow */
+.form-control:focus,
+.form-control:focus-visible,
+.form-select:focus,
+.form-select:focus-visible,
+.select2-container--focus .select2-selection,
+.select2-container--open .select2-selection {
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Input groups: the template draws an extra 1px ring around the whole group on focus — drop it */
+.input-group:focus-within,
+.input-group:focus,
+.input-group:focus-within::before,
+.input-group:focus-within > * {
+    box-shadow: none !important;
+}
+.input-group:focus-within > .input-group-text {
+    border-color: var(--bs-primary) !important;
 }
 
 /* 2. Readonly Form Controls (Exclude Flatpickr) */
@@ -2646,7 +2918,10 @@ html.layout-navbar-fixed.layout-menu-collapsed .layout-content-navbar:not(.layou
 }
 
 @media (max-width: 1199.98px) {
-    html.layout-navbar-fixed .layout-content-navbar .layout-navbar.navbar-detached {
+    /* .layout-wrapper + :not() raise specificity above the desktop/collapsed rules (here and in demo.css),
+       otherwise the navbar keeps the sidebar offset on mobile and collapses into a tiny box */
+    html.layout-navbar-fixed .layout-content-navbar .layout-navbar.navbar-detached,
+    html.layout-navbar-fixed .layout-wrapper.layout-content-navbar:not(.layout-without-menu) .layout-navbar.navbar-detached {
         inset-inline-start: 0 !important;
         inset-inline-end: 0 !important;
         width: calc(100% - 2rem) !important;
@@ -2662,6 +2937,11 @@ html.layout-navbar-fixed .layout-without-menu .layout-navbar.navbar-detached {
     width: calc(100% - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
     max-width: calc(1440px - calc(var(--bs-gutter-x, 1.625rem) * 2)) !important;
     margin-inline: auto !important;
+}
+
+/* Full content width: let the detached navbar span the same width as the content */
+html.layout-navbar-fixed .layout-content-navbar .layout-navbar.navbar-detached.container-fluid {
+    max-width: none !important;
 }
 
 /* Ensure proper top clearance for fixed detached navbar */
@@ -2884,8 +3164,8 @@ html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
 
 .select2-container--focus .select2-selection--multiple,
 .select2-container--open .select2-selection--multiple {
-    border-color: #696cff !important;
-    box-shadow: 0 0 0.25rem 0.05rem rgba(105, 108, 255, 0.1) !important;
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
 }
 
 .select2-container .select2-selection--multiple .select2-selection__rendered {

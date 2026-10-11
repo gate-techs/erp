@@ -94,7 +94,7 @@
 
             <!-- 5. Status & Reset -->
             <div class="col-12 col-md-3">
-                <div class="row g-2">
+                <div class="row g-2 align-items-end">
                     <div class="col-7">
                         <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
                         <select id="filter_status" class="select2 form-select" data-allow-clear="true">
@@ -105,8 +105,7 @@
                         </select>
                     </div>
                     <div class="col-5">
-                        <label class="form-label d-none d-md-block">&nbsp;</label>
-                        <button type="button" id="btn_reset_filters" class="btn btn-label-secondary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+                        <button type="button" id="btn_reset_filters" class="btn btn-label-secondary w-100 d-flex align-items-center justify-content-center gap-1">
                             <i class="icon-base bx bx-reset font-18"></i>
                             <span>{{ __('Reset') }}</span>
                         </button>

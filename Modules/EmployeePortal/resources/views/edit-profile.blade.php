@@ -265,7 +265,7 @@
     .portal-form-control:focus {
         background: #ffffff;
         border-color: #00334B;
-        box-shadow: 0 0 0 3px rgba(0, 51, 75, 0.08);
+        box-shadow: none;
     }
 
     .portal-form-control:disabled, .portal-form-control[readonly] {
