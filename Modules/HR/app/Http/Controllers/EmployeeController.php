@@ -36,6 +36,47 @@ class EmployeeController extends Controller
 
     //======================
     /**
+     * Display employees that have been soft deleted.
+     */
+    public function deleted(Request $request): View
+    {
+        $search = trim((string) $request->input('search'));
+
+        $employees = Employee::onlyTrashed()
+            ->with([
+                'translations',
+                'department.translations',
+            ])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('employee_code', 'like', "%{$search}%")
+                        ->orWhereHas('translations', function ($query) use ($search) {
+                            $query->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->latest('deleted_at')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('hr::employees.deleted', compact('employees', 'search'));
+    }
+
+    //======================
+    /**
+     * Restore a soft deleted employee.
+     */
+    public function restore(int $id): RedirectResponse
+    {
+        $employee = Employee::onlyTrashed()->findOrFail($id);
+        $employee->restore();
+
+        return redirect()->route('hr.employees.deleted')
+            ->with('success', __('Employee restored successfully.'));
+    }
+
+    //======================
+    /**
      * Server-side DataTables endpoint for Employees.
      */
     public function data(Request $request): JsonResponse

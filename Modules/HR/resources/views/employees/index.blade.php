@@ -21,7 +21,11 @@
             </div>
         </div>
 
-        <div class="mt-3 mt-md-0">
+        <div class="mt-3 mt-md-0 d-flex gap-2">
+            <a href="{{ route('hr.employees.deleted') }}" class="btn btn-outline-secondary btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm">
+                <i class="icon-base bx bx-trash font-18"></i>
+                <span>{{ __('Deleted Employees') }}</span>
+            </a>
             <a href="{{ route('hr.employees.create') }}" class="btn btn-primary btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm">
                 <i class="icon-base bx bx-plus font-18"></i>
                 <span>{{ __('Add New Employee') }}</span>
