@@ -46,4 +46,10 @@ class ItemCategory extends Model implements TranslatableContract
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    //------------------------------------------
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class, 'category_id');
+    }
 }

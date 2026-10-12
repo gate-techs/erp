@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\GeneralDashboardRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Eloquent\GeneralDashboardRepository;
 use App\Repositories\Eloquent\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +17,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(GeneralDashboardRepositoryInterface::class, GeneralDashboardRepository::class);
     }
 
     //==================================

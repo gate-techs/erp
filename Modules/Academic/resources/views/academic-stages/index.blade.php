@@ -415,7 +415,7 @@ window.addEventListener('load', function () {
                 className: 'text-center',
                 render: (data, type, row, meta) => `<strong class="text-muted">#${data || (meta.row + 1 + (meta.settings._iDisplayStart || 0))}</strong>`
             },
-            { data: 'name', name: 'translations.name', className: 'fw-semibold text-heading' },
+            { data: 'name', name: 'translations.name', className: 'fw-semibold text-heading', render: (data, type, row) => `<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-stage" data-id="${row.id}" title="{{ __('Edit') }}">${$('<div>').text(data || '-').html()}</button>` },
             { data: 'institution_name', name: 'institution_id', defaultContent: '-' },
             { data: 'code', name: 'code', className: 'text-center' },
             { data: 'age_range', name: 'min_age_months', className: 'text-center' },

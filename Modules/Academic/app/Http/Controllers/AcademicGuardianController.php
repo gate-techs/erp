@@ -54,7 +54,7 @@ class AcademicGuardianController extends Controller
                 $name = $guardian->translate($locale)?->name ?? $guardian->translate('ar')?->name ?? $guardian->name ?? '-';
                 $nameSafe = e($name);
 
-                $html = '<span class="fw-semibold text-heading guardian-name-text">' . $nameSafe . '</span>';
+                $html = '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none guardian-name-text edit-record-btn" data-id="' . $guardian->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>';
                 if ($guardian->user && $guardian->user->employee) {
                     $html .= ' <span class="badge bg-label-warning font-11 ms-1"><i class="icon-base bx bx-briefcase font-12 me-1"></i>' . e(__('Staff')) . '</span>';
                 }

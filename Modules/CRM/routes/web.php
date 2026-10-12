@@ -9,6 +9,8 @@ Route::middleware(['auth', 'verified'])->prefix('crm')->name('crm.')->group(func
     Route::middleware('permission:crm.leads.view')->group(function () {
         Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
         Route::get('leads/data', [LeadController::class, 'data'])->name('leads.data');
+        Route::get('leads/statistics', [LeadController::class, 'statisticsPage'])->name('leads.statistics');
+        Route::get('leads/statistics/data', [LeadController::class, 'statistics'])->name('leads.statistics.data');
     });
     Route::post('leads', [LeadController::class, 'store'])
         ->middleware('permission:crm.leads.create')

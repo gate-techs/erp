@@ -1,143 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', __('App Calendar') . ' - ' . config('variables.templateName'))
-
-@section('page-style')
-<style>
-    /* FullCalendar Sneat Theme Customization */
-    .fc-theme-standard th {
-        background-color: #fbfbfb;
-        color: #566a7f;
-        font-weight: 600;
-        font-size: 0.85rem;
-        padding: 10px 0;
-        text-align: center;
-        border-color: #e7e7e8 !important;
-    }
-
-    .fc-theme-standard td,
-    .fc-theme-standard .fc-scrollgrid {
-        border-color: #eceef1 !important;
-    }
-
-    .fc .fc-toolbar {
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-        margin-bottom: 1.5rem !important;
-    }
-
-    .fc .fc-toolbar-title {
-        font-size: 1.35rem;
-        font-weight: 600;
-        color: #566a7f;
-        margin: 0 12px !important;
-    }
-
-    /* Primary Add Event Button */
-    .fc .fc-addEventButton-button {
-        background-color: #0b3252 !important;
-        border-color: #0b3252 !important;
-        color: #ffffff !important;
-        font-weight: 600 !important;
-        padding: 0.45rem 1.25rem !important;
-        border-radius: 0.375rem !important;
-        font-size: 0.9rem !important;
-        box-shadow: 0 2px 4px rgba(11, 50, 82, 0.2);
-        transition: all 0.2s ease;
-        margin-inline-end: 10px !important;
-    }
-
-    .fc .fc-addEventButton-button:hover {
-        background-color: #08253d !important;
-        border-color: #08253d !important;
-    }
-
-    /* Views Buttons Group (Month, Week, Day, List) */
-    .fc .fc-button-group {
-        border-radius: 0.375rem;
-        overflow: hidden;
-        border: 1px solid #d9dee3;
-    }
-
-    .fc .fc-button-group > .fc-button {
-        background-color: #b5c7d6 !important;
-        border: none !important;
-        color: #2b435b !important;
-        font-weight: 500 !important;
-        font-size: 0.85rem !important;
-        padding: 0.45rem 0.9rem !important;
-        text-transform: capitalize;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        transition: background-color 0.2s;
-    }
-
-    .fc .fc-button-group > .fc-button:not(:last-child) {
-        border-inline-end: 1px solid #9eb3c4 !important;
-    }
-
-    .fc .fc-button-group > .fc-button.fc-button-active,
-    .fc .fc-button-group > .fc-button:hover {
-        background-color: #9ab4c7 !important;
-        color: #172d42 !important;
-        font-weight: 600 !important;
-    }
-
-    /* Prev & Next Navigation Buttons */
-    .fc .fc-prev-button,
-    .fc .fc-next-button {
-        background: transparent !important;
-        border: none !important;
-        color: #566a7f !important;
-        font-size: 1.1rem !important;
-        padding: 0.25rem 0.5rem !important;
-        box-shadow: none !important;
-    }
-
-    .fc .fc-prev-button:hover,
-    .fc .fc-next-button:hover {
-        color: #0b3252 !important;
-    }
-
-    .fc .fc-daygrid-day-number {
-        font-size: 0.85rem;
-        color: #8592a3;
-        padding: 6px 10px;
-        font-weight: 500;
-        text-decoration: none !important;
-    }
-
-    .fc .fc-day-today {
-        background-color: rgba(105, 108, 255, 0.04) !important;
-    }
-
-    .fc .fc-daygrid-day-top {
-        flex-direction: row-reverse;
-    }
-
-    /* Event Badges & Spanned Bars */
-    .fc-event {
-        cursor: pointer;
-        border-radius: 4px;
-        padding: 2px 6px;
-        font-size: 0.8rem;
-        border: none !important;
-        font-weight: 500;
-        margin-bottom: 2px;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .fc-event:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-    }
-
-    .fc-h-event {
-        border-radius: 4px;
-    }
-</style>
-@endsection
+@section('title', __('Events') . ' - ' . config('variables.templateName'))
 
 @section('content')
 <!-- Page Header -->
@@ -148,155 +11,370 @@
             <ol class="breadcrumb mb-1">
                 <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-muted fw-medium small">{{ __('Dashboard') }}</a></li>
                 <li class="breadcrumb-item text-muted fw-medium small">{{ __('Schedules & Events') }}</li>
-                <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ __('App Calendar') }}</li>
+                <li class="breadcrumb-item active text-primary fw-medium small" aria-current="page">{{ __('Events') }}</li>
             </ol>
         </nav>
         <!-- Title -->
         <div class="d-flex align-items-center gap-2 mt-1">
-            <i class="icon-base bx bx-calendar-event text-primary font-24"></i>
-            <h4 class="mb-0 fw-bold text-heading">{{ __('App Calendar') }}</h4>
-            <span class="badge bg-label-primary ms-2">{{ __('Events') }}</span>
+            <div class="avatar avatar-sm bg-label-primary rounded p-1 d-flex align-items-center justify-content-center">
+                <i class="icon-base bx bx-party text-primary font-22"></i>
+            </div>
+            <div>
+                <h4 class="mb-0 fw-bold text-heading">{{ __('Events & Activities') }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        <a href="{{ route('settings.general.event-types.index') }}" class="btn btn-label-secondary btn-sm d-flex align-items-center gap-2 shadow-sm">
+            <i class="icon-base bx bx-category font-18"></i>
+            <span>{{ __('Event Types Settings') }}</span>
+        </a>
+        <button type="button" id="btn_open_add_event" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm">
+            <i class="icon-base bx bx-plus font-18"></i>
+            <span>{{ __('Add New Event') }}</span>
+        </button>
+    </div>
+</div>
+
+<div id="page_alert_container"></div>
+
+<!-- Quick Metrics Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center gap-3">
+                <div class="avatar bg-label-primary rounded p-2 d-flex align-items-center justify-content-center">
+                    <i class="icon-base bx bx-party font-22"></i>
+                </div>
+                <div>
+                    <span class="text-muted small d-block">{{ __('Total Events') }}</span>
+                    <h5 class="mb-0 fw-bold text-heading" id="metric_total_events">--</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center gap-3">
+                <div class="avatar bg-label-success rounded p-2 d-flex align-items-center justify-content-center">
+                    <i class="icon-base bx bx-check-circle font-22"></i>
+                </div>
+                <div>
+                    <span class="text-muted small d-block">{{ __('Active') }}</span>
+                    <h5 class="mb-0 fw-bold text-success" id="metric_active_events">--</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center gap-3">
+                <div class="avatar bg-label-warning rounded p-2 d-flex align-items-center justify-content-center">
+                    <i class="icon-base bx bx-time-five font-22"></i>
+                </div>
+                <div>
+                    <span class="text-muted small d-block">{{ __('Upcoming') }}</span>
+                    <h5 class="mb-0 fw-bold text-warning" id="metric_upcoming_events">--</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-3 d-flex align-items-center gap-3">
+                <div class="avatar bg-label-info rounded p-2 d-flex align-items-center justify-content-center">
+                    <i class="icon-base bx bx-calendar-event font-22"></i>
+                </div>
+                <div>
+                    <span class="text-muted small d-block">{{ __('Event Types') }}</span>
+                    <h5 class="mb-0 fw-bold text-info">{{ $eventTypes->count() }}</h5>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Calendar Card -->
+<!-- Filters Card -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body py-3">
+        <div class="row g-3 align-items-end">
+            <!-- 1. Institution Filter -->
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Nursery / Institution') }}</label>
+                <select id="filter_institution_id" class="select2 form-select" data-placeholder="{{ __('All Nurseries') }}">
+                    <option value="">{{ __('All Nurseries') }}</option>
+                    @foreach ($institutions as $inst)
+                        <option value="{{ $inst->id }}">{{ $inst->translate(app()->getLocale())?->name ?? $inst->translate('ar')?->name ?? $inst->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 2. Branch Filter -->
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Branch') }}</label>
+                <select id="filter_branch_id" class="select2 form-select" data-placeholder="{{ __('All Branches') }}">
+                    <option value="">{{ __('All Branches') }}</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 3. Class Filter -->
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Academic Class') }}</label>
+                <select id="filter_class_id" class="select2 form-select" data-placeholder="{{ __('All Classes') }}">
+                    <option value="">{{ __('All Classes') }}</option>
+                    @foreach ($classes as $cls)
+                        <option value="{{ $cls->id }}">{{ $cls->translate(app()->getLocale())?->name ?? $cls->translate('ar')?->name ?? $cls->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 4. Event Type Filter -->
+            <div class="col-12 col-md-3 col-lg-2">
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Event Type') }}</label>
+                <select id="filter_event_type_id" class="select2 form-select" data-placeholder="{{ __('All Types') }}">
+                    <option value="">{{ __('All Types') }}</option>
+                    @foreach ($eventTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->translate(app()->getLocale())?->name ?? $type->translate('ar')?->name ?? $type->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 5. Status Filter -->
+            <div class="col-12 col-md-2 col-lg-2">
+                <label class="form-label fw-semibold text-heading small mb-1">{{ __('Status') }}</label>
+                <select id="filter_status" class="select2 form-select" data-placeholder="{{ __('All Statuses') }}">
+                    <option value="">{{ __('All Statuses') }}</option>
+                    @foreach ($statuses as $key => $lbl)
+                        <option value="{{ $key }}">{{ $lbl }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- 6. Reset Button -->
+            <div class="col-12 col-md-2 col-lg-2 d-flex gap-2">
+                <button type="button" id="btn_reset_filters" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1">
+                    <i class="icon-base bx bx-reset font-18"></i>
+                    <span>{{ __('Reset') }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events Table Card -->
 <div class="card shadow-sm border-0">
-    <div class="card-body p-4">
-        <div id="calendar"></div>
+    <div class="card-datatable">
+        <table id="eventsTable" class="table table-hover border-top w-100 text-nowrap">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th style="width: 70px;">{{ __('Image') }}</th>
+                    <th>{{ __('Event Name') }}</th>
+                    <th>{{ __('Nursery & Branch') }}</th>
+                    <th>{{ __('Academic Class') }}</th>
+                    <th>{{ __('Event Type') }}</th>
+                    <th>{{ __('Date Range') }}</th>
+                    <th>{{ __('Price') }}</th>
+                    <th class="text-center" style="width: 90px;">{{ __('Status') }}</th>
+                    <th class="text-center" style="width: 120px;">{{ __('Actions') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loaded via DataTables Server-Side -->
+            </tbody>
+        </table>
     </div>
 </div>
 
 <!-- ============================================================== -->
-<!-- Add / Edit Event (Modal جانبي - Offcanvas Drawer) -->
+<!-- Offcanvas Drawer: Add / Edit Event (Side Modal)                -->
 <!-- ============================================================== -->
-<div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasEvent" aria-labelledby="offcanvasEventLabel" style="width: 480px; max-width: 95vw;">
+<div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasEvent" aria-labelledby="offcanvasEventLabel" style="width: 540px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
-        <h5 class="offcanvas-title fw-bold" id="offcanvasEventLabel">
-            <i class="icon-base bx bx-calendar-plus text-primary me-2"></i>
-            <span id="offcanvasEventTitleText">{{ __('Add Event') }}</span>
+        <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2 mb-0" id="offcanvasEventLabel">
+            <i class="icon-base bx bx-party text-primary font-22"></i>
+            <span id="offcanvasEventTitleText">{{ __('Add New Event') }}</span>
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
 
     <div class="offcanvas-body p-4">
-        <form id="formEvent">
+        <div id="offcanvas_alert_error" class="alert alert-danger d-none mb-3" role="alert">
+            <ul class="mb-0 ps-3" id="offcanvas_error_list"></ul>
+        </div>
+
+        <form id="eventForm" enctype="multipart/form-data">
             @csrf
-            <input type="hidden" id="event_id" name="id" value="">
+            <input type="hidden" id="event_method" name="_method" value="POST">
+            <input type="hidden" id="event_id" value="">
 
             <div class="row g-3">
-                <!-- Event Name AR -->
+                <!-- Cover Image Upload with Preview -->
+                <div class="col-12 text-center">
+                    <label class="form-label d-block text-start fw-semibold mb-2">{{ __('Event Cover / Image') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <div id="drawer_image_preview_box" class="position-relative d-inline-block rounded border overflow-hidden bg-light w-100 mb-2" style="height: 160px; cursor: pointer;" onclick="document.getElementById('drawer_image_input').click();">
+                        <img id="drawer_image_preview" src="" alt="Preview" class="w-100 h-100 object-fit-cover d-none">
+                        <div id="drawer_placeholder_box" class="h-100 d-flex flex-column align-items-center justify-content-center text-muted p-3">
+                            <i class="icon-base bx bx-cloud-upload font-32 text-primary mb-1"></i>
+                            <span class="small fw-medium">{{ __('Click to upload event image') }}</span>
+                            <small class="text-muted font-11">PNG, JPG, WEBP ({{ __('Max: 2MB') }})</small>
+                        </div>
+                    </div>
+                    <input type="file" name="image" id="drawer_image_input" class="d-none" accept="image/*">
+                </div>
+
+                <!-- Event Name Arabic -->
                 <div class="col-12">
-                    <label class="form-label required fw-medium">{{ __('Event Name (Arabic)') }}</label>
-                    <input type="text" class="form-control" id="title_ar" name="title_ar" placeholder="مثال: أسبوع التشجير" required>
+                    <label class="form-label required">{{ __('Event Name (Arabic)') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_ar" id="drawer_name_ar" class="form-control" placeholder="مثال: رحلة علمية إلى حديقة الشهيد" required>
                 </div>
 
-                <!-- Event Name EN -->
+                <!-- Event Name English -->
                 <div class="col-12">
-                    <label class="form-label required fw-medium">{{ __('Event Name (English)') }}</label>
-                    <input type="text" class="form-control" id="title_en" name="title_en" placeholder="e.g. Greening Week" required>
+                    <label class="form-label required">{{ __('Event Name (English)') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_en" id="drawer_name_en" class="form-control" placeholder="Example: Science Trip to Al Shaheed Park" required dir="ltr">
                 </div>
 
-                <!-- Start Date -->
-                <div class="col-12 col-md-6">
-                    <label class="form-label required fw-medium">{{ __('Date') }}</label>
-                    <input type="date" class="form-control" id="start_date" name="start_date" required>
-                </div>
-
-                <!-- End Date -->
-                <div class="col-12 col-md-6">
-                    <label class="form-label fw-medium">{{ __('End Date') }}</label>
-                    <input type="date" class="form-control" id="end_date" name="end_date">
-                    <small class="text-muted d-block mt-1">{{ __('Optional') }}</small>
-                </div>
-
-                <!-- Institution -->
+                <!-- Nursery / Institution -->
                 <div class="col-12">
-                    <label class="form-label required fw-medium">{{ __('Educational Institution / Nursery') }}</label>
-                    <select class="form-select select2-modal" id="modal_institution_id" name="institution_id" required>
-                        <option value="">{{ __('Select Institution') }}</option>
+                    <label class="form-label required">{{ __('Nursery') }} <span class="text-danger">*</span></label>
+                    <select id="drawer_institution_id" name="institution_id" class="form-select select2-drawer" required>
+                        <option value="">{{ __('Select Nursery') }}</option>
                         @foreach ($institutions as $inst)
                             <option value="{{ $inst->id }}">{{ $inst->translate(app()->getLocale())?->name ?? $inst->translate('ar')?->name ?? $inst->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <!-- Status -->
+                <!-- Branch -->
                 <div class="col-12">
-                    <label class="form-label fw-medium">{{ __('Status') }}</label>
-                    <select class="form-select" id="modal_status" name="status">
-                        <option value="active">{{ __('Active') }}</option>
-                        <option value="inactive">{{ __('Inactive') }}</option>
+                    <label class="form-label required">{{ __('Branch') }} <span class="text-danger">*</span></label>
+                    <select id="drawer_branch_id" name="branch_id" class="form-select select2-drawer" required>
+                        <option value="">{{ __('Select Branch') }}</option>
+                        @foreach ($branches as $branch)
+                            <option value="{{ $branch->id }}">{{ $branch->translate(app()->getLocale())?->name ?? $branch->translate('ar')?->name ?? $branch->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 
-                <!-- Description AR -->
+                <!-- Academic Class -->
                 <div class="col-12">
-                    <label class="form-label fw-medium">{{ __('Description (Arabic)') }}</label>
-                    <textarea class="form-control" id="description_ar" name="description_ar" rows="3" placeholder="وصف تفصيلي للحدث..."></textarea>
+                    <label class="form-label">{{ __('Academic Class') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <select id="drawer_academic_class_id" name="academic_class_id" class="form-select select2-drawer">
+                        <option value="">{{ __('All Classes in Branch') }}</option>
+                        @foreach ($classes as $cls)
+                            <option value="{{ $cls->id }}">{{ $cls->translate(app()->getLocale())?->name ?? $cls->translate('ar')?->name ?? $cls->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <!-- Description EN -->
+                <!-- Event Type -->
                 <div class="col-12">
-                    <label class="form-label fw-medium">{{ __('Description (English)') }}</label>
-                    <textarea class="form-control" id="description_en" name="description_en" rows="3" placeholder="Detailed event description..."></textarea>
+                    <label class="form-label required">{{ __('Event Type') }} <span class="text-danger">*</span></label>
+                    <select id="drawer_event_type_id" name="event_type_id" class="form-select select2-drawer" required>
+                        <option value="">{{ __('Select Event Type') }}</option>
+                        @foreach ($eventTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->translate(app()->getLocale())?->name ?? $type->translate('ar')?->name ?? $type->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-12">
+                    <label class="form-label required">{{ __('Start Date') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="start_date" id="drawer_start_date" class="form-control flatpickr-date" placeholder="YYYY-MM-DD" required>
+                </div>
+
+                <!-- End Date -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('End Date') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <input type="text" name="end_date" id="drawer_end_date" class="form-control flatpickr-date" placeholder="YYYY-MM-DD">
+                </div>
+
+                <!-- Start Time -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Start Time') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <input type="text" name="start_time" id="drawer_start_time" class="form-control flatpickr-time" placeholder="HH:MM">
+                </div>
+
+                <!-- End Time -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('End Time') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <input type="text" name="end_time" id="drawer_end_time" class="form-control flatpickr-time" placeholder="HH:MM">
+                </div>
+
+                <!-- Price -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Price / Fees (KWD)') }}</label>
+                    <div class="input-group">
+                        <input type="number" step="0.001" min="0" name="price" id="drawer_price" class="form-control" value="0.000">
+                        <span class="input-group-text">{{ __('KWD') }}</span>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Status') }}</label>
+                    <select name="status" id="drawer_status" class="form-select">
+                        @foreach ($statuses as $key => $lbl)
+                            <option value="{{ $key }}">{{ $lbl }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Details Arabic -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Event Details (Arabic)') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <textarea name="description_ar" id="drawer_description_ar" rows="3" class="form-control" placeholder="تفاصيل الفاعلية والتعليمات لأولياء الأمور..."></textarea>
+                </div>
+
+                <!-- Details English -->
+                <div class="col-12">
+                    <label class="form-label">{{ __('Event Details (English)') }} <small class="text-muted">({{ __('Optional') }})</small></label>
+                    <textarea name="description_en" id="drawer_description_en" rows="3" class="form-control" placeholder="Event details and instructions in English..." dir="ltr"></textarea>
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-2 pt-4 mt-4 border-top">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
-                <button type="submit" class="btn btn-primary" id="btnSaveEvent">
-                    <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
-                    <span>{{ __('Save') }}</span>
+            <div class="mt-4 pt-3 border-top d-flex align-items-center justify-content-end gap-2">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                <button type="submit" id="drawer_submit_btn" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
+                    <i class="icon-base bx bx-save font-18"></i>
+                    <span id="drawer_submit_text">{{ __('Save Event') }}</span>
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- ============================================================== -->
-<!-- View Event Details Modal -->
-<!-- ============================================================== -->
-<div class="modal fade" id="modalViewEvent" tabindex="-1" aria-hidden="true">
+<!-- Modal: Delete Event -->
+<div class="modal fade" id="deleteEventModal" tabindex="-1" aria-labelledby="deleteEventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <div class="d-flex align-items-center gap-2">
-                    <span style="width: 12px; height: 12px; border-radius: 50%; background-color: #ef4444; display: inline-block;"></span>
-                    <h5 class="modal-title fw-bold mb-0" id="viewEventTitle"></h5>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title d-flex align-items-center gap-2 text-danger" id="deleteEventModalLabel">
+                    <i class="icon-base bx bx-trash"></i>
+                    {{ __('Confirm Deletion') }}
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body py-4">
-                <div class="d-flex flex-column gap-3">
-                    <div class="d-flex align-items-center gap-2 text-muted">
-                        <i class="icon-base bx bx-calendar font-18 text-primary"></i>
-                        <span id="viewEventDates" class="fw-semibold text-heading"></span>
-                    </div>
-
-                    <div id="viewEventInstitutionRow" class="d-flex align-items-center gap-2 text-muted">
-                        <i class="icon-base bx bx-buildings font-18 text-primary"></i>
-                        <span id="viewEventInstitution"></span>
-                    </div>
-
-                    <div class="border-top pt-3">
-                        <label class="fw-semibold text-heading small mb-1">{{ __('Description') }}:</label>
-                        <p id="viewEventDescription" class="mb-0 text-muted" style="white-space: pre-wrap;"></p>
-                    </div>
-                </div>
+            <div class="modal-body text-center py-4">
+                <i class="icon-base bx bx-error-circle text-danger mb-3" style="font-size: 54px;"></i>
+                <h5 class="fw-bold mb-2">{{ __('Are you sure you want to delete this event?') }}</h5>
+                <p class="text-muted mb-0">
+                    {{ __('You are about to delete:') }} <strong id="delete_target_name" class="text-heading"></strong>
+                </p>
+                <small class="text-danger d-block mt-2">{{ __('This action cannot be undone.') }}</small>
             </div>
-            <div class="modal-footer justify-content-between border-top">
-                <button type="button" class="btn btn-outline-danger btn-sm" id="btnDeleteEventFromView">
-                    <i class="icon-base bx bx-trash font-16 me-1"></i>
-                    <span>{{ __('Delete') }}</span>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="button" id="btn_confirm_delete" class="btn btn-danger d-flex align-items-center gap-1">
+                    <i class="icon-base bx bx-trash"></i>
+                    <span>{{ __('Yes, Delete') }}</span>
                 </button>
-                <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="btnEditEventFromView">
-                        <i class="icon-base bx bx-edit font-16 me-1"></i>
-                        <span>{{ __('Edit') }}</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -304,310 +382,509 @@
 @endsection
 
 @section('page-script')
-<!-- FullCalendar v6 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales-all.global.min.js"></script>
-
 <script>
-    let calendar = null;
-    let currentEventData = null;
-    let offcanvasEventInstance = null;
-    const currentLocale = '{{ app()->getLocale() }}';
+window.addEventListener('load', function () {
+    const $ = window.jQuery || window.$;
+    if (!$ || !$.fn.DataTable) {
+        console.error('jQuery or DataTables not loaded');
+        return;
+    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const offcanvasEl = document.getElementById('offcanvasEvent');
-        if (offcanvasEl) {
-            offcanvasEventInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);
-        }
+    const dataUrl = "{{ route('academic.events.data') }}";
+    const storeUrl = "{{ route('academic.events.store') }}";
+    const baseUrl = "{{ url('academic/events') }}";
+    const branchesUrl = "{{ url('academic/events/branches') }}";
+    const classesUrl = "{{ url('academic/events/classes') }}";
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        initSelect2();
-        initCalendar();
-        initEventForm();
+    // Offcanvas Instance
+    const offcanvasEl = document.getElementById('offcanvasEvent');
+    const offcanvasInstance = offcanvasEl ? bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl) : null;
+
+    // Initialize Filter Select2
+    $('.select2').each(function () {
+        const placeholder = $(this).data('placeholder') || '';
+        $(this).select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            placeholder: placeholder,
+            allowClear: true,
+            dir: document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'
+        });
     });
 
-    //------------------------------
-    function initSelect2() {
-        if ($.fn.select2) {
-            $('.select2-modal').select2({
+    // Initialize Drawer Select2
+    function initDrawerSelect2() {
+        $('.select2-drawer').each(function () {
+            $(this).select2({
+                theme: 'bootstrap-5',
+                width: '100%',
                 dropdownParent: $('#offcanvasEvent'),
-                width: '100%'
+                dir: document.documentElement.dir === 'rtl' ? 'rtl' : 'ltr'
             });
-        }
+        });
     }
+    initDrawerSelect2();
 
-    //------------------------------
-    function initCalendar() {
-        const calendarEl = document.getElementById('calendar');
-
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: currentLocale === 'ar' ? 'ar' : 'en',
-            direction: currentLocale === 'ar' ? 'rtl' : 'ltr',
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next title',
-                center: '',
-                right: 'addEventButton dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-            },
-            customButtons: {
-                addEventButton: {
-                    text: '+ ' + (currentLocale === 'ar' ? 'اضف حدث' : 'Add Event'),
-                    click: function () {
-                        openAddEventOffcanvas();
-                    }
-                }
-            },
-            buttonText: {
-                today: currentLocale === 'ar' ? 'اليوم' : 'Today',
-                month: 'Month',
-                week: 'Week',
-                day: 'Day',
-                list: 'List'
-            },
-            height: 'auto',
-            navLinks: true,
-            dayMaxEvents: 4,
-            editable: false,
-            selectable: true,
-            selectMirror: true,
-
-            // Fetch Events via AJAX
-            events: function (fetchInfo, successCallback, failureCallback) {
-                $.ajax({
-                    url: '{{ route("academic.events.calendar-data") }}',
-                    type: 'GET',
-                    data: {
-                        start: fetchInfo.startStr,
-                        end: fetchInfo.endStr
-                    },
-                    success: function (response) {
-                        successCallback(response);
-                    },
-                    error: function () {
-                        failureCallback();
-                    }
-                });
-            },
-
-            // Click on date -> open side modal
-            select: function (selectionInfo) {
-                openAddEventOffcanvas(selectionInfo.startStr, selectionInfo.endStr);
-                calendar.unselect();
-            },
-
-            // Click on event -> view details modal
-            eventClick: function (info) {
-                info.jsEvent.preventDefault();
-                showEventDetails(info.event);
-            },
-
-            // Customize event render
-            eventContent: function (arg) {
-                const titleText = arg.event.title;
-
-                const container = document.createElement('div');
-                container.className = 'd-flex align-items-center gap-1 text-truncate w-100 px-1 py-1 rounded';
-                container.style.backgroundColor = '#fee2e2';
-                container.style.color = '#dc2626';
-                container.style.fontSize = '0.78rem';
-                container.style.border = '1px solid #fecaca';
-
-                container.innerHTML = `
-                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: #ef4444; display: inline-block; flex-shrink: 0;"></span>
-                    <span class="text-truncate fw-semibold">${titleText}</span>
-                `;
-
-                return { domNodes: [container] };
-            }
+    // Flatpickr
+    if (window.flatpickr) {
+        flatpickr('.flatpickr-date', {
+            dateFormat: 'Y-m-d',
+            allowInput: true,
+            disableMobile: true,
+            locale: document.documentElement.dir === 'rtl' && flatpickr.l10ns?.ar ? flatpickr.l10ns.ar : 'default'
         });
 
-        calendar.render();
-    }
-
-    //------------------------------
-    function openAddEventOffcanvas(startDate = '', endDate = '') {
-        $('#formEvent')[0].reset();
-        $('#event_id').val('');
-        $('#offcanvasEventTitleText').text('{{ __("Add Event") }}');
-
-        if (startDate) {
-            $('#start_date').val(startDate);
-        } else {
-            $('#start_date').val(new Date().toISOString().slice(0, 10));
-        }
-
-        if (endDate) {
-            const startD = new Date(startDate);
-            const endD = new Date(endDate);
-            const diffDays = Math.round((endD - startD) / (1000 * 60 * 60 * 24));
-            if (diffDays > 1) {
-                const adjEnd = new Date(endD);
-                adjEnd.setDate(adjEnd.getDate() - 1);
-                $('#end_date').val(adjEnd.toISOString().slice(0, 10));
-            } else {
-                $('#end_date').val('');
-            }
-        } else {
-            $('#end_date').val('');
-        }
-
-        const firstInst = $('#modal_institution_id option:nth-child(2)').val();
-        if (firstInst) {
-            $('#modal_institution_id').val(firstInst).trigger('change');
-        }
-
-        if (offcanvasEventInstance) {
-            offcanvasEventInstance.show();
-        }
-    }
-
-    //------------------------------
-    function showEventDetails(eventObj) {
-        currentEventData = eventObj;
-        const props = eventObj.extendedProps;
-
-        $('#viewEventTitle').text(eventObj.title);
-
-        let dateStr = props.start_date;
-        if (props.end_date && props.end_date !== props.start_date) {
-            dateStr += ' {{ __("to") }} ' + props.end_date;
-        }
-        $('#viewEventDates').text(dateStr);
-
-        let instText = props.institution_name || '';
-        if (instText) {
-            $('#viewEventInstitution').text(instText);
-            $('#viewEventInstitutionRow').removeClass('d-none');
-        } else {
-            $('#viewEventInstitutionRow').addClass('d-none');
-        }
-
-        const desc = (currentLocale === 'ar' ? (props.description_ar || props.description_en) : (props.description_en || props.description_ar)) || '-';
-        $('#viewEventDescription').text(desc);
-
-        $('#modalViewEvent').modal('show');
-    }
-
-    //------------------------------
-    $('#btnEditEventFromView').on('click', function () {
-        if (!currentEventData) return;
-        $('#modalViewEvent').modal('hide');
-        editEvent(currentEventData.id);
-    });
-
-    //------------------------------
-    $('#btnDeleteEventFromView').on('click', function () {
-        if (!currentEventData) return;
-        deleteEvent(currentEventData.id);
-    });
-
-    //------------------------------
-    function editEvent(id) {
-        $.ajax({
-            url: `{{ url("academic/events") }}/${id}`,
-            type: 'GET',
-            success: function (res) {
-                if (res.success && res.data) {
-                    const data = res.data;
-                    $('#event_id').val(data.id);
-                    $('#offcanvasEventTitleText').text('{{ __("Edit Event") }}');
-
-                    $('#title_ar').val(data.title_ar);
-                    $('#title_en').val(data.title_en);
-                    $('#description_ar').val(data.description_ar);
-                    $('#description_en').val(data.description_en);
-                    $('#start_date').val(data.start_date);
-                    $('#end_date').val(data.end_date || '');
-                    $('#modal_status').val(data.status || 'active');
-
-                    $('#modal_institution_id').val(data.institution_id).trigger('change');
-
-                    if (offcanvasEventInstance) {
-                        offcanvasEventInstance.show();
-                    }
-                }
-            },
-            error: function () {
-                alert('{{ __("Failed to load event data.") }}');
-            }
+        flatpickr('.flatpickr-time', {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: 'H:i',
+            allowInput: true,
+            disableMobile: true
         });
     }
 
-    //------------------------------
-    function deleteEvent(id) {
-        if (!confirm('{{ __("Are you sure you want to delete this event?") }}')) {
+    // Dynamic Cascade (Filter): Institution -> Branches
+    $('#filter_institution_id').on('change', function () {
+        const instId = $(this).val();
+        const branchSelect = $('#filter_branch_id');
+        branchSelect.empty().append(new Option("{{ __('All Branches') }}", ""));
+
+        if (!instId) {
+            branchSelect.trigger('change');
             return;
         }
 
-        $.ajax({
-            url: `{{ url("academic/events") }}/${id}`,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                _method: 'DELETE'
+        $.getJSON(branchesUrl + '/' + instId, function (data) {
+            data.forEach(function (b) {
+                branchSelect.append(new Option(b.name, b.id));
+            });
+            branchSelect.trigger('change');
+        });
+    });
+
+    // Dynamic Cascade (Filter): Branch -> Classes
+    $('#filter_branch_id').on('change', function () {
+        const branchId = $(this).val();
+        const classSelect = $('#filter_class_id');
+        classSelect.empty().append(new Option("{{ __('All Classes') }}", ""));
+
+        if (!branchId) {
+            classSelect.trigger('change');
+            return;
+        }
+
+        $.getJSON(classesUrl + '/' + branchId, function (data) {
+            data.forEach(function (c) {
+                classSelect.append(new Option(c.name, c.id));
+            });
+            classSelect.trigger('change');
+        });
+    });
+
+    // Dynamic Cascade (Drawer): Institution -> Branches
+    $('#drawer_institution_id').on('change', function () {
+        const instId = $(this).val();
+        const branchSelect = $('#drawer_branch_id');
+        const currentBranch = branchSelect.data('selected');
+        branchSelect.empty().append(new Option("{{ __('Select Branch') }}", ""));
+
+        if (!instId) {
+            branchSelect.trigger('change');
+            return;
+        }
+
+        $.getJSON(branchesUrl + '/' + instId, function (data) {
+            data.forEach(function (b) {
+                const opt = new Option(b.name, b.id, false, b.id == currentBranch);
+                branchSelect.append(opt);
+            });
+            branchSelect.trigger('change');
+        });
+    });
+
+    // Dynamic Cascade (Drawer): Branch -> Classes
+    $('#drawer_branch_id').on('change', function () {
+        const branchId = $(this).val();
+        const classSelect = $('#drawer_academic_class_id');
+        const currentClass = classSelect.data('selected');
+        classSelect.empty().append(new Option("{{ __('All Classes in Branch') }}", ""));
+
+        if (!branchId) {
+            classSelect.trigger('change');
+            return;
+        }
+
+        $.getJSON(classesUrl + '/' + branchId, function (data) {
+            data.forEach(function (c) {
+                const opt = new Option(c.name, c.id, false, c.id == currentClass);
+                classSelect.append(opt);
+            });
+            classSelect.trigger('change');
+        });
+    });
+
+    // Initialize DataTable
+    const table = $('#eventsTable').DataTable({
+        processing: true,
+        serverSide: true,
+        pagingType: 'simple_numbers',
+        ajax: {
+            url: dataUrl,
+            data: function (d) {
+                d.institution_id = $('#filter_institution_id').val();
+                d.branch_id = $('#filter_branch_id').val();
+                d.academic_class_id = $('#filter_class_id').val();
+                d.event_type_id = $('#filter_event_type_id').val();
+                d.status = $('#filter_status').val();
+            }
+        },
+        drawCallback: function (settings) {
+            const json = settings.json;
+            if (json) {
+                $('#metric_total_events').text(json.recordsTotal || 0);
+            }
+        },
+        columns: [
+            {
+                data: 'DT_RowIndex',
+                name: 'DT_RowIndex',
+                orderable: false,
+                searchable: false,
+                render: (data, type, row, meta) => `<strong class="text-muted">#${data || (meta.row + 1 + (meta.settings._iDisplayStart || 0))}</strong>`
             },
+            {
+                data: 'image_url',
+                name: 'image',
+                orderable: false,
+                searchable: false,
+                render: data => data
+                    ? `<img src="${data}" alt="Cover" class="rounded object-fit-cover border shadow-xs" width="42" height="42">`
+                    : `<div class="avatar avatar-sm bg-label-primary rounded d-inline-flex align-items-center justify-content-center" style="width: 42px; height: 42px;"><i class="icon-base bx bx-party font-20"></i></div>`
+            },
+            {
+                data: 'name_display',
+                name: 'name',
+                orderable: false,
+                render: (data, type, row) => `
+                    <div>
+                        <a href="${row.actions?.show_url}" class="fw-bold text-heading text-hover-primary d-block">${data}</a>
+                        ${row.name_en && row.name_en !== data ? `<small class="text-muted d-block font-sans">${row.name_en}</small>` : ''}
+                    </div>`
+            },
+            {
+                data: 'institution_name',
+                name: 'institution_id',
+                orderable: false,
+                render: (data, type, row) => `
+                    <div>
+                        <span class="fw-semibold text-heading small">${data}</span>
+                        <small class="text-muted d-block"><i class="bx bx-map-pin font-12 me-1"></i>${row.branch_name || '-'}</small>
+                    </div>`
+            },
+            {
+                data: 'class_name',
+                name: 'academic_class_id',
+                orderable: false,
+                render: data => (data === "{{ __('All Classes') }}")
+                    ? `<span class="badge bg-label-secondary font-monospace"><i class="bx bx-layer me-1 font-12"></i>${data}</span>`
+                    : `<span class="badge bg-label-primary"><i class="bx bx-chalkboard me-1 font-12"></i>${data}</span>`
+            },
+            {
+                data: 'event_type_name',
+                name: 'event_type_id',
+                orderable: false,
+                render: data => `<span class="badge bg-label-info fw-semibold"><i class="bx bx-tag-alt me-1 font-12"></i>${data}</span>`
+            },
+            {
+                data: 'dates_formatted',
+                name: 'start_date',
+                render: data => `
+                    <div class="small">
+                        <span class="fw-medium text-heading">${data?.full || '-'}</span>
+                    </div>`
+            },
+            {
+                data: 'price',
+                name: 'price',
+                render: data => (parseFloat(data) > 0)
+                    ? `<span class="badge bg-label-success fw-bold">${data} {{ __('KWD') }}</span>`
+                    : `<span class="badge bg-label-secondary">{{ __('Free') }}</span>`
+            },
+            {
+                data: 'status',
+                name: 'status',
+                className: 'text-center',
+                render: (data, type, row) => {
+                    const isChecked = (data === 'active') ? 'checked' : '';
+                    let badgeClass = 'bg-label-success';
+                    let label = "{{ __('Active') }}";
+
+                    if (data === 'inactive') {
+                        badgeClass = 'bg-label-danger';
+                        label = "{{ __('Inactive') }}";
+                    } else if (data === 'upcoming') {
+                        badgeClass = 'bg-label-warning';
+                        label = "{{ __('Upcoming') }}";
+                    } else if (data === 'completed') {
+                        badgeClass = 'bg-label-secondary';
+                        label = "{{ __('Completed') }}";
+                    }
+
+                    return `
+                        <div class="d-flex flex-column align-items-center gap-1">
+                            <span class="badge ${badgeClass} mb-1">${label}</span>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input btn-toggle-event-status" type="checkbox" role="switch" data-id="${row.id}" ${isChecked}>
+                            </div>
+                        </div>`;
+                }
+            },
+            {
+                data: 'actions',
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                render: (actions, type, row) => `
+                    <div class="d-inline-flex gap-1">
+                        <a href="${actions.show_url}" class="btn btn-icon btn-sm btn-outline-info" title="{{ __('View') }}">
+                            <i class="icon-base bx bx-show"></i>
+                        </a>
+                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-event"
+                                title="{{ __('Edit') }}"
+                                data-id="${row.id}">
+                            <i class="icon-base bx bx-edit-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-event"
+                                title="{{ __('Delete') }}"
+                                data-id="${row.id}"
+                                data-url="${actions.delete_url}"
+                                data-name="${row.name_display}">
+                            <i class="icon-base bx bx-trash"></i>
+                        </button>
+                    </div>`
+            }
+        ],
+        order: [[6, 'desc']]
+    });
+
+    // Filter changes reload
+    $('#filter_institution_id, #filter_branch_id, #filter_class_id, #filter_event_type_id, #filter_status').on('change', function () {
+        table.ajax.reload();
+    });
+
+    // Reset Filters
+    $('#btn_reset_filters').on('click', function () {
+        $('#filter_institution_id').val('').trigger('change');
+        $('#filter_branch_id').val('').trigger('change');
+        $('#filter_class_id').val('').trigger('change');
+        $('#filter_event_type_id').val('').trigger('change');
+        $('#filter_status').val('').trigger('change');
+        table.ajax.reload();
+    });
+
+    // Image Preview Handling in Drawer
+    const drawerImageInput = document.getElementById('drawer_image_input');
+    const drawerImagePreview = document.getElementById('drawer_image_preview');
+    const drawerPlaceholderBox = document.getElementById('drawer_placeholder_box');
+
+    if (drawerImageInput) {
+        drawerImageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    drawerImagePreview.src = e.target.result;
+                    drawerImagePreview.classList.remove('d-none');
+                    drawerPlaceholderBox.classList.add('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function resetDrawerForm() {
+        $('#eventForm')[0].reset();
+        $('#event_id').val('');
+        $('#event_method').val('POST');
+        $('#offcanvas_alert_error').addClass('d-none');
+        $('#offcanvas_error_list').empty();
+
+        drawerImagePreview.src = '';
+        drawerImagePreview.classList.add('d-none');
+        drawerPlaceholderBox.classList.remove('d-none');
+
+        $('#drawer_institution_id').val('').data('selected', '').trigger('change');
+        $('#drawer_branch_id').val('').data('selected', '').trigger('change');
+        $('#drawer_academic_class_id').val('').data('selected', '').trigger('change');
+        $('#drawer_event_type_id').val('').trigger('change');
+        $('#drawer_status').val('active');
+        $('#drawer_price').val('0.000');
+    }
+
+    // Open Drawer for Add Event
+    $('#btn_open_add_event').on('click', function () {
+        resetDrawerForm();
+        $('#offcanvasEventTitleText').text("{{ __('Add New Event') }}");
+        $('#drawer_submit_text').text("{{ __('Save Event') }}");
+        if (offcanvasInstance) offcanvasInstance.show();
+    });
+
+    // Open Drawer for Edit Event
+    $(document).on('click', '.btn-edit-event', function () {
+        const id = $(this).data('id');
+        resetDrawerForm();
+        $('#offcanvasEventTitleText').text("{{ __('Edit Event') }}");
+        $('#drawer_submit_text').text("{{ __('Update Event') }}");
+        $('#event_id').val(id);
+        $('#event_method').val('PUT');
+
+        $.ajax({
+            url: baseUrl + '/' + id + '/edit',
+            type: 'GET',
+            headers: { 'Accept': 'application/json' },
             success: function (res) {
-                $('#modalViewEvent').modal('hide');
-                calendar.refetchEvents();
+                $('#drawer_name_ar').val(res.name_ar || '');
+                $('#drawer_name_en').val(res.name_en || '');
+                $('#drawer_description_ar').val(res.description_ar || '');
+                $('#drawer_description_en').val(res.description_en || '');
+                $('#drawer_start_date').val(res.start_date || '');
+                $('#drawer_end_date').val(res.end_date || '');
+                $('#drawer_start_time').val(res.start_time || '');
+                $('#drawer_end_time').val(res.end_time || '');
+                $('#drawer_price').val(res.price || '0.000');
+                $('#drawer_status').val(res.status || 'active');
+
+                if (res.image_url) {
+                    drawerImagePreview.src = res.image_url;
+                    drawerImagePreview.classList.remove('d-none');
+                    drawerPlaceholderBox.classList.add('d-none');
+                }
+
+                $('#drawer_event_type_id').val(res.event_type_id).trigger('change');
+
+                // Cascade setting with preselected values
+                $('#drawer_branch_id').data('selected', res.branch_id);
+                $('#drawer_academic_class_id').data('selected', res.academic_class_id);
+                $('#drawer_institution_id').val(res.institution_id).trigger('change');
+
+                if (offcanvasInstance) offcanvasInstance.show();
             },
             error: function () {
-                alert('{{ __("Failed to delete event.") }}');
+                alert("{{ __('Failed to load event data.') }}");
             }
         });
-    }
+    });
 
-    //------------------------------
-    function initEventForm() {
-        $('#formEvent').on('submit', function (e) {
-            e.preventDefault();
+    // Handle Event Form Submission (AJAX via FormData)
+    $('#eventForm').on('submit', function (e) {
+        e.preventDefault();
+        const form = this;
+        const id = $('#event_id').val();
+        const isUpdate = (id !== '');
+        const submitBtn = $('#drawer_submit_btn');
+        const errorAlert = $('#offcanvas_alert_error');
+        const errorList = $('#offcanvas_error_list');
 
-            const form = $(this);
-            const id = $('#event_id').val();
-            const url = id ? `{{ url("academic/events") }}/${id}` : '{{ route("academic.events.store") }}';
+        errorAlert.addClass('d-none');
+        errorList.empty();
+        submitBtn.prop('disabled', true);
 
-            const btnSave = $('#btnSaveEvent');
-            const spinner = btnSave.find('.spinner-border');
+        const formData = new FormData(form);
+        const targetUrl = isUpdate ? (baseUrl + '/' + id) : storeUrl;
 
-            btnSave.prop('disabled', true);
-            spinner.removeClass('d-none');
+        $.ajax({
+            url: targetUrl,
+            type: 'POST', // with _method=PUT inside formData for update
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            },
+            success: function (res) {
+                if (offcanvasInstance) offcanvasInstance.hide();
+                table.ajax.reload(null, false);
 
-            const payload = form.serializeArray();
-            if (id) {
-                payload.push({ name: '_method', value: 'PUT' });
-            }
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: $.param(payload),
-                success: function (res) {
-                    btnSave.prop('disabled', false);
-                    spinner.addClass('d-none');
-
-                    if (res.success) {
-                        if (offcanvasEventInstance) {
-                            offcanvasEventInstance.hide();
-                        }
-                        calendar.refetchEvents();
-                    } else {
-                        alert(res.message || '{{ __("Error occurred.") }}');
-                    }
-                },
-                error: function (xhr) {
-                    btnSave.prop('disabled', false);
-                    spinner.addClass('d-none');
-
-                    let msg = '{{ __("Validation error:") }}\n';
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        for (const key in xhr.responseJSON.errors) {
-                            msg += xhr.responseJSON.errors[key].join(', ') + '\n';
-                        }
-                    } else {
-                        msg = xhr.responseJSON?.message || '{{ __("Error saving event.") }}';
-                    }
-                    alert(msg);
+                $('#page_alert_container').html(`
+                    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
+                        <i class="bx bx-check-circle me-2 font-20"></i>
+                        <div>${res.message || "{{ __('Saved successfully.') }}"}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `);
+            },
+            error: function (xhr) {
+                errorAlert.removeClass('d-none');
+                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errs = xhr.responseJSON.errors;
+                    Object.keys(errs).forEach(function (key) {
+                        errs[key].forEach(function (msg) {
+                            errorList.append(`<li>${msg}</li>`);
+                        });
+                    });
+                } else {
+                    errorList.append(`<li>{{ __('Error saving event. Please check inputs and try again.') }}</li>`);
                 }
-            });
+            },
+            complete: function () {
+                submitBtn.prop('disabled', false);
+            }
         });
-    }
+    });
+
+    // Delete Event Handling
+    let deleteTargetUrl = '';
+    const deleteModalEl = document.getElementById('deleteEventModal');
+    const deleteModal = deleteModalEl ? new bootstrap.Modal(deleteModalEl) : null;
+    const deleteTargetName = document.getElementById('delete_target_name');
+
+    $(document).on('click', '.btn-delete-event', function () {
+        deleteTargetUrl = $(this).data('url');
+        deleteTargetName.textContent = $(this).data('name') || '';
+        if (deleteModal) deleteModal.show();
+    });
+
+    $('#btn_confirm_delete').on('click', function () {
+        if (!deleteTargetUrl) return;
+        const btn = $(this);
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: deleteTargetUrl,
+            type: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+            success: function (res) {
+                if (deleteModal) deleteModal.hide();
+                table.ajax.reload();
+            },
+            error: function () {
+                alert("{{ __('Failed to delete event. Please try again.') }}");
+            },
+            complete: function () {
+                btn.prop('disabled', false);
+            }
+        });
+    });
+
+    // Toggle Status Handling
+    $(document).on('change', '.btn-toggle-event-status', function () {
+        const id = $(this).data('id');
+        const checkbox = $(this);
+        $.ajax({
+            url: baseUrl + '/' + id + '/toggle-status',
+            type: 'PATCH',
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+            success: function () {
+                table.ajax.reload(null, false);
+            },
+            error: function () {
+                checkbox.prop('checked', !checkbox.prop('checked'));
+                alert("{{ __('Failed to update status. Please try again.') }}");
+            }
+        });
+    });
+});
 </script>
 @endsection

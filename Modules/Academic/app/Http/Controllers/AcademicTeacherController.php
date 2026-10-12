@@ -60,7 +60,7 @@ class AcademicTeacherController extends Controller
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <img src="' . e($avatar) . '" alt="' . e($name) . '" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
-                        <span class="fw-semibold text-heading teacher-name-text">' . e($name) . '</span>
+                        <button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none teacher-name-text edit-teacher-btn" data-id="' . $teacher->id . '" title="' . e(__('Edit Basic Info')) . '">' . e($name) . '</button>
                     </div>';
             })
             ->addColumn('job_title', function (Employee $teacher) {

@@ -199,6 +199,62 @@ class GeneralSettingController extends Controller
     }
 
     // =========================================================================
+    // 5. Event Types (أنواع الفاعليات)
+    // =========================================================================
+
+    public function eventTypes(): View
+    {
+        return view('settings::general.event_types.index');
+    }
+
+    public function eventTypesData(): JsonResponse
+    {
+        return $this->getSettingDataQuery(GeneralSettingType::EVENT_TYPE);
+    }
+
+    public function storeEventType(Request $request): RedirectResponse
+    {
+        return $this->handleStore(
+            $request,
+            GeneralSettingType::EVENT_TYPE,
+            'settings.general.event-types.index',
+            __('تمت إضافة نوع الفاعلية بنجاح.')
+        );
+    }
+
+    public function updateEventType(Request $request, int $id): RedirectResponse
+    {
+        return $this->handleUpdate(
+            $request,
+            $id,
+            'settings.general.event-types.index',
+            __('تم تحديث بيانات نوع الفاعلية بنجاح.')
+        );
+    }
+
+    public function destroyEventType(int $id): RedirectResponse
+    {
+        return $this->handleDestroy(
+            $id,
+            'settings.general.event-types.index',
+            __('تم حذف نوع الفاعلية بنجاح.')
+        );
+    }
+
+    public function toggleEventTypeStatus(int $id): JsonResponse
+    {
+        $setting = GeneralSetting::findOrFail($id);
+        $setting->status = !$setting->status;
+        $setting->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => (bool)$setting->status,
+            'message' => __('تم تحديث الحالة بنجاح.')
+        ]);
+    }
+
+    // =========================================================================
     // Common Helper Methods
     // =========================================================================
 
@@ -212,7 +268,10 @@ class GeneralSettingController extends Controller
             ->addColumn('image_url', fn(GeneralSetting $item) => $item->image_url)
             ->addColumn('name_ar', fn(GeneralSetting $item) => $item->translate('ar')?->name ?? '-')
             ->addColumn('name_en', fn(GeneralSetting $item) => $item->translate('en')?->name ?? '-')
+            ->addColumn('description_ar', fn(GeneralSetting $item) => $item->translate('ar')?->description ?? '')
+            ->addColumn('description_en', fn(GeneralSetting $item) => $item->translate('en')?->description ?? '')
             ->editColumn('value', fn(GeneralSetting $item) => $item->value ?? '-')
+            ->editColumn('status', fn(GeneralSetting $item) => (bool) ($item->status ?? true))
             ->editColumn('created_at', fn(GeneralSetting $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->filterColumn('name_ar', function ($query, $keyword) {
                 $query->whereTranslationLike('name', "%{$keyword}%", 'ar');
@@ -224,6 +283,7 @@ class GeneralSettingController extends Controller
                 if ($search = request('search.value')) {
                     $query->where(function ($q) use ($search) {
                         $q->whereTranslationLike('name', "%{$search}%")
+                          ->orWhereTranslationLike('description', "%{$search}%")
                           ->orWhere('value', 'like', "%{$search}%")
                           ->orWhere('id', 'like', "%{$search}%");
                     });
@@ -237,18 +297,26 @@ class GeneralSettingController extends Controller
         $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'value' => 'nullable|string|max:50',
+            'description_ar' => 'nullable|string',
+            'description_en' => 'nullable|string',
+            'value' => 'nullable|string|max:100',
+            'status' => 'nullable',
             'image' => 'nullable|image|max:2048',
         ]);
+
+        $status = $request->has('status') ? (bool) $request->input('status') : true;
 
         $data = [
             'type' => $type,
             'value' => $request->input('value'),
+            'status' => $status,
             'ar' => [
                 'name' => $request->input('name_ar'),
+                'description' => $request->input('description_ar'),
             ],
             'en' => [
                 'name' => $request->input('name_en'),
+                'description' => $request->input('description_en'),
             ],
         ];
 
@@ -262,7 +330,10 @@ class GeneralSettingController extends Controller
         $request->validate([
             'name_ar' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
-            'value' => 'nullable|string|max:50',
+            'description_ar' => 'nullable|string',
+            'description_en' => 'nullable|string',
+            'value' => 'nullable|string|max:100',
+            'status' => 'nullable',
             'image' => 'nullable|image|max:2048',
         ]);
 
@@ -270,11 +341,17 @@ class GeneralSettingController extends Controller
             'value' => $request->input('value'),
             'ar' => [
                 'name' => $request->input('name_ar'),
+                'description' => $request->input('description_ar'),
             ],
             'en' => [
                 'name' => $request->input('name_en'),
+                'description' => $request->input('description_en'),
             ],
         ];
+
+        if ($request->has('status')) {
+            $data['status'] = (bool) $request->input('status');
+        }
 
         $this->generalSettingService->updateSetting($id, $data, $request->file('image'));
 

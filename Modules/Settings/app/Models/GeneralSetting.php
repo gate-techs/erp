@@ -29,6 +29,7 @@ class GeneralSetting extends Model implements TranslatableContract
      */
     public array $translatedAttributes = [
         'name',
+        'description',
     ];
 
     /**
@@ -41,6 +42,7 @@ class GeneralSetting extends Model implements TranslatableContract
         'parent_id',
         'value',
         'image',
+        'status',
         'created_by',
     ];
 
@@ -51,6 +53,7 @@ class GeneralSetting extends Model implements TranslatableContract
      */
     protected $casts = [
         'type' => GeneralSettingType::class,
+        'status' => 'boolean',
     ];
 
     /**

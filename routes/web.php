@@ -20,4 +20,7 @@ Route::middleware('auth')->group(function () {
 
     // Main Dashboard Route
     Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+
+    // Global Search API
+    Route::get('/global-search', [\App\Http\Controllers\GlobalSearchController::class, 'search'])->name('global.search');
 });

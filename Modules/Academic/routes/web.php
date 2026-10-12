@@ -10,6 +10,7 @@ use Modules\Academic\Http\Controllers\AcademicWeeklyPlanController;
 use Modules\Academic\Http\Controllers\AcademicYearController;
 use Modules\Academic\Http\Controllers\AcademicFeeController;
 use Modules\Academic\Http\Controllers\AcademicFeeTypeController;
+use Modules\Academic\Http\Controllers\AcademicFeeStatisticsController;
 use Modules\Academic\Http\Controllers\AcademicGuardianController;
 use Modules\Academic\Http\Controllers\AcademicStudentController;
 use Modules\Academic\Http\Controllers\AcademicStudentFeeController;
@@ -20,12 +21,16 @@ use Modules\Academic\Http\Controllers\DailyReportController;
 use Modules\Academic\Http\Controllers\StudentWithdrawalRequestController;
 use Modules\Academic\Http\Controllers\IncidentReportController;
 use Modules\Academic\Http\Controllers\MedicationRequestController;
-use Modules\Academic\Http\Controllers\EventController;
+use Modules\Academic\Http\Controllers\CalenderController;
+use Modules\Academic\Http\Controllers\AcademicDashboardController;
 
 Route::middleware(['auth', 'verified'])
     ->prefix('academic')
     ->name('academic.')
     ->group(function () {
+        Route::get('dashboard', [AcademicDashboardController::class, 'index'])
+            ->name('dashboard');
+
         Route::get('medication-requests/data',[MedicationRequestController::class,'data'])->name('medication-requests.data');
         Route::patch('medication-requests/{id}/done',[MedicationRequestController::class,'done'])->name('medication-requests.done');
         Route::resource('medication-requests',MedicationRequestController::class)->only(['index','store','show','update','destroy']);
@@ -192,6 +197,10 @@ Route::middleware(['auth', 'verified'])
             ->name('monthly-plans.ajax.classes');
 
         // Academic Fee Types
+        Route::get('fee-statistics', [AcademicFeeStatisticsController::class, 'index'])
+            ->name('fee-statistics.index');
+        Route::get('fee-statistics/stats', [AcademicFeeStatisticsController::class, 'stats'])
+            ->name('fee-statistics.stats');
         Route::get('fee-types', [AcademicFeeTypeController::class, 'index'])
             ->name('fee-types.index');
         Route::get('fee-types/data', [AcademicFeeTypeController::class, 'data'])
@@ -376,10 +385,50 @@ Route::middleware(['auth', 'verified'])
             ->name('incident-reports.print');
         Route::resource('incident-reports', IncidentReportController::class);
 
-        // App Calendar & Events / رزنامة التطبيق والفعاليات
-        Route::get('events/calendar-data', [EventController::class, 'calendarEvents'])
-            ->name('events.calendar-data');
-        Route::patch('events/{id}/toggle-status', [EventController::class, 'toggleStatus'])
+        // App Calendar / رزنامة التطبيق
+        Route::get('calender/calendar-data', [CalenderController::class, 'calendarEvents'])
+            ->name('calender.calendar-data');
+        Route::patch('calender/{id}/toggle-status', [CalenderController::class, 'toggleStatus'])
+            ->name('calender.toggle-status');
+        Route::resource('calender', CalenderController::class);
+
+        // Events / الفاعليات
+        Route::get('events/data', [\Modules\Academic\Http\Controllers\EventController::class, 'data'])
+            ->name('events.data');
+        Route::get('events/branches/{institutionId}', [\Modules\Academic\Http\Controllers\EventController::class, 'branches'])
+            ->name('events.branches');
+        Route::get('events/classes/{branchId}', [\Modules\Academic\Http\Controllers\EventController::class, 'classes'])
+            ->name('events.classes');
+        Route::patch('events/{id}/toggle-status', [\Modules\Academic\Http\Controllers\EventController::class, 'toggleStatus'])
             ->name('events.toggle-status');
-        Route::resource('events', EventController::class);
+        Route::resource('events', \Modules\Academic\Http\Controllers\EventController::class);
+
+        // Personal Calendar / الرزنامة الشخصية
+        Route::get('personal-calendar/calendar-data', [\Modules\Academic\Http\Controllers\PersonalCalendarController::class, 'calendarEvents'])
+            ->name('personal-calendar.calendar-data');
+        Route::patch('personal-calendar/{id}/status', [\Modules\Academic\Http\Controllers\PersonalCalendarController::class, 'updateStatus'])
+            ->name('personal-calendar.status');
+        Route::resource('personal-calendar', \Modules\Academic\Http\Controllers\PersonalCalendarController::class);
+
+        // Meetings Calendar / رزنامة الاجتماعات
+        Route::get('meeting-calendar/calendar-data', [\Modules\Academic\Http\Controllers\MeetingCalendarController::class, 'calendarEvents'])
+            ->name('meeting-calendar.calendar-data');
+        Route::get('meeting-calendar/sidebar-data', [\Modules\Academic\Http\Controllers\MeetingCalendarController::class, 'sidebarData'])
+            ->name('meeting-calendar.sidebar-data');
+        Route::patch('meeting-calendar/{id}/status', [\Modules\Academic\Http\Controllers\MeetingCalendarController::class, 'updateStatus'])
+            ->name('meeting-calendar.status');
+        Route::resource('meeting-calendar', \Modules\Academic\Http\Controllers\MeetingCalendarController::class);
+
+        // Interviews Calendar / رزنامة المقابلات
+        Route::get('interviews_calender/calendar-data', [\Modules\Academic\Http\Controllers\InterviewsCalenderController::class, 'calendarEvents'])
+            ->name('interviews_calender.calendar-data');
+        Route::get('interviews_calender/sidebar-data', [\Modules\Academic\Http\Controllers\InterviewsCalenderController::class, 'sidebarData'])
+            ->name('interviews_calender.sidebar-data');
+        Route::get('interviews_calender/check-guardian', [\Modules\Academic\Http\Controllers\InterviewsCalenderController::class, 'checkGuardian'])
+            ->name('interviews_calender.check-guardian');
+        Route::get('interviews_calender/branches/{institutionId}', [\Modules\Academic\Http\Controllers\InterviewsCalenderController::class, 'branches'])
+            ->name('interviews_calender.branches');
+        Route::patch('interviews_calender/{id}/status', [\Modules\Academic\Http\Controllers\InterviewsCalenderController::class, 'updateStatus'])
+            ->name('interviews_calender.status');
+        Route::resource('interviews_calender', \Modules\Academic\Http\Controllers\InterviewsCalenderController::class);
     });

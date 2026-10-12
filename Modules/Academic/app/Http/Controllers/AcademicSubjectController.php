@@ -118,7 +118,7 @@ class AcademicSubjectController extends Controller
                     </div>';
                 }
 
-                return '<div class="d-flex align-items-center">' . $avatar . '<span class="fw-semibold text-heading">' . e($name) . '</span></div>';
+                return '<div class="d-flex align-items-center">' . $avatar . '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-subject" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button></div>';
             })
             ->addColumn('institution_name', fn (AcademicSubject $item) => e($item->institution?->name ?? '-'))
             ->addColumn('stages_badges', function (AcademicSubject $item) {

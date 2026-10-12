@@ -97,6 +97,48 @@ class AcademicPermissionSeeder extends Seeder
             'academic.guardians.edit',
             'academic.guardians.delete',
             'academic.guardians.toggle-status',
+
+            // 11. Dashboards
+            'academic.dashboard.view',
+            'academic.fee-statistics.view',
+
+            // 12. Academic Events
+            'academic.events.view',
+            'academic.events.create',
+            'academic.events.edit',
+            'academic.events.delete',
+
+            // 13. App Calendar
+            'academic.calender.view',
+            'academic.calender.create',
+            'academic.calender.edit',
+            'academic.calender.delete',
+            'academic.calendar.view',
+            'academic.calendar.create',
+            'academic.calendar.edit',
+            'academic.calendar.delete',
+
+            // 14. Personal Calendar
+            'academic.personal-calendar.view',
+            'academic.personal-calendar.create',
+            'academic.personal-calendar.edit',
+            'academic.personal-calendar.delete',
+
+            // 15. Meetings Calendar
+            'academic.meeting-calendar.view',
+            'academic.meeting-calendar.create',
+            'academic.meeting-calendar.edit',
+            'academic.meeting-calendar.delete',
+
+            // 16. Interviews Calendar
+            'academic.interviews_calender.view',
+            'academic.interviews_calender.create',
+            'academic.interviews_calender.edit',
+            'academic.interviews_calender.delete',
+            'academic.interviews-calendar.view',
+            'academic.interviews-calendar.create',
+            'academic.interviews-calendar.edit',
+            'academic.interviews-calendar.delete',
         ];
 
         // Create or update permissions

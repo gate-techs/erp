@@ -8,27 +8,23 @@ use Modules\Academic\Models\Event;
 
 interface EventRepositoryInterface
 {
-    //------------------------------
     public function getFilteredQuery(array $filters = []): Builder;
 
-    //------------------------------
-    public function all(array $filters = []): Collection;
-
-    //------------------------------
-    public function getCalendarEvents(array $filters = []): Collection;
-
-    //------------------------------
     public function find(int $id): ?Event;
 
-    //------------------------------
     public function create(array $data): Event;
 
-    //------------------------------
     public function update(int $id, array $data): bool;
 
-    //------------------------------
     public function delete(int $id): bool;
 
-    //------------------------------
     public function toggleStatus(int $id): bool;
+
+    public function getInstitutions(): Collection;
+
+    public function getBranches(?int $institutionId = null): Collection;
+
+    public function getClasses(?int $branchId = null, ?int $institutionId = null): Collection;
+
+    public function getEventTypes(): Collection;
 }

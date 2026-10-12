@@ -4,7 +4,8 @@
       "name": "Dashboard",
       "icon": "menu-icon icon-base bx bx-home-circle",
       "slug": "dashboard-analytics",
-      "url": "/"
+      "url": "/",
+      "permission": "dashboard.view"
     },
     {
       "name": "Nurseries",
@@ -31,6 +32,7 @@
       "name": "Academic Management",
       "icon": "menu-icon icon-base bx bx-book-open",
       "slug": [
+        "academic.dashboard",
         "academic.academic-years",
         "academic.stages",
         "academic.classes",
@@ -40,6 +42,7 @@
         "academic.monthly-plans"
       ],
       "permission": [
+        "academic.dashboard.view",
         "academic.years.view",
         "academic.stages.view",
         "academic.classes.view",
@@ -49,6 +52,13 @@
         "academic.monthly-plans.view"
       ],
       "submenu": [
+        {
+          "name": "Dashboard",
+          "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
+          "slug": "academic.dashboard",
+          "url": "/academic/dashboard",
+          "permission": "academic.dashboard.view"
+        },
         {
           "name": "Academic Years",
           "icon": "menu-icon icon-base bx bx-calendar",
@@ -104,14 +114,56 @@
       "name": "Schedules & Events",
       "icon": "menu-icon icon-base bx bx-calendar-event",
       "slug": [
-        "academic.events"
+        "academic.events",
+        "academic.calender",
+        "academic.personal-calendar",
+        "academic.meeting-calendar",
+        "academic.interviews_calender"
+      ],
+      "permission": [
+        "academic.events.view",
+        "academic.calender.view",
+        "academic.calendar.view",
+        "academic.personal-calendar.view",
+        "academic.meeting-calendar.view",
+        "academic.interviews_calender.view",
+        "academic.interviews-calendar.view"
       ],
       "submenu": [
         {
+          "name": "Events",
+          "icon": "menu-icon icon-base bx bx-party",
+          "slug": "academic.events.index",
+          "url": "/academic/events",
+          "permission": "academic.events.view"
+        },
+        {
           "name": "App Calendar",
           "icon": "menu-icon icon-base bx bx-calendar",
-          "slug": "academic.events.index",
-          "url": "/academic/events"
+          "slug": "academic.calender.index",
+          "url": "/academic/calender",
+          "permission": "academic.calender.view"
+        },
+        {
+          "name": "Personal Calendar",
+          "icon": "menu-icon icon-base bx bx-calendar-star",
+          "slug": "academic.personal-calendar.index",
+          "url": "/academic/personal-calendar",
+          "permission": "academic.personal-calendar.view"
+        },
+        {
+          "name": "Meetings Calendar",
+          "icon": "menu-icon icon-base bx bx-calendar-check",
+          "slug": "academic.meeting-calendar.index",
+          "url": "/academic/meeting-calendar",
+          "permission": "academic.meeting-calendar.view"
+        },
+        {
+          "name": "Interviews Calendar",
+          "icon": "menu-icon icon-base bx bx-calendar-heart",
+          "slug": "academic.interviews_calender.index",
+          "url": "/academic/interviews_calender",
+          "permission": "academic.interviews_calender.view"
         }
       ]
     },
@@ -221,17 +273,26 @@
       "icon": "menu-icon icon-base bx bx-wallet",
       "slug": [
         "academic.fee-types",
+        "academic.fee-statistics",
         "academic.fees",
         "academic.student-fees",
         "packages.index"
       ],
       "permission": [
+        "academic.fee-statistics.view",
         "academic.fee-types.view",
         "academic.fees.view",
         "academic.student-fees.view",
         "nursery.packages.view"
       ],
       "submenu": [
+        {
+          "name": "Dashboard",
+          "icon": "menu-icon icon-base bx bx-line-chart",
+          "slug": "academic.fee-statistics.index",
+          "url": "/academic/fee-statistics",
+          "permission": "academic.fee-statistics.view"
+        },
         {
           "name": "Fee Types",
           "icon": "menu-icon icon-base bx bx-category",
@@ -725,15 +786,24 @@
       "name": "Inventory",
       "icon": "menu-icon icon-base bx bx-package",
       "slug": [
-        "inventory"
+        "inventory",
+        "inventory.dashboard"
       ],
       "permission": [
+        "inventory.dashboard.view",
         "inventory.items.view",
         "inventory.categories.view",
         "inventory.units.view",
         "inventory.warehouses.view"
       ],
       "submenu": [
+        {
+          "name": "Dashboard",
+          "icon": "menu-icon icon-base bx bx-store",
+          "slug": "inventory.dashboard",
+          "url": "/inventory-dashboard",
+          "permission": "inventory.dashboard.view"
+        },
         {
           "name": "Items",
           "icon": "menu-icon icon-base bx bx-box",
@@ -773,10 +843,18 @@
         "crm.service-requests"
       ],
       "permission": [
+        "crm.dashboard.view",
         "crm.leads.view",
         "crm.service-requests.view"
       ],
       "submenu": [
+        {
+          "name": "Request Statistics",
+          "icon": "menu-icon icon-base bx bx-bar-chart-alt-2",
+          "slug": "crm.leads.statistics",
+          "url": "/crm/leads/statistics",
+          "permission": "crm.dashboard.view"
+        },
         {
           "name": "Leads",
           "icon": "menu-icon icon-base bx bx-user-plus",

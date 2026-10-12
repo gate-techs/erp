@@ -52,7 +52,7 @@ class AcademicFeeTypeController extends Controller
 
                 return '
                     <div class="d-flex flex-column">
-                        <span class="fw-bold text-heading">' . e($name) . '</span>
+                        <button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button>
                         <small class="text-muted">' . e($subName) . '</small>
                     </div>
                 ';

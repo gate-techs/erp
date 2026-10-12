@@ -12,6 +12,8 @@ import 'flatpickr/dist/flatpickr.css';
 import flatpickr from 'flatpickr';
 import { Arabic } from 'flatpickr/dist/l10n/ar.js';
 
+window.flatpickr = flatpickr;
+
 // Flatpickr Initialization
 document.addEventListener('DOMContentLoaded', function () {
   const initFlatpickr = () => {
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentPosition = isRtl ? 'auto right' : 'auto left';
 
     // Normal Date Pickers
-    const dateInputs = document.querySelectorAll('.js-flatpickr-date:not(.flatpickr-input)');
+    const dateInputs = document.querySelectorAll('.js-flatpickr-date');
     if (dateInputs.length > 0) {
       dateInputs.forEach(input => {
         if (!input._flatpickr) {
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Datetime Pickers
-    const datetimeInputs = document.querySelectorAll('.js-flatpickr-datetime:not(.flatpickr-input)');
+    const datetimeInputs = document.querySelectorAll('.js-flatpickr-datetime');
     if (datetimeInputs.length > 0) {
       datetimeInputs.forEach(input => {
         if (!input._flatpickr) {
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (node.nodeType === 1) {
             if (node.classList && (node.classList.contains('js-flatpickr-date') || node.classList.contains('js-flatpickr-datetime'))) {
               shouldInit = true;
-            } else if (node.querySelectorAll && node.querySelectorAll('.js-flatpickr-date:not(.flatpickr-input), .js-flatpickr-datetime:not(.flatpickr-input)').length > 0) {
+            } else if (node.querySelectorAll && node.querySelectorAll('.js-flatpickr-date, .js-flatpickr-datetime').length > 0) {
               shouldInit = true;
             }
           }
@@ -573,3 +575,84 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+/**
+ * ==========================================================================
+ * Global FullCalendar Sneat Factory
+ * Standardizes toolbar layout, title format (e.g. October 2026), and clean chevrons
+ * ==========================================================================
+ */
+window.createAppCalendar = function (calendarEl, customOptions = {}) {
+    if (typeof FullCalendar === 'undefined' || !calendarEl) {
+        console.warn('FullCalendar or target calendar element not found.');
+        return null;
+    }
+
+    const htmlLang = document.documentElement.lang || 'ar';
+    const isRtl = document.documentElement.dir === 'rtl' || htmlLang.toLowerCase().startsWith('ar');
+
+    const defaultOptions = {
+        locale: isRtl ? 'ar' : 'en',
+        direction: isRtl ? 'rtl' : 'ltr',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev next title',
+            center: '',
+            right: 'addEventButton dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        datesSet: function (info) {
+            const titleEl = calendarEl.querySelector('.fc-toolbar-title');
+            if (titleEl) {
+                const d = info.view.calendar.getDate();
+                const monthName = d.toLocaleString('en-US', { month: 'long' });
+                const year = d.getFullYear();
+                if (info.view.type === 'dayGridMonth' || info.view.type === 'listMonth') {
+                    titleEl.textContent = `${monthName} ${year}`;
+                } else if (info.view.type === 'timeGridDay') {
+                    titleEl.textContent = `${monthName} ${d.getDate()}, ${year}`;
+                } else {
+                    const start = info.start;
+                    const end = new Date(info.end.getTime() - 86400000);
+                    const sMonth = start.toLocaleString('en-US', { month: 'short' });
+                    const eMonth = end.toLocaleString('en-US', { month: 'short' });
+                    titleEl.textContent = `${sMonth} ${start.getDate()} – ${eMonth} ${end.getDate()}, ${year}`;
+                }
+            }
+
+            if (typeof customOptions.onDatesSet === 'function') {
+                customOptions.onDatesSet(info);
+            }
+        },
+        buttonText: {
+            today: isRtl ? 'اليوم' : 'Today',
+            month: isRtl ? 'شهري' : 'Month',
+            week: isRtl ? 'أسبوعي' : 'Week',
+            day: isRtl ? 'يومي' : 'Day',
+            list: isRtl ? 'أجندة' : 'List'
+        },
+        height: 'auto',
+        navLinks: true,
+        dayMaxEvents: 4,
+        editable: false,
+        selectable: true,
+        selectMirror: true
+    };
+
+    const mergedOptions = {
+        ...defaultOptions,
+        ...customOptions,
+        headerToolbar: customOptions.headerToolbar || defaultOptions.headerToolbar,
+        customButtons: {
+            ...(defaultOptions.customButtons || {}),
+            ...(customOptions.customButtons || {})
+        },
+        buttonText: {
+            ...(defaultOptions.buttonText || {}),
+            ...(customOptions.buttonText || {})
+        }
+    };
+
+    const calendar = new FullCalendar.Calendar(calendarEl, mergedOptions);
+    calendar.render();
+    return calendar;
+};

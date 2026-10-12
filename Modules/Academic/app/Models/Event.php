@@ -6,82 +6,127 @@ use App\Models\User;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Nursery\Models\Nursery;
+use Modules\Nursery\Models\NurseryBranch;
+use Modules\Settings\Models\GeneralSetting;
 
 class Event extends Model implements TranslatableContract
 {
     use HasFactory, SoftDeletes, Translatable;
 
-    /**
-     * Attributes that are translatable via event_translations.
-     */
+    protected $table = 'events';
+
     public array $translatedAttributes = [
-        'title',
+        'name',
         'description',
     ];
 
-    protected $table = 'events';
+    public string $translationModel = EventTranslation::class;
 
     protected $fillable = [
         'institution_id',
+        'branch_id',
+        'academic_class_id',
+        'event_type_id',
+        'image',
         'start_date',
         'end_date',
+        'start_time',
+        'end_time',
+        'price',
         'status',
         'created_by',
     ];
 
     protected $casts = [
-        'institution_id' => 'integer',
-        'start_date'     => 'date:Y-m-d',
-        'end_date'       => 'date:Y-m-d',
-        'created_by'     => 'integer',
+        'institution_id'    => 'integer',
+        'branch_id'         => 'integer',
+        'academic_class_id' => 'integer',
+        'event_type_id'     => 'integer',
+        'start_date'        => 'date:Y-m-d',
+        'end_date'          => 'date:Y-m-d',
+        'price'             => 'decimal:3',
+        'created_by'        => 'integer',
     ];
 
     public const STATUS_ACTIVE = 'active';
     public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_UPCOMING = 'upcoming';
+    public const STATUS_COMPLETED = 'completed';
 
     public static function statuses(): array
     {
         return [
-            self::STATUS_ACTIVE,
-            self::STATUS_INACTIVE,
+            self::STATUS_ACTIVE    => __('Active'),
+            self::STATUS_INACTIVE  => __('Inactive'),
+            self::STATUS_UPCOMING  => __('Upcoming'),
+            self::STATUS_COMPLETED => __('Completed'),
         ];
     }
 
     /**
-     * Alias for 'title' translation so $event->name works interchangeably with $event->title.
+     * Relationship: Nursery / Institution
      */
-    protected function name(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->title,
-            set: fn ($value) => ['title' => $value],
-        );
-    }
-
-    //---------------------------------------------------------
-    // Relationships
-    //---------------------------------------------------------
-
     public function institution(): BelongsTo
     {
         return $this->belongsTo(Nursery::class, 'institution_id');
     }
 
+    /**
+     * Relationship: Nursery Branch
+     */
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(NurseryBranch::class, 'branch_id');
+    }
+
+    /**
+     * Relationship: Academic Class (الفصل الدراسي)
+     */
+    public function classroom(): BelongsTo
+    {
+        return $this->belongsTo(AcademicClass::class, 'academic_class_id');
+    }
+
+    /**
+     * Relationship: Event Type (نوع الفاعلية)
+     */
+    public function eventType(): BelongsTo
+    {
+        return $this->belongsTo(GeneralSetting::class, 'event_type_id');
+    }
+
+    /**
+     * Relationship: Creator User
+     */
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    //---------------------------------------------------------
-    // Query Scopes
-    //---------------------------------------------------------
+    /**
+     * Get image full URL.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
 
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+
+        return asset('storage/' . $this->image);
+    }
+
+    /**
+     * Scopes
+     */
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_ACTIVE);
@@ -92,9 +137,8 @@ class Event extends Model implements TranslatableContract
         return $query->where('institution_id', $institutionId);
     }
 
-    public function scopeUpcoming(Builder $query): Builder
+    public function scopeForBranch(Builder $query, int $branchId): Builder
     {
-        return $query->where('start_date', '>=', now()->toDateString())
-            ->orderBy('start_date', 'asc');
+        return $query->where('branch_id', $branchId);
     }
 }

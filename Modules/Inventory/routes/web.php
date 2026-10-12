@@ -5,8 +5,14 @@ use Modules\Inventory\Http\Controllers\ItemCategoryController;
 use Modules\Inventory\Http\Controllers\ItemController;
 use Modules\Inventory\Http\Controllers\UnitController;
 use Modules\Inventory\Http\Controllers\WarehouseController;
+use Modules\Inventory\Http\Controllers\InventoryDashboardController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Store dashboard
+    Route::get('inventory-dashboard', [InventoryDashboardController::class, 'index'])
+        ->middleware('permission:inventory.items.view')
+        ->name('inventory.dashboard');
+
     // 1. Warehouses (المستودعات والمخازن)
     Route::middleware('permission:inventory.warehouses.view')->group(function () {
         Route::get('warehouses/data', [WarehouseController::class, 'data'])->name('inventory.data');
@@ -83,4 +89,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware('permission:inventory.items.toggle-status')
         ->name('inventory.items.toggle-status');
 });
-

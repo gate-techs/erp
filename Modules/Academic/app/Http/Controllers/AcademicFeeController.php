@@ -72,7 +72,7 @@ class AcademicFeeController extends Controller
                     <div class="d-flex align-items-center gap-3">
                         <img src="' . $imageUrl . '" alt="' . $nameSafe . '" class="rounded border object-fit-cover shadow-xs" width="42" height="42" onerror="this.src=\'' . asset('assets/img/favicon/favicon.ico') . '\'">
                         <div class="d-flex flex-column">
-                            <span class="fw-bold text-heading">' . $nameSafe . '</span>
+                            <button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee" data-id="' . $fee->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>
                             <small class="text-muted">' . $subName . '</small>
                         </div>
                     </div>

@@ -135,6 +135,12 @@ class AcademicStage extends Model implements TranslatableContract
     }
 
     //------------------------------------------
+    public function students(): HasMany
+    {
+        return $this->hasMany(AcademicStudent::class, 'academic_stage_id');
+    }
+
+    //------------------------------------------
     public function subjects(): BelongsToMany
     {
         return $this->belongsToMany(AcademicSubject::class, 'academic_subject_stage', 'academic_stage_id', 'academic_subject_id');

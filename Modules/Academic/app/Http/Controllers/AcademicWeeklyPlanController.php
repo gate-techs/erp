@@ -58,7 +58,7 @@ class AcademicWeeklyPlanController extends Controller
                 $subtitle = $item->translate(app()->getLocale() === 'ar' ? 'en' : 'ar')?->title;
                 $subtitleHtml = $subtitle ? '<small class="text-muted d-block text-truncate" style="max-width: 220px;">' . e($subtitle) . '</small>' : '';
 
-                return '<div class="d-flex align-items-center">' . $avatar . '<div><span class="fw-semibold text-heading d-block">' . e($title) . '</span>' . $subtitleHtml . '</div></div>';
+                return '<div class="d-flex align-items-center">' . $avatar . '<div><button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-weekly-plan d-block" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($title) . '</button>' . $subtitleHtml . '</div></div>';
             })
             ->addColumn('institution_name', function (AcademicWeeklyPlan $item) {
                 return e(

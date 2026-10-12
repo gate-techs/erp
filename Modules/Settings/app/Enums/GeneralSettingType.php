@@ -14,6 +14,7 @@ enum GeneralSettingType: string
     case RELATIONSHIP = 'relationship';
     case MARITAL_STATUS = 'marital_status';
     case INCIDENT_TYPE = 'incident_type';
+    case EVENT_TYPE = 'event_type';
     case OTHER = 'other';
 
     /**
@@ -32,6 +33,7 @@ enum GeneralSettingType: string
             self::RELATIONSHIP => __('Relationship'),
             self::MARITAL_STATUS => __('Marital Status'),
             self::INCIDENT_TYPE => __('Incident / Injury Type'),
+            self::EVENT_TYPE => __('Event Type'),
             self::OTHER => __('Other'),
         };
     }

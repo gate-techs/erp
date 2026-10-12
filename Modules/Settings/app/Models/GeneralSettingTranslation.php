@@ -32,5 +32,6 @@ class GeneralSettingTranslation extends Model
         'general_setting_id',
         'locale',
         'name',
+        'description',
     ];
 }

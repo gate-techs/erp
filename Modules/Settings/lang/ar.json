@@ -351,5 +351,18 @@
     "Info": "معلومات",
     "Danger": "خطر",
     "Secondary": "ثانوي",
-    "Dark": "داكن"
+    "Dark": "داكن",
+    "Event Types": "أنواع الفاعليات",
+    "Event Type": "نوع الفاعلية",
+    "Add New Event Type": "إضافة نوع فاعلية جديد",
+    "Edit Event Type": "تعديل نوع الفاعلية",
+    "Save Event Type": "حفظ نوع الفاعلية",
+    "Update Event Type": "تحديث نوع الفاعلية",
+    "Event Type Name (Arabic)": "اسم نوع الفاعلية (بالعربية)",
+    "Event Type Name (English)": "اسم نوع الفاعلية (بالإنجليزية)",
+    "Details / Description": "التفاصيل / الوصف",
+    "Details / Description (Arabic)": "التفاصيل / الوصف (بالعربية)",
+    "Details / Description (English)": "التفاصيل / الوصف (بالإنجليزية)",
+    "Manage activity categories, types, details, and status.": "إدارة تصنيفات وأنوع الفاعليات، التفاصيل والحالة.",
+    "Are you sure you want to delete this event type?": "هل أنت متأكد من رغبتك في حذف نوع الفاعلية هذا؟"
 }

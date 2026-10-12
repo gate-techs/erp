@@ -142,6 +142,26 @@ class AcademicServiceProvider extends ModuleServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\CalenderRepositoryInterface::class,
+            \Modules\Academic\Repositories\CalenderRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\PersonalCalendarRepositoryInterface::class,
+            \Modules\Academic\Repositories\PersonalCalendarRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\MeetingCalendarRepositoryInterface::class,
+            \Modules\Academic\Repositories\MeetingCalendarRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Academic\Repositories\Contracts\InterviewsCalenderRepositoryInterface::class,
+            \Modules\Academic\Repositories\InterviewsCalenderRepository::class
+        );
+
+        $this->app->bind(
             \Modules\Academic\Repositories\Contracts\EventRepositoryInterface::class,
             \Modules\Academic\Repositories\EventRepository::class
         );

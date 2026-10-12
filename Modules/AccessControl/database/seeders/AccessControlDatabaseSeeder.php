@@ -15,6 +15,7 @@ class AccessControlDatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             StudentAndFeesPermissionSeeder::class,
+            SchedulesAndDashboardsPermissionSeeder::class,
         ]);
     }
 }

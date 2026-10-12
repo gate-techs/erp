@@ -60,7 +60,7 @@ class AcademicStudentFeeController extends Controller
                     ?? $payment->studentFee?->student?->translate('ar')?->name
                     ?? $payment->studentFee?->student?->name
                     ?? '-';
-                return e($name);
+                return '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-student-fee" data-id="' . $assignment->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button>';
             })
             ->addColumn('fee_name', function ($payment) {
                 return e($payment->studentFee?->fee?->translate(app()->getLocale())?->name

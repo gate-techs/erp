@@ -76,7 +76,7 @@ class AcademicStudentController extends Controller
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <img src="' . $photo . '" alt="' . e($name) . '" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
-                        <a href="' . route('academic.students.show', $student->id) . '" class="fw-semibold text-heading student-name-text">' . e($name) . '</a>
+                        <a href="' . route('academic.students.edit', $student->id) . '" class="fw-semibold text-heading text-decoration-none student-name-text" title="' . e(__('Edit')) . '">' . e($name) . '</a>
                     </div>';
             })
             ->addColumn('civil_id', function (AcademicStudent $student) {

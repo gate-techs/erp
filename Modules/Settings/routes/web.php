@@ -100,5 +100,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('bank-branches', [\Modules\Settings\Http\Controllers\BankController::class, 'storeBranch'])->name('bank-branches.store');
         Route::put('bank-branches/{id}', [\Modules\Settings\Http\Controllers\BankController::class, 'updateBranch'])->name('bank-branches.update');
         Route::delete('bank-branches/{id}', [\Modules\Settings\Http\Controllers\BankController::class, 'destroyBranch'])->name('bank-branches.destroy');
+
+        // 7. Event Types (أنواع الفاعليات)
+        Route::get('event-types/data', [GeneralSettingController::class, 'eventTypesData'])->name('event-types.data');
+        Route::get('event-types', [GeneralSettingController::class, 'eventTypes'])->name('event-types.index');
+        Route::post('event-types', [GeneralSettingController::class, 'storeEventType'])->name('event-types.store');
+        Route::put('event-types/{id}', [GeneralSettingController::class, 'updateEventType'])->name('event-types.update');
+        Route::delete('event-types/{id}', [GeneralSettingController::class, 'destroyEventType'])->name('event-types.destroy');
+        Route::patch('event-types/{id}/toggle-status', [GeneralSettingController::class, 'toggleEventTypeStatus'])->name('event-types.toggle-status');
     });
 });

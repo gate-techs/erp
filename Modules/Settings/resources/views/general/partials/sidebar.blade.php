@@ -6,6 +6,7 @@
         'maritalStatuses' => \Modules\Settings\Models\GeneralSetting::ofType(\Modules\Settings\Enums\GeneralSettingType::MARITAL_STATUS)->count(),
         'banks' => \Modules\Settings\Models\Bank::mainBanks()->count(),
         'bankBranches' => \Modules\Settings\Models\Bank::bankBranches()->count(),
+        'eventTypes' => \Modules\Settings\Models\GeneralSetting::ofType(\Modules\Settings\Enums\GeneralSettingType::EVENT_TYPE)->count(),
     ];
 @endphp
 
@@ -87,6 +88,18 @@
                 </div>
                 <span class="badge rounded-pill ms-2 {{ request()->routeIs('settings.general.bank-branches.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
                     {{ $counts['bankBranches'] ?? 0 }}
+                </span>
+            </a>
+
+            <!-- 7- أنواع الفاعليات -->
+            <a href="{{ route('settings.general.event-types.index') }}" 
+               class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('settings.general.event-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="icon-base bx bx-calendar-event {{ request()->routeIs('settings.general.event-types.*') ? 'text-white' : 'text-primary' }} font-18"></i>
+                    <span>{{ __('Event Types') }}</span>
+                </div>
+                <span class="badge rounded-pill ms-2 {{ request()->routeIs('settings.general.event-types.*') ? 'bg-white text-primary' : 'bg-label-primary' }}">
+                    {{ $counts['eventTypes'] ?? 0 }}
                 </span>
             </a>
         </div>

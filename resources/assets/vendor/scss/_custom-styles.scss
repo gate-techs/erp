@@ -121,7 +121,8 @@ button,
 
   // Submenu items
   .menu-sub {
-    padding-inline-start: 0.75rem !important;
+    padding: 0 !important;
+    padding-inline-start: 0 !important;
 
     // Remove misplaced template bullet dots in submenus completely
     .menu-link::before,
@@ -173,7 +174,8 @@ button,
 
     // 2nd level sub-menus (Nested inside menu-sub)
     .menu-sub {
-      padding-inline-start: 0.75rem !important;
+      padding: 0 !important;
+      padding-inline-start: 0 !important;
 
       .menu-item .menu-link {
         padding-block: 0.4rem !important;
