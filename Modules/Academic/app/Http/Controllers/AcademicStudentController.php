@@ -76,7 +76,7 @@ class AcademicStudentController extends Controller
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <img src="' . $photo . '" alt="' . e($name) . '" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
-                        <a href="' . route('academic.students.edit', $student->id) . '" class="fw-semibold text-heading text-decoration-none student-name-text" title="' . e(__('Edit')) . '">' . e($name) . '</a>
+                        <a href="' . route('academic.students.show', $student->id) . '" class="fw-semibold text-heading text-hover-primary text-decoration-none student-name-text" title="' . e(__('View Profile')) . '">' . e($name) . '</a>
                     </div>';
             })
             ->addColumn('civil_id', function (AcademicStudent $student) {
@@ -392,9 +392,12 @@ class AcademicStudentController extends Controller
         return response()->json($stages);
     }
 
-    public function getClasses(int $stageId): JsonResponse
+    public function getClasses(int $stageId, Request $request): JsonResponse
     {
-        $classes = $this->service->getClasses($stageId);
+        $branchId = $request->integer('branch_id') ?: null;
+        $institutionId = $request->integer('institution_id') ?: null;
+
+        $classes = $this->service->getClasses($stageId, $branchId, $institutionId);
 
         return response()->json($classes);
     }

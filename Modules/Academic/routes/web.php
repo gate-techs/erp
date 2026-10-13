@@ -23,6 +23,7 @@ use Modules\Academic\Http\Controllers\IncidentReportController;
 use Modules\Academic\Http\Controllers\MedicationRequestController;
 use Modules\Academic\Http\Controllers\CalenderController;
 use Modules\Academic\Http\Controllers\AcademicDashboardController;
+use Modules\Academic\Http\Controllers\ExecutiveManagementController;
 
 Route::middleware(['auth', 'verified'])
     ->prefix('academic')
@@ -30,6 +31,12 @@ Route::middleware(['auth', 'verified'])
     ->group(function () {
         Route::get('dashboard', [AcademicDashboardController::class, 'index'])
             ->name('dashboard');
+
+        // Executive Management / الإدارة العليا - التقرير العام
+        Route::get('executive-management/general-report', [ExecutiveManagementController::class, 'index'])
+            ->name('executive-management.index');
+        Route::get('executive-management/data', [ExecutiveManagementController::class, 'data'])
+            ->name('executive-management.data');
 
         Route::get('medication-requests/data',[MedicationRequestController::class,'data'])->name('medication-requests.data');
         Route::patch('medication-requests/{id}/done',[MedicationRequestController::class,'done'])->name('medication-requests.done');

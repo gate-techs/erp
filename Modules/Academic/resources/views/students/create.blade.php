@@ -320,7 +320,7 @@
 /* Medical Declaration Tab matching user screenshot */
 .medical-declaration-body {
     max-width: 1000px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
 }
 .medical-declaration-text {
     font-size: 0.98rem;
@@ -348,7 +348,7 @@
 }
 .financial-body {
     max-width: 1000px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
 }
 .financial-text {
     font-size: 0.98rem;
@@ -779,7 +779,7 @@
                         </div>
                         <div class="col-12 col-md-4">
                             <label class="form-label text-muted small fw-semibold">{{ __('Date of Birth') }}</label>
-                            <input type="date" name="birth_date" id="birth_date" class="form-control" placeholder="mm/dd/yyyy">
+                            <input type="text" name="birth_date" id="birth_date" class="form-control js-flatpickr-date flatpickr-input active" placeholder="YYYY-MM-DD" autocomplete="off">
                         </div>
                     </div>
 
@@ -942,7 +942,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <label class="form-label text-muted small fw-semibold">{{ __('Phone') }}</label>
-                            <input type="text" name="father[phone]" id="father_phone" class="form-control" dir="ltr" placeholder="965XXXXXXXX">
+                            <input type="tel" name="father[phone]" id="father_phone" class="form-control js-phone-input iti__tel-input" dir="ltr" placeholder="965XXXXXXXX">
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label text-muted small fw-semibold">{{ __('Email') }}</label>
@@ -1017,7 +1017,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <label class="form-label text-muted small fw-semibold">{{ __('Phone') }}</label>
-                            <input type="text" name="mother[phone]" id="mother_phone" class="form-control" dir="ltr" placeholder="965XXXXXXXX">
+                            <input type="tel" name="mother[phone]" id="mother_phone" class="form-control js-phone-input iti__tel-input" dir="ltr" placeholder="965XXXXXXXX">
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label text-muted small fw-semibold">{{ __('Email') }}</label>
@@ -1263,7 +1263,7 @@
                             <!-- Right: رقم الموبيل -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted small fw-semibold">{{ __('Mobile Number') }}</label>
-                                <input type="text" name="emergency_contacts[{{ $i }}][phone_1]" class="form-control" placeholder="">
+                                <input type="tel" name="emergency_contacts[{{ $i }}][phone_1]" class="form-control js-phone-input iti__tel-input" dir="ltr" placeholder="">
                                 <input type="hidden" name="emergency_contacts[{{ $i }}][priority]" value="{{ $i + 1 }}">
                             </div>
                             <!-- Left: صله القرابه -->
@@ -1295,7 +1295,7 @@
                             <!-- Right: رقم الموبيل -->
                             <div class="col-12 col-md-6 mb-3">
                                 <label class="form-label text-muted small fw-semibold">{{ __('Mobile Number') }}</label>
-                                <input type="text" name="authorized_pickups[{{ $i }}][phone]" value="{{ old("authorized_pickups.{$i}.phone") }}" class="form-control" placeholder="">
+                                <input type="tel" name="authorized_pickups[{{ $i }}][phone]" value="{{ old("authorized_pickups.{$i}.phone") }}" class="form-control js-phone-input iti__tel-input" dir="ltr" placeholder="">
                             </div>
                             <!-- Left: صله القرابه -->
                             <div class="col-12 col-md-6 mb-3">
@@ -1488,6 +1488,80 @@
                 dir: $('html').attr('dir') === 'rtl' ? 'rtl' : 'ltr'
             });
         }
+
+        // Function to reload classes based on Stage and Branch
+        function reloadClasses() {
+            const stageId = $('#academic_stage_id').val();
+            const branchId = $('#branch_id').val();
+            const institutionId = $('#institution_id').val();
+            const classSelect = $('#academic_class_id');
+
+            classSelect.empty().append(new Option("{{ __('Select Class...') }}", ""));
+
+            if (!stageId) {
+                classSelect.trigger('change');
+                return;
+            }
+
+            const url = '{{ route("academic.students.ajax.classes", ":id") }}'.replace(':id', stageId);
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    branch_id: branchId,
+                    institution_id: institutionId
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data)) {
+                        data.forEach(function (cls) {
+                            classSelect.append(new Option(cls.name, cls.id));
+                        });
+                    }
+                    classSelect.trigger('change');
+                },
+                error: function () {
+                    classSelect.trigger('change');
+                }
+            });
+        }
+
+        // Function to reload branches based on Institution (Nursery)
+        $('#institution_id').on('change', function () {
+            const institutionId = $(this).val();
+            const branchSelect = $('#branch_id');
+
+            branchSelect.empty().append(new Option("{{ __('Select Branch...') }}", ""));
+
+            if (!institutionId) {
+                branchSelect.trigger('change');
+                return;
+            }
+
+            const url = '{{ route("academic.students.ajax.branches", ":id") }}'.replace(':id', institutionId);
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (Array.isArray(data)) {
+                        data.forEach(function (br) {
+                            branchSelect.append(new Option(br.name, br.id));
+                        });
+                    }
+                    branchSelect.trigger('change');
+                },
+                error: function () {
+                    branchSelect.trigger('change');
+                }
+            });
+        });
+
+        // Dependent dropdown: Classes based on Academic Stage & Branch
+        $('#academic_stage_id').on('change', reloadClasses);
+        $('#branch_id').on('change', reloadClasses);
 
         // Toast Helper
         function showToast(type, message, title = '') {

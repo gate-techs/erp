@@ -94,6 +94,9 @@ class AcademicTeacherController extends Controller
 
                 return e($branchName);
             })
+            ->addColumn('allocations', function (Employee $teacher) {
+                return $this->service->renderAllocationsBadgeHtml($teacher);
+            })
             ->addColumn('phone_formatted', function (Employee $teacher) {
                 if (! $teacher->phone) {
                     return '<span class="text-muted">-</span>';
@@ -132,7 +135,7 @@ class AcademicTeacherController extends Controller
                         </button>
                     </div>';
             })
-            ->rawColumns(['employee_code_formatted', 'teacher_name', 'role', 'phone_formatted', 'status_badge', 'actions'])
+            ->rawColumns(['employee_code_formatted', 'teacher_name', 'role', 'allocations', 'phone_formatted', 'status_badge', 'actions'])
             ->make(true);
     }
 

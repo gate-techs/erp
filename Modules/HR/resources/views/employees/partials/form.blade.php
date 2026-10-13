@@ -149,11 +149,11 @@
                         </div>
                         <div class="form-check form-switch m-0">
                             <input class="form-check-input" type="checkbox" id="createUserAccountSwitch" name="create_user_account" value="1"
-                                   {{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? 'checked' : '' }}>
+                                   {{ old('create_user_account', $isEdit ? ($employee->user_id ? '1' : '0') : '1') == '1' ? 'checked' : '' }}>
                         </div>
                     </div>
 
-                    <div id="userAccountFields" class="{{ old('create_user_account', $isEdit && $employee->user_id ? '1' : '0') == '1' ? '' : 'd-none' }} pt-3 mt-2 border-top">
+                    <div id="userAccountFields" class="{{ old('create_user_account', $isEdit ? ($employee->user_id ? '1' : '0') : '1') == '1' ? '' : 'd-none' }} pt-3 mt-2 border-top">
                         <div class="row align-items-center g-3">
                             @if ($isEdit && $employee->user)
                                 <div class="col-12">
@@ -172,7 +172,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bx bx-envelope"></i></span>
                                     <input type="email" id="userAccountEmail" name="email" class="form-control bg-white @error('email') is-invalid @enderror" 
-                                           value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="employee@domain.com" dir="ltr">
+                                           value="{{ old('email', $isEdit ? $employee->email : '') }}" placeholder="firstname@astroleadrskw.com" dir="ltr">
                                 </div>
                                 @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                             </div>
@@ -181,11 +181,13 @@
                             <div class="col-12 col-md-4">
                                 <label class="form-label text-muted small fw-semibold mb-1">
                                     {{ $isEdit && $employee->user_id ? __('Change Password') : __('Password') }}
-                                    @if (!$isEdit) <span class="text-muted font-11">({{ __('Default:') }} 12345678)</span> @endif
+                                    @if (!$isEdit) <span class="text-muted font-11">({{ __('Default:') }} astro@123)</span> @endif
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white"><i class="bx bx-lock-alt"></i></span>
-                                    <input type="password" name="user_password" class="form-control bg-white" placeholder="{{ $isEdit ? __('Leave blank to keep current') : '••••••••' }}">
+                                    <input type="password" name="user_password" class="form-control bg-white" 
+                                           value="{{ old('user_password', $isEdit ? '' : 'astro@123') }}" 
+                                           placeholder="{{ $isEdit ? __('Leave blank to keep current') : 'astro@123' }}">
                                 </div>
                             </div>
 
@@ -1224,6 +1226,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (cardEmployeeName) {
                     cardEmployeeName.textContent = arabicText;
                 }
+                nameEnInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
         })
         .catch(err => {

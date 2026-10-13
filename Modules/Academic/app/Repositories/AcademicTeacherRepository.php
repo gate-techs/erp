@@ -23,7 +23,16 @@ class AcademicTeacherRepository implements AcademicTeacherRepositoryInterface
     {
         $query = Employee::query()
             ->where('is_teacher', true)
-            ->with(['branch.translations', 'jobTitle.translations', 'manager.translations', 'user.roles', 'translations']);
+            ->with([
+                'branch.translations',
+                'jobTitle.translations',
+                'manager.translations',
+                'user.roles',
+                'translations',
+                'academicTeacherClasses.stage.translations',
+                'academicTeacherClasses.class.translations',
+                'academicTeacherSubjects.subject.translations',
+            ]);
 
         if (! empty($filters['branch_id'])) {
             $query->where('primary_branch_id', (int) $filters['branch_id']);

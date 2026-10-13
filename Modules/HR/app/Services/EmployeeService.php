@@ -163,11 +163,12 @@ class EmployeeService
             $isTeacher = !empty($validated['is_teacher']);
             if (!empty($validated['create_user_account']) && !empty($validated['email']) && !$userId) {
                 $userType = $isTeacher ? UserType::TEACHER : UserType::EMPLOYEE;
+                $rawPassword = !empty($validated['user_password']) ? $validated['user_password'] : 'astro@123';
                 $user = User::create([
                     'name'      => $validated['name_ar'],
                     'email'     => $validated['email'],
                     'phone'     => $validated['phone'] ?? null,
-                    'password'  => Hash::make($validated['user_password'] ?? '12345678'),
+                    'password'  => Hash::make($rawPassword),
                     'user_type' => $userType,
                     'is_active' => true,
                 ]);

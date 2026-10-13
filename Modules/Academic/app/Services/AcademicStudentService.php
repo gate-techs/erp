@@ -549,7 +549,7 @@ class AcademicStudentService
     {
         $query = NurseryBranch::with('translations')->where('status', 'active');
         if ($institutionId) {
-            $query->where('institution_id', $institutionId);
+            $query->where('nursery_id', $institutionId);
         }
 
         return $query->get();
@@ -575,11 +575,17 @@ class AcademicStudentService
         return $query->get();
     }
 
-    public function getClasses(?int $stageId = null): Collection
+    public function getClasses(?int $stageId = null, ?int $branchId = null, ?int $institutionId = null): Collection
     {
         $query = AcademicClass::with('translations')->where('status', 'active');
         if ($stageId) {
             $query->where('academic_stage_id', $stageId);
+        }
+        if ($branchId) {
+            $query->where('branch_id', $branchId);
+        }
+        if ($institutionId) {
+            $query->where('institution_id', $institutionId);
         }
 
         return $query->get();

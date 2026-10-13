@@ -568,7 +568,7 @@ window.addEventListener('load', function () {
                 orderable: false,
                 render: (data, type, row) => `
                     <div>
-                        <a href="${row.actions?.show_url}" class="fw-bold text-heading text-hover-primary d-block">${data}</a>
+                        <a href="javascript:void(0);" class="fw-bold text-heading text-hover-primary d-block btn-edit-event" data-id="${row.id}">${data}</a>
                         ${row.name_en && row.name_en !== data ? `<small class="text-muted d-block font-sans">${row.name_en}</small>` : ''}
                     </div>`
             },

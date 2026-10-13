@@ -299,10 +299,67 @@
 
                 // Two-way sync between User Account Email and Contact Email
                 $('#userAccountEmail').on('input change', function () {
+                    this.dataset.manuallyEdited = 'true';
                     $('#contactEmail').val($(this).val());
                 });
                 $('#contactEmail').on('input change', function () {
-                    $('#userAccountEmail').val($(this).val());
+                    const val = $(this).val();
+                    const $accEmail = $('#userAccountEmail');
+                    $accEmail[0].dataset.manuallyEdited = 'true';
+                    $accEmail.val(val);
+                });
+
+                // Auto-generate email from first name (@astroleadrskw.com)
+                function sanitizeForEmail(text) {
+                    if (!text) return '';
+                    return text.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+                }
+
+                function arabicToLatinTransliterate(arStr) {
+                    if (!arStr) return '';
+                    const map = {
+                        'أ': 'a', 'إ': 'e', 'آ': 'a', 'ا': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th',
+                        'ج': 'j', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'th', 'ر': 'r', 'ز': 'z',
+                        'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a',
+                        'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n',
+                        'ه': 'h', 'و': 'w', 'ي': 'y', 'ى': 'a', 'ة': 'a', 'ء': 'a', 'ئ': 'e', 'ؤ': 'o'
+                    };
+                    return arStr.split('').map(char => map[char] || char).join('');
+                }
+
+                function updateGeneratedEmail() {
+                    const $accEmail = $('#userAccountEmail');
+                    if (!$accEmail.length) return;
+                    if ($accEmail[0].dataset.manuallyEdited === 'true' && $accEmail.val().trim() !== '') {
+                        return;
+                    }
+
+                    const englishName = $('#employeeNameEn').val().trim();
+                    const arabicName = $('#employeeNameAr').val().trim();
+                    let firstName = '';
+
+                    if (englishName) {
+                        const parts = englishName.split(/\s+/);
+                        firstName = sanitizeForEmail(parts[0]);
+                    } else if (arabicName) {
+                        const parts = arabicName.split(/\s+/);
+                        const transliterated = arabicToLatinTransliterate(parts[0]);
+                        firstName = sanitizeForEmail(transliterated);
+                    }
+
+                    if (firstName) {
+                        const generatedEmail = `${firstName}@astroleadrskw.com`;
+                        $accEmail.val(generatedEmail);
+                        $('#contactEmail').val(generatedEmail);
+                    }
+                }
+
+                $('#employeeNameEn').on('input change', function () {
+                    updateGeneratedEmail();
+                });
+
+                $('#employeeNameAr').on('input change', function () {
+                    updateGeneratedEmail();
                 });
 
                 // Academic Teacher toggle role auto-sync

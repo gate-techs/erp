@@ -356,13 +356,13 @@
                         </td>
                         <td>
                             <span class="badge bg-label-{{ $log->event == 'created' ? 'success' : ($log->event == 'deleted' ? 'danger' : 'info') }} me-1">
-                                {{ ucfirst($log->event ?? 'action') }}
+                                {{ __($log->event ? ucfirst($log->event) : 'Action') }}
                             </span>
-                            <span class="text-heading">{{ $log->description ?? __('Performed action') }}</span>
+                            <span class="text-heading">{{ $log->description ? __($log->description) : __('Performed action') }}</span>
                         </td>
                         <td>
                             <span class="badge bg-label-secondary font-monospace">
-                                {{ class_basename($log->subject_type ?? 'Record') }}
+                                {{ __(class_basename($log->subject_type ?? 'Record')) }}
                                 @if(!empty($log->subject_id)) #{{ $log->subject_id }} @endif
                             </span>
                         </td>

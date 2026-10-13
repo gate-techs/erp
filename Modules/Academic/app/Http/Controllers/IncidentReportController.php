@@ -72,7 +72,7 @@ class IncidentReportController extends Controller
             ->addColumn('incident_datetime', function (IncidentReport $r) {
                 $date = $r->date ? $r->date->format('Y-m-d') : '-';
                 $time = $r->time ? '<span class="badge bg-label-secondary ms-1"><i class="bx bx-time-five me-1 font-12"></i>' . e($r->time) . '</span>' : '';
-                return '<span class="fw-medium text-heading">' . e($date) . '</span>' . $time;
+                return '<a href="' . route('academic.incident-reports.edit', $r->id) . '" class="fw-semibold text-heading text-hover-primary" title="' . e(__('تعديل')) . '">' . e($date) . '</a>' . $time;
             })
             ->addColumn('location_html', function (IncidentReport $r) {
                 if (empty($r->location)) {

@@ -91,6 +91,7 @@
                     <th class="text-center">{{ __('Role') }}</th>
                     <th>{{ __('Direct Manager') }}</th>
                     <th>{{ __('Branch') }}</th>
+                    <th>{{ __('Stages, Classes & Subjects') }}</th>
                     <th class="text-center">{{ __('Phone Number') }}</th>
                     <th class="text-center" style="width: 100px;">{{ __('Status') }}</th>
                     <th class="text-center" style="width: 130px;">{{ __('Actions') }}</th>
@@ -545,6 +546,7 @@
                 { data: 'role', name: 'role', className: 'text-center', orderable: false, searchable: false },
                 { data: 'manager', name: 'manager_id' },
                 { data: 'branch', name: 'primary_branch_id' },
+                { data: 'allocations', name: 'allocations', orderable: false, searchable: false },
                 { data: 'phone_formatted', name: 'phone', className: 'text-center' },
                 { data: 'status_badge', name: 'status', className: 'text-center' },
                 { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center' }
