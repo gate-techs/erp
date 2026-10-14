@@ -32,6 +32,68 @@ class PortalProfileService implements PortalProfileServiceInterface
     }
 
     /**
+     * Get data required for employee profile screen.
+     */
+    public function getProfileContext(?User $user): array
+    {
+        $employee = $this->resolveCurrentEmployee($user);
+
+        $name = $employee?->name ?? $user?->name ?? __('Staff Member');
+        $jobTitle = $employee?->jobTitle?->name ?? $employee?->designation?->name ?? __('Kindergarten Educator');
+        $department = $employee?->department?->name ?? '';
+        $roleSummary = $department ? ($jobTitle . ' • ' . $department) : $jobTitle;
+
+        $branchName = $employee?->primaryBranch?->name ?? $employee?->branch?->name ?? __('Main Branch - State of Kuwait');
+
+        $hireDateFormatted = $employee?->hire_date
+            ? $employee->hire_date->translatedFormat('d F Y')
+            : \Carbon\Carbon::now()->subYears(2)->translatedFormat('d F Y');
+
+        $shiftName = $employee?->shift?->name ?? __('Full-time Morning Shift');
+        $jobSubtitle = __('Hire Date: :date • :shift', [
+            'date'  => $hireDateFormatted,
+            'shift' => $shiftName,
+        ]);
+
+        $latestPayrollMonth = \Carbon\Carbon::now()->subMonth()->translatedFormat('F');
+
+        $avatarUrl = null;
+        if ($employee?->avatar) {
+            $avatarUrl = Storage::url($employee->avatar);
+        } elseif ($user?->avatar) {
+            $avatarUrl = Storage::url($user->avatar);
+        } else {
+            $avatarUrl = asset('assets/portal/avatar-default.png');
+        }
+
+        $currentLocale = app()->getLocale();
+        $targetLocale = $currentLocale === 'ar' ? 'en' : 'ar';
+        $targetLocaleLabel = $currentLocale === 'ar' ? 'English' : 'العربية';
+        $currentLocaleLabel = $currentLocale === 'ar' ? 'العربية' : 'English';
+        $langSwitchUrl = route('lang.swap', $targetLocale);
+        $langSubtitle = $currentLocale === 'ar'
+            ? 'العربية (مفعلة) • التبديل إلى English'
+            : 'English (Active) • Switch to العربية';
+
+        return [
+            'employee'              => $employee,
+            'user'                  => $user,
+            'name'                  => $name,
+            'role_summary'          => $roleSummary,
+            'branch_name'           => $branchName,
+            'job_subtitle'          => $jobSubtitle,
+            'latest_payroll_month'  => $latestPayrollMonth,
+            'avatar_url'            => $avatarUrl,
+            'current_locale'        => $currentLocale,
+            'target_locale'         => $targetLocale,
+            'target_locale_label'   => $targetLocaleLabel,
+            'current_locale_label'  => $currentLocaleLabel,
+            'lang_switch_url'       => $langSwitchUrl,
+            'lang_subtitle'         => $langSubtitle,
+        ];
+    }
+
+    /**
      * Get profile and edit view data for current employee/user.
      */
     public function getProfileEditData(?User $user): array

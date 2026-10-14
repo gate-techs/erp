@@ -98,11 +98,12 @@
             </div>
 
             <div class="portal-create-doc-date-wrap">
-                <input type="date" 
+                <input type="text" 
                        name="expiry_date" 
                        id="docExpiryDateInput" 
-                       class="portal-create-doc-date-input" 
-                       value="{{ $document?->expiry_date ? $document->expiry_date->format('Y-m-d') : old('expiry_date') }}" />
+                       class="form-control js-flatpickr-date flatpickr-input flatpickr-custom-input active portal-create-doc-date-input" 
+                       value="{{ $document?->expiry_date ? $document->expiry_date->format('Y-m-d') : old('expiry_date') }}" 
+                       autocomplete="off" />
                 <i class="bx bx-calendar portal-create-doc-date-icon"></i>
             </div>
 
@@ -182,6 +183,18 @@
             });
         }
 
+        if (typeof flatpickr !== 'undefined') {
+            const expiryEl = document.getElementById('docExpiryDateInput');
+            if (expiryEl && !expiryEl._flatpickr) {
+                flatpickr(expiryEl, {
+                    locale: '{{ app()->getLocale() === "ar" ? "ar" : "en" }}',
+                    dateFormat: 'Y-m-d',
+                    allowInput: true,
+                    disableMobile: true
+                });
+            }
+        }
+
         const isPerm = document.getElementById('isPermanentCheckbox');
         if (isPerm && isPerm.checked) {
             togglePermanent(true);
@@ -193,7 +206,11 @@
         if (dateInput) {
             dateInput.disabled = isPermanent;
             if (isPermanent) {
-                dateInput.value = '';
+                if (dateInput._flatpickr) {
+                    dateInput._flatpickr.clear();
+                } else {
+                    dateInput.value = '';
+                }
             }
         }
     }

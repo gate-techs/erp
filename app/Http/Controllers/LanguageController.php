@@ -18,6 +18,14 @@ class LanguageController extends Controller
     {
         if (in_array($locale, ['en', 'ar'])) {
             Session::put('locale', $locale);
+
+            if (auth()->check()) {
+                try {
+                    auth()->user()->update(['locale' => $locale]);
+                } catch (\Throwable $e) {
+                    // Fail silently if table doesn't support or unauthenticated
+                }
+            }
         }
 
         return redirect()->back();

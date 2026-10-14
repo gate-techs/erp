@@ -136,12 +136,9 @@ class EmployeePortalController extends Controller
      */
     public function profile(): View
     {
-        $employee = $this->attendanceService->resolveCurrentEmployee(Auth::user());
+        $context = $this->profileService->getProfileContext(Auth::user());
 
-        return view('employeeportal::profile', [
-            'employee' => $employee,
-            'user'     => Auth::user(),
-        ]);
+        return view('employeeportal::profile', $context);
     }
 
     /**

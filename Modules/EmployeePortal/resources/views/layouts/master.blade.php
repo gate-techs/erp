@@ -195,6 +195,28 @@
     <!-- Animated Mobile Toast (Success / Error) Component -->
     @include('employeeportal::components.portal-toast')
 
+    <!-- Portal Language Storage Handler -->
+    <script>
+        (function () {
+            try {
+                const currentLocale = "{{ app()->getLocale() }}";
+                localStorage.setItem('astro_portal_locale', currentLocale);
+                localStorage.setItem('app_locale', currentLocale);
+            } catch (e) {}
+        })();
+
+        function savePortalLocaleAndRedirect(event, targetLocale, url) {
+            if (event) event.preventDefault();
+            try {
+                localStorage.setItem('astro_portal_locale', targetLocale);
+                localStorage.setItem('app_locale', targetLocale);
+            } catch (e) {
+                console.error('Failed to save to localStorage:', e);
+            }
+            window.location.href = url;
+        }
+    </script>
+
     @stack('scripts')
 </body>
 

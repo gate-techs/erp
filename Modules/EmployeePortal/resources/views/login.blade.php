@@ -445,7 +445,7 @@
     <!-- Top Mobile Status Notch Bar preview with language switch -->
     <div class="mobile-top-bar">
         <span>{{ __('Astro Leaders') }}</span>
-        <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-login-lang-btn" title="{{ __('Change Language') }}">
+        <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-login-lang-btn" title="{{ __('Change Language') }}" onclick="savePortalLocaleAndRedirect(event, '{{ app()->getLocale() === 'ar' ? 'en' : 'ar' }}', this.href)">
             <i class="bx bx-globe"></i>
             <span>{{ app()->getLocale() === 'ar' ? 'English' : 'عربي' }}</span>
         </a>
@@ -579,6 +579,25 @@
                 btnToggle.classList.toggle('bx-show', !isPassword);
                 btnToggle.classList.toggle('bx-hide', isPassword);
             });
+        }
+
+        (function () {
+            try {
+                const currentLocale = "{{ app()->getLocale() }}";
+                localStorage.setItem('astro_portal_locale', currentLocale);
+                localStorage.setItem('app_locale', currentLocale);
+            } catch (e) {}
+        })();
+
+        function savePortalLocaleAndRedirect(event, targetLocale, url) {
+            if (event) event.preventDefault();
+            try {
+                localStorage.setItem('astro_portal_locale', targetLocale);
+                localStorage.setItem('app_locale', targetLocale);
+            } catch (e) {
+                console.error('Failed to save to localStorage:', e);
+            }
+            window.location.href = url;
         }
     </script>
 
