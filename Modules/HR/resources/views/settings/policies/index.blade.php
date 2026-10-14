@@ -776,8 +776,8 @@
                                     </div>
                                     <div class="form-check form-switch mt-2">
                                         <input type="hidden" name="policies[allow_multiple_loans]" value="0">
-                                        <input class="form-check-input font-20" type="checkbox" id="allow_multiple_loans" name="policies[allow_multiple_loans]" value="1" {{ !empty($policies['loans']['allow_multiple_loans']) ? 'checked' : '' }}>
-                                        <label class="form-check-label fw-semibold ms-2" for="allow_multiple_loans">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="allow_multiple_loans" name="policies[allow_multiple_loans]" value="1" {{ !empty($policies['loans']['allow_multiple_loans']) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="allow_multiple_loans">
                                             {{ __('Allow requesting new loan while an active loan is unpaid') }}
                                         </label>
                                     </div>

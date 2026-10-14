@@ -8,7 +8,7 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
-            <h4 class="fw-bold py-1 mb-0">
+            <h4 class="report-page-title fw-bold py-1 mb-0">
                 <span class="text-muted fw-light">{{ __('الموارد البشرية') }} / {{ __('التقارير') }} /</span> 
                 @if($reportType === 'monthly_summary')
                     {{ __('ملخص الحضور الشهري (Timesheet)') }}
@@ -22,7 +22,7 @@
             </h4>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
+        <div class="report-actions d-flex align-items-center gap-2">
             <!-- Column Selector Dropdown -->
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="columnSelectorDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
@@ -102,7 +102,7 @@
 
     <!-- 4 Sub-Reports Navigation Tabs -->
     <div class="nav-align-top mb-4">
-        <ul class="nav nav-pills flex-column flex-md-row gap-2">
+        <ul class="nav nav-pills report-type-tabs gap-2">
             <li class="nav-item">
                 <a class="nav-link {{ $reportType === 'daily' ? 'active' : '' }}" 
                    href="{{ route('hr.reports.attendance.index', array_merge(request()->except(['page', 'columns']), ['report_type' => 'daily'])) }}">
@@ -132,8 +132,8 @@
 
     <!-- Advanced Filter Card -->
     <div class="card mb-4 border-0 shadow-sm">
-        <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
-            <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <div class="card-header report-filter-header bg-transparent border-bottom py-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
                 <i class="bx bx-filter-alt text-primary"></i> {{ __('فلاتر التقرير الشاملة') }}
             </h6>
 
@@ -155,7 +155,7 @@
                 $isThisMonth = ($curStart === $startOfMonth && $curEnd === $todayDate);
                 $isLastMonth = ($curStart === $startOfLastMonth && $curEnd === $endOfLastMonth);
             @endphp
-            <div class="btn-group btn-group-sm" role="group">
+            <div class="btn-group btn-group-sm date-presets" role="group">
                 <button type="button" class="btn btn-outline-primary {{ $isToday ? 'active' : '' }}" onclick="setDatePreset('today')">{{ __('اليوم') }}</button>
                 <button type="button" class="btn btn-outline-primary {{ $isYesterday ? 'active' : '' }}" onclick="setDatePreset('yesterday')">{{ __('أمس') }}</button>
                 <button type="button" class="btn btn-outline-primary {{ $isThisWeek ? 'active' : '' }}" onclick="setDatePreset('this_week')">{{ __('هذا الأسبوع') }}</button>
@@ -276,7 +276,7 @@
                     </div>
 
                     <!-- Filter Action Buttons -->
-                    <div class="col-12 d-flex justify-content-end gap-2 pt-2">
+                    <div class="col-12 report-filter-actions d-flex justify-content-end gap-2 pt-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bx bx-search me-1"></i> {{ __('تحديث التقرير') }}
                         </button>

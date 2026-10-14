@@ -146,7 +146,7 @@
 <!-- Table View -->
 <div class="card border-0 shadow-sm rounded-3">
     <div class="card-datatable table-responsive">
-        <table class="table border-top table-hover" id="interviewsTable">
+        <table class="table border-top table-hover text-nowrap" id="interviewsTable">
             <thead>
                 <tr>
                     <th class="text-center" style="width: 40px;">#</th>

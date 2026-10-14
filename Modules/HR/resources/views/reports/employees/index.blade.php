@@ -8,7 +8,7 @@
     <!-- Page Header & Action Buttons -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
         <div>
-            <h4 class="fw-bold py-1 mb-0">
+            <h4 class="report-page-title fw-bold py-1 mb-0">
                 <span class="text-muted fw-light">{{ __('الموارد البشرية') }} / {{ __('التقارير') }} /</span> 
                 @if($reportType === 'expiring_docs')
                     {{ __('تقرير انتهاء وثائق الموظفين') }}
@@ -20,7 +20,7 @@
             </h4>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
+        <div class="report-actions d-flex align-items-center gap-2">
             @if($reportType !== 'demographics')
                 <!-- Column Selector Dropdown -->
                 <div class="dropdown">
@@ -104,7 +104,7 @@
 
     <!-- 3 Sub-Reports Navigation Tabs -->
     <div class="nav-align-top mb-4">
-        <ul class="nav nav-pills flex-column flex-md-row gap-2">
+        <ul class="nav nav-pills report-type-tabs gap-2">
             <li class="nav-item">
                 <a class="nav-link {{ $reportType === 'master' ? 'active' : '' }}" 
                    href="{{ route('hr.reports.employees.index', array_merge(request()->except(['page', 'columns']), ['report_type' => 'master'])) }}">
@@ -128,13 +128,13 @@
 
     <!-- Advanced Filter Card -->
     <div class="card mb-4 border-0 shadow-sm">
-        <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
-            <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
+        <div class="card-header report-filter-header bg-transparent border-bottom py-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2 text-nowrap">
                 <i class="bx bx-filter-alt text-primary"></i> {{ __('معايير التصفية والبحث') }}
             </h6>
 
             @if($reportType === 'expiring_docs')
-                <div class="btn-group btn-group-sm" role="group">
+                <div class="btn-group btn-group-sm date-presets" role="group">
                     <a href="{{ route('hr.reports.employees.index', array_merge(request()->all(), ['expiry_range' => 'all'])) }}" 
                        class="btn btn-outline-primary {{ request('expiry_range', 'all') === 'all' ? 'active' : '' }}">{{ __('الكل') }}</a>
                     <a href="{{ route('hr.reports.employees.index', array_merge(request()->all(), ['expiry_range' => 'expired'])) }}" 
@@ -302,7 +302,7 @@
                     @endif
 
                     <!-- Action Buttons -->
-                    <div class="col-12 d-flex justify-content-end gap-2 mt-2">
+                    <div class="col-12 report-filter-actions d-flex justify-content-end gap-2 mt-2">
                         <a href="{{ route('hr.reports.employees.index', ['report_type' => $reportType]) }}" class="btn btn-outline-secondary">
                             <i class="bx bx-reset me-1"></i> {{ __('إعادة تعيين') }}
                         </a>

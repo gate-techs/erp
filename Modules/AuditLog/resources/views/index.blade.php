@@ -213,21 +213,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 render: (data) => data 
             }
         ],
+        // Search / length / info / paging texts come from the global DataTables defaults
         language: {
-            search: "{{ __('Search:') }}",
-            lengthMenu: "{{ __('Show _MENU_ records') }}",
-            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ records') }}",
-            infoEmpty: "{{ __('No records available') }}",
-            infoFiltered: "{{ __('(filtered from _MAX_ total records)') }}",
             zeroRecords: "{{ __('No matching records found') }}",
             emptyTable: "{{ __('No activity logs recorded') }}",
-            processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"><span class="visually-hidden">{{ __("Loading...") }}</span></div> {{ __("Loading data...") }}',
-            paginate: {
-                first: "{{ __('First') }}",
-                last: "{{ __('Last') }}",
-                next: "{{ __('Next') }}",
-                previous: "{{ __('Previous') }}"
-            }
+            processing: '<div class="spinner-border text-primary spinner-border-sm" role="status"><span class="visually-hidden">{{ __("Loading...") }}</span></div> {{ __("Loading data...") }}'
         }
     });
 

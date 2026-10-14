@@ -53,6 +53,46 @@
             background-color: var(--bs-primary);
             color: #fff !important;
         }
+
+        /* Phones: entity selector full row, Excel + Add share the next row equally;
+           card toolbar buttons fill the width */
+        @media (max-width: 575.98px) {
+            .coa-header-actions {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: 100%;
+            }
+            .coa-header-actions .coa-entity-select {
+                grid-column: 1 / -1;
+                min-width: 0 !important;
+            }
+            .coa-header-actions > .btn,
+            .coa-header-actions .coa-excel-dropdown > .btn {
+                width: 100% !important;
+                height: 100%;
+                padding-inline: 0.5rem;
+                font-size: 0.8125rem;
+                white-space: nowrap;
+            }
+            .coa-header-actions .coa-excel-dropdown > .btn > span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .coa-toolbar,
+            .coa-toolbar #viewModeControls,
+            .coa-toolbar #treeToggleControls {
+                width: 100%;
+            }
+            .coa-toolbar #viewModeControls > .btn,
+            .coa-toolbar #treeToggleControls > .btn {
+                flex: 1 1 0;
+                justify-content: center;
+                white-space: nowrap;
+                font-size: 0.8125rem;
+                padding-inline: 0.5rem;
+            }
+        }
     </style>
 @endsection
 
@@ -74,8 +114,8 @@
         </div>
 
         <!-- Right Header Controls: Entity Switcher & Add Button -->
-        <div class="d-flex flex-wrap align-items-center gap-2">
-            <div style="min-width: 240px;">
+        <div class="coa-header-actions d-flex flex-wrap align-items-center gap-2">
+            <div class="coa-entity-select" style="min-width: 240px;">
                 <select id="entitySelector" class="select2 form-select" data-placeholder="{{ __('Entity') }}">
                     @foreach($entities as $entity)
                         @php
@@ -89,11 +129,12 @@
             </div>
 
             <!-- Excel Actions Dropdown (Coordinated with Primary Theme) -->
-            <div class="dropdown">
-                <button type="button" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2"
+            <div class="dropdown coa-excel-dropdown">
+                <button type="button" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center justify-content-center gap-2"
                     data-bs-toggle="dropdown" aria-expanded="false" id="btnExcelDropdown">
                     <i class="icon-base bx bx-export font-18"></i>
-                    <span class="fw-semibold">{{ __('Excel Operations') }}</span>
+                    <span class="fw-semibold d-none d-sm-inline">{{ __('Excel Operations') }}</span>
+                    <span class="fw-semibold d-sm-none">Excel</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 py-2 mt-2"
                     style="min-width: 290px;">
@@ -219,7 +260,7 @@
                 <span>{{ __('Chart of Accounts') }}</span>
             </h5>
 
-            <div class="d-flex flex-wrap align-items-center gap-2">
+            <div class="coa-toolbar d-flex flex-wrap align-items-center gap-2">
 
                 <!-- Prominent View Mode Switcher (Beside Expand/Collapse) -->
                 <div class="d-flex align-items-center gap-2" id="viewModeControls">

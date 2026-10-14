@@ -6,12 +6,12 @@
 <div class="ai-chat-app-container">
     
     <!-- Standard ERP Page Header -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div>
-            <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
+    <div class="ai-page-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div class="ai-page-header-title">
+            <h4 class="ai-page-title fw-bold mb-1 d-flex align-items-center gap-2">
                 <i class="bx bx-bot text-primary fs-3"></i>
                 <span>{{ __('المساعد المالي والمرشد الذكي') }}</span>
-                <span class="badge bg-label-primary rounded-pill small fw-normal py-1 px-2" style="font-size: 0.72rem;">
+                <span class="badge bg-label-primary rounded-pill small fw-normal py-1 px-2 d-none d-sm-inline-block" style="font-size: 0.72rem;">
                     <i class="bx bx-check-shield me-1 text-success"></i>GateTech AI
                 </span>
             </h4>
@@ -29,9 +29,9 @@
                 <span class="ai-live-dot"></span>
                 <span>{{ __('متصل بالنظام المالي لحظياً') }}</span>
             </span>
-            <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 py-2 px-3 shadow-2xs" data-bs-toggle="offcanvas" data-bs-target="#offcanvasChatHistory" aria-controls="offcanvasChatHistory">
+            <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 py-2 px-3 shadow-2xs ai-history-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasChatHistory" aria-controls="offcanvasChatHistory" title="{{ __('سجل المحادثات') }}">
                 <i class="bx bx-history fs-5"></i>
-                <span>{{ __('سجل المحادثات') }}</span>
+                <span class="d-none d-sm-inline">{{ __('سجل المحادثات') }}</span>
             </button>
         </div>
     </div>
@@ -41,31 +41,31 @@
         
         <!-- Top Toolbar Header Bar -->
         <div class="card-header bg-white border-bottom p-3">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="ai-chat-toolbar d-flex flex-wrap align-items-center justify-content-between gap-3">
                 
                 <!-- Left / Start: Bot Identity -->
-                <div class="d-flex align-items-center gap-3">
+                <div class="ai-chat-identity d-flex align-items-center gap-3">
                     <div class="position-relative flex-shrink-0">
                         <div class="avatar avatar-md bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm ai-avatar-glow">
                             <i class="bx bx-bot fs-3"></i>
                         </div>
                         <span class="ai-status-indicator"></span>
                     </div>
-                    <div>
+                    <div class="ai-chat-identity-text">
                         <div class="d-flex align-items-center gap-2">
-                            <h6 class="mb-0 fw-bold text-dark">{{ __('المساعد المالي والمحاسبي الذكي') }}</h6>
-                            <span class="badge bg-label-success rounded-pill px-2 py-0" style="font-size: 0.68rem;">
+                            <h6 class="mb-0 fw-bold text-dark text-truncate">{{ __('المساعد المالي والمحاسبي الذكي') }}</h6>
+                            <span class="badge bg-label-success rounded-pill px-2 py-0 d-none d-sm-inline-block flex-shrink-0" style="font-size: 0.68rem;">
                                 {{ __('متصل ومباشر') }}
                             </span>
                         </div>
-                        <small class="text-muted d-block" style="font-size: 0.74rem;">
+                        <small class="text-muted d-block text-truncate" style="font-size: 0.74rem;">
                             {{ __('المساعد الذكي للعمليات المحاسبية والتقارير المالية المعتمدة') }}
                         </small>
                     </div>
                 </div>
 
                 <!-- Right / End: Fast Actions -->
-                <div class="d-flex align-items-center gap-1">
+                <div class="d-flex align-items-center gap-1 flex-shrink-0">
                     <button type="button" class="btn btn-sm btn-primary rounded-pill d-flex align-items-center gap-1 py-1 px-3 ai-btn-new-chat" id="btn-new-chat">
                         <i class="bx bx-plus-circle font-16"></i>
                         <span class="d-none d-sm-inline">{{ __('محادثة جديدة') }}</span>
@@ -262,6 +262,62 @@
     min-height: 620px;
     background: #fff;
     border-radius: 16px !important;
+}
+
+/* Header rows: identity/title shrink & truncate so actions stay on the same row */
+.ai-chat-identity,
+.ai-chat-identity-text,
+.ai-page-header-title {
+    min-width: 0;
+}
+
+@media (max-width: 575.98px) {
+    .ai-page-header {
+        flex-wrap: nowrap !important;
+    }
+    .ai-page-header-title {
+        flex: 1 1 auto;
+    }
+    .ai-page-title {
+        font-size: 1.1rem;
+    }
+    .ai-page-title > span {
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ai-page-header .breadcrumb {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .ai-history-btn {
+        padding: 0.45rem 0.6rem !important;
+    }
+
+    .ai-chat-card .card-header {
+        padding: 0.75rem !important;
+    }
+    .ai-chat-toolbar {
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+    }
+    .ai-chat-identity {
+        flex: 1 1 auto;
+        gap: 0.6rem !important;
+    }
+    .ai-chat-identity .avatar {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+    .ai-chat-identity-text h6 {
+        font-size: 0.875rem;
+    }
+    .ai-chat-card {
+        height: calc(100vh - 150px);
+        min-height: 520px;
+    }
 }
 
 .ai-avatar-glow {

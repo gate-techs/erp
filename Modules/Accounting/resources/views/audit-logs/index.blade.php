@@ -221,18 +221,10 @@ document.addEventListener('DOMContentLoaded', function () {
         language: {
             emptyTable: "{{ __('No matching records found in audit log') }}",
             zeroRecords: "{{ __('No matching records found') }}",
-            info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-            infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
-            infoFiltered: "({{ __('filtered from _MAX_ total entries') }})",
-            lengthMenu: "{{ __('Show _MENU_ entries') }}",
             loadingRecords: "{{ __('Loading...') }}",
             processing: "{{ __('Processing...') }}",
             search: '',
             searchPlaceholder: "{{ __('Search audit log...') }}",
-            paginate: {
-                previous: '<i class="bx bx-chevron-right"></i>',
-                next: '<i class="bx bx-chevron-left"></i>'
-            }
         }
     });
 

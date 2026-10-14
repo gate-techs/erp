@@ -522,7 +522,7 @@
 <div id="tableViewContainer" class="d-none">
     <div class="card border-0 shadow-sm">
         <div class="card-datatable table-responsive">
-            <table class="table border-top table-hover" id="jobApplicationsTable">
+            <table class="table border-top table-hover text-nowrap" id="jobApplicationsTable">
                 <thead>
                     <tr>
                         <th class="text-center" style="width: 40px;">#</th>

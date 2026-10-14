@@ -503,6 +503,29 @@ div.dt-paging .pagination .page-item.disabled span.page-link,
     }
 }
 
+/* Server-rendered pagination (resources/views/vendor/pagination/app.blade.php):
+   same info + buttons layout as the DataTables footer above */
+.app-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+}
+@media (max-width: 767.98px) {
+    .app-pagination {
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+@media (max-width: 575.98px) {
+    /* Compact window on phones: ‹ 4 5 6 › (drop boundary numbers & ellipses) */
+    .app-pagination .pg-far {
+        display: none;
+    }
+}
+
 /* ==========================================================================
    Linear Loading Progress Bar directly under thead (replacing dt-processing)
    ========================================================================== */
@@ -3681,3 +3704,105 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
 
 
 
+
+/* ==========================================================================
+   HR Reports pages (attendance / leaves / employees / payrolls): shared header,
+   report-type tabs and filter-card responsiveness
+   ========================================================================== */
+/* Report type tabs: single scrollable row instead of a tall stacked list */
+.report-type-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 2px;
+}
+.report-type-tabs .nav-link {
+    white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+    /* Report type tabs: 2-column grid so every tab is fully visible */
+    .report-type-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: visible;
+        padding-bottom: 0;
+    }
+    .report-type-tabs .nav-item {
+        min-width: 0;
+    }
+    .report-type-tabs .nav-link {
+        height: 100%;
+        white-space: normal;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        text-align: center;
+        font-size: 0.8125rem;
+        line-height: 1.35;
+        padding: 0.5rem;
+        border: 1px solid var(--bs-border-color);
+    }
+    .report-type-tabs .nav-link.active {
+        border-color: transparent;
+    }
+
+    /* Header actions: full-width row, buttons share the space */
+    .report-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .report-actions > .dropdown,
+    .report-actions > .btn,
+    .report-actions > .btn-group {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+    .report-actions > .dropdown {
+        flex-basis: 100%;
+    }
+    .report-actions > .dropdown > .btn,
+    .report-actions > .btn {
+        width: 100%;
+    }
+    .report-actions > .btn-group > .btn:first-child {
+        flex: 1 1 auto;
+    }
+    .report-actions .btn {
+        white-space: nowrap;
+        padding-inline: 0.5rem;
+        font-size: 0.8125rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Filter header: title on its own line, presets full width */
+    .report-filter-header {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    .report-filter-header .date-presets {
+        display: flex;
+        width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .report-filter-header .date-presets .btn {
+        flex: 1 0 auto;
+        white-space: nowrap;
+    }
+
+    .report-page-title {
+        font-size: 1.05rem;
+        line-height: 1.6;
+    }
+
+    /* Filter submit/reset: equal full-width buttons */
+    .report-filter-actions > .btn {
+        flex: 1 1 0;
+    }
+}
