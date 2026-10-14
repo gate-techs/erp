@@ -151,13 +151,13 @@
                         </div>
                     </div>
 
-                    <div class="card-footer border-top py-3 px-4 d-flex align-items-center justify-content-between bg-transparent">
-                        <span class="text-muted small">
+                    <div class="card-footer border-top py-3 px-3 px-sm-4 d-flex flex-wrap align-items-center justify-content-between gap-2 bg-transparent">
+                        <span class="text-muted small" style="flex: 1 1 180px; min-width: 0;">
                             @if($lockDates?->updatedBy)
                                 {{ __('Last updated by') }}: <strong>{{ $lockDates->updatedBy->name }}</strong> · {{ $lockDates->updated_at?->format('Y-m-d') }}
                             @endif
                         </span>
-                        <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-1 shadow-sm">
+                        <button type="submit" class="btn btn-primary px-4 d-flex align-items-center justify-content-center gap-1 shadow-sm text-nowrap flex-shrink-0 ms-auto">
                             <i class="icon-base bx bx-save font-18"></i>
                             <span>{{ __('Save Changes') }}</span>
                         </button>

@@ -13,7 +13,7 @@
             <p class="text-muted mb-0">{{ __('Manage localization and system phrases per module') }}</p>
         </div>
 
-        <div class="d-flex flex-wrap align-items-center gap-2">
+        <div class="translations-header-actions d-flex flex-wrap align-items-center gap-2">
             <!-- Module Switcher Dropdown -->
             <div class="dropdown">
                 <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -193,7 +193,10 @@ window.addEventListener('load', function () {
                 data.search.value = $('#searchInput').val();
             }
         },
-        dom: 'rt<"d-flex flex-wrap justify-content-between align-items-center p-3"ip>',
+        // Same footer as the global DataTables layout (info + paging, centered on mobile); page has its own search bar
+        dom: "rt<'row dt-footer-row mx-0 px-4 py-3 border-top align-items-center justify-content-between'<'col-auto'i><'col-auto'p>>",
+        // Wide editable rows: scroll horizontally instead of collapsing columns
+        responsive: false,
         columns: [
             { data: 'key', render: (data) => `<div class="translation-key-badge"><span>${escapeHtml(data)}</span><button type="button" class="btn-copy-key" title="{{ __('Copy Key') }}" data-key="${escapeHtml(data)}"><i class="icon-base bx bx-copy"></i></button></div>` },
             { data: 'ar', orderable: false, render: (data) => `<textarea class="form-control translation-input translation-textarea" rows="1" dir="rtl">${escapeHtml(data || '')}</textarea>` },

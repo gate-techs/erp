@@ -20,19 +20,23 @@
 @section('content')
 <!-- Header -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <div>
-            <h4 class="fw-bold py-1 mb-0 d-flex align-items-center gap-2">
-                <i class="icon-base bx bx-history text-primary font-24"></i>
-                <span class="text-muted fw-light">{{ __('System') }} /</span> <span>{{ __('Activity & Audit Logs') }}</span>
+        <div style="flex: 1 1 260px; min-width: 0;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">{{ __('System') }}</li>
+                    <li class="breadcrumb-item active">{{ __('Activity & Audit Logs') }}</li>
+                </ol>
+            </nav>
+            <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <i class="icon-base bx bx-history text-primary font-24 flex-shrink-0"></i>
+                <span>{{ __('Activity & Audit Logs') }}</span>
             </h4>
             <p class="text-muted small mb-0">{{ __('Track and document all operations, additions, modifications and user activities on the system instantly.') }}</p>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-outline-primary" id="btnRefreshTable">
-                <i class="bx bx-refresh me-1"></i> {{ __('Refresh Table') }}
-            </button>
-        </div>
+        <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 text-nowrap flex-shrink-0" id="btnRefreshTable">
+            <i class="bx bx-refresh"></i> {{ __('Refresh Table') }}
+        </button>
     </div>
 
     <!-- Filter Card -->

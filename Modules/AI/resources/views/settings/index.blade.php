@@ -50,7 +50,7 @@
 
     <!-- Clean Tab Navigation -->
     <div class="nav-align-top mb-4">
-        <ul class="nav nav-pills mb-3 gap-2" role="tablist">
+        <ul class="nav nav-pills nav-tabs-grid mb-3 gap-2" role="tablist">
             <li class="nav-item">
                 <button type="button" class="nav-link active d-flex align-items-center gap-2 py-2 px-3" role="tab" data-bs-toggle="tab" data-bs-target="#tab-providers">
                     <i class="bx bx-server font-18"></i>
@@ -91,7 +91,7 @@
 
                     @if ($providers->isNotEmpty())
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
+                            <table class="table table-hover align-middle mb-0 text-nowrap">
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 25%;">{{ __('Name') }}</th>
@@ -169,18 +169,19 @@
             <!-- TAB 2: TASK ROUTING -->
             <div class="tab-pane fade" id="tab-routing" role="tabpanel">
                 <div class="card border shadow-none">
-                    <div class="card-header border-bottom py-3 d-flex justify-content-between align-items-center">
+                    <div class="card-header border-bottom py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
                         <div>
                             <h5 class="card-title mb-0">{{ __('AI Task Routing') }}</h5>
                             <small class="text-muted">{{ __('Select which provider executes each system task.') }}</small>
                         </div>
-                        <small class="text-muted">
+                        <small class="text-muted text-nowrap">
                             <i class="bx bx-info-circle me-1"></i>{{ __('System Fallback') }}: <strong class="text-primary font-monospace" dir="ltr">{{ ucfirst(config('ai.default_provider', 'gemini')) }}</strong>
                         </small>
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
+                        {{-- min-width: scrolls horizontally on phones instead of squeezing the description into a narrow column --}}
+                        <table class="table table-hover align-middle mb-0" style="min-width: 820px;">
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 25%;">{{ __('Task') }}</th>
@@ -200,10 +201,10 @@
                                                 <div class="avatar avatar-xs bg-label-{{ $task->color }} rounded d-flex align-items-center justify-content-center">
                                                     <i class="{{ $task->icon }}"></i>
                                                 </div>
-                                                <strong class="text-body">{{ __($task->name) }}</strong>
+                                                <strong class="text-body text-nowrap">{{ __($task->name) }}</strong>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td style="min-width: 280px;">
                                             <span class="text-muted small">{{ __($task->description) }}</span>
                                         </td>
                                         <td>

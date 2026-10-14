@@ -2,22 +2,43 @@
 
 @section('title', __('Audit Log & External Database Settings') . ' - ' . config('variables.templateName'))
 
+@section('page-style')
+<style>
+    /* Phones: action buttons stacked full width (labels stay on one line) */
+    @media (max-width: 575.98px) {
+        .audit-settings-actions > div,
+        .audit-settings-actions .btn {
+            width: 100%;
+        }
+        .audit-settings-actions .btn {
+            justify-content: center;
+            white-space: nowrap;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <!-- Header & Navigation -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-        <div>
-            <h4 class="fw-bold py-1 mb-0 d-flex align-items-center gap-2">
-                <i class="icon-base bx bx-data text-primary font-24"></i>
-                <span class="text-muted fw-light">{{ __('System') }} / <a href="{{ route('audit-logs.index') }}" class="text-muted">{{ __('Activity Log') }}</a> /</span> <span>{{ __('External Connection Settings') }}</span>
+        <div style="flex: 1 1 260px; min-width: 0;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">{{ __('System') }}</li>
+                    <li class="breadcrumb-item"><a href="{{ route('audit-logs.index') }}">{{ __('Activity Log') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __('External Connection Settings') }}</li>
+                </ol>
+            </nav>
+            <h4 class="fw-bold mb-1 d-flex align-items-center gap-2">
+                <i class="icon-base bx bx-data text-primary font-24 flex-shrink-0"></i>
+                <span>{{ __('External Connection Settings') }}</span>
             </h4>
             <p class="text-muted small mb-0">{{ __('Configure and route audit logs to a dedicated external server or database (Enterprise Isolation).') }}</p>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('audit-logs.index') }}" class="btn btn-outline-secondary">
-                <i class="bx bx-arrow-back me-1"></i> {{ __('Back to Logs') }}
-            </a>
-        </div>
+        <a href="{{ route('audit-logs.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1 text-nowrap flex-shrink-0">
+            <i class="bx bx-arrow-back"></i> {{ __('Back to Logs') }}
+        </a>
     </div>
 
 
@@ -30,15 +51,15 @@
 
                 <!-- Card: External DB Connection -->
                 <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
+                    <div class="card-header bg-transparent border-bottom py-3 d-flex flex-wrap align-items-center justify-content-between gap-2">
                         <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
-                            <i class="bx bx-server text-primary"></i> {{ __('External Database Connection Settings') }}
+                            <i class="bx bx-server text-primary flex-shrink-0"></i> {{ __('External Database Connection Settings') }}
                         </h6>
 
                         <!-- Toggle Enable/Disable -->
                         <div class="form-check form-switch form-switch-lg mb-0">
                             <input class="form-check-input" type="checkbox" id="is_external_db_enabled" name="is_external_db_enabled" value="1" {{ old('is_external_db_enabled', $settings->is_external_db_enabled) ? 'checked' : '' }}>
-                            <label class="form-check-label fw-bold text-primary" for="is_external_db_enabled">
+                            <label class="form-check-label fw-bold text-primary text-nowrap" for="is_external_db_enabled">
                                 {{ __('Enable External Storage') }}
                             </label>
                         </div>
@@ -127,8 +148,8 @@
                     </div>
 
                     <!-- Footer Action Buttons -->
-                    <div class="card-footer bg-transparent border-top py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-                        <div class="d-flex gap-2">
+                    <div class="card-footer audit-settings-actions bg-transparent border-top py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             <button type="button" id="btnTestConnection" class="btn btn-outline-primary d-flex align-items-center gap-1">
                                 <i class="bx bx-broadcast"></i>
                                 <span>{{ __('Test Connection') }}</span>
@@ -159,7 +180,7 @@
                     </h6>
                 </div>
                 <div class="card-body pt-3" id="testResultBox">
-                    <div class="d-flex align-items-center justify-content-between mb-3 p-3 rounded {{ $settings->is_external_db_enabled ? 'bg-label-success' : 'bg-label-secondary' }}">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 p-3 rounded {{ $settings->is_external_db_enabled ? 'bg-label-success' : 'bg-label-secondary' }}">
                         <div class="fw-semibold">
                             {{ __('Current Working Mode:') }}
                         </div>

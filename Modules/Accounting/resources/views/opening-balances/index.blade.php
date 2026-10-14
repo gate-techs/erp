@@ -52,18 +52,21 @@
 <div id="alertContainer"></div>
 
 <!-- Status Banner if Posted -->
-<div id="postedBanner" class="alert alert-success d-flex align-items-center justify-content-between mb-4 shadow-sm" style="display: none;">
-    <div class="d-flex align-items-center gap-2">
-        <i class="icon-base bx bx-check-double font-24 flex-shrink-0"></i>
-        <div>
-            <span class="fw-bold fs-6">{{ __('Opening Entry Posted & Approved') }}</span>
-            <span class="d-block small text-muted" id="postedBannerDetails"></span>
+{{-- Visibility is toggled by JS (slideDown/slideUp), so the outer element must not carry d-flex (!important) --}}
+<div id="postedBanner" class="alert alert-success mb-4 shadow-sm" style="display: none;">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <div class="d-flex align-items-center gap-2" style="flex: 1 1 220px; min-width: 0;">
+            <i class="icon-base bx bx-check-double font-24 flex-shrink-0"></i>
+            <div>
+                <span class="fw-bold fs-6">{{ __('Opening Entry Posted & Approved') }}</span>
+                <span class="d-block small text-muted" id="postedBannerDetails"></span>
+            </div>
         </div>
+        <button type="button" id="btnReopenEntry" class="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center gap-1 shadow-xs text-nowrap flex-shrink-0 ms-auto">
+            <i class="icon-base bx bx-lock-open font-16"></i>
+            <span>{{ __('Reopen to Draft') }}</span>
+        </button>
     </div>
-    <button type="button" id="btnReopenEntry" class="btn btn-sm btn-outline-success d-flex align-items-center gap-1 shadow-xs">
-        <i class="icon-base bx bx-lock-open font-16"></i>
-        <span>{{ __('Reopen to Draft') }}</span>
-    </button>
 </div>
 
 <!-- Header Controls Card -->
