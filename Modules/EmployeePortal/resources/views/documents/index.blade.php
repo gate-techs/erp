@@ -81,37 +81,16 @@
                 {{ $doc->subtitle }}
             </div>
 
-            <!-- Action Buttons: Download PDF & Preview & Edit -->
+            <!-- Action Buttons: Download PDF & Preview (Exact match with mockup) -->
             <div class="portal-doc-actions-row">
-                <!-- تحميل PDF -->
-                @if($doc->has_file)
-                    <a href="{{ $doc->file_url }}" download class="portal-btn-download-pdf">
-                        <i class="bx bx-download"></i>
-                        <span>{{ __('Download PDF') }}</span>
-                    </a>
-                @else
-                    <button type="button" class="portal-btn-download-pdf" onclick="showPortalToast('error', '{{ __('Official Documents') }}', '{{ __('No file attached') }}')">
-                        <i class="bx bx-download"></i>
-                        <span>{{ __('Download PDF') }}</span>
-                    </button>
-                @endif
+                <a href="{{ $doc->file_url ?: 'javascript:void(0)' }}" {{ $doc->has_file ? 'download' : '' }} class="portal-btn-download-pdf">
+                    <i class="bx bx-download"></i>
+                    <span>{{ __('Download PDF') }}</span>
+                </a>
 
-                <!-- معاينة -->
-                @if($doc->has_file)
-                    <a href="{{ $doc->file_url }}" target="_blank" rel="noopener noreferrer" class="portal-btn-preview-doc">
-                        <i class="bx bx-show"></i>
-                        <span>{{ __('Preview') }}</span>
-                    </a>
-                @else
-                    <a href="{{ route('portal.documents.create', ['id' => $doc->id]) }}" class="portal-btn-preview-doc">
-                        <i class="bx bx-cloud-upload"></i>
-                        <span>{{ __('Upload New Document') }}</span>
-                    </a>
-                @endif
-
-                <!-- تعديل / تحديث المستند -->
-                <a href="{{ route('portal.documents.create', ['id' => $doc->id]) }}" class="portal-btn-edit-doc" title="{{ __('Update Document') }}">
-                    <i class="bx bx-edit-alt"></i>
+                <a href="{{ $doc->file_url ?: route('portal.documents.create', ['id' => $doc->id]) }}" {{ $doc->has_file ? 'target="_blank" rel="noopener noreferrer"' : '' }} class="portal-btn-preview-doc">
+                    <i class="bx bx-show"></i>
+                    <span>{{ __('Preview') }}</span>
                 </a>
             </div>
         </div>

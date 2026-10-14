@@ -18,11 +18,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::middleware('permission:accounting.entities.view')->group(function () {
         Route::get('entities/data', [EntityController::class, 'data'])->name('entities.data');
         Route::get('entities', [EntityController::class, 'index'])->name('entities.index');
-        Route::get('entities/{entity}', [EntityController::class, 'show'])->name('entities.show');
     });
     Route::middleware('permission:accounting.entities.create')->group(function () {
         Route::get('entities/create', [EntityController::class, 'create'])->name('entities.create');
         Route::post('entities', [EntityController::class, 'store'])->name('entities.store');
+    });
+    Route::middleware('permission:accounting.entities.view')->group(function () {
+        Route::get('entities/{entity}', [EntityController::class, 'show'])->whereNumber('entity')->name('entities.show');
     });
     Route::middleware('permission:accounting.entities.edit')->group(function () {
         Route::get('entities/{entity}/edit', [EntityController::class, 'edit'])->name('entities.edit');
@@ -34,11 +36,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::middleware('permission:accounting.fiscal-years.view')->group(function () {
         Route::get('fiscal-years/data', [FiscalYearController::class, 'data'])->name('fiscal-years.data');
         Route::get('fiscal-years', [FiscalYearController::class, 'index'])->name('fiscal-years.index');
-        Route::get('fiscal-years/{fiscal_year}', [FiscalYearController::class, 'show'])->name('fiscal-years.show');
     });
     Route::middleware('permission:accounting.fiscal-years.create')->group(function () {
         Route::get('fiscal-years/create', [FiscalYearController::class, 'create'])->name('fiscal-years.create');
         Route::post('fiscal-years', [FiscalYearController::class, 'store'])->name('fiscal-years.store');
+    });
+    Route::middleware('permission:accounting.fiscal-years.view')->group(function () {
+        Route::get('fiscal-years/{fiscal_year}', [FiscalYearController::class, 'show'])->whereNumber('fiscal_year')->name('fiscal-years.show');
     });
     Route::middleware('permission:accounting.fiscal-years.edit')->group(function () {
         Route::get('fiscal-years/{fiscal_year}/edit', [FiscalYearController::class, 'edit'])->name('fiscal-years.edit');
@@ -59,11 +63,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
         Route::get('cost-centers/parents', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'getParentsByEntity'])->name('cost-centers.parents');
         Route::get('cost-centers/branches', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'getBranchesByEntity'])->name('cost-centers.branches');
         Route::get('cost-centers', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'index'])->name('cost-centers.index');
-        Route::get('cost-centers/{cost_center}', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'show'])->name('cost-centers.show');
     });
     Route::middleware('permission:accounting.cost-centers.create')->group(function () {
         Route::get('cost-centers/create', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'create'])->name('cost-centers.create');
         Route::post('cost-centers', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'store'])->name('cost-centers.store');
+    });
+    Route::middleware('permission:accounting.cost-centers.view')->group(function () {
+        Route::get('cost-centers/{cost_center}', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'show'])->whereNumber('cost_center')->name('cost-centers.show');
     });
     Route::middleware('permission:accounting.cost-centers.edit')->group(function () {
         Route::get('cost-centers/{cost_center}/edit', [\Modules\Accounting\Http\Controllers\CostCenterController::class, 'edit'])->name('cost-centers.edit');
@@ -76,11 +82,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::middleware('permission:accounting.journals.view')->group(function () {
         Route::get('journals/data', [JournalController::class, 'data'])->name('journals.data');
         Route::get('journals', [JournalController::class, 'index'])->name('journals.index');
-        Route::get('journals/{journal}', [JournalController::class, 'show'])->name('journals.show');
     });
     Route::middleware('permission:accounting.journals.create')->group(function () {
         Route::get('journals/create', [JournalController::class, 'create'])->name('journals.create');
         Route::post('journals', [JournalController::class, 'store'])->name('journals.store');
+    });
+    Route::middleware('permission:accounting.journals.view')->group(function () {
+        Route::get('journals/{journal}', [JournalController::class, 'show'])->whereNumber('journal')->name('journals.show');
     });
     Route::middleware('permission:accounting.journals.edit')->group(function () {
         Route::get('journals/{journal}/edit', [JournalController::class, 'edit'])->name('journals.edit');
@@ -93,11 +101,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::middleware('permission:accounting.cash-accounts.view')->group(function () {
         Route::get('cash-accounts/data', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'data'])->name('cash-accounts.data');
         Route::get('cash-accounts', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'index'])->name('cash-accounts.index');
-        Route::get('cash-accounts/{cash_account}', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'show'])->name('cash-accounts.show');
     });
     Route::middleware('permission:accounting.cash-accounts.create')->group(function () {
         Route::get('cash-accounts/create', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'create'])->name('cash-accounts.create');
         Route::post('cash-accounts', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'store'])->name('cash-accounts.store');
+    });
+    Route::middleware('permission:accounting.cash-accounts.view')->group(function () {
+        Route::get('cash-accounts/{cash_account}', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'show'])->whereNumber('cash_account')->name('cash-accounts.show');
     });
     Route::middleware('permission:accounting.cash-accounts.edit')->group(function () {
         Route::get('cash-accounts/{cash_account}/edit', [\Modules\Accounting\Http\Controllers\CashAccountController::class, 'edit'])->name('cash-accounts.edit');
@@ -144,11 +154,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
         Route::get('bank-reconciliations/banks-by-entity', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'getBanksByEntity'])->name('bank-reconciliations.banks-by-entity');
         Route::get('bank-reconciliations/workspace-data', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'workspaceData'])->name('bank-reconciliations.workspace-data');
         Route::get('bank-reconciliations', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'index'])->name('bank-reconciliations.index');
-        Route::get('bank-reconciliations/{bank_reconciliation}', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'show'])->name('bank-reconciliations.show');
     });
     Route::middleware('permission:accounting.bank-reconciliations.create')->group(function () {
         Route::get('bank-reconciliations/create', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'create'])->name('bank-reconciliations.create');
         Route::post('bank-reconciliations', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'store'])->name('bank-reconciliations.store');
+    });
+    Route::middleware('permission:accounting.bank-reconciliations.view')->group(function () {
+        Route::get('bank-reconciliations/{bank_reconciliation}', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'show'])->whereNumber('bank_reconciliation')->name('bank-reconciliations.show');
     });
     Route::middleware('permission:accounting.bank-reconciliations.edit')->group(function () {
         Route::get('bank-reconciliations/{bank_reconciliation}/edit', [\Modules\Accounting\Http\Controllers\BankReconciliationController::class, 'edit'])->name('bank-reconciliations.edit');
@@ -184,11 +196,13 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
         Route::get('accounts/suggest-code', [AccountController::class, 'suggestCode'])->name('accounts.suggest-code');
         Route::get('accounts/parents', [AccountController::class, 'parents'])->name('accounts.parents');
         Route::get('accounts', [AccountController::class, 'index'])->name('accounts.index');
-        Route::get('accounts/{account}', [AccountController::class, 'show'])->name('accounts.show');
     });
     Route::middleware('permission:accounting.accounts.create')->group(function () {
         Route::get('accounts/create', [AccountController::class, 'create'])->name('accounts.create');
         Route::post('accounts', [AccountController::class, 'store'])->name('accounts.store');
+    });
+    Route::middleware('permission:accounting.accounts.view')->group(function () {
+        Route::get('accounts/{account}', [AccountController::class, 'show'])->whereNumber('account')->name('accounts.show');
     });
     Route::middleware('permission:accounting.accounts.edit')->group(function () {
         Route::get('accounts/{account}/edit', [AccountController::class, 'edit'])->name('accounts.edit');
