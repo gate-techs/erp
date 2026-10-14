@@ -26,4 +26,9 @@ interface PortalPermissionServiceInterface
      * Store and submit a new permission request for the employee.
      */
     public function submitPermissionRequest(array $data, ?User $user): array;
+
+    /**
+     * Get data required for permission requests history screen.
+     */
+    public function getPermissionsHistoryContext(?User $user, ?string $status = null): array;
 }

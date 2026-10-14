@@ -264,6 +264,24 @@ class EmployeePortalController extends Controller
     //==========================================================================
 
     /**
+     * Display Permission Requests History screen (سجل الأذونات).
+     */
+    public function permissionsHistory(Request $request): View
+    {
+        $status = $request->query('status');
+        $context = $this->permissionService->getPermissionsHistoryContext(Auth::user(), $status);
+
+        return view('employeeportal::permissions.index', [
+            'employee'      => $context['employee'],
+            'user'          => $context['user'],
+            'balance'       => $context['balance'],
+            'statusCounts'  => $context['statusCounts'],
+            'permissions'   => $context['permissions'],
+            'currentFilter' => $context['currentFilter'],
+        ]);
+    }
+
+    /**
      * Render Submit New Permission Request Screen (طلب استئذان جديد).
      */
     public function createPermission(): View

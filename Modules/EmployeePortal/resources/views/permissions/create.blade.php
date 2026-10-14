@@ -14,7 +14,7 @@
         <div class="perm-nav-placeholder"></div>
     </div>
 
-    <!-- 1. Header Hero Card with Live Policy Balance -->
+    <!-- 1. Simple & Clean Balance Card -->
     <div class="perm-hero-card">
         <div class="perm-hero-top">
             <div class="perm-hero-title-group">
@@ -22,12 +22,12 @@
                     <i class="bx bx-time-five"></i>
                 </div>
                 <div>
-                    <h2 class="perm-hero-title">{{ __('New Permission Request') }}</h2>
-                    <p class="perm-hero-subtitle">{{ __('Monthly Permission Balance') }}</p>
+                    <h2 class="perm-hero-title">{{ __('Monthly Permission Balance') }}</h2>
+                    <p class="perm-hero-subtitle">{{ $balance['month_name'] }}</p>
                 </div>
             </div>
 
-            <a href="#recentPermissionsSection" class="perm-history-pill">
+            <a href="{{ route('portal.permissions.index') }}" class="perm-history-pill">
                 <span class="dot"></span>
                 <span>{{ __('Requests History') }}</span>
             </a>

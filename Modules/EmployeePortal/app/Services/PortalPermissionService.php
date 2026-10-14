@@ -222,4 +222,90 @@ class PortalPermissionService implements PortalPermissionServiceInterface
             ];
         }
     }
+
+    /**
+     * Get data required for permission requests history screen.
+     */
+    public function getPermissionsHistoryContext(?User $user, ?string $status = null): array
+    {
+        $employee = $this->resolveCurrentEmployee($user);
+        $today = Carbon::today();
+
+        if ($employee) {
+            $balance = $this->hrPermissionService->getEmployeeMonthlyBalance($employee->id);
+            $query = PermissionRequest::where('employee_id', $employee->id);
+        } else {
+            $policies = HrWorkPolicy::getGroup('permissions');
+            $maxHours = (float) ($policies['max_monthly_permission_hours'] ?? 4.0);
+            $maxCount = (int) ($policies['max_monthly_permission_count'] ?? 3);
+
+            $balance = [
+                'month'               => $today->format('Y-m'),
+                'month_name'          => $today->translatedFormat('F Y'),
+                'max_monthly_hours'   => $maxHours,
+                'consumed_hours'      => 0.0,
+                'remaining_hours'     => $maxHours,
+                'max_monthly_count'   => $maxCount,
+                'consumed_count'      => 0,
+                'remaining_count'     => $maxCount,
+                'max_single_hours'    => (float) ($policies['max_single_permission_hours'] ?? 2.0),
+                'min_advance_hours'   => (int) ($policies['min_advance_notice_hours'] ?? 24),
+                'financial_policy'    => $policies['permission_financial_policy'] ?? 'paid_with_excess_deduction',
+                'approval_workflow'   => $policies['approval_workflow'] ?? 'manager_and_hr',
+                'max_emergency_count' => (int) ($policies['max_monthly_emergency_permissions'] ?? 1),
+                'can_request'         => true,
+            ];
+            $query = PermissionRequest::query();
+        }
+
+        // Calculate progress bar percentage and today date
+        $maxHours = (float) ($balance['max_monthly_hours'] ?? 4.0);
+        $consumed = (float) ($balance['consumed_hours'] ?? 0.0);
+        $percentage = $maxHours > 0 ? min(100, round(($consumed / $maxHours) * 100)) : 0;
+        $balance['consumption_percentage'] = $percentage;
+        $balance['today_formatted'] = $today->translatedFormat('j F Y');
+
+        // Calculate counts for each status tab
+        $baseQuery = clone $query;
+        $statusCounts = [
+            'all'       => (clone $baseQuery)->count(),
+            'pending'   => (clone $baseQuery)->whereIn('status', [
+                PermissionRequestStatus::PENDING->value,
+                PermissionRequestStatus::MANAGER_APPROVED->value
+            ])->count(),
+            'approved'  => (clone $baseQuery)->where('status', PermissionRequestStatus::APPROVED->value)->count(),
+            'rejected'  => (clone $baseQuery)->where('status', PermissionRequestStatus::REJECTED->value)->count(),
+            'emergency' => (clone $baseQuery)->where(function($q) {
+                $q->where('is_emergency', true)->orWhere('type', PermissionType::EMERGENCY->value);
+            })->count(),
+        ];
+
+        // Apply tab filter if provided
+        $filter = $status ?: 'all';
+        if ($filter === 'pending') {
+            $query->whereIn('status', [
+                PermissionRequestStatus::PENDING->value,
+                PermissionRequestStatus::MANAGER_APPROVED->value
+            ]);
+        } elseif ($filter === 'approved') {
+            $query->where('status', PermissionRequestStatus::APPROVED->value);
+        } elseif ($filter === 'rejected') {
+            $query->where('status', PermissionRequestStatus::REJECTED->value);
+        } elseif ($filter === 'emergency') {
+            $query->where(function($q) {
+                $q->where('is_emergency', true)->orWhere('type', PermissionType::EMERGENCY->value);
+            });
+        }
+
+        $permissions = $query->latest('date')->latest('id')->paginate(15);
+
+        return [
+            'employee'      => $employee,
+            'user'          => $user,
+            'balance'       => $balance,
+            'statusCounts'  => $statusCounts,
+            'permissions'   => $permissions,
+            'currentFilter' => $filter,
+        ];
+    }
 }

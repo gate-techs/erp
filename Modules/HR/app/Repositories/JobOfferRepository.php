@@ -60,6 +60,11 @@ class JobOfferRepository implements JobOfferRepositoryInterface
         ];
     }
 
+    public function findById(int $id): ?JobOffer
+    {
+        return JobOffer::find($id);
+    }
+
     public function findWithRelations(int $id): ?JobOffer
     {
         return JobOffer::with([
@@ -72,5 +77,20 @@ class JobOfferRepository implements JobOfferRepositoryInterface
             'creator',
             'onboarding',
         ])->find($id);
+    }
+
+    public function create(array $data): JobOffer
+    {
+        return JobOffer::create($data);
+    }
+
+    public function update(JobOffer $offer, array $data): bool
+    {
+        return $offer->update($data);
+    }
+
+    public function delete(JobOffer $offer): bool
+    {
+        return (bool) $offer->delete();
     }
 }

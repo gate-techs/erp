@@ -46,7 +46,8 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::post('leaves/calculate', [EmployeePortalController::class, 'calculateLeave'])->name('leaves.calculate');
         Route::post('leaves/store', [EmployeePortalController::class, 'storeLeave'])->name('leaves.store');
 
-        // Permission Requests (تقديم طلب استئذان ومغادرة)
+        // Permission Requests (سجل الأذونات وتقديم طلب جديد)
+        Route::get('permissions', [EmployeePortalController::class, 'permissionsHistory'])->name('permissions.index');
         Route::get('permissions/create', [EmployeePortalController::class, 'createPermission'])->name('permissions.create');
         Route::post('permissions/calculate', [EmployeePortalController::class, 'calculatePermission'])->name('permissions.calculate');
         Route::post('permissions/store', [EmployeePortalController::class, 'storePermission'])->name('permissions.store');

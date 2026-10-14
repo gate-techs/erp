@@ -9,7 +9,11 @@ interface OnboardingRepositoryInterface
 {
     public function getDataTableQuery(array $filters = []): Builder;
 
+    public function getKpis(): array;
+
     public function findById(int $id): ?Onboarding;
+
+    public function findWithRelations(int $id): ?Onboarding;
 
     public function create(array $data): Onboarding;
 

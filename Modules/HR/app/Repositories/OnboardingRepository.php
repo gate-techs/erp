@@ -58,6 +58,11 @@ class OnboardingRepository implements OnboardingRepositoryInterface
         ];
     }
 
+    public function findById(int $id): ?Onboarding
+    {
+        return Onboarding::find($id);
+    }
+
     public function findWithRelations(int $id): ?Onboarding
     {
         return Onboarding::with([
@@ -71,5 +76,20 @@ class OnboardingRepository implements OnboardingRepositoryInterface
             'creator',
             'tasks.assignee.translations',
         ])->find($id);
+    }
+
+    public function create(array $data): Onboarding
+    {
+        return Onboarding::create($data);
+    }
+
+    public function update(Onboarding $onboarding, array $data): bool
+    {
+        return $onboarding->update($data);
+    }
+
+    public function delete(Onboarding $onboarding): bool
+    {
+        return (bool) $onboarding->delete();
     }
 }
