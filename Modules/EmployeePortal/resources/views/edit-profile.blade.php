@@ -3,8 +3,6 @@
 @section('title', __('Edit Personal Information'))
 
 @push('styles')
-<!-- intl-tel-input CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" />
 
 <style>
     .edit-profile-container {
@@ -625,9 +623,6 @@
 </div>
 
 @push('scripts')
-<!-- intl-tel-input JS -->
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-
 <script>
     // Initialize intl-tel-input for Phone
     document.addEventListener("DOMContentLoaded", function () {
