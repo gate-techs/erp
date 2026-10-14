@@ -13,6 +13,9 @@ use Modules\EmployeePortal\Http\Requests\PortalLoginRequest;
 use Modules\EmployeePortal\Http\Requests\PortalPunchRequest;
 use Modules\EmployeePortal\Services\Contracts\PortalAttendanceServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalAuthServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalPermissionServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalPwaServiceInterface;
 
 class EmployeePortalController extends Controller
@@ -24,8 +27,9 @@ class EmployeePortalController extends Controller
         protected PortalAuthServiceInterface $authService,
         protected PortalAttendanceServiceInterface $attendanceService,
         protected PortalPwaServiceInterface $pwaService,
-        protected \Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface $profileService,
-        protected \Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface $leaveService
+        protected PortalProfileServiceInterface $profileService,
+        protected PortalLeaveServiceInterface $leaveService,
+        protected PortalPermissionServiceInterface $permissionService
     ) {}
 
     //==========================================================================
@@ -256,7 +260,69 @@ class EmployeePortalController extends Controller
     }
 
     //==========================================================================
-    // 4. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
+    // 4. Permission Requests (تقديم طلب استئذان ومغادرة)
+    //==========================================================================
+
+    /**
+     * Render Submit New Permission Request Screen (طلب استئذان جديد).
+     */
+    public function createPermission(): View
+    {
+        $context = $this->permissionService->getPermissionFormContext(Auth::user());
+
+        return view('employeeportal::permissions.create', [
+            'employee'          => $context['employee'],
+            'user'              => $context['user'],
+            'balance'           => $context['balance'],
+            'permissionTypes'   => $context['permissionTypes'],
+            'recentPermissions' => $context['recentPermissions'],
+        ]);
+    }
+
+    /**
+     * AJAX Real-time duration & balance calculation for permission request.
+     */
+    public function calculatePermission(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'date'         => 'required|date',
+            'type'         => 'required|string',
+            'from_time'    => 'required|date_format:H:i',
+            'to_time'      => 'required|date_format:H:i|after:from_time',
+            'is_emergency' => 'nullable|boolean',
+        ]);
+
+        $result = $this->permissionService->calculateDurationAndBalance(Auth::user(), $validated);
+
+        return response()->json($result);
+    }
+
+    /**
+     * Handle Permission Request Submission.
+     */
+    public function storePermission(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'date'         => 'required|date',
+            'type'         => 'required|string|in:late_arrival,early_departure,during_shift,emergency',
+            'from_time'    => 'required|date_format:H:i',
+            'to_time'      => 'required|date_format:H:i|after:from_time',
+            'is_emergency' => 'nullable|boolean',
+            'reason'       => 'nullable|string|max:1000',
+            'attachment'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $result = $this->permissionService->submitPermissionRequest($validated, Auth::user());
+
+        if ($result['success']) {
+            return redirect()->route('portal.requests')->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message'])->withInput();
+    }
+
+    //==========================================================================
+    // 5. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
     //==========================================================================
 
     /**

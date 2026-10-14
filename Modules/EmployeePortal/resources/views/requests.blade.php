@@ -315,7 +315,7 @@
         </a>
 
         <!-- 2. استئذان ومغادرة (Permission / Early Leave) -->
-        <a href="javascript:void(0)" onclick="showPortalToast('success', '{{ __('Permission Request') }}', '{{ __('Permission request form will be available soon') }}')" class="request-item-card request-card-navy">
+        <a href="{{ route('portal.permissions.create') }}" class="request-item-card request-card-navy">
             <div>
                 <div class="request-card-icon-box icon-box-blue">
                     <i class="bx bx-time-five"></i>
