@@ -55,6 +55,16 @@ if ($.fn && $.fn.dataTable) {
     }
   });
 
+  // Unified pagination look on every table: some pages override the labels with
+  // text / « » / manually RTL-swapped icons. Labels are read on each draw, so
+  // normalising them before the first draw is enough (RTL mirroring is done in CSS).
+  $(document).on('preInit.dt', function (e, settings) {
+    if (settings && settings.language && settings.language.paginate) {
+      settings.language.paginate.previous = '<i class="icon-base bx bx-chevron-left"></i>';
+      settings.language.paginate.next = '<i class="icon-base bx bx-chevron-right"></i>';
+    }
+  });
+
   // Global listener: Animated Linear Progress Bar directly under thead
   $(document).on('processing.dt', function (e, settings, processing) {
     try {

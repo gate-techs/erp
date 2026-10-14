@@ -220,15 +220,15 @@
 <!-- 5. Operational Tables (Stacked cleanly) -->
 <!-- Table 1: Cash & Bank Accounts (Full Width) -->
 <div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
-        <div>
+    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between gap-3">
+        <div style="min-width: 0;">
             <h6 class="fw-bold mb-0 text-heading">{{ __('Cash & Bank Account Balances') }}</h6>
             <small class="text-muted">{{ __('General Ledger recorded balances for cash accounts') }}</small>
         </div>
-        <a href="{{ route('accounting.cash-accounts.index') }}" class="btn btn-sm btn-label-secondary">{{ __('View All') }}</a>
+        <a href="{{ route('accounting.cash-accounts.index') }}" class="btn btn-sm btn-label-secondary text-nowrap flex-shrink-0">{{ __('View All') }}</a>
     </div>
     <div class="table-responsive" style="max-height: 360px; overflow-y: auto;">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0 text-nowrap">
             <thead class="table-light sticky-top bg-light">
                 <tr>
                     <th style="width: 140px;">{{ __('Account Code') }}</th>
@@ -267,15 +267,15 @@
 
 <!-- Table 2: Recent Journal Entries (Full Width) -->
 <div class="card shadow-sm border-0 mb-4">
-    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between">
-        <div>
+    <div class="card-header bg-transparent border-bottom py-3 d-flex align-items-center justify-content-between gap-3">
+        <div style="min-width: 0;">
             <h6 class="fw-bold mb-0 text-heading">{{ __('Recent Journal Entries') }}</h6>
             <small class="text-muted">{{ __('Latest transactions and daily entries recorded in the system') }}</small>
         </div>
-        <a href="{{ route('accounting.journal-entries.index') }}" class="btn btn-sm btn-label-secondary">{{ __('View All') }}</a>
+        <a href="{{ route('accounting.journal-entries.index') }}" class="btn btn-sm btn-label-secondary text-nowrap flex-shrink-0">{{ __('View All') }}</a>
     </div>
     <div class="table-responsive" style="max-height: 360px; overflow-y: auto;">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0 text-nowrap">
             <thead class="table-light sticky-top bg-light">
                 <tr>
                     <th style="width: 160px;">{{ __('Entry #') }}</th>

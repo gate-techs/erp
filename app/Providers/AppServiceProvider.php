@@ -22,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        // Same look as the DataTables footer everywhere (resources/views/vendor/pagination/app.blade.php)
+        Paginator::defaultView('pagination::app');
 
         Gate::before(function ($user, $ability) {
             // Profile viewing and editing is universally allowed for all authenticated users

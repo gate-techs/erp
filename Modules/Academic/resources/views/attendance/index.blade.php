@@ -245,17 +245,7 @@
             language: {
                 search: "",
                 searchPlaceholder: "{{ __('Search') }}...",
-                lengthMenu: "{{ __('Show _MENU_ entries') }}",
                 zeroRecords: "{{ __('No matching records found') }}",
-                info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-                infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
-                infoFiltered: "({{ __('filtered from _MAX_ total entries') }})",
-                paginate: {
-                    first: "«",
-                    previous: "‹",
-                    next: "›",
-                    last: "»"
-                }
             },
             ajax: {
                 url: dataUrl,
