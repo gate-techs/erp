@@ -104,61 +104,27 @@
     <!-- 4. Permission Records List -->
     <div class="perm-records-list">
         @forelse($permissions as $perm)
-            @php
-                $isPending = in_array($perm->status->value, [\Modules\HR\Enums\PermissionRequestStatus::PENDING->value, \Modules\HR\Enums\PermissionRequestStatus::MANAGER_APPROVED->value]);
-                $isApproved = $perm->status->value === \Modules\HR\Enums\PermissionRequestStatus::APPROVED->value;
-                $isRejected = $perm->status->value === \Modules\HR\Enums\PermissionRequestStatus::REJECTED->value;
-
-                $iconClass = 'amber';
-                $iconBx = 'bx-bell';
-                if ($isApproved) {
-                    $iconClass = 'green';
-                    $iconBx = 'bx-check';
-                } elseif ($isRejected) {
-                    $iconClass = 'red';
-                    $iconBx = 'bx-x';
-                }
-
-                $permTitle = __('Personal Permission');
-                if ($perm->is_emergency || $perm->type->value === 'emergency') {
-                    $permTitle = __('Personal Emergency Permission');
-                } elseif ($perm->type->value === 'early_departure') {
-                    $permTitle = __('Early Departure');
-                } elseif ($perm->type->value === 'late_arrival') {
-                    $permTitle = __('Late Arrival');
-                } elseif ($perm->type->value === 'during_shift') {
-                    $permTitle = __('Personal Permission');
-                } else {
-                    $permTitle = $perm->type->label();
-                }
-
-                $requestCode = 'PER-' . $perm->date->format('Y') . '-' . str_pad($perm->id, 4, '0', STR_PAD_LEFT);
-                $formattedFrom = \Carbon\Carbon::parse($perm->from_time)->translatedFormat('h:i A');
-                $formattedTo = \Carbon\Carbon::parse($perm->to_time)->translatedFormat('h:i A');
-                $formattedDate = $perm->date->translatedFormat('l j F Y');
-            @endphp
-
-            <div class="perm-record-card">
+            <a href="{{ route('portal.permissions.show', $perm->id) }}" class="perm-record-card text-decoration-none">
                 <!-- Top Header: Title, Code, Icon & Status Badge -->
                 <div class="perm-record-top">
                     <!-- Right: Icon and Title Group -->
                     <div class="perm-record-type-col">
-                        <div class="perm-record-icon-circle {{ $iconClass }}">
-                            <i class="bx {{ $iconBx }}"></i>
+                        <div class="perm-record-icon-circle {{ $perm->icon_class }}">
+                            <i class="bx {{ $perm->icon_bx }}"></i>
                         </div>
                         <div class="perm-record-titles">
-                            <h3 class="perm-record-main-title">{{ $permTitle }}</h3>
-                            <span class="perm-record-code">{{ __('Request No. :code', ['code' => $requestCode]) }}</span>
+                            <h3 class="perm-record-main-title">{{ $perm->display_title }}</h3>
+                            <span class="perm-record-code">{{ __('Request No. :code', ['code' => $perm->request_code]) }}</span>
                         </div>
                     </div>
 
                     <!-- Left: Status Badge -->
                     <div>
-                        @if($isPending)
+                        @if($perm->is_pending_status)
                             <span class="perm-badge-pending">{{ __('Under Review') }}</span>
-                        @elseif($isApproved)
+                        @elseif($perm->is_approved_status)
                             <span class="perm-badge-approved">{{ __('Approved') }}</span>
-                        @elseif($isRejected)
+                        @elseif($perm->is_rejected_status)
                             <span class="perm-badge-rejected">
                                 <i class="bx bx-x-circle"></i>
                                 <span>{{ __('Request Rejected') }}</span>
@@ -169,14 +135,20 @@
                     </div>
                 </div>
 
-                <!-- Bottom Bar: Date & Time Range -->
+                <!-- Bottom Bar: Date & Time Range & View Details -->
                 <div class="perm-record-time-bar">
-                    <span>{{ $formattedDate }}</span>
-                    <span class="perm-record-time-slot">{{ $formattedFrom }} - {{ $formattedTo }} ({{ $perm->hours_count }} {{ __('hrs') }})</span>
+                    <div>
+                        <span>{{ $perm->formatted_date }}</span>
+                        <span class="perm-record-time-slot">({{ $perm->formatted_from }} - {{ $perm->formatted_to }})</span>
+                    </div>
+                    <div class="perm-view-detail-hint">
+                        <span>{{ __('Details') }}</span>
+                        <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }}"></i>
+                    </div>
                 </div>
 
                 <!-- Optional Rejection Reason -->
-                @if($isRejected && !empty($perm->rejection_reason))
+                @if($perm->is_rejected_status && !empty($perm->rejection_reason))
                     <div class="perm-rejection-box">
                         <div class="perm-rejection-title">
                             <i class="bx bx-info-circle"></i>
@@ -185,7 +157,7 @@
                         <p class="perm-rejection-text">{{ $perm->rejection_reason }}</p>
                     </div>
                 @endif
-            </div>
+            </a>
         @empty
             <div class="text-center py-5 bg-white rounded-4 border shadow-sm p-4 mt-2">
                 <div class="mb-3">

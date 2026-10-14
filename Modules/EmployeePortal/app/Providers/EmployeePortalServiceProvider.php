@@ -89,6 +89,11 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
         );
 
         $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalDocumentServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalDocumentService::class
+        );
+
+        $this->app->bind(
             \Modules\EmployeePortal\Services\Contracts\PortalPushSubscriptionServiceInterface::class,
             \Modules\EmployeePortal\Services\PortalPushSubscriptionService::class
         );

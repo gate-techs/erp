@@ -63,7 +63,7 @@
         </a>
 
         <!-- 3. تحديث مستند (Document Update) -->
-        <a href="javascript:void(0)" onclick="showPortalToast('success', '{{ __('Document Update') }}', '{{ __('Document upload form will be available soon') }}')" class="request-item-card request-card-navy">
+        <a href="{{ route('portal.documents.index') }}" class="request-item-card request-card-navy">
             <div>
                 <div class="request-card-icon-box icon-box-navy">
                     <i class="bx bx-file"></i>

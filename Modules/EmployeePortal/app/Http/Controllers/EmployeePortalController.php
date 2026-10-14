@@ -13,6 +13,7 @@ use Modules\EmployeePortal\Http\Requests\PortalLoginRequest;
 use Modules\EmployeePortal\Http\Requests\PortalPunchRequest;
 use Modules\EmployeePortal\Services\Contracts\PortalAttendanceServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalAuthServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalDocumentServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalPermissionServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface;
@@ -29,7 +30,8 @@ class EmployeePortalController extends Controller
         protected PortalPwaServiceInterface $pwaService,
         protected PortalProfileServiceInterface $profileService,
         protected PortalLeaveServiceInterface $leaveService,
-        protected PortalPermissionServiceInterface $permissionService
+        protected PortalPermissionServiceInterface $permissionService,
+        protected PortalDocumentServiceInterface $documentService
     ) {}
 
     //==========================================================================
@@ -339,8 +341,85 @@ class EmployeePortalController extends Controller
         return redirect()->back()->with('error', $result['message'])->withInput();
     }
 
+    /**
+     * Display Permission Request Details screen (تفاصيل الاستئذان).
+     */
+    public function showPermission(int $id): View|RedirectResponse
+    {
+        $context = $this->permissionService->getPermissionDetails(Auth::user(), $id);
+
+        if (!$context) {
+            return redirect()->route('portal.permissions.index')->with('error', __('Permission request not found or unauthorized.'));
+        }
+
+        return view('employeeportal::permissions.show', $context);
+    }
+
+    /**
+     * Cancel a pending permission request.
+     */
+    public function cancelPermission(int $id): RedirectResponse
+    {
+        $result = $this->permissionService->cancelPermissionRequest(Auth::user(), $id);
+
+        if ($result['success']) {
+            return redirect()->route('portal.permissions.show', $id)->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message']);
+    }
+
     //==========================================================================
-    // 5. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
+    // 5. Official Documents & Files (المستندات والوثائق)
+    //==========================================================================
+
+    /**
+     * Display employee official documents screen.
+     */
+    public function documents(): View
+    {
+        $context = $this->documentService->getDocumentsContext(Auth::user());
+
+        return view('employeeportal::documents.index', $context);
+    }
+
+    /**
+     * Show form to submit or update official document.
+     */
+    public function createDocument(Request $request): View
+    {
+        $documentId = $request->has('id') ? (int) $request->get('id') : null;
+        $context = $this->documentService->getCreateDocumentContext(Auth::user(), $documentId);
+
+        return view('employeeportal::documents.create', $context);
+    }
+
+    /**
+     * Upload or update an employee document.
+     */
+    public function uploadDocument(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'document_id'        => 'nullable|integer',
+            'document_type_id'   => 'required|integer',
+            'issuing_authority'  => 'required|string|max:255',
+            'document_number'    => 'nullable|string|max:100',
+            'expiry_date'        => 'nullable|date',
+            'is_permanent'       => 'nullable',
+            'file'               => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $result = $this->documentService->uploadDocument($request->all(), Auth::user());
+
+        if ($result['success']) {
+            return redirect()->route('portal.documents.index')->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message'])->withInput();
+    }
+
+    //==========================================================================
+    // 6. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
     //==========================================================================
 
     /**

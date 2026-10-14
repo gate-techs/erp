@@ -46,11 +46,18 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::post('leaves/calculate', [EmployeePortalController::class, 'calculateLeave'])->name('leaves.calculate');
         Route::post('leaves/store', [EmployeePortalController::class, 'storeLeave'])->name('leaves.store');
 
-        // Permission Requests (سجل الأذونات وتقديم طلب جديد)
+        // Permission Requests (سجل الأذونات، التفاصيل، وتقديم طلب جديد)
         Route::get('permissions', [EmployeePortalController::class, 'permissionsHistory'])->name('permissions.index');
         Route::get('permissions/create', [EmployeePortalController::class, 'createPermission'])->name('permissions.create');
         Route::post('permissions/calculate', [EmployeePortalController::class, 'calculatePermission'])->name('permissions.calculate');
         Route::post('permissions/store', [EmployeePortalController::class, 'storePermission'])->name('permissions.store');
+        Route::get('permissions/{id}', [EmployeePortalController::class, 'showPermission'])->name('permissions.show');
+        Route::post('permissions/{id}/cancel', [EmployeePortalController::class, 'cancelPermission'])->name('permissions.cancel');
+
+        // Official Documents (المستندات والوثائق الرسمية)
+        Route::get('documents', [EmployeePortalController::class, 'documents'])->name('documents.index');
+        Route::get('documents/create', [EmployeePortalController::class, 'createDocument'])->name('documents.create');
+        Route::post('documents/upload', [EmployeePortalController::class, 'uploadDocument'])->name('documents.upload');
 
         Route::post('push-subscriptions', [PortalPushSubscriptionController::class, 'store'])->name('push.subscribe');
         Route::delete('push-subscriptions', [PortalPushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');

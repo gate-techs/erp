@@ -31,4 +31,14 @@ interface PortalPermissionServiceInterface
      * Get data required for permission requests history screen.
      */
     public function getPermissionsHistoryContext(?User $user, ?string $status = null): array;
+
+    /**
+     * Get data required for permission request details screen.
+     */
+    public function getPermissionDetails(?User $user, int $id): ?array;
+
+    /**
+     * Cancel an existing permission request if it is still pending.
+     */
+    public function cancelPermissionRequest(?User $user, int $id): array;
 }

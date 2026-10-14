@@ -110,20 +110,24 @@ Route::middleware(['auth', 'verified'])->prefix('accounting')->as('accounting.')
     Route::middleware('permission:accounting.journal-entries.view')->group(function () {
         Route::get('journal-entries/data', [JournalEntryController::class, 'data'])->name('journal-entries.data');
         Route::get('journal-entries', [JournalEntryController::class, 'index'])->name('journal-entries.index');
-        Route::get('journal-entries/{journal_entry}', [JournalEntryController::class, 'show'])->name('journal-entries.show');
     });
     Route::middleware('permission:accounting.journal-entries.create')->group(function () {
         Route::get('journal-entries/create', [JournalEntryController::class, 'create'])->name('journal-entries.create');
         Route::post('journal-entries', [JournalEntryController::class, 'store'])->name('journal-entries.store');
     });
-    Route::middleware('permission:accounting.journal-entries.edit')->group(function () {
-        Route::get('journal-entries/{journal_entry}/edit', [JournalEntryController::class, 'edit'])->name('journal-entries.edit');
-        Route::match(['put', 'patch'], 'journal-entries/{journal_entry}', [JournalEntryController::class, 'update'])->name('journal-entries.update');
+    Route::middleware('permission:accounting.journal-entries.view')->group(function () {
+        Route::get('journal-entries/{journal_entry}', [JournalEntryController::class, 'show'])
+            ->whereNumber('journal_entry')
+            ->name('journal-entries.show');
     });
-    Route::delete('journal-entries/{journal_entry}', [JournalEntryController::class, 'destroy'])->name('journal-entries.destroy')->middleware('permission:accounting.journal-entries.delete');
-    Route::post('journal-entries/{id}/post', [JournalEntryController::class, 'post'])->name('journal-entries.post')->middleware('permission:accounting.journal-entries.post');
-    Route::post('journal-entries/{id}/cancel', [JournalEntryController::class, 'cancel'])->name('journal-entries.cancel')->middleware('permission:accounting.journal-entries.cancel');
-    Route::post('journal-entries/{id}/reverse', [JournalEntryController::class, 'reverse'])->name('journal-entries.reverse')->middleware('permission:accounting.journal-entries.reverse');
+    Route::middleware('permission:accounting.journal-entries.edit')->group(function () {
+        Route::get('journal-entries/{journal_entry}/edit', [JournalEntryController::class, 'edit'])->whereNumber('journal_entry')->name('journal-entries.edit');
+        Route::match(['put', 'patch'], 'journal-entries/{journal_entry}', [JournalEntryController::class, 'update'])->whereNumber('journal_entry')->name('journal-entries.update');
+    });
+    Route::delete('journal-entries/{journal_entry}', [JournalEntryController::class, 'destroy'])->whereNumber('journal_entry')->name('journal-entries.destroy')->middleware('permission:accounting.journal-entries.delete');
+    Route::post('journal-entries/{id}/post', [JournalEntryController::class, 'post'])->whereNumber('id')->name('journal-entries.post')->middleware('permission:accounting.journal-entries.post');
+    Route::post('journal-entries/{id}/cancel', [JournalEntryController::class, 'cancel'])->whereNumber('id')->name('journal-entries.cancel')->middleware('permission:accounting.journal-entries.cancel');
+    Route::post('journal-entries/{id}/reverse', [JournalEntryController::class, 'reverse'])->whereNumber('id')->name('journal-entries.reverse')->middleware('permission:accounting.journal-entries.reverse');
 
     // Opening Balances (الأرصدة الافتتاحية)
     Route::prefix('opening-balances')->as('opening-balances.')->group(function () {

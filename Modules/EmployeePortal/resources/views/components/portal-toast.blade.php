@@ -342,7 +342,7 @@
             showPortalToast('success', "{{ session('success') }}");
         @elseif(session('error'))
             showPortalToast('error', "{{ session('error') }}");
-        @elseif($errors->any())
+        @elseif(isset($errors) && $errors->any())
             showPortalToast('error', "{{ $errors->first() }}");
         @endif
     });
