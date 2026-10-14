@@ -2349,15 +2349,19 @@ html[dir="ltr"] .layout-menu .menu-sub .menu-item {
         padding: 6px 12px !important;
         text-align: right !important;
     }
-    table.matrix-attendance-table thead th.col-sticky-emp {
-        background-color: var(--bs-body-bg) !important;
+    /* Must stay opaque so day cells scrolling underneath don't show through */
+    table.matrix-attendance-table thead tr th.col-sticky-emp,
+    table.matrix-attendance-table thead tr:first-child th.col-sticky-emp,
+    table.matrix-attendance-table thead tr:nth-child(2) th.col-sticky-emp {
+        background-color: var(--bs-paper-bg) !important;
         z-index: 15 !important;
         font-weight: 700 !important;
         font-size: 14px !important;
         color: var(--bs-heading-color) !important;
     }
     table.matrix-attendance-table tbody tr:hover td.col-sticky-emp {
-        background-color: transparent !important;
+        background-color: var(--bs-paper-bg) !important;
+        background-image: linear-gradient(var(--bs-primary-bg-subtle), var(--bs-primary-bg-subtle)) !important;
     }
 
     /* Table Headers */
@@ -2477,6 +2481,40 @@ html[dir="ltr"] .layout-menu .menu-sub .menu-item {
         align-items: center !important;
         justify-content: center !important;
         flex-shrink: 0 !important;
+    }
+    .emp-card-info {
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    /* Mobile: narrower sticky column so the day grid stays visible */
+    @media (max-width: 767.98px) {
+        table.matrix-attendance-table th.col-sticky-emp,
+        table.matrix-attendance-table td.col-sticky-emp {
+            width: 140px !important;
+            min-width: 140px !important;
+            max-width: 140px !important;
+            padding: 4px 8px !important;
+        }
+        table.matrix-attendance-table thead tr th.col-sticky-emp {
+            font-size: 12px !important;
+        }
+        table.matrix-attendance-table th.col-matrix-day,
+        table.matrix-attendance-table td.col-matrix-day {
+            width: 36px !important;
+            min-width: 36px !important;
+            max-width: 36px !important;
+            height: 46px !important;
+        }
+        .emp-avatar-badge {
+            display: none !important;
+        }
+        .emp-card-name {
+            font-size: 12px !important;
+        }
+        .emp-card-sub {
+            font-size: 10px !important;
+        }
     }
 
 /* ==========================================================================
@@ -3165,6 +3203,17 @@ html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
 .kpi-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+/* Bootstrap .card variant (HR pages): let .card-body own padding/layout and fill the width */
+.card.kpi-card {
+    padding: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+.card.kpi-card > .card-body {
+    width: 100%;
+    gap: 0.75rem;
 }
 .kpi-val {
     font-size: 1.75rem;
