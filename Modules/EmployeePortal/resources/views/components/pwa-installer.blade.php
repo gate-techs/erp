@@ -327,17 +327,27 @@
 
 <script>
     (function () {
-        // 1. Service Worker Registration
+        // 1. Service Worker Registration & Automatic Update Check
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 window.portalServiceWorkerRegistration = navigator.serviceWorker.register('{{ route("portal.sw") }}', { scope: '/portal/' })
                     .then((reg) => {
                         console.log('✅ Astro PWA ServiceWorker registered with scope:', reg.scope);
+                        // Auto-check for ServiceWorker script changes on launch
+                        reg.update();
                         return reg;
                     })
                     .catch((err) => {
                         console.warn('⚠️ Astro PWA ServiceWorker registration failed:', err);
                     });
+            });
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
             });
         }
 

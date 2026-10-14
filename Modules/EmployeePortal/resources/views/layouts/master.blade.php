@@ -37,8 +37,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     @endif
 
-    <!-- Unified Portal CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/portal/css/portal.css') }}?v=1.0.0" />
+    <!-- Unified Portal CSS (Dynamic cache-busting on file change) -->
+    <link rel="stylesheet" href="{{ asset('assets/portal/css/portal.css') }}?v={{ file_exists(public_path('assets/portal/css/portal.css')) ? filemtime(public_path('assets/portal/css/portal.css')) : '2.0.0' }}" />
 
     <!-- Flatpickr Date & Time Picker CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />

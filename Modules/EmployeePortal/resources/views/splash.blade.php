@@ -518,7 +518,10 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('{{ route("portal.sw") }}')
-                    .then(reg => console.log('Portal SW active:', reg.scope))
+                    .then(reg => {
+                        reg.update();
+                        console.log('Portal SW active:', reg.scope);
+                    })
                     .catch(err => console.warn('SW err:', err));
             });
         }

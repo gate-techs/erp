@@ -63,7 +63,7 @@ class PortalPwaService implements PortalPwaServiceInterface
     public function getServiceWorkerScript(): string
     {
         return <<<'JS'
-const CACHE_NAME = 'astro-portal-v3';
+const CACHE_NAME = 'astro-portal-v4';
 const OFFLINE_URL = '/portal/offline';
 
 const PRECACHE_ASSETS = [
@@ -141,6 +141,7 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
 
+    // 1. Navigation requests: Network First, fallback to offline screen
     if (event.request.mode === 'navigate') {
         event.respondWith(
             fetch(event.request).catch(() => caches.match(OFFLINE_URL))
@@ -148,16 +149,41 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    const url = event.request.url;
+
+    // 2. CSS, JS, and Portal assets: Network First with Cache Fallback (Ensures newest styles always render)
+    if (
+        event.request.destination === 'style' ||
+        event.request.destination === 'script' ||
+        url.includes('/assets/portal/') ||
+        url.match(/\.(css|js)(\?.*)?$/)
+    ) {
+        event.respondWith(
+            fetch(event.request)
+                .then((networkRes) => {
+                    if (networkRes && networkRes.status === 200) {
+                        const clone = networkRes.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+                    }
+                    return networkRes;
+                })
+                .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // 3. Static Media (Fonts, Images, Icons): Cache First with background revalidation
     event.respondWith(
         caches.match(event.request).then((cached) => {
-            if (cached) return cached;
-            return fetch(event.request).then((res) => {
-                if (res && res.status === 200 && event.request.url.match(/\.(css|js|svg|png|jpg|ico|woff2)$/)) {
-                    const clone = res.clone();
+            const fetchPromise = fetch(event.request).then((networkRes) => {
+                if (networkRes && networkRes.status === 200) {
+                    const clone = networkRes.clone();
                     caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
                 }
-                return res;
-            });
+                return networkRes;
+            }).catch(() => null);
+
+            return cached || fetchPromise;
         }).catch(() => caches.match(event.request))
     );
 });
