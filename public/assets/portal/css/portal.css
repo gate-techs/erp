@@ -3382,7 +3382,7 @@ body {
  * Modern Employee Profile Screen (الملف الشخصي)
  * ============================================================================== */
 .portal-profile-container {
-    padding: 16px 16px 110px 16px;
+    padding: 0 0 100px 0;
     max-width: 500px;
     margin: 0 auto;
 }
