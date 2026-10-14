@@ -71,7 +71,7 @@
                 </p>
             </div>
             <div class="col-lg-4 text-center text-lg-end mt-3 mt-lg-0">
-                <span class="badge bg-white bg-opacity-10 text-white font-13 px-3 py-2 border border-light border-opacity-25">
+                <span class="badge text-white font-13 px-3 py-2 border border-light border-opacity-25" style="background-color: rgba(255, 255, 255, 0.12) !important; color: #fff !important;">
                     <i class="icon-base bx bx-check-double me-1 text-success"></i>
                     {{ $templates->where('is_active', true)->count() }} {{ __('Active Templates') }}
                 </span>

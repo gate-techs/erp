@@ -4,73 +4,8 @@
    Global DataTables Custom Theme & Loading Line
    ========================================================================== */
 
-/* 1. Transform native dt-processing into the thin animated bar under thead */
-div.dt-processing,
-.dataTables_wrapper .dataTables_processing {
-    position: absolute !important;
-    top: var(--dt-thead-height, 44px) !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: 3px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    background: #eef0f3 !important;
-    box-shadow: none !important;
-    overflow: hidden !important;
-    z-index: 50 !important;
-    font-size: 0 !important;
-    color: transparent !important;
-    transform: none !important;
-}
-
-div.dt-processing > *,
-div.dt-processing > div {
-    display: none !important;
-}
-
-div.dt-processing::after {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 35% !important;
-    background: #38434f !important;
-    border-radius: 2px !important;
-    animation: dt-linear-progress-anim 1.2s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite !important;
-}
-
-@keyframes dt-linear-progress-anim {
-    0% {
-        left: -35%;
-        width: 35%;
-    }
-    50% {
-        left: 25%;
-        width: 55%;
-    }
-    100% {
-        left: 100%;
-        width: 35%;
-    }
-}
-
-/* Dim table body during reload */
-.table-responsive:has(div.dt-processing[style*="display: block"]) table tbody,
-.table-responsive:has(div.dt-processing:not([style*="display: none"])) table tbody,
-table.is-loading-data tbody {
-    opacity: 0.35 !important;
-    filter: blur(0.2px);
-    transition: opacity 0.2s ease-in-out !important;
-    pointer-events: none !important;
-}
-
-table.dataTable tbody {
-    transition: opacity 0.2s ease-in-out !important;
-}
+/* 1. Table loading indicator: circular spinner over the data area.
+      Styles live in resources/css/app.css (.dt-body-loader); the native dt-processing is hidden there. */
 
 /* 2. Container relative */
 .card-datatable,

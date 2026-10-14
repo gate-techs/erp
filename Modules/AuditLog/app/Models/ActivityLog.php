@@ -232,8 +232,66 @@ class ActivityLog extends SpatieActivity
             'lock_date'        => __('تاريخ الإقفال'),
             'fiscal_year_id'   => __('السنة المالية'),
             'entity_id'        => __('الكيان المحاسبي'),
-            default            => ucfirst(str_replace('_', ' ', $field)),
+            // System / meta fields
+            'id'               => __('المعرّف'),
+            'attributes'       => __('البيانات'),
+            'updated_at'       => __('تاريخ التحديث'),
+            'updated_by'       => __('آخر تحديث بواسطة'),
+            'is_active'        => __('نشط'),
+            'is_group'         => __('حساب تجميعي'),
+            'is_deprecated'    => __('موقوف'),
+            'is_teacher'       => __('معلم'),
+            'allow_posting'    => __('يسمح بالترحيل'),
+            'attachment'       => __('المرفق'),
+            'parent_id'        => __('العنصر / الحساب الرئيسي'),
+            'user_id'          => __('المستخدم'),
+            'employee_id'      => __('الموظف'),
+            'bank_id'          => __('البنك'),
+            'bank_branch_id'   => __('فرع البنك'),
+            'emergency_contact_phone' => __('هاتف الطوارئ'),
+            // HR fields
+            'staff_type'       => __('نوع الموظف'),
+            'national_id'      => __('الرقم المدني'),
+            'iban'             => __('رقم الآيبان (IBAN)'),
+            'date_of_birth'    => __('تاريخ الميلاد'),
+            'manager_approved_by' => __('اعتماد المدير بواسطة'),
+            'manager_approved_at' => __('تاريخ اعتماد المدير'),
+            'hr_approved_by'   => __('اعتماد الموارد البشرية بواسطة'),
+            'hr_approved_at'   => __('تاريخ اعتماد الموارد البشرية'),
+            // Accounting journal fields
+            'posted_at'        => __('تاريخ الترحيل'),
+            'closed_by'        => __('أُغلق بواسطة'),
+            'closed_at'        => __('تاريخ الإغلاق'),
+            'sequence_number_next' => __('رقم التسلسل التالي'),
+            'refund_sequence'  => __('تسلسل المرتجعات'),
+            'payment_sequence' => __('تسلسل المدفوعات'),
+            'restrict_mode_hash_table' => __('قفل التعديل (Hash)'),
+            default            => $this->translatedFieldFallback($field),
         };
+    }
+
+    /**
+     * Fallback label for fields not listed above: reuse an existing translation of the
+     * field's English name (e.g. "Hire Date", "Leave Type"), else the humanized name.
+     */
+    protected function translatedFieldFallback(string $field): string
+    {
+        $base = preg_replace('/_id$/', '', $field);
+        $candidates = array_unique([
+            \Illuminate\Support\Str::headline($field),
+            \Illuminate\Support\Str::headline($base),
+            ucfirst(str_replace('_', ' ', $field)),
+            ucfirst(str_replace('_', ' ', $base)),
+        ]);
+
+        foreach ($candidates as $candidate) {
+            $translated = __($candidate);
+            if ($translated !== $candidate) {
+                return $translated;
+            }
+        }
+
+        return ucfirst(str_replace('_', ' ', $field));
     }
 
     /**
@@ -249,6 +307,15 @@ class ActivityLog extends SpatieActivity
         }
         if (is_array($val)) {
             return json_encode($val, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        }
+        // ISO-8601 timestamps from model casts (e.g. 2026-10-01T00:00:00.000000Z) -> readable date / date-time
+        if (is_string($val) && preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/', $val)) {
+            $dt = \Illuminate\Support\Carbon::parse($val);
+
+            // Date-only casts serialize as midnight UTC: show the date as-is (no timezone shift)
+            return $dt->format('H:i:s') === '00:00:00'
+                ? $dt->format('Y-m-d')
+                : $dt->timezone(config('app.timezone'))->format('Y-m-d H:i');
         }
 
         return (string) $val;

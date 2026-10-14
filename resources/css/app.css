@@ -527,78 +527,63 @@ div.dt-paging .pagination .page-item.disabled span.page-link,
 }
 
 /* ==========================================================================
-   Linear Loading Progress Bar directly under thead (replacing dt-processing)
+   Table loading: circular spinner shown in place of the data (rows faded out).
+   The overlay (.dt-body-loader) is managed in datatables-bootstrap5.js on
+   "processing.dt"; the native DataTables processing indicator is hidden.
    ========================================================================== */
 
 div.dt-processing,
 .dataTables_wrapper .dataTables_processing {
-    position: absolute !important;
-    top: var(--dt-thead-height, 44px) !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: 3px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    background: #eef0f3 !important;
-    box-shadow: none !important;
-    overflow: hidden !important;
-    z-index: 50 !important;
-    font-size: 0 !important;
-    color: transparent !important;
-    transform: none !important;
-}
-
-/* Hide native child spinner/dots and text inside dt-processing */
-div.dt-processing>*,
-div.dt-processing>div {
     display: none !important;
 }
 
-/* Moving indeterminate pulse bar */
-div.dt-processing::after {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 35% !important;
-    background: #38434f !important;
-    border-radius: 2px !important;
-    animation: dt-linear-progress-anim 1.2s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite !important;
+.dt-body-loader {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    pointer-events: none;
 }
-
-@keyframes dt-linear-progress-anim {
-    0% {
-        left: -35%;
-        width: 35%;
-    }
-
-    50% {
-        left: 25%;
-        width: 55%;
-    }
-
-    100% {
-        left: 100%;
-        width: 35%;
+.dt-body-loader.is-loading {
+    display: flex;
+}
+.dt-body-spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 3px solid var(--bs-border-color);
+    border-top-color: var(--bs-primary);
+    border-radius: 50%;
+    animation: dt-body-spin 0.75s linear infinite;
+}
+@keyframes dt-body-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
-/* Dim table body during reload */
-.card-datatable:has(div.dt-processing[style*="display: block"]) table tbody,
-.card-datatable:has(div.dt-processing:not([style*="display: none"])) table tbody,
-.table-responsive:has(div.dt-processing[style*="display: block"]) table tbody,
-.table-responsive:has(div.dt-processing:not([style*="display: none"])) table tbody,
+/* Rows (incl. DataTables' "Loading..." row and its borders) are hidden while loading so the
+   spinner takes their place cleanly; the footer's top border is hidden too */
+.dt-container.dt-is-loading table tbody,
 table.is-loading-data tbody {
-    opacity: 0.35 !important;
-    filter: blur(0.2px);
-    transition: opacity 0.2s ease-in-out !important;
+    visibility: hidden !important;
     pointer-events: none !important;
 }
-
+/* Collapsed table borders are painted by the table even for hidden cells */
+.dt-container.dt-is-loading table tbody > tr > *,
+table.is-loading-data tbody > tr > * {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+.dt-container.dt-is-loading table.dataTable {
+    border-bottom-color: transparent !important;
+}
+.dt-container.dt-is-loading .dt-footer-row,
+.dt-container.dt-is-loading > .row:last-child {
+    border-top-color: transparent !important;
+}
 table.dataTable tbody {
     transition: opacity 0.2s ease-in-out !important;
 }
@@ -620,11 +605,13 @@ table.dataTable tbody {
     .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) .btn.w-100 {
         width: auto !important;
     }
-    /* Title block (breadcrumb + title) may shrink so the breadcrumb wraps inside it instead of
-       pushing the action button to a new line; wrap only happens when there is truly no room */
+    /* Title block keeps its natural (one-line) width; when title + actions don't fit on one row
+       the actions wrap to the next line rather than squeezing the title onto two lines */
     .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :first-child {
-        flex: 1 1 0;
-        min-width: min(100%, 9rem);
+        flex: 1 1 auto;
+        /* keep the title on one line: the button wraps below instead (title only wraps if wider than the row) */
+        min-width: fit-content;
+        max-width: 100%;
     }
     .content-wrapper .d-flex.flex-column.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *) > :last-child:not(:first-child) {
         flex: 0 1 auto;
@@ -670,7 +657,8 @@ table.dataTable tbody {
 }
 .content-wrapper .d-flex.justify-content-between:is(.flex-sm-row, .flex-md-row, .flex-lg-row):not(.card *, .modal *, .offcanvas *):has(> :first-child > nav .breadcrumb) > :first-child > :not(nav) {
     flex: 1 1 auto;
-    min-width: min(100%, 9rem);
+    min-width: fit-content; /* title stays on one line; actions wrap below when there is no room */
+    max-width: 100%;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
@@ -3709,29 +3697,29 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
    HR Reports pages (attendance / leaves / employees / payrolls): shared header,
    report-type tabs and filter-card responsiveness
    ========================================================================== */
-/* Report type tabs: single scrollable row instead of a tall stacked list */
-.report-type-tabs {
+/* Tab pills (.report-type-tabs, generic .nav-tabs-grid): single scrollable row on desktop, 2-col grid on phones */
+:is(.report-type-tabs, .nav-tabs-grid) {
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: thin;
     padding-bottom: 2px;
 }
-.report-type-tabs .nav-link {
+:is(.report-type-tabs, .nav-tabs-grid) .nav-link {
     white-space: nowrap;
 }
 
 @media (max-width: 767.98px) {
     /* Report type tabs: 2-column grid so every tab is fully visible */
-    .report-type-tabs {
+    :is(.report-type-tabs, .nav-tabs-grid) {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         overflow: visible;
         padding-bottom: 0;
     }
-    .report-type-tabs .nav-item {
+    :is(.report-type-tabs, .nav-tabs-grid) .nav-item {
         min-width: 0;
     }
-    .report-type-tabs .nav-link {
+    :is(.report-type-tabs, .nav-tabs-grid) .nav-link {
         height: 100%;
         white-space: normal;
         display: flex;
@@ -3744,7 +3732,14 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
         padding: 0.5rem;
         border: 1px solid var(--bs-border-color);
     }
-    .report-type-tabs .nav-link.active {
+    /* Icons dropped on phones so the label (and count badge) get the space */
+    :is(.report-type-tabs, .nav-tabs-grid) .nav-link > i {
+        display: none !important;
+    }
+    :is(.report-type-tabs, .nav-tabs-grid) .nav-link .badge {
+        flex-shrink: 0;
+    }
+    :is(.report-type-tabs, .nav-tabs-grid) .nav-link.active {
         border-color: transparent;
     }
 

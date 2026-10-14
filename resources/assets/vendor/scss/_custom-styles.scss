@@ -660,6 +660,69 @@ html[dir="rtl"] {
   padding: 0.75rem 1rem;
 }
 
+// Small screens: keep columns readable and let .table-responsive scroll horizontally
+// instead of crushing keys/textareas to one character per line
+.table-translations {
+  min-width: 760px;
+
+  th:first-child,
+  td:first-child {
+    min-width: 200px;
+  }
+
+  th:last-child,
+  td:last-child {
+    min-width: 96px;
+    white-space: nowrap;
+  }
+
+  .btn-copy-key {
+    flex-shrink: 0;
+  }
+}
+
+// Header actions (module switcher + add key) on phones: full-width rows, long module name truncates
+@media (max-width: 575.98px) {
+  .translations-header-actions {
+    width: 100%;
+
+    > .dropdown,
+    > .btn {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+
+    > .dropdown > .btn,
+    > .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    > .dropdown > .btn {
+      min-width: 0;
+      overflow: hidden;
+
+      > i,
+      > span,
+      &::after {
+        flex-shrink: 0;
+      }
+
+      > strong {
+        flex: 0 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+}
+
 .translation-textarea {
   resize: vertical;
   min-height: 38px;

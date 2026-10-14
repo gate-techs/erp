@@ -1,4 +1,9 @@
 {
+    "Each row is saved independently so pagination does not lose changes.": "يتم حفظ كل صف بشكل مستقل، لذلك لا تضيع التعديلات عند التنقل بين الصفحات.",
+    "e.g. Employees Directory": "مثال: دليل الموظفين",
+    "Key copied to clipboard!": "تم نسخ المفتاح!",
+    "Unable to save translation.": "تعذر حفظ الترجمة.",
+    "Key": "المفتاح",
     "Email Templates Settings": "إعدادات قوالب البريد الإلكتروني",
     "Email Templates": "قوالب البريد الإلكتروني",
     "Email Template": "قالب بريد إلكتروني",

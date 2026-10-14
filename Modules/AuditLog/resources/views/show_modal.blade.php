@@ -40,12 +40,13 @@
 
     @if(!empty($diffs) && count($diffs) > 0)
         <div class="table-responsive border rounded">
-            <table class="table table-sm table-hover align-middle mb-0">
+            {{-- fixed layout: all three columns stay visible on phones (long values/field names wrap) --}}
+            <table class="table table-sm table-hover align-middle mb-0" style="table-layout: fixed;">
                 <thead class="table-light">
                     <tr>
-                        <th style="width: 25%;">{{ __('Field') }}</th>
-                        <th style="width: 37%;" class="text-danger bg-label-danger bg-opacity-10">{{ __('Value (Before)') }}</th>
-                        <th style="width: 38%;" class="text-success bg-label-success bg-opacity-10">{{ __('Value (After)') }}</th>
+                        <th style="width: 30%;">{{ __('Field') }}</th>
+                        <th style="width: 35%;" class="text-danger bg-label-danger bg-opacity-10">{{ __('Value (Before)') }}</th>
+                        <th style="width: 35%;" class="text-success bg-label-success bg-opacity-10">{{ __('Value (After)') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +54,7 @@
                         <tr>
                             <td>
                                 <strong>{{ $d['field_label'] }}</strong>
-                                <small class="text-muted d-block font-monospace">({{ $d['field'] }})</small>
+                                <small class="text-muted d-none d-sm-block font-monospace" style="word-break: break-all;">({{ $d['field'] }})</small>
                             </td>
                             <td class="text-danger" style="background-color: #fef2f2; word-break: break-all;">
                                 <del>{{ $d['old'] }}</del>
