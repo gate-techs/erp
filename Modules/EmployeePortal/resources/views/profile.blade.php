@@ -116,21 +116,7 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 4.2 Courses & Professional Training Log -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Courses & Professional Training Log') }}', '{{ __('Early childhood care workshops and educational development') }}'); return false;">
-            <div class="portal-profile-item-right">
-                <div class="portal-profile-item-icon icon-purple">
-                    <i class="bx bxs-graduation"></i>
-                </div>
-                <div>
-                    <h4 class="portal-profile-item-title">{{ __('Courses & Professional Training Log') }}</h4>
-                    <p class="portal-profile-item-subtitle">{{ __('Early childhood care workshops and educational development') }}</p>
-                </div>
-            </div>
-            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
-        </a>
-
-        <!-- 4.3 Awards & Honorary Incentives Log -->
+        <!-- 4.2 Awards & Honorary Incentives Log -->
         <a href="{{ route('portal.profile.rewards') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-gold">
@@ -177,7 +163,7 @@
         </a>
 
         <!-- 5.3 Security & Face ID -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Security & Face ID') }}', '{{ __('Change password and enable biometric login') }}'); return false;">
+        <a href="{{ route('portal.profile.security') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-red">
                     <i class="bx bx-shield-quarter"></i>
@@ -190,19 +176,6 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 5.4 Help & Technical Support Center -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Help & Technical Support Center') }}', '{{ __('Contact HR and support desk') }}'); return false;">
-            <div class="portal-profile-item-right">
-                <div class="portal-profile-item-icon icon-slate">
-                    <i class="bx bx-headphone"></i>
-                </div>
-                <div>
-                    <h4 class="portal-profile-item-title">{{ __('Help & Technical Support Center') }}</h4>
-                    <p class="portal-profile-item-subtitle">{{ __('Contact HR and support desk') }}</p>
-                </div>
-            </div>
-            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
-        </a>
     </div>
 
     <!-- 6. Logout Action Button -->

@@ -53,6 +53,10 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::post('profile/notifications/update', [EmployeePortalController::class, 'updateNotificationSettings'])->name('profile.notifications.update');
         Route::post('profile/notifications/toggle', [EmployeePortalController::class, 'toggleNotificationPreference'])->name('profile.notifications.toggle');
 
+        // Security & Face ID Password Settings
+        Route::get('profile/security', [EmployeePortalController::class, 'securitySettings'])->name('profile.security');
+        Route::post('profile/security/password', [EmployeePortalController::class, 'updatePassword'])->name('profile.security.password');
+
         // Notifications Center
         Route::get('notifications', [PortalNotificationController::class, 'index'])->name('notifications.index');
         Route::post('notifications/{id}/read', [PortalNotificationController::class, 'markAsRead'])->name('notifications.read');

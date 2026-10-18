@@ -662,5 +662,58 @@ class PortalProfileService implements PortalProfileServiceInterface
             'message' => __('Setting updated successfully.'),
         ];
     }
+
+    /**
+     * Get data required for employee security & password settings screen.
+     */
+    public function getSecurityContext(?User $user): array
+    {
+        $employee = $this->resolveCurrentEmployee($user);
+
+        return [
+            'user'     => $user,
+            'employee' => $employee,
+            'userName' => $employee?->name ?? $user?->name ?? __('Staff Member'),
+            'userEmail'=> $user?->email ?? $employee?->email ?? '',
+        ];
+    }
+
+    /**
+     * Update user password with biometric verification.
+     */
+    public function updatePassword(?User $user, array $data): array
+    {
+        if (!$user) {
+            return [
+                'success' => false,
+                'message' => __('User not found or unauthenticated.'),
+            ];
+        }
+
+        $newPassword = $data['password'] ?? '';
+        $passwordConfirmation = $data['password_confirmation'] ?? '';
+
+        if (strlen($newPassword) < 8) {
+            return [
+                'success' => false,
+                'message' => __('Password must be at least 8 characters.'),
+            ];
+        }
+
+        if ($newPassword !== $passwordConfirmation) {
+            return [
+                'success' => false,
+                'message' => __('Passwords do not match.'),
+            ];
+        }
+
+        $user->password = bcrypt($newPassword);
+        $user->save();
+
+        return [
+            'success' => true,
+            'message' => __('Password updated successfully.'),
+        ];
+    }
 }
 

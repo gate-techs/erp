@@ -258,6 +258,31 @@ class EmployeePortalController extends Controller
     }
 
     /**
+     * Display Security & Face ID password screen (الأمان وبصمة الوجه).
+     */
+    public function securitySettings(): View
+    {
+        $context = $this->profileService->getSecurityContext(Auth::user());
+
+        return view('employeeportal::security-settings', $context);
+    }
+
+    /**
+     * Update user password after biometric verification.
+     */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'password'              => ['required', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['required', 'string'],
+        ]);
+
+        $result = $this->profileService->updatePassword(Auth::user(), $validated);
+
+        return response()->json($result);
+    }
+
+    /**
      * Render Employee Requests Screen (صفحة الطلبات).
      */
     public function requests(): View

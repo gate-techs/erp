@@ -51,4 +51,14 @@ interface PortalProfileServiceInterface
      * Toggle a single notification preference dynamically via AJAX.
      */
     public function toggleSingleNotificationPreference(?User $user, string $key, bool $value): array;
+
+    /**
+     * Get data required for employee security & password settings screen.
+     */
+    public function getSecurityContext(?User $user): array;
+
+    /**
+     * Update user password with biometric verification.
+     */
+    public function updatePassword(?User $user, array $data): array;
 }
