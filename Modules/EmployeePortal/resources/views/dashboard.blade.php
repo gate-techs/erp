@@ -417,18 +417,126 @@
         transform: scale(0.98);
         background: rgba(253, 187, 34, 0.25);
     }
+
+    /* 0. Dashboard Top Navigation Header matching all other portal screens */
+    .portal-dashboard-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 0 0 90px 0;
+    }
+
+    .portal-dashboard-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding: 0 4px;
+    }
+
+    .portal-dashboard-nav-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid rgba(0, 51, 75, 0.08);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 51, 75, 0.04);
+        color: #00334B;
+        font-size: 24px;
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+    }
+
+    .portal-dashboard-nav-btn:hover {
+        transform: translateY(-1px);
+        background: #f8fafc;
+        box-shadow: 0 4px 12px rgba(0, 51, 75, 0.08);
+        border-color: rgba(0, 51, 75, 0.15);
+        color: #00334B;
+    }
+
+    .portal-dashboard-header-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #00334B;
+        margin: 0;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .portal-dashboard-container .portal-header {
+        margin: 0 0 14px 0;
+    }
 </style>
 @endpush
 
 @section('content')
 @php
-    $hasCheckIn = !empty($todayAttendance?->check_in);
-    $hasCheckOut = !empty($todayAttendance?->check_out);
-    $inPeriod = $hasCheckIn ? (\Carbon\Carbon::parse($todayAttendance->check_in)->format('A') === 'AM' ? __('AM') : __('PM')) : '';
-    $outPeriod = $hasCheckOut ? (\Carbon\Carbon::parse($todayAttendance->check_out)->format('A') === 'AM' ? __('AM') : __('PM')) : '';
-    $checkInTimeFormatted = $hasCheckIn ? \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i') . ' ' . $inPeriod : null;
-    $checkOutTimeFormatted = $hasCheckOut ? \Carbon\Carbon::parse($todayAttendance->check_out)->format('h:i') . ' ' . $outPeriod : null;
+    $hasCheckIn = $hasCheckIn ?? !empty($todayAttendance?->check_in);
+    $hasCheckOut = $hasCheckOut ?? !empty($todayAttendance?->check_out);
+    $checkInTimeFormatted = $checkInTimeFormatted ?? ($hasCheckIn ? \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i A') : null);
+    $checkOutTimeFormatted = $checkOutTimeFormatted ?? ($hasCheckOut ? \Carbon\Carbon::parse($todayAttendance->check_out)->format('h:i A') : null);
 @endphp
+<div class="portal-dashboard-container">
+    <!-- 0. Top Navigation Header matching all other portal screens -->
+    <div class="portal-dashboard-header">
+        <a href="{{ route('portal.profile', [], false) }}" class="portal-dashboard-nav-btn" aria-label="{{ __('Profile') }}">
+            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-right' : 'bx-chevron-left' }}"></i>
+        </a>
+        <h1 class="portal-dashboard-header-title">{{ __('Home') }}</h1>
+        @include('employeeportal::components.notification-bell')
+    </div>
+
+    <!-- 1. Original Header Card -->
+    <header class="portal-header">
+        <!-- Date Badge & Status Badge Row -->
+        <div class="header-top-badges">
+            <!-- 1. Date Badge (Kuwait) -->
+            <div class="badge-date-pill">
+                <i class="bx bxs-calendar"></i>
+                <span>{{ $portalCurrentDate ?? (now('Asia/Kuwait')->translatedFormat('l, d F Y') . ' • ' . __('Kuwait')) }}</span>
+            </div>
+
+            <!-- 2. Status Pill with dot -->
+            <div class="badge-status-pill">
+                @if($hasCheckIn && $hasCheckOut)
+                    <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
+                    <span>{{ __("Today's shift completed ✓ (Out: :time)", ['time' => $checkOutTimeFormatted]) }}</span>
+                @elseif($hasCheckIn)
+                    <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
+                    <span>{{ __('Checked in') }} {{ $checkInTimeFormatted }}</span>
+                @else
+                    <span class="status-dot"></span>
+                    <span>{{ __('Awaiting Punch') }}</span>
+                @endif
+            </div>
+        </div>
+
+        <!-- User Greeting & Avatar Row -->
+        <div class="header-user-row">
+            <a href="{{ route('portal.profile', [], false) }}" class="user-info-side" style="text-decoration: none; color: inherit;">
+                <div class="user-avatar-ring">
+                    <img src="{{ $avatarUrl ?? (auth()->user()?->avatar_url ?? asset('assets/portal/teacher-avatar.png')) }}" alt="Avatar" onerror="this.onerror=null; this.src='{{ asset('assets/portal/teacher-avatar.png') }}';" />
+                </div>
+
+                <div class="greeting-text-col">
+                    <div class="greeting-name">
+                        <span>{{ $greetingTime ?? (now('Asia/Kuwait')->hour < 12 ? __('Good Morning') : __('Good Evening')) }}, {{ auth()->user()?->employee?->name ?? (auth()->user()?->name ?? __('Employee')) }}</span>
+                        <span class="wave-hand">👋</span>
+                    </div>
+                    <div class="greeting-role">
+                        {{ auth()->user()?->employee?->jobTitle?->name ?? __('Staff Member') }}
+                        @if(auth()->user()?->employee?->primaryBranch)
+                            • {{ auth()->user()?->employee?->primaryBranch?->name }}
+                        @endif
+                    </div>
+                </div>
+            </a>
+        </div>
+    </header>
 
     <!-- 1. Central Punch Center Card -->
     <div class="punch-hero-card">
@@ -524,7 +632,7 @@
             <span class="status-label">{{ __("Today's Status") }}</span>
             <span class="status-value" style="{{ $hasCheckIn ? 'color: #059669;' : '' }}">
                 @if($hasCheckIn && $hasCheckOut)
-                    {{ __("Today's shift completed ✓") }}
+                    {{ __("Shift Completed (Out: :time)", ['time' => $checkOutTimeFormatted]) }}
                 @elseif($hasCheckIn)
                     {{ __('Checked in') }}: {{ $checkInTimeFormatted }}
                 @else
@@ -566,7 +674,7 @@
 
             <!-- 2-Column Stats Box -->
             <div class="punch-stats-box">
-                <!-- وقت البصمة الفعلي -->
+                <!-- Actual Punch Time -->
                 <div class="stat-col">
                     <span class="stat-label">{{ __('Actual Punch Time') }}</span>
                     <span class="stat-val-time" id="punchModalTime">
@@ -576,7 +684,7 @@
 
                 <div class="stat-divider"></div>
 
-                <!-- حالة الحضور -->
+                <!-- Attendance Status -->
                 <div class="stat-col">
                     <span class="stat-label">{{ __('Attendance Status') }}</span>
                     <div class="stat-val-status">
@@ -587,6 +695,7 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('scripts')

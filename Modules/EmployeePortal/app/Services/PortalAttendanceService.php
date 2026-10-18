@@ -61,9 +61,35 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
             $todayAttendance = $this->attendanceRepo->findTodayAttendance($employee->id, $today);
         }
 
+        $nowKuwait = Carbon::now('Asia/Kuwait');
+        $portalCurrentDate = $nowKuwait->locale(app()->getLocale())->translatedFormat('l, d F Y') . ' • ' . __('Kuwait');
+
+        $currentHour = $nowKuwait->hour;
+        $greetingTime = $currentHour < 12 ? __('Good Morning') : __('Good Evening');
+
+        $hasCheckIn = !empty($todayAttendance?->check_in);
+        $hasCheckOut = !empty($todayAttendance?->check_out);
+        $checkInTimeFormatted = $hasCheckIn ? Carbon::parse($todayAttendance->check_in)->format('h:i A') : null;
+        $checkOutTimeFormatted = $hasCheckOut ? Carbon::parse($todayAttendance->check_out)->format('h:i A') : null;
+
+        $shiftStatusText = __('Awaiting Punch');
+        if ($hasCheckIn && $hasCheckOut) {
+            $shiftStatusText = __("Today's shift completed ✓");
+        } elseif ($hasCheckIn) {
+            $shiftStatusText = __('Checked in') . ': ' . $checkInTimeFormatted;
+        }
+
         return [
-            'employee'        => $employee,
-            'todayAttendance' => $todayAttendance,
+            'employee'               => $employee,
+            'avatarUrl'              => $employee?->avatar_url ?? $user?->avatar_url ?? asset('assets/portal/teacher-avatar.png'),
+            'todayAttendance'        => $todayAttendance,
+            'portalCurrentDate'      => $portalCurrentDate,
+            'greetingTime'           => $greetingTime,
+            'hasCheckIn'             => $hasCheckIn,
+            'hasCheckOut'            => $hasCheckOut,
+            'checkInTimeFormatted'   => $checkInTimeFormatted,
+            'checkOutTimeFormatted'  => $checkOutTimeFormatted,
+            'shiftStatusText'        => $shiftStatusText,
         ];
     }
 
@@ -81,7 +107,7 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
         if (!$employee) {
             return [
                 'success' => false,
-                'message' => __('لم يتم العثور على سجل موظف مرتبط بهذا الحساب.'),
+                'message' => __('Employee record not found for this account.'),
                 'data'    => null,
                 'status'  => 404,
             ];
@@ -131,18 +157,18 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
             }
 
             $timeNow = now('Asia/Kuwait');
-            $period = $timeNow->format('A') === 'AM' ? __('صباحاً') : __('مساءً');
+            $period = $timeNow->format('A') === 'AM' ? __('AM') : __('PM');
             $formattedTime = $timeNow->format('h:i') . ' ' . $period;
-            $empName = $employee->first_name ?? $employee->name ?? __('أستاذة');
+            $empName = $employee->first_name ?? $employee->name ?? __('Teacher');
 
             if ($isCheckIn) {
-                $greeting = __('مرحباً :name، نتمنى لك يوماً سعيداً', ['name' => $empName]);
-                $title = __('تم تسجيل حضورك بنجاح!');
-                $statusLabel = __('حضور مبكر ومنتظم');
+                $greeting = __('Hello :name, have a great day!', ['name' => $empName]);
+                $title = __('Your check-in was successfully recorded!');
+                $statusLabel = __('Early & On-Time Check-In');
             } else {
-                $greeting = __('مع السلامة :name، تم تسجيل انصرافك', ['name' => $empName]);
-                $title = __('تم تسجيل انصرافك بنجاح!');
-                $statusLabel = __('انصراف مسائي معتمد');
+                $greeting = __('Goodbye :name, your departure has been recorded.', ['name' => $empName]);
+                $title = __('Your check-out was successfully recorded!');
+                $statusLabel = __('Approved Evening Check-Out');
             }
 
             return [
@@ -162,7 +188,7 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
         } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => $e->getMessage() ?: __('فشل في تسجيل البصمة.'),
+                'message' => $e->getMessage() ?: __('Failed to record punch.'),
                 'data'    => null,
                 'status'  => 500,
             ];

@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\EmployeePortal\Http\Controllers\EmployeePortalController;
+use Modules\EmployeePortal\Http\Controllers\PortalNotificationController;
 use Modules\EmployeePortal\Http\Controllers\PortalPushSubscriptionController;
 
 Route::prefix('portal')->name('portal.')->group(function () {
-    // 0. Entrypoint (Redirects to Splash Every Time App Opens)
+    // 0. Entrypoint (Redirects to Splash Screen)
     Route::get('/', function () {
         return redirect()->route('portal.splash');
     });
 
-    // 1. Splash Screen (Entry Screen)
+    // 1. Splash Screen
     Route::get('splash', [EmployeePortalController::class, 'splash'])->name('splash');
 
     // 2. Mobile Login & Logout
@@ -25,28 +26,49 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
     // 4. Authenticated Mobile Employee Portal Routes
     Route::middleware(['auth'])->group(function () {
-        // Main Screen (شاشة البصمة بعد الدخول)
+        // Main Screen (Dashboard & Punch)
         Route::get('dashboard', [EmployeePortalController::class, 'dashboard'])->name('dashboard');
 
         // Attendance & GPS Punch Action
         Route::post('attendance/punch', [EmployeePortalController::class, 'recordPunch'])->name('attendance.punch');
 
-        // Profile Screen (الملف الشخصي)
+        // Profile Screen
         Route::get('profile', [EmployeePortalController::class, 'profile'])->name('profile');
 
-        // Edit Profile Screen & Update (تعديل المعلومات الشخصية)
+        // Edit Profile Screen & Update
         Route::get('profile/edit', [EmployeePortalController::class, 'editProfile'])->name('profile.edit');
         Route::post('profile/update', [EmployeePortalController::class, 'updateProfile'])->name('profile.update');
 
-        // Requests Screen (صفحة الطلبات)
+        // Salary Details & Payslips
+        Route::get('profile/salary', [EmployeePortalController::class, 'salaryDetails'])->name('profile.salary');
+
+        // Rewards & Honorary Incentives Log
+        Route::get('profile/rewards', [EmployeePortalController::class, 'rewardsLog'])->name('profile.rewards');
+
+        // Nursery Policies & Regulations
+        Route::get('profile/policies', [EmployeePortalController::class, 'nurseryPolicies'])->name('profile.policies');
+
+        // Notification & Alert Settings
+        Route::get('profile/notifications', [EmployeePortalController::class, 'notificationSettings'])->name('profile.notifications');
+        Route::post('profile/notifications/update', [EmployeePortalController::class, 'updateNotificationSettings'])->name('profile.notifications.update');
+        Route::post('profile/notifications/toggle', [EmployeePortalController::class, 'toggleNotificationPreference'])->name('profile.notifications.toggle');
+
+        // Notifications Center
+        Route::get('notifications', [PortalNotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/{id}/read', [PortalNotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('notifications/read-all', [PortalNotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+        Route::delete('notifications/{id}', [PortalNotificationController::class, 'destroy'])->name('notifications.destroy');
+        Route::post('notifications/clear-all', [PortalNotificationController::class, 'clearAll'])->name('notifications.clearAll');
+
+        // Requests Screen
         Route::get('requests', [EmployeePortalController::class, 'requests'])->name('requests');
 
-        // Leave Requests (تقديم طلب إجازة)
+        // Leave Requests
         Route::get('leaves/create', [EmployeePortalController::class, 'createLeave'])->name('leaves.create');
         Route::post('leaves/calculate', [EmployeePortalController::class, 'calculateLeave'])->name('leaves.calculate');
         Route::post('leaves/store', [EmployeePortalController::class, 'storeLeave'])->name('leaves.store');
 
-        // Permission Requests (سجل الأذونات، التفاصيل، وتقديم طلب جديد)
+        // Permission Requests
         Route::get('permissions', [EmployeePortalController::class, 'permissionsHistory'])->name('permissions.index');
         Route::get('permissions/create', [EmployeePortalController::class, 'createPermission'])->name('permissions.create');
         Route::post('permissions/calculate', [EmployeePortalController::class, 'calculatePermission'])->name('permissions.calculate');
@@ -54,7 +76,14 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('permissions/{id}', [EmployeePortalController::class, 'showPermission'])->name('permissions.show');
         Route::post('permissions/{id}/cancel', [EmployeePortalController::class, 'cancelPermission'])->name('permissions.cancel');
 
-        // Official Documents (المستندات والوثائق الرسمية)
+        // Loans & Salary Advances
+        Route::get('loans', [EmployeePortalController::class, 'loansHistory'])->name('loans.index');
+        Route::get('loans/create', [EmployeePortalController::class, 'createLoan'])->name('loans.create');
+        Route::post('loans/calculate', [EmployeePortalController::class, 'calculateLoan'])->name('loans.calculate');
+        Route::post('loans/store', [EmployeePortalController::class, 'storeLoan'])->name('loans.store');
+        Route::get('loans/{id}', [EmployeePortalController::class, 'showLoan'])->name('loans.show');
+
+        // Official Documents Archive
         Route::get('documents', [EmployeePortalController::class, 'documents'])->name('documents.index');
         Route::get('documents/create', [EmployeePortalController::class, 'createDocument'])->name('documents.create');
         Route::post('documents/upload', [EmployeePortalController::class, 'uploadDocument'])->name('documents.upload');

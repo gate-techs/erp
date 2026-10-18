@@ -15,6 +15,7 @@ use Modules\EmployeePortal\Services\Contracts\PortalAttendanceServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalAuthServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalDocumentServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalLoanServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalPermissionServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalProfileServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalPwaServiceInterface;
@@ -31,7 +32,8 @@ class EmployeePortalController extends Controller
         protected PortalProfileServiceInterface $profileService,
         protected PortalLeaveServiceInterface $leaveService,
         protected PortalPermissionServiceInterface $permissionService,
-        protected PortalDocumentServiceInterface $documentService
+        protected PortalDocumentServiceInterface $documentService,
+        protected PortalLoanServiceInterface $loanService
     ) {}
 
     //==========================================================================
@@ -103,10 +105,7 @@ class EmployeePortalController extends Controller
     {
         $data = $this->attendanceService->getDashboardData(Auth::user());
 
-        return view('employeeportal::dashboard', [
-            'employee'        => $data['employee'],
-            'todayAttendance' => $data['todayAttendance'],
-        ]);
+        return view('employeeportal::dashboard', $data);
     }
 
     /**
@@ -184,6 +183,78 @@ class EmployeePortalController extends Controller
         }
 
         return redirect()->back()->with('error', $result['message'])->withInput();
+    }
+
+    /**
+     * Display Salary Details & Allowances screen (تفاصيل الراتب والبدلات ومسيرات الرواتب).
+     */
+    public function salaryDetails(): View
+    {
+        $context = $this->profileService->getSalaryContext(Auth::user());
+
+        return view('employeeportal::salary', $context);
+    }
+
+    /**
+     * Display Rewards & Honorary Incentives Log screen (سجل المكافآت والحوافز التقديرية).
+     */
+    public function rewardsLog(Request $request): View
+    {
+        $filter = $request->query('filter');
+        $context = $this->profileService->getRewardsContext(Auth::user(), $filter);
+
+        return view('employeeportal::rewards', $context);
+    }
+
+    /**
+     * Display Nursery Policies & Regulations screen (سياسات ولوائح الحضانة).
+     */
+    public function nurseryPolicies(): View
+    {
+        $context = $this->profileService->getPoliciesContext(Auth::user());
+
+        return view('employeeportal::policies', $context);
+    }
+
+    /**
+     * Display Notification & Alert Settings screen (إعدادات الإشعارات والتنبيهات).
+     */
+    public function notificationSettings(): View
+    {
+        $context = $this->profileService->getNotificationSettingsContext(Auth::user());
+
+        return view('employeeportal::notifications-settings', $context);
+    }
+
+    /**
+     * Update Notification & Alert Settings.
+     */
+    public function updateNotificationSettings(Request $request): JsonResponse
+    {
+        $result = $this->profileService->updateNotificationSettings(Auth::user(), $request->all());
+
+        return response()->json($result);
+    }
+
+    /**
+     * Fast toggle a single notification preference dynamically via AJAX.
+     */
+    public function toggleNotificationPreference(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'key'   => ['required', 'string', 'max:60'],
+            'value' => ['required'],
+        ]);
+
+        $boolVal = filter_var($validated['value'], FILTER_VALIDATE_BOOLEAN);
+
+        $result = $this->profileService->toggleSingleNotificationPreference(
+            Auth::user(),
+            $validated['key'],
+            $boolVal
+        );
+
+        return response()->json($result);
     }
 
     /**
@@ -416,7 +487,102 @@ class EmployeePortalController extends Controller
     }
 
     //==========================================================================
-    // 6. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
+    // 6. Loans & Salary Advances (السلف والقروض المالية)
+    //==========================================================================
+
+    /**
+     * Display Loans & Advances History screen (سجل السلف والقروض).
+     */
+    public function loansHistory(Request $request): View
+    {
+        $status = $request->query('status');
+        $context = $this->loanService->getLoansHistoryContext(Auth::user(), $status);
+
+        return view('employeeportal::loans.index', [
+            'employee'           => $context['employee'],
+            'user'               => $context['user'],
+            'loans'              => $context['loans'],
+            'currentFilter'      => $context['currentFilter'],
+            'statusCounts'       => $context['statusCounts'],
+            'totalRemainingDebt' => $context['totalRemainingDebt'],
+            'totalDisbursed'     => $context['totalDisbursed'],
+            'totalRepaid'        => $context['totalRepaid'],
+            'nextInstallment'    => $context['nextInstallment'],
+        ]);
+    }
+
+    /**
+     * Render Submit New Loan / Salary Advance Request Screen (طلب سلفة مالية جديدة).
+     */
+    public function createLoan(): View
+    {
+        $context = $this->loanService->getLoanFormContext(Auth::user());
+
+        return view('employeeportal::loans.create', [
+            'employee'    => $context['employee'],
+            'user'        => $context['user'],
+            'eligibility' => $context['eligibility'],
+            'recentLoans' => $context['recentLoans'],
+            'loanTypes'   => $context['loanTypes'],
+        ]);
+    }
+
+    /**
+     * AJAX Real-time eligibility, installment & schedule calculation.
+     */
+    public function calculateLoan(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'amount'             => 'required|numeric|min:0',
+            'type'               => 'required|string|in:salary_advance,installment_loan',
+            'installments_count' => 'nullable|integer|min:1|max:60',
+            'start_date'         => 'nullable|date',
+        ]);
+
+        $result = $this->loanService->calculateLoanEligibility(Auth::user(), $validated);
+
+        return response()->json($result);
+    }
+
+    /**
+     * Handle Loan / Salary Advance Request Submission.
+     */
+    public function storeLoan(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'type'               => 'required|string|in:salary_advance,installment_loan',
+            'amount'             => 'required|numeric|min:1',
+            'installments_count' => 'nullable|integer|min:1|max:60',
+            'start_date'         => 'required|date',
+            'reason'             => 'nullable|string|max:1000',
+            'attachment'         => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $result = $this->loanService->submitLoanRequest($validated, Auth::user(), $request->file('attachment'));
+
+        if ($result['success']) {
+            return redirect()->route('portal.loans.index')->with('success', $result['message']);
+        }
+
+        return redirect()->back()->with('error', $result['message'])->withInput();
+    }
+
+    /**
+     * Display Single Loan Request Details screen with installment breakdown.
+     */
+    public function showLoan(int $id): View|RedirectResponse
+    {
+        $context = $this->loanService->getLoanDetails(Auth::user(), $id);
+
+        if (!$context) {
+            return redirect()->route('portal.loans.index')->with('error', __('Loan request not found or unauthorized.'));
+        }
+
+        return view('employeeportal::loans.show', $context);
+    }
+
+    //==========================================================================
+    // 7. PWA Infrastructure (Manifest, Service Worker, Offline Fallback)
     //==========================================================================
 
     /**

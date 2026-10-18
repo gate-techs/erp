@@ -44,95 +44,45 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" />
 
-    <!-- intl-tel-input CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" />
+    <style>
+        .notification-bell-btn {
+            position: relative;
+        }
+        .bell-badge-count {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 18px;
+            text-align: center;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+            border: 2px solid #ffffff;
+            pointer-events: none;
+            animation: portalBellPulse 2s infinite ease-in-out;
+        }
+        [dir="rtl"] .bell-badge-count {
+            right: auto;
+            left: -3px;
+        }
+        @keyframes portalBellPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
 
 @stack('styles')
 </head>
 
 <body>
     <div class="portal-app-wrapper">
-        @php
-            $portalCurrentDate = '';
-            if (app()->getLocale() === 'ar') {
-                try {
-                    if (class_exists('IntlDateFormatter')) {
-                        $hijriFormatter = new \IntlDateFormatter('ar_SA@calendar=islamic-umalqura', \IntlDateFormatter::FULL, \IntlDateFormatter::NONE, 'Asia/Kuwait', \IntlDateFormatter::TRADITIONAL, 'EEEE، d MMMM y هـ');
-                        $portalCurrentDate = $hijriFormatter->format(now('Asia/Kuwait')) . ' • الكويت';
-                    } else {
-                        \Carbon\Carbon::setLocale('ar');
-                        $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l، d F Y') . ' • الكويت';
-                    }
-                } catch (\Throwable $e) {
-                    \Carbon\Carbon::setLocale('ar');
-                    $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l، d F Y') . ' • الكويت';
-                }
-            } else {
-                \Carbon\Carbon::setLocale('en');
-                $portalCurrentDate = now('Asia/Kuwait')->translatedFormat('l, d F Y') . ' • Kuwait';
-            }
 
-            $currentHour = now('Asia/Kuwait')->hour;
-            $greetingTime = $currentHour < 12 ? __('Good Morning') : __('Good Evening');
-        @endphp
-
-        <!-- Top Mobile App Header matching design (only on dashboard / main screen) -->
-        @if(request()->routeIs('portal.dashboard') || (isset($showPortalHeader) && $showPortalHeader))
-        <header class="portal-header">
-            <!-- Date Badge & Status Badge Row -->
-            <div class="header-top-badges">
-                <!-- 1. Date Badge (Kuwait) -->
-                <div class="badge-date-pill">
-                    <i class="bx bxs-calendar"></i>
-                    <span>{{ $portalCurrentDate }}</span>
-                </div>
-
-                <!-- 2. Status Pill with dot -->
-                <div class="badge-status-pill">
-                    @if(isset($todayAttendance) && !empty($todayAttendance->check_out))
-                        <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                        <span>{{ __("Today's shift completed ✓") }}</span>
-                    @elseif(isset($todayAttendance) && !empty($todayAttendance->check_in))
-                        <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                        <span>{{ __('Checked in') }} {{ \Carbon\Carbon::parse($todayAttendance->check_in)->format('h:i A') }}</span>
-                    @else
-                        <span class="status-dot"></span>
-                        <span>{{ __('Awaiting Punch') }}</span>
-                    @endif
-                </div>
-            </div>
-
-            <!-- User Greeting & Avatar & Notification Bell & Lang Switcher -->
-            <div class="header-user-row">
-                <!-- Avatar ring + Teacher greeting -->
-                <a href="{{ route('portal.profile', [], false) }}" class="user-info-side"
-                    style="text-decoration: none; color: inherit;">
-                    <div class="user-avatar-ring">
-                        <img src="{{ auth()->user()?->avatar_url ?? asset('assets/portal/header-emblem.png') }}" alt="Avatar" />
-                    </div>
-
-                    <div class="greeting-text-col">
-                        <div class="greeting-name">
-                            <span>{{ $greetingTime }}, {{ auth()->user()?->employee?->name ?? (auth()->user()?->name ?? __('Employee')) }}</span>
-                            <span class="wave-hand">👋</span>
-                        </div>
-                        <div class="greeting-role">
-                            {{ auth()->user()?->employee?->jobTitle?->name ?? __('Staff Member') }}
-                            @if(auth()->user()?->employee?->primaryBranch)
-                                • {{ auth()->user()?->employee?->primaryBranch?->name }}
-                            @endif
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Left / Right: Notification Bell -->
-                <a href="javascript:void(0)" class="notification-bell-btn">
-                    <i class="bx bxs-bell"></i>
-                    <span class="bell-badge-dot"></span>
-                </a>
-            </div>
-        </header>
-        @endif
 
         <!-- Main Content Container -->
         <main id="portalMainContent" class="container-fluid px-3 pt-1">
@@ -141,7 +91,7 @@
 
         <!-- 4-Tab Bottom Navigation Bar matching design -->
         <nav class="portal-bottom-nav">
-            <!-- 1. الرئيسية (Home) -->
+            <!-- 1. Home -->
             <a href="{{ route('portal.dashboard', [], false) }}"
                 class="portal-nav-tab {{ request()->routeIs('portal.dashboard') ? 'active' : '' }}">
                 <div class="tab-icon-wrapper">
@@ -150,7 +100,7 @@
                 <span>{{ __('Home') }}</span>
             </a>
 
-            <!-- 2. الطلبات (Requests) with yellow dot badge -->
+            <!-- 2. Requests with yellow dot badge -->
             <a href="{{ route('portal.requests', [], false) }}"
                 class="portal-nav-tab {{ request()->routeIs('portal.requests') ? 'active' : '' }}">
                 <div class="tab-icon-wrapper">
@@ -160,7 +110,7 @@
                 <span>{{ __('Requests') }}</span>
             </a>
 
-            <!-- 3. الحضور (Attendance) -->
+            <!-- 3. Attendance -->
             <a href="{{ route('portal.dashboard', [], false) }}" class="portal-nav-tab">
                 <div class="tab-icon-wrapper">
                     <i class="bx bx-time-five"></i>
@@ -168,7 +118,7 @@
                 <span>{{ __('Attendance') }}</span>
             </a>
 
-            <!-- 4. الملف الشخصي (Profile) -->
+            <!-- 4. Profile -->
             <a href="{{ route('portal.profile', [], false) }}"
                 class="portal-nav-tab {{ request()->routeIs('portal.profile') ? 'active' : '' }}">
                 <div class="tab-icon-wrapper">

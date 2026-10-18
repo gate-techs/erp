@@ -94,8 +94,18 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
         );
 
         $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalLoanServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalLoanService::class
+        );
+
+        $this->app->bind(
             \Modules\EmployeePortal\Services\Contracts\PortalPushSubscriptionServiceInterface::class,
             \Modules\EmployeePortal\Services\PortalPushSubscriptionService::class
+        );
+
+        $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalNotificationServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalNotificationService::class
         );
     }
 
@@ -107,5 +117,20 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
         parent::boot();
 
         $this->loadJsonTranslationsFrom(__DIR__ . '/../../lang');
+
+        // Share unread notifications count across all portal views
+        \Illuminate\Support\Facades\View::composer('employeeportal::*', function ($view) {
+            $count = 0;
+            if (\Illuminate\Support\Facades\Auth::check()) {
+                try {
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                    $notifService = app(\Modules\EmployeePortal\Services\Contracts\PortalNotificationServiceInterface::class);
+                    $count = $notifService->getUnreadCount($user);
+                } catch (\Throwable $e) {
+                    $count = 0;
+                }
+            }
+            $view->with('portalUnreadNotificationsCount', $count);
+        });
     }
 }

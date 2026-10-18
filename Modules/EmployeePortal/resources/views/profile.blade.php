@@ -10,14 +10,14 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-right' : 'bx-chevron-left' }}"></i>
         </a>
         <h1 class="portal-profile-header-title">{{ __('Profile') }}</h1>
-        <div class="portal-profile-header-spacer"></div>
+        @include('employeeportal::components.notification-bell')
     </div>
 
     <!-- 1. Hero Profile Card -->
     <div class="portal-profile-hero-card">
         <div class="portal-profile-hero-top">
             <div class="portal-profile-hero-avatar-box">
-                <img src="{{ $avatar_url }}" alt="{{ $name }}" class="portal-profile-hero-avatar" />
+                <img src="{{ $avatar_url }}" alt="{{ $name }}" class="portal-profile-hero-avatar" onerror="this.onerror=null; this.src='{{ asset('assets/portal/teacher-avatar.png') }}';" />
                 <a href="{{ route('portal.profile.edit') }}" class="portal-profile-hero-camera-badge" aria-label="{{ __('Change Photo') }}">
                     <i class="bx bxs-camera"></i>
                 </a>
@@ -36,7 +36,7 @@
         </a>
     </div>
 
-    <!-- 2. Language Switch Strip (تغيير لغة التطبيق) -->
+    <!-- 2. Language Switch Strip -->
     <a href="{{ $lang_switch_url }}" class="portal-profile-lang-strip" title="{{ __('Change Language') }}" onclick="savePortalLocaleAndRedirect(event, '{{ $target_locale }}', this.href)">
         <div class="portal-profile-lang-right">
             <div class="portal-profile-lang-icon">
@@ -53,10 +53,10 @@
         </div>
     </a>
 
-    <!-- 3. Section: Profile & Job Details (الملف والبيانات الوظيفية) -->
+    <!-- 3. Section: Profile & Job Details -->
     <h3 class="portal-profile-section-title">{{ __('Profile & Job Details') }}</h3>
     <div class="portal-profile-group-card">
-        <!-- 3.1 بياناتي الوظيفية والتعاقدية -->
+        <!-- 3.1 Job & Contractual Details -->
         <a href="{{ route('portal.profile.edit') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-blue">
@@ -70,8 +70,8 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 3.2 تفاصيل الراتب والبدلات -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Salary Details & Allowances') }}', '{{ __('Detailed payslip, bank account and transfers') }}'); return false;">
+        <!-- 3.2 Salary Details & Allowances -->
+        <a href="{{ route('portal.profile.salary') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-green">
                     <i class="bx bx-credit-card"></i>
@@ -84,8 +84,8 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 3.3 السلف والمستحقات المالية -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Advances & Financial Entitlements') }}', '{{ __('Request new advance, estimated end of service gratuity') }}'); return false;">
+        <!-- 3.3 Advances & Financial Entitlements -->
+        <a href="{{ route('portal.loans.index', ['from' => 'profile']) }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-orange">
                     <i class="bx bx-coin-stack"></i>
@@ -99,10 +99,10 @@
         </a>
     </div>
 
-    <!-- 4. Section: Documents, Certificates & Training (المستندات والشهادات والتدريب) -->
+    <!-- 4. Section: Documents, Certificates & Training -->
     <h3 class="portal-profile-section-title">{{ __('Documents, Certificates & Training') }}</h3>
     <div class="portal-profile-group-card">
-        <!-- 4.1 أرشيف المستندات والوثائق الرسمية -->
+        <!-- 4.1 Archive of Official Documents & Records -->
         <a href="{{ route('portal.documents.index') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-indigo">
@@ -116,7 +116,7 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 4.2 سجل الدورات والتدريب المهني -->
+        <!-- 4.2 Courses & Professional Training Log -->
         <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Courses & Professional Training Log') }}', '{{ __('Early childhood care workshops and educational development') }}'); return false;">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-purple">
@@ -130,8 +130,8 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 4.3 سجل المكافآت والحوافز التقديرية -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Awards & Honorary Incentives Log') }}', '{{ __('Distinguished teacher certificates, term achievement bonuses') }}'); return false;">
+        <!-- 4.3 Awards & Honorary Incentives Log -->
+        <a href="{{ route('portal.profile.rewards') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-gold">
                     <i class="bx bx-award"></i>
@@ -145,11 +145,11 @@
         </a>
     </div>
 
-    <!-- 5. Section: Policies & Account Settings (السياسات وإعدادات الحساب) -->
+    <!-- 5. Section: Policies & Account Settings -->
     <h3 class="portal-profile-section-title">{{ __('Policies & Account Settings') }}</h3>
     <div class="portal-profile-group-card">
-        <!-- 5.1 سياسات ولوائح الحضانة -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Nursery Policies & Regulations') }}', '{{ __('Leave regulations, permission rules and work conduct') }}'); return false;">
+        <!-- 5.1 Nursery Policies & Regulations -->
+        <a href="{{ route('portal.profile.policies') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-teal">
                     <i class="bx bx-book-bookmark"></i>
@@ -162,8 +162,8 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 5.2 إعدادات الإشعارات والتنبيهات -->
-        <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Notification & Alert Settings') }}', '{{ __('Punch reminder, management decisions and payroll alerts') }}'); return false;">
+        <!-- 5.2 Notification & Alert Settings -->
+        <a href="{{ route('portal.profile.notifications') }}" class="portal-profile-item">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-sky">
                     <i class="bx bx-bell"></i>
@@ -176,7 +176,7 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 5.3 الأمان وبصمة الوجه (Face ID) -->
+        <!-- 5.3 Security & Face ID -->
         <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Security & Face ID') }}', '{{ __('Change password and enable biometric login') }}'); return false;">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-red">
@@ -190,7 +190,7 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
-        <!-- 5.4 مركز المساعدة والدعم الفني -->
+        <!-- 5.4 Help & Technical Support Center -->
         <a href="#" class="portal-profile-item" onclick="showPortalToast('success', '{{ __('Help & Technical Support Center') }}', '{{ __('Contact HR and support desk') }}'); return false;">
             <div class="portal-profile-item-right">
                 <div class="portal-profile-item-icon icon-slate">

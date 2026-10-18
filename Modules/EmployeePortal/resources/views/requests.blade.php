@@ -10,16 +10,10 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-right-arrow-alt' : 'bx-left-arrow-alt' }}"></i>
         </a>
         <h1 class="requests-header-title">{{ __('Requests') }}</h1>
-        <div class="requests-nav-placeholder"></div>
+        @include('employeeportal::components.notification-bell')
     </div>
 
-    <!-- 1. Header Banner Card (تقديم طلب جديد) -->
     <div class="requests-banner-card">
-        <div class="requests-banner-badge">
-            <span class="badge-dot"></span>
-            <span>{{ __('Teachers & Staff Portal') }}</span>
-        </div>
-
         <h2 class="requests-banner-title">{{ __('Submit New Request') }}</h2>
         <p class="requests-banner-desc">
             {{ __('Choose transaction type for documentation and approval by Academic Management & HR.') }}
@@ -80,7 +74,7 @@
         </a>
 
         <!-- 4. سلفة مالية (Financial Loan) -->
-        <a href="javascript:void(0)" onclick="showPortalToast('success', '{{ __('Financial Advance') }}', '{{ __('Financial advance form will be available soon') }}')" class="request-item-card request-card-orange">
+        <a href="{{ route('portal.loans.create') }}" class="request-item-card request-card-orange">
             <div>
                 <div class="request-card-icon-box icon-box-gold">
                     <i class="bx bx-wallet"></i>

@@ -407,7 +407,8 @@
                 <img src="{{ $employee?->avatar_url ?? auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}"
                      alt="Avatar"
                      class="edit-avatar-img"
-                     id="previewAvatarImg" />
+                     id="previewAvatarImg"
+                     onerror="this.onerror=null; this.src='{{ asset('assets/portal/teacher-avatar.png') }}';" />
                 <button type="button" class="edit-camera-btn" title="{{ __('Change Photo') }}" onclick="document.getElementById('editAvatarInput').click()">
                     <i class="bx bxs-camera"></i>
                 </button>
