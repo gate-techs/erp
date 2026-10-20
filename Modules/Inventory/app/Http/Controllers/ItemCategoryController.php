@@ -22,6 +22,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('inventory.categories.view'), 403);
+
         return view('inventory::categories.index', [
             'parentCategories' => $this->service->getAll(['status' => 'active']),
         ]);
@@ -30,6 +32,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.categories.view'), 403);
+
         $query = $this->service->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -44,18 +48,26 @@ class ItemCategoryController extends Controller
                 $active = $category->status === 'active';
                 $class = $active ? 'success' : 'danger';
                 $label = $active ? __('Active') : __('Inactive');
+                $canToggle = auth()->user()->can('inventory.categories.toggle-status');
+                $actionClass = $canToggle ? 'btn-toggle-category-status' : 'pe-none opacity-75';
 
-                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 btn-toggle-category-status" data-id="' . $category->id . '">' . e($label) . '</button>';
+                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 ' . $actionClass . '" data-id="' . $category->id . '" ' . ($canToggle ? '' : 'disabled') . '>' . e($label) . '</button>';
             })
             ->addColumn('actions', function (ItemCategory $category) {
                 $name = $category->translate(app()->getLocale())?->name
                     ?? $category->translate('ar')?->name
                     ?? $category->code;
+                $user = auth()->user();
+                $buttons = '';
 
-                return '<div class="d-inline-flex gap-1">
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-category" data-id="' . $category->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button>
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-category" data-id="' . $category->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>
-                </div>';
+                if ($user->can('inventory.categories.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-category" data-id="' . $category->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button> ';
+                }
+                if ($user->can('inventory.categories.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-category" data-id="' . $category->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->filterColumn('name_ar', fn ($query, $keyword) => $query->whereTranslationLike('name', "%{$keyword}%", 'ar'))
             ->filterColumn('name_en', fn ($query, $keyword) => $query->whereTranslationLike('name', "%{$keyword}%", 'en'))
@@ -67,6 +79,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function store(StoreItemCategoryRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.categories.create'), 403);
+
         $category = $this->service->create($request->validated(), auth()->id());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -79,6 +93,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function show(Request $request, int $id): JsonResponse|View
     {
+        abort_if(! auth()->user()->can('inventory.categories.view'), 403);
+
         $category = $this->service->getById($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -91,6 +107,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function update(UpdateItemCategoryRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.categories.edit'), 403);
+
         $category = $this->service->update($id, $request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -103,6 +121,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.categories.delete'), 403);
+
         $this->service->delete($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -115,6 +135,8 @@ class ItemCategoryController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.categories.toggle-status'), 403);
+
         $category = $this->service->toggleStatus($id);
 
         return response()->json([

@@ -22,14 +22,18 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.subjects.board')
         <a href="{{ route('academic.subjects.board') }}" class="btn btn-label-info btn-sm d-flex align-items-center gap-2 shadow-sm" title="{{ __('Drag & Drop Board View') }}">
             <i class="icon-base bx bx-grid-alt font-18"></i>
             <span>{{ __('Stages Board (Drag & Drop)') }}</span>
         </a>
+        @endcan
+        @can('academic.subjects.create')
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicSubject" aria-controls="offcanvasAddAcademicSubject">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Subject') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -116,6 +120,7 @@
     </div>
 </div>
 
+@can('academic.subjects.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Subject                                        -->
 <!-- ========================================================================= -->
@@ -255,7 +260,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.subjects.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Subject                                       -->
 <!-- ========================================================================= -->
@@ -402,7 +409,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.subjects.delete')
 <!-- ========================================================================= -->
 <!-- 3. Modal: Confirm Delete                                                  -->
 <!-- ========================================================================= -->
@@ -428,7 +437,9 @@
         </div>
     </div>
 </div>
+@endcan
 
+@can('academic.subjects.clone')
 <!-- ========================================================================= -->
 <!-- 4. Modal: Confirm Clone                                                   -->
 <!-- ========================================================================= -->
@@ -454,6 +465,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @endsection
 

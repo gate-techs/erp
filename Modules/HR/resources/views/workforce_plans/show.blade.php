@@ -29,10 +29,13 @@
     <!-- Actions Toolbar -->
     <div class="d-flex flex-wrap align-items-center gap-2">
         @if ($plan->status === \Modules\HR\Enums\WorkforcePlanStatus::DRAFT)
+            @can('hr.workforce-plans.edit')
             <a href="{{ route('hr.workforce-plans.edit', $plan->id) }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                 <i class="icon-base bx bx-edit font-16"></i>
                 <span>{{ __('Edit Plan') }}</span>
             </a>
+            @endcan
+            @can('hr.workforce-plans.submit')
             <form action="{{ route('hr.workforce-plans.submit', $plan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Submit this plan for management approval?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
@@ -40,7 +43,9 @@
                     <span>{{ __('Submit for Approval') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif ($plan->status === \Modules\HR\Enums\WorkforcePlanStatus::SUBMITTED)
+            @can('hr.workforce-plans.approve')
             <form action="{{ route('hr.workforce-plans.approve', $plan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Approve this workforce plan?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-success d-flex align-items-center gap-1 shadow-sm">
@@ -48,7 +53,9 @@
                     <span>{{ __('Approve Plan') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif ($plan->status === \Modules\HR\Enums\WorkforcePlanStatus::APPROVED)
+            @can('hr.workforce-plans.activate')
             <form action="{{ route('hr.workforce-plans.activate', $plan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Activate this plan for departmental hiring?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
@@ -56,11 +63,15 @@
                     <span>{{ __('Activate Plan') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif ($plan->status === \Modules\HR\Enums\WorkforcePlanStatus::ACTIVE)
+            @can('hr.workforce-plans.recalculate')
             <button type="button" id="btn-recalculate-live" class="btn btn-outline-info d-flex align-items-center gap-1">
                 <i class="icon-base bx bx-refresh font-16"></i>
                 <span>{{ __('Recalculate Live Headcount') }}</span>
             </button>
+            @endcan
+            @can('hr.workforce-plans.close')
             <form action="{{ route('hr.workforce-plans.close', $plan->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Close this workforce plan?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-outline-secondary d-flex align-items-center gap-1">
@@ -68,6 +79,7 @@
                     <span>{{ __('Close Plan') }}</span>
                 </button>
             </form>
+            @endcan
         @endif
     </div>
 </div>

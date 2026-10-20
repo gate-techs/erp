@@ -30,6 +30,8 @@ class OnboardingController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.onboardings.view'), 403);
+
         $selectedDepartment = $request->get('department_id');
         $selectedStatus     = $request->get('status');
 
@@ -42,6 +44,8 @@ class OnboardingController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.onboardings.view'), 403);
+
         $filters = $request->only(['status', 'department_id']);
         $query = $this->repository->getDataTableQuery($filters);
 
@@ -113,20 +117,34 @@ class OnboardingController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (Onboarding $item) {
-                $showBtn = '<a href="' . route('hr.onboardings.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Journey') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+
+                $showBtn = '';
+                if ($user->can('hr.onboardings.view')) {
+                    $showBtn = '<a href="' . route('hr.onboardings.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Journey') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $convertBtn = '';
-                if (!$item->employee_id) {
+                if (!$item->employee_id && $user->can('hr.onboardings.convert')) {
                     $convertBtn = '<button type="button" class="btn btn-sm btn-icon btn-outline-success btn-convert-modal" data-id="' . $item->id . '" title="' . __('Convert to Employee') . '">
                                     <i class="bx bx-user-check font-16"></i>
                                    </button>';
                 }
 
-                return '<div class="d-flex align-items-center justify-content-center gap-1">
-                            ' . $showBtn . $convertBtn . '
-                        </div>';
+                $deleteBtn = '';
+                if ($user->can('hr.onboardings.delete')) {
+                    $deleteBtn = '<form action="' . route('hr.onboardings.destroy', $item->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'' . __('Are you sure?') . '\')">
+                                    ' . csrf_field() . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" title="' . __('Delete') . '">
+                                        <i class="bx bx-trash font-16"></i>
+                                    </button>
+                                  </form>';
+                }
+
+                $buttons = $showBtn . $convertBtn . $deleteBtn;
+                return $buttons ? '<div class="d-flex align-items-center justify-content-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['onboarding_code_info', 'candidate_info', 'position_info', 'progress_bar', 'conversion_status', 'status_badge', 'actions'])
             ->make(true);
@@ -134,6 +152,8 @@ class OnboardingController extends Controller
 
     public function create(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.onboardings.create'), 403);
+
         $candidateId = $request->get('candidate_id');
         $candidates  = Candidate::latest()->get();
         $departments = Department::with('translations')->where('status', 'active')->get();
@@ -145,6 +165,8 @@ class OnboardingController extends Controller
 
     public function store(StoreOnboardingRequest $request)
     {
+        abort_if(! auth()->user()->can('hr.onboardings.create'), 403);
+
         $onboarding = $this->service->startOnboarding($request->validated(), auth()->id() ?? 1);
 
         return redirect()->route('hr.onboardings.show', $onboarding->id)
@@ -153,6 +175,8 @@ class OnboardingController extends Controller
 
     public function show(int $id)
     {
+        abort_if(! auth()->user()->can('hr.onboardings.view'), 403);
+
         $onboarding = $this->repository->findWithRelations($id);
         if (!$onboarding) {
             abort(404, __('Onboarding journey not found.'));
@@ -178,6 +202,8 @@ class OnboardingController extends Controller
 
     public function toggleTask(int $taskId): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.onboardings.tasks'), 403);
+
         try {
             $result = $this->service->toggleTask($taskId);
             return response()->json([
@@ -194,6 +220,8 @@ class OnboardingController extends Controller
 
     public function addTask(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.onboardings.tasks'), 403);
+
         $request->validate([
             'title'       => 'required|string|max:255',
             'category'    => 'required|string',
@@ -218,6 +246,8 @@ class OnboardingController extends Controller
 
     public function convertToEmployee(ConvertToEmployeeRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.onboardings.convert'), 403);
+
         try {
             $employee = $this->service->convertToEmployee($id, $request->validated());
 
@@ -237,6 +267,8 @@ class OnboardingController extends Controller
 
     public function destroy(int $id)
     {
+        abort_if(! auth()->user()->can('hr.onboardings.delete'), 403);
+
         $onboarding = Onboarding::findOrFail($id);
         $onboarding->delete();
 

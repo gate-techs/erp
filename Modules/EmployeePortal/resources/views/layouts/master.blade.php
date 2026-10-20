@@ -6,15 +6,15 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@yield('title', __('Attendance Portal')) | {{ __('Astro Leaders') }}</title>
+    <title>@yield('title', __('Attendance Portal')) | {{ __('ALA ORBIT') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#00334B" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="AstroLeaders" />
-    <meta name="application-name" content="AstroLeaders" />
+    <meta name="apple-mobile-web-app-title" content="ALA ORBIT" />
+    <meta name="application-name" content="ALA ORBIT" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />

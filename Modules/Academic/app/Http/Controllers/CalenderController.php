@@ -21,6 +21,8 @@ class CalenderController extends Controller
     //------------------------------
     public function index()
     {
+        abort_if(! auth()->user()->can('academic.calender.view'), 403);
+
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $statuses = Calender::statuses();
 
@@ -33,6 +35,8 @@ class CalenderController extends Controller
     //------------------------------
     public function calendarEvents(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'status',
@@ -48,6 +52,8 @@ class CalenderController extends Controller
     //------------------------------
     public function store(StoreCalenderRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.create'), 403);
+
         try {
             $event = $this->service->create($request->validated());
 
@@ -67,6 +73,8 @@ class CalenderController extends Controller
     //------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.view'), 403);
+
         $calender = $this->service->find($id);
 
         if (! $calender) {
@@ -96,6 +104,8 @@ class CalenderController extends Controller
     //------------------------------
     public function update(UpdateCalenderRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.edit'), 403);
+
         try {
             $updated = $this->service->update($id, $request->validated());
 
@@ -121,6 +131,8 @@ class CalenderController extends Controller
     //------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.delete'), 403);
+
         try {
             $deleted = $this->service->delete($id);
 
@@ -146,6 +158,8 @@ class CalenderController extends Controller
     //------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.calender.toggle-status'), 403);
+
         try {
             $toggled = $this->service->toggleStatus($id);
 

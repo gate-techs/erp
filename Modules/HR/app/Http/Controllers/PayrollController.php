@@ -27,6 +27,8 @@ class PayrollController extends Controller
      */
     public function index()
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $kpis = $this->payrollRepo->getKpis();
         $branches = NurseryBranch::where('status', 'active')->get();
         $statuses = PayrollStatus::cases();
@@ -39,6 +41,8 @@ class PayrollController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $query = $this->payrollRepo->getQuery();
 
         // 1. Multi-Filters
@@ -95,53 +99,56 @@ class PayrollController extends Controller
                 </span>';
             })
             ->addColumn('actions', function (Payroll $payroll) {
+                $user = auth()->user();
                 $id = $payroll->id;
                 $status = $payroll->status instanceof PayrollStatus ? $payroll->status->value : $payroll->status;
                 $showUrl = route('hr.payrolls.show', $id);
 
                 $buttons = '';
 
-                // View Details Button (Outline Info)
-                $buttons .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Payroll Details') . '">
-                    <i class="icon-base bx bx-show"></i>
-                </a>';
+                // View Details Button
+                if ($user->can('hr.payrolls.view')) {
+                    $buttons .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Payroll Details') . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </a>';
+                }
 
-                // Recalculate (Draft only - Outline Primary)
-                if ($status === PayrollStatus::DRAFT->value) {
+                // Recalculate (Draft only)
+                if ($status === PayrollStatus::DRAFT->value && $user->can('hr.payrolls.recalculate')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-recalculate-payroll" data-id="' . $id . '" title="' . __('Recalculate Payroll') . '">
                         <i class="icon-base bx bx-refresh"></i>
                     </button>';
                 }
 
-                // Approve (Draft only - Outline Success)
-                if ($status === PayrollStatus::DRAFT->value) {
+                // Approve (Draft only)
+                if ($status === PayrollStatus::DRAFT->value && $user->can('hr.payrolls.approve')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-payroll" data-id="' . $id . '" title="' . __('Approve Payroll') . '">
                         <i class="icon-base bx bx-check"></i>
                     </button>';
                 }
 
-                // Disburse / Pay (Draft or Approved - Outline Primary)
-                if (in_array($status, [PayrollStatus::DRAFT->value, PayrollStatus::APPROVED->value])) {
+                // Disburse / Pay (Draft or Approved)
+                if (in_array($status, [PayrollStatus::DRAFT->value, PayrollStatus::APPROVED->value]) && $user->can('hr.payrolls.disburse')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-disburse-payroll" data-id="' . $id . '" data-amount="' . number_format($payroll->total_net, 2) . ' ' . __('KWD') . '" title="' . __('Disburse / Mark as Paid') . '">
                         <i class="icon-base bx bx-wallet"></i>
                     </button>';
                 }
 
-                // Cancel (Draft or Approved - Outline Danger)
-                if ($status !== PayrollStatus::PAID->value && $status !== PayrollStatus::CANCELLED->value) {
+                // Cancel (Draft or Approved)
+                if ($status !== PayrollStatus::PAID->value && $status !== PayrollStatus::CANCELLED->value && $user->can('hr.payrolls.cancel')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-cancel-payroll" data-id="' . $id . '" title="' . __('Cancel Payroll') . '">
                         <i class="icon-base bx bx-x"></i>
                     </button>';
                 }
 
-                // Delete (not paid - Outline Secondary)
-                if ($status !== PayrollStatus::PAID->value) {
+                // Delete (not paid)
+                if ($status !== PayrollStatus::PAID->value && $user->can('hr.payrolls.delete')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-secondary btn-delete-payroll" data-id="' . $id . '" title="' . __('Delete') . '">
                         <i class="icon-base bx bx-trash"></i>
                     </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['payroll_code', 'month_info', 'branch_info', 'employees_count_formatted', 'gross_formatted', 'deductions_formatted', 'net_formatted', 'status_badge', 'actions'])
             ->make(true);
@@ -152,6 +159,8 @@ class PayrollController extends Controller
      */
     public function store(GeneratePayrollRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.create'), 403);
+
         try {
             $payroll = $this->payrollService->generatePayroll(
                 month: $request->payroll_month,
@@ -183,6 +192,8 @@ class PayrollController extends Controller
      */
     public function show(int $id)
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $payroll = $this->payrollRepo->findWithDetails($id);
         if (!$payroll) {
             abort(404, __('Payroll run not found.'));
@@ -196,6 +207,8 @@ class PayrollController extends Controller
      */
     public function itemsData(int $id, Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $payroll = $this->payrollRepo->find($id);
         if (!$payroll) {
             return response()->json(['error' => __('Payroll run not found.')], 404);
@@ -288,6 +301,7 @@ class PayrollController extends Controller
                 </span>';
             })
             ->addColumn('actions', function ($item) use ($payroll) {
+                $user = auth()->user();
                 $itemId = $item->id;
                 $payrollId = $payroll->id;
                 $isDraft = ($payroll->status === PayrollStatus::DRAFT);
@@ -295,18 +309,20 @@ class PayrollController extends Controller
                 $buttons = '';
 
                 // View Payslip (Outline Info)
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-payslip" data-payroll-id="' . $payrollId . '" data-item-id="' . $itemId . '" title="' . __('View Payslip') . '">
-                    <i class="icon-base bx bx-show"></i>
-                </button>';
+                if ($user->can('hr.payrolls.view')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-payslip" data-payroll-id="' . $payrollId . '" data-item-id="' . $itemId . '" title="' . __('View Payslip') . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </button>';
+                }
 
                 // Edit Item (Draft only - Outline Warning)
-                if ($isDraft) {
+                if ($isDraft && $user->can('hr.payrolls.edit')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-edit-item" data-payroll-id="' . $payrollId . '" data-item-id="' . $itemId . '" title="' . __('Adjust Item') . '">
                         <i class="icon-base bx bx-edit"></i>
                     </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['employee_info', 'overtime_formatted', 'rewards_formatted', 'gross_formatted', 'deductions_breakdown', 'net_salary_formatted', 'payment_status_badge', 'actions'])
             ->make(true);
@@ -317,6 +333,8 @@ class PayrollController extends Controller
      */
     public function recalculate(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.recalculate'), 403);
+
         $payroll = $this->payrollRepo->find($id);
         if (!$payroll) {
             return response()->json(['success' => false, 'message' => __('Payroll not found.')], 404);
@@ -338,6 +356,8 @@ class PayrollController extends Controller
      */
     public function approve(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.approve'), 403);
+
         $payroll = $this->payrollRepo->find($id);
         if (!$payroll) {
             return response()->json(['success' => false, 'message' => __('Payroll not found.')], 404);
@@ -359,6 +379,8 @@ class PayrollController extends Controller
      */
     public function disburse(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.disburse'), 403);
+
         $payroll = $this->payrollRepo->find($id);
         if (!$payroll) {
             return response()->json(['success' => false, 'message' => __('Payroll not found.')], 404);
@@ -380,6 +402,8 @@ class PayrollController extends Controller
      */
     public function cancel(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.cancel'), 403);
+
         $request->validate(['reason' => 'required|string|max:1000']);
 
         $payroll = $this->payrollRepo->find($id);
@@ -403,6 +427,8 @@ class PayrollController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.delete'), 403);
+
         $payroll = $this->payrollRepo->find($id);
         if (!$payroll) {
             return response()->json(['success' => false, 'message' => __('Payroll not found.')], 404);
@@ -424,6 +450,8 @@ class PayrollController extends Controller
      */
     public function getItem(int $id, int $itemId): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $item = $this->payrollRepo->findItem($itemId);
         if (!$item || $item->payroll_id != $id) {
             return response()->json(['success' => false, 'message' => __('Item not found.')], 404);
@@ -458,6 +486,8 @@ class PayrollController extends Controller
      */
     public function updateItem(UpdatePayrollItemRequest $request, int $id, int $itemId): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.edit'), 403);
+
         $item = $this->payrollRepo->findItem($itemId);
         if (!$item || $item->payroll_id != $id) {
             return response()->json(['success' => false, 'message' => __('Item not found.')], 404);
@@ -480,6 +510,8 @@ class PayrollController extends Controller
      */
     public function payslip(int $id, int $itemId): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.payrolls.view'), 403);
+
         $item = $this->payrollRepo->findItem($itemId);
         if (!$item || $item->payroll_id != $id) {
             return response()->json(['success' => false, 'message' => __('Item not found.')], 404);
@@ -537,6 +569,8 @@ class PayrollController extends Controller
      */
     public function exportWps(int $id)
     {
+        abort_if(! auth()->user()->can('hr.payrolls.export-wps'), 403);
+
         $payroll = $this->payrollRepo->findWithDetails($id);
         if (!$payroll) {
             abort(404, __('Payroll run not found.'));

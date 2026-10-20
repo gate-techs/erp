@@ -15,6 +15,7 @@ class StudentAndFeesPermissionSeeder extends Seeder
 
         $permissions = [
             // Fees & Packages
+            'academic.fee-statistics.view',
             'academic.fee-types.view',
             'academic.fee-types.create',
             'academic.fee-types.edit',
@@ -27,6 +28,8 @@ class StudentAndFeesPermissionSeeder extends Seeder
             'academic.fees.toggle-status',
             'academic.student-fees.view',
             'academic.student-fees.create',
+            'academic.student-fees.edit',
+            'academic.student-fees.delete',
             'academic.student-fees.payments.create',
             'nursery.packages.view',
             'nursery.packages.create',

@@ -8,7 +8,9 @@
         <h4 class="fw-bold mb-1 d-flex align-items-center gap-2"><i class="icon-base bx bx-box text-primary font-24"></i><span>{{ __('Items') }}</span></h4>
         <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li><li class="breadcrumb-item"><a href="{{ route('inventory.index') }}">{{ __('Inventory') }}</a></li><li class="breadcrumb-item active">{{ __('Items') }}</li></ol></nav>
     </div>
+    @can('inventory.items.create')
     <button type="button" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm" id="btnAddItem"><i class="icon-base bx bx-plus font-18"></i>{{ __('Add New Item') }}</button>
+    @endcan
 </div>
 
 <div id="alertContainer">@if(session('success'))<div class="alert alert-success alert-dismissible d-flex align-items-center mb-4" role="alert"><i class="icon-base bx bx-check-circle me-2 font-20"></i><div>{{ session('success') }}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>@endif</div>

@@ -20,10 +20,12 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
+        @can('hr.payrolls.create')
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasGeneratePayroll" aria-controls="offcanvasGeneratePayroll">
             <i class="icon-base bx bx-calculator font-18"></i>
             <span>{{ __('Generate New Payroll') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 

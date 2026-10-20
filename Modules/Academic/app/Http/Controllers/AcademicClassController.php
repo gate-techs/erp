@@ -25,6 +25,8 @@ class AcademicClassController extends Controller
 
     public function index(): View
     {
+        abort_if(!auth()->user()->can('academic.classes.view'), 403);
+
         $institutions = Nursery::with('translations')->get();
         $branches = NurseryBranch::with('translations')->get();
         $academicYears = AcademicYear::with('translations')->get();
@@ -42,6 +44,8 @@ class AcademicClassController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->addColumn('name', function (AcademicClass $item) {
@@ -71,7 +75,11 @@ class AcademicClassController extends Controller
                     '</div>';
                 }
 
-                return '<div class="d-flex align-items-center">' . $avatar . '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-class" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button></div>';
+                $canEdit = auth()->user()?->can('academic.classes.edit');
+                if ($canEdit) {
+                    return '<div class="d-flex align-items-center">' . $avatar . '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-class" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button></div>';
+                }
+                return '<div class="d-flex align-items-center">' . $avatar . '<span class="fw-semibold text-heading">' . e($name) . '</span></div>';
             })
             ->addColumn('institution_name', fn (AcademicClass $item) => e($item->institution?->name ?? '-'))
             ->addColumn('branch_name', fn (AcademicClass $item) => e(
@@ -107,6 +115,8 @@ class AcademicClassController extends Controller
 
     public function store(StoreAcademicClassRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.create'), 403);
+
         $academicClass = $this->service->createAcademicClass(
             $request->validated(),
             auth()->id()
@@ -122,6 +132,8 @@ class AcademicClassController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.view'), 403);
+
         $academicClass = $this->service->getAcademicClass($id);
 
         if (!$academicClass) {
@@ -139,6 +151,8 @@ class AcademicClassController extends Controller
 
     public function update(UpdateAcademicClassRequest $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.edit'), 403);
+
         $academicClass = $this->service->updateAcademicClass($id, $request->validated());
 
         return $this->respond(
@@ -150,6 +164,8 @@ class AcademicClassController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.delete'), 403);
+
         $this->service->deleteAcademicClass($id);
 
         return $this->respond($request, __('Academic class deleted successfully.'));
@@ -157,6 +173,8 @@ class AcademicClassController extends Controller
 
     public function toggleStatus(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.classes.toggle-status'), 403);
+
         $academicClass = $this->service->toggleStatus($id);
 
         return $this->respond(
@@ -201,6 +219,15 @@ class AcademicClassController extends Controller
 
     private function actionsColumn(AcademicClass $academicClass): string
     {
+        $user = auth()->user();
+        $canEdit = $user?->can('academic.classes.edit');
+        $canToggle = $user?->can('academic.classes.toggle-status');
+        $canDelete = $user?->can('academic.classes.delete');
+
+        if (!$canEdit && !$canToggle && !$canDelete) {
+            return '<span class="text-muted">-</span>';
+        }
+
         $name = e(
             $academicClass->translate(app()->getLocale())?->name
                 ?? $academicClass->translate('ar')?->name
@@ -208,20 +235,32 @@ class AcademicClassController extends Controller
                 ?? __('Academic Class')
         );
 
-        return '<div class="d-inline-flex gap-1">
-            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-class"
+        $buttons = '<div class="d-inline-flex gap-1">';
+
+        if ($canEdit) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-class"
                 data-id="' . $academicClass->id . '" title="' . e(__('Edit')) . '">
                 <i class="icon-base bx bx-edit"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-class-status"
+            </button>';
+        }
+
+        if ($canToggle) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-class-status"
                 data-id="' . $academicClass->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-class"
+            </button>';
+        }
+
+        if ($canDelete) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-class"
                 data-id="' . $academicClass->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '">
                 <i class="icon-base bx bx-trash"></i>
-            </button>
-        </div>';
+            </button>';
+        }
+
+        $buttons .= '</div>';
+
+        return $buttons;
     }
 
     private function respond(

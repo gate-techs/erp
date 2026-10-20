@@ -106,6 +106,74 @@
             </button>
         </form>
     </div>
+
+    <!-- 3. Legal & Privacy Policy Link (Apple App Store Requirement) -->
+    <div class="security-form-card mt-3" style="padding: 14px 16px;">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bx bx-shield-quarter text-primary fs-4"></i>
+                <div>
+                    <h4 class="m-0 fs-6 fw-bold text-dark">{{ __('Privacy Policy & Data Protection') }}</h4>
+                    <p class="m-0 text-muted" style="font-size: 11.5px;">{{ __('Review how ALA ORBIT protects your personal data') }}</p>
+                </div>
+            </div>
+            <a href="{{ route('portal.privacy') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 12px; font-weight: 700;">
+                {{ __('View') }}
+            </a>
+        </div>
+    </div>
+
+    <!-- 4. Account Deletion & Data Rights (Apple Guideline 5.1.1(v)) -->
+    <div class="security-danger-card mt-3">
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bx bx-error-circle text-danger fs-4"></i>
+            <h4 class="m-0 fs-6 fw-bold text-danger">{{ __('Account Deletion & Data Rights') }}</h4>
+        </div>
+        <p class="danger-card-desc mb-3">
+            {{ __('In accordance with privacy standards, you can request account deactivation and data purging from our HR system. This action requires current password verification.') }}
+        </p>
+        <button type="button" class="btn-delete-account" onclick="openDeleteAccountModal()">
+            <i class="bx bx-trash"></i>
+            <span>{{ __('Request Account Deletion') }}</span>
+        </button>
+    </div>
+</div>
+
+<!-- Account Deletion Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-2">
+                    <i class="bx bx-error-circle fs-3"></i>
+                    {{ __('Request Account Deletion') }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted" style="font-size: 13px;">
+                    {{ __('Please enter your current password to confirm account deactivation and data purge request. Your active sessions will be terminated.') }}
+                </p>
+                <form id="deleteAccountForm" onsubmit="submitDeleteAccount(event)">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 12.5px;">{{ __('Current Password') }} <span class="text-danger">*</span></label>
+                        <input type="password" id="delCurrentPassword" name="password" class="form-control" required placeholder="{{ __('Enter current password') }}" style="border-radius: 12px; font-size: 13.5px;" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 12.5px;">{{ __('Reason for Leaving (Optional)') }}</label>
+                        <textarea id="delReason" name="reason" class="form-control" rows="2" placeholder="{{ __('Optional notes for HR administration...') }}" style="border-radius: 12px; font-size: 13px;"></textarea>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" id="btnConfirmDeleteAccount" class="btn btn-danger rounded-pill px-4 fw-bold">
+                            {{ __('Confirm Deletion Request') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('styles')
@@ -432,6 +500,44 @@
     .btn-save-password:not(:disabled):active {
         transform: scale(0.98);
     }
+
+    /* Danger Card for Account Deletion */
+    .security-danger-card {
+        background: #FFF5F5;
+        border: 1px solid #FECACA;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.05);
+    }
+
+    .danger-card-desc {
+        font-size: 12.5px;
+        color: #7F1D1D;
+        line-height: 1.6;
+    }
+
+    .btn-delete-account {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: #DC2626;
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        padding: 11px 16px;
+        font-size: 13.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+    }
+
+    .btn-delete-account:active {
+        transform: scale(0.98);
+        background: #B91C1C;
+    }
 </style>
 @endpush
 
@@ -481,7 +587,7 @@
                         publicKey: {
                             challenge: challenge,
                             rp: {
-                                name: "{{ config('app.name', 'Astro Leaders') }}",
+                                name: "{{ config('app.name', 'ALA ORBIT') }}",
                                 id: window.location.hostname
                             },
                             user: {
@@ -617,6 +723,59 @@
             alert('⚠️ {{ __("Connection error with server") }}');
             saveBtn.disabled = false;
             saveBtn.innerHTML = '<i class="bx bx-check-shield"></i> <span>{{ __("Save New Password") }}</span>';
+        }
+    }
+
+    // Account Deletion Handlers (Apple Guideline 5.1.1(v))
+    let deleteModalInstance = null;
+    function openDeleteAccountModal() {
+        const modalEl = document.getElementById('deleteAccountModal');
+        if (modalEl) {
+            deleteModalInstance = new bootstrap.Modal(modalEl);
+            deleteModalInstance.show();
+        }
+    }
+
+    async function submitDeleteAccount(event) {
+        event.preventDefault();
+        const pwd = document.getElementById('delCurrentPassword').value;
+        const reason = document.getElementById('delReason').value;
+        const btn = document.getElementById('btnConfirmDeleteAccount');
+
+        if (!pwd) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> {{ __("Processing...") }}';
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+            const response = await fetch("{{ route('portal.profile.security.deleteAccount') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ password: pwd, reason: reason })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                alert('✅ ' + data.message);
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                }
+            } else {
+                alert('⚠️ ' + (data.message || '{{ __("Failed to process account deletion request.") }}'));
+                btn.disabled = false;
+                btn.innerHTML = '{{ __("Confirm Deletion Request") }}';
+            }
+        } catch (err) {
+            console.error('Account deletion error:', err);
+            alert('⚠️ {{ __("Connection error with server") }}');
+            btn.disabled = false;
+            btn.innerHTML = '{{ __("Confirm Deletion Request") }}';
         }
     }
 </script>

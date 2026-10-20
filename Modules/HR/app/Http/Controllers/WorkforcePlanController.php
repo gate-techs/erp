@@ -35,6 +35,8 @@ class WorkforcePlanController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.view'), 403);
+
         $kpis        = $this->planService->getKPIs();
         $years       = WorkforcePlan::select('year')->distinct()->orderByDesc('year')->pluck('year');
         if ($years->isEmpty()) {
@@ -50,6 +52,8 @@ class WorkforcePlanController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.view'), 403);
+
         $query = $this->planRepository->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -96,25 +100,30 @@ class WorkforcePlanController extends Controller
                 ';
             })
             ->addColumn('actions', function (WorkforcePlan $plan) {
-                $btnShow = '<a href="' . route('hr.workforce-plans.show', $plan->id) . '" class="btn btn-sm btn-icon btn-outline-info" title="' . __('View Plan') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+                $btnShow = '';
+                if ($user->can('hr.workforce-plans.view')) {
+                    $btnShow = '<a href="' . route('hr.workforce-plans.show', $plan->id) . '" class="btn btn-sm btn-icon btn-outline-info" title="' . __('View Plan') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $btnEdit = '';
-                if ($plan->status === WorkforcePlanStatus::DRAFT) {
+                if ($plan->status === WorkforcePlanStatus::DRAFT && $user->can('hr.workforce-plans.edit')) {
                     $btnEdit = '<a href="' . route('hr.workforce-plans.edit', $plan->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Edit Plan') . '">
                                     <i class="bx bx-edit font-16"></i>
                                 </a>';
                 }
 
                 $btnDelete = '';
-                if ($plan->status === WorkforcePlanStatus::DRAFT) {
+                if ($plan->status === WorkforcePlanStatus::DRAFT && $user->can('hr.workforce-plans.delete')) {
                     $btnDelete = '<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete-plan" data-id="' . $plan->id . '" data-title="' . e($plan->title) . '" title="' . __('Delete') . '">
                                     <i class="bx bx-trash font-16"></i>
                                   </button>';
                 }
 
-                return '<div class="d-flex align-items-center gap-1">' . $btnShow . $btnEdit . $btnDelete . '</div>';
+                $buttons = $btnShow . $btnEdit . $btnDelete;
+                return $buttons ? '<div class="d-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['plan_info', 'duration', 'target_headcount', 'budgeted_cost', 'status_badge', 'fulfillment', 'actions'])
             ->make(true);
@@ -125,6 +134,8 @@ class WorkforcePlanController extends Controller
      */
     public function create(): View
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.create'), 403);
+
         $departments = Department::with('translations')->orderBy('id')->get();
         $jobTitles   = JobTitle::with('translations')->orderBy('id')->get();
         $branches    = NurseryBranch::with('translations')->latest('id')->get();
@@ -147,6 +158,8 @@ class WorkforcePlanController extends Controller
      */
     public function store(StoreWorkforcePlanRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.create'), 403);
+
         try {
             $plan = $this->planService->createPlan(
                 $request->safe()->except('items'),
@@ -170,6 +183,8 @@ class WorkforcePlanController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.view'), 403);
+
         $plan = $this->planRepository->findById($id);
 
         if (!$plan) {
@@ -184,6 +199,8 @@ class WorkforcePlanController extends Controller
      */
     public function edit(int $id): View|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.edit'), 403);
+
         $plan = $this->planRepository->findById($id);
 
         if (!$plan) {
@@ -219,6 +236,8 @@ class WorkforcePlanController extends Controller
      */
     public function update(UpdateWorkforcePlanRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.edit'), 403);
+
         try {
             $plan = $this->planService->updatePlan(
                 $id,
@@ -242,6 +261,8 @@ class WorkforcePlanController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.delete'), 403);
+
         try {
             $this->planService->deletePlan($id);
             return response()->json(['success' => true, 'message' => __('Workforce Plan deleted successfully.')]);
@@ -255,6 +276,8 @@ class WorkforcePlanController extends Controller
      */
     public function submit(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.submit'), 403);
+
         try {
             $this->planService->submitPlan($id);
             return back()->with('success', __('Workforce Plan submitted for approval successfully.'));
@@ -268,6 +291,8 @@ class WorkforcePlanController extends Controller
      */
     public function approve(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.approve'), 403);
+
         try {
             $this->planService->approvePlan($id, Auth::id());
             return back()->with('success', __('Workforce Plan approved successfully.'));
@@ -281,6 +306,8 @@ class WorkforcePlanController extends Controller
      */
     public function activate(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.activate'), 403);
+
         try {
             $this->planService->activatePlan($id);
             return back()->with('success', __('Workforce Plan activated successfully.'));
@@ -294,6 +321,8 @@ class WorkforcePlanController extends Controller
      */
     public function close(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.close'), 403);
+
         try {
             $this->planService->closePlan($id);
             return back()->with('success', __('Workforce Plan closed successfully.'));
@@ -307,6 +336,8 @@ class WorkforcePlanController extends Controller
      */
     public function recalculateHeadcount(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.recalculate'), 403);
+
         try {
             $plan = $this->planRepository->findById($id);
             if (!$plan) {
@@ -324,6 +355,8 @@ class WorkforcePlanController extends Controller
      */
     public function getLiveHeadcount(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.workforce-plans.view'), 403);
+
         $deptId   = (int) $request->input('department_id');
         $jobId    = (int) $request->input('job_title_id');
         $branchId = $request->filled('branch_id') ? (int) $request->input('branch_id') : null;

@@ -26,6 +26,8 @@ class JobOfferController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.view'), 403);
+
         $selectedOpeningId  = $request->get('job_opening_id');
         $selectedStatus     = $request->get('status');
         $selectedDepartment = $request->get('department_id');
@@ -48,6 +50,8 @@ class JobOfferController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.view'), 403);
+
         $filters = $request->only(['status', 'department_id', 'job_opening_id']);
         $query = $this->repository->getDataTableQuery($filters);
         $settingCurrency = \Modules\Settings\Models\Setting::instance()->currency ?? 'KWD';
@@ -121,19 +125,24 @@ class JobOfferController extends Controller
                 return '<span class="font-12 ' . $cls . '">' . $item->expiry_date->format('Y-m-d') . '</span>';
             })
             ->addColumn('actions', function (JobOffer $item) {
-                $showBtn = '<a href="' . route('hr.job-offers.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View / Print Offer') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+
+                $showBtn = '';
+                if ($user->can('hr.job-offers.view')) {
+                    $showBtn = '<a href="' . route('hr.job-offers.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View / Print Offer') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $editBtn = '';
-                if (in_array($item->status, [JobOfferStatus::DRAFT, JobOfferStatus::PENDING_APPROVAL])) {
+                if (in_array($item->status, [JobOfferStatus::DRAFT, JobOfferStatus::PENDING_APPROVAL]) && $user->can('hr.job-offers.edit')) {
                     $editBtn = '<a href="' . route('hr.job-offers.edit', $item->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Edit') . '">
                                     <i class="bx bx-edit font-16"></i>
                                 </a>';
                 }
 
                 $deleteBtn = '';
-                if ($item->status === JobOfferStatus::DRAFT) {
+                if ($item->status === JobOfferStatus::DRAFT && $user->can('hr.job-offers.delete')) {
                     $deleteBtn = '<form action="' . route('hr.job-offers.destroy', $item->id) . '" method="POST" class="d-inline delete-offer-form">
                                     ' . csrf_field() . method_field('DELETE') . '
                                     <button type="submit" class="btn btn-sm btn-icon btn-outline-danger btn-delete-offer" title="' . __('Delete') . '">
@@ -142,9 +151,8 @@ class JobOfferController extends Controller
                                   </form>';
                 }
 
-                return '<div class="d-flex align-items-center justify-content-center gap-1">
-                            ' . $showBtn . $editBtn . $deleteBtn . '
-                        </div>';
+                $buttons = $showBtn . $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-flex align-items-center justify-content-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['offer_code_info', 'candidate_info', 'opening_info', 'position_info', 'compensation_info', 'status_badge', 'expiry_info', 'actions'])
             ->make(true);
@@ -152,6 +160,8 @@ class JobOfferController extends Controller
 
     public function create(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.create'), 403);
+
         $applicationId = $request->get('application_id');
         $prefilledApp  = null;
 
@@ -188,6 +198,8 @@ class JobOfferController extends Controller
 
     public function store(StoreJobOfferRequest $request)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.create'), 403);
+
         $application = JobApplication::with('jobOpening')->findOrFail($request->job_application_id);
 
         $data = $request->validated();
@@ -202,6 +214,8 @@ class JobOfferController extends Controller
 
     public function show(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.view'), 403);
+
         $offer = $this->repository->findWithRelations($id);
         if (!$offer) {
             abort(404, __('Job Offer not found.'));
@@ -212,6 +226,8 @@ class JobOfferController extends Controller
 
     public function edit(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.edit'), 403);
+
         $offer = $this->repository->findWithRelations($id);
         if (!$offer) {
             abort(404, __('Job Offer not found.'));
@@ -229,6 +245,8 @@ class JobOfferController extends Controller
 
     public function update(UpdateJobOfferRequest $request, int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.edit'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->updateOffer($offer, $request->validated());
 
@@ -238,6 +256,8 @@ class JobOfferController extends Controller
 
     public function submitForApproval(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.submit'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->submitForApproval($offer);
 
@@ -249,6 +269,8 @@ class JobOfferController extends Controller
 
     public function approve(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.approve'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->approveOffer($offer, auth()->id() ?? 1);
 
@@ -260,6 +282,8 @@ class JobOfferController extends Controller
 
     public function send(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.send'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->sendOffer($offer);
 
@@ -271,6 +295,8 @@ class JobOfferController extends Controller
 
     public function accept(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.accept'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->acceptOffer($offer);
 
@@ -282,6 +308,8 @@ class JobOfferController extends Controller
 
     public function decline(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.decline'), 403);
+
         $request->validate(['rejection_reason' => 'nullable|string|max:500']);
         $offer = JobOffer::findOrFail($id);
         $this->service->declineOffer($offer, $request->rejection_reason);
@@ -294,6 +322,8 @@ class JobOfferController extends Controller
 
     public function cancel(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-offers.cancel'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $this->service->cancelOffer($offer);
 
@@ -305,6 +335,8 @@ class JobOfferController extends Controller
 
     public function destroy(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-offers.delete'), 403);
+
         $offer = JobOffer::findOrFail($id);
         $offer->delete();
 

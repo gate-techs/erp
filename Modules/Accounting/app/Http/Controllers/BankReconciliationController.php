@@ -100,32 +100,43 @@ class BankReconciliationController extends Controller
                 return '<span class="badge ' . $item->status->badgeClass() . ' d-inline-flex align-items-center">' . e($item->status->label()) . '</span>';
             })
             ->addColumn('actions', function (BankReconciliation $item) {
+                $user = auth()->user();
                 $showUrl = route('accounting.bank-reconciliations.show', $item->id);
                 $editUrl = route('accounting.bank-reconciliations.edit', $item->id);
                 $printUrl = route('accounting.bank-reconciliations.print', $item->id);
 
                 $actions = '<div class="d-inline-flex gap-1">';
 
-                $actions .= '<a href="' . $printUrl . '" target="_blank" class="btn btn-icon btn-sm btn-outline-secondary" title="' . __('Print Statement') . '">
-                    <i class="icon-base bx bx-printer"></i>
-                </a>';
+                if ($user->can('accounting.bank-reconciliations.print')) {
+                    $actions .= '<a href="' . $printUrl . '" target="_blank" class="btn btn-icon btn-sm btn-outline-secondary" title="' . __('Print Statement') . '">
+                        <i class="icon-base bx bx-printer"></i>
+                    </a>';
+                }
 
-                $actions .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View') . '">
-                    <i class="icon-base bx bx-show"></i>
-                </a>';
+                if ($user->can('accounting.bank-reconciliations.view')) {
+                    $actions .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View') . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </a>';
+                }
 
                 if ($item->isDraft() || $item->status === BankReconciliationStatus::IN_PROGRESS) {
-                    $actions .= '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit / Reconcile') . '">
-                        <i class="icon-base bx bx-edit"></i>
-                    </a>';
+                    if ($user->can('accounting.bank-reconciliations.edit')) {
+                        $actions .= '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit / Reconcile') . '">
+                            <i class="icon-base bx bx-edit"></i>
+                        </a>';
+                    }
 
-                    $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-rec" data-id="' . $item->id . '" data-number="' . e($item->reconciliation_number) . '" title="' . __('Delete') . '">
-                        <i class="icon-base bx bx-trash"></i>
-                    </button>';
+                    if ($user->can('accounting.bank-reconciliations.delete')) {
+                        $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-rec" data-id="' . $item->id . '" data-number="' . e($item->reconciliation_number) . '" title="' . __('Delete') . '">
+                            <i class="icon-base bx bx-trash"></i>
+                        </button>';
+                    }
                 } else if ($item->isCompleted()) {
-                    $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reopen-rec" data-id="' . $item->id . '" title="' . __('Reopen to Draft') . '">
-                        <i class="icon-base bx bx-lock-open"></i>
-                    </button>';
+                    if ($user->can('accounting.bank-reconciliations.reopen')) {
+                        $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reopen-rec" data-id="' . $item->id . '" title="' . __('Reopen to Draft') . '">
+                            <i class="icon-base bx bx-lock-open"></i>
+                        </button>';
+                    }
                 }
 
                 $actions .= '</div>';

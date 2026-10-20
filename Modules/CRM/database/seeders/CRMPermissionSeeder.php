@@ -20,6 +20,11 @@ class CRMPermissionSeeder extends Seeder
         $guardName = 'web';
 
         $screens = [
+            // 0. إحصائيات الطلبات (Dashboard)
+            'crm_dashboard' => [
+                'crm.dashboard.view' => 'عرض إحصائيات ولوحة تحكم علاقات العملاء',
+            ],
+
             // 1. العملاء المحتملين (Leads)
             'crm_leads' => [
                 'crm.leads.view'   => 'عرض قائمة العملاء المحتملين',

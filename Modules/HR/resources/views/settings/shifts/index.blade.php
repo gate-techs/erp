@@ -46,12 +46,14 @@
                 <p class="text-muted mb-0 small">{{ __('Manage company working shifts, hours, grace periods, and attendance windows.') }}</p>
             </div>
 
+            @can('hr.settings.shifts.create')
             <div>
                 <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm w-100 w-sm-auto" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddShift" aria-controls="offcanvasAddShift">
                     <i class="icon-base bx bx-plus font-18"></i>
                     <span>{{ __('Add New Shift') }}</span>
                 </button>
             </div>
+            @endcan
         </div>
 
         <!-- Shifts Server-Side DataTable Card -->

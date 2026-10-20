@@ -124,27 +124,34 @@ class CashAccountController extends Controller
                 return '<span class="badge bg-label-danger d-inline-flex align-items-center"><i class="icon-base bx bx-x-circle me-1 font-12"></i>' . __('Inactive') . '</span>';
             })
             ->addColumn('actions', function (CashAccount $item) {
+                $user = auth()->user();
                 $locale = app()->getLocale();
                 $name = $item->translate($locale)?->name ?? $item->code;
                 $editUrl = route('accounting.cash-accounts.edit', $item->id);
                 $showUrl = route('accounting.cash-accounts.show', $item->id);
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View') . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </a>
-                        <a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </a>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-status" data-id="' . $item->id . '" title="' . __('Change Status') . '">
-                            <i class="icon-base bx bx-power-off"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete" data-id="' . $item->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $showBtn = '';
+                if ($user->can('accounting.cash-accounts.view')) {
+                    $showBtn = '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View') . '"><i class="icon-base bx bx-show"></i></a>';
+                }
+
+                $editBtn = '';
+                if ($user->can('accounting.cash-accounts.edit')) {
+                    $editBtn = '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '"><i class="icon-base bx bx-edit"></i></a>';
+                }
+
+                $toggleBtn = '';
+                if ($user->can('accounting.cash-accounts.toggle-status')) {
+                    $toggleBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-status" data-id="' . $item->id . '" title="' . __('Change Status') . '"><i class="icon-base bx bx-power-off"></i></button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.cash-accounts.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete" data-id="' . $item->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                $buttons = $showBtn . $editBtn . $toggleBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['account_info', 'entity_name', 'type_badge', 'gl_account', 'responsible_person', 'currency_display', 'status_badge', 'actions'])
             ->make(true);

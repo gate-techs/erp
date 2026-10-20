@@ -20,6 +20,7 @@
         </div>
     </div>
 
+    @can('nursery.create')
     <div class="mt-3 mt-md-0">
         <!-- Button that opens the Side Offcanvas matching the user's design -->
         <button type="button" class="btn btn-primary btn-sm nursery-page-btn d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddNursery" aria-controls="offcanvasAddNursery">
@@ -27,6 +28,7 @@
             <span>{{ __('Add New') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 
@@ -69,6 +71,7 @@
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add New Nursery (Form from the side matching the image)     -->
 <!-- ========================================================================= -->
+@can('nursery.create')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasAddNursery" aria-labelledby="offcanvasAddNurseryLabel" style="width: 480px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasAddNurseryLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -270,10 +273,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Nursery                                                -->
 <!-- ========================================================================= -->
+@can('nursery.edit')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasEditNursery" aria-labelledby="offcanvasEditNurseryLabel" style="width: 480px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasEditNurseryLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -406,10 +411,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 3. Modal: Delete Nursery Confirmation                                     -->
 <!-- ========================================================================= -->
+@can('nursery.delete')
 <div class="modal fade" id="deleteNurseryModal" tabindex="-1" aria-labelledby="deleteNurseryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <form id="deleteNurseryForm" method="POST" class="modal-content">
@@ -433,10 +440,15 @@
         </form>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('page-script')
 <script>
+const canEditNursery = @json(auth()->user()->can('nursery.edit'));
+const canDeleteNursery = @json(auth()->user()->can('nursery.delete'));
+const canToggleNursery = @json(auth()->user()->can('nursery.toggle-status'));
+
 // Image preview functions
 function previewAddImage(input) {
     if (input.files && input.files[0]) {
@@ -530,10 +542,15 @@ window.addEventListener('load', function () {
                 data: 'status', 
                 name: 'status',
                 className: 'text-center',
-                render: (data, type, row) => `
-                    <button type="button" class="btn btn-sm btn-toggle-status ${row.status_badge || 'bg-label-success'} border-0" data-id="${row.id}" title="{{ __('Click to toggle') }}">
-                        ${row.status_label || data}
-                    </button>`
+                render: (data, type, row) => {
+                    if (canToggleNursery) {
+                        return `
+                            <button type="button" class="btn btn-sm btn-toggle-status ${row.status_badge || 'bg-label-success'} border-0" data-id="${row.id}" title="{{ __('Click to toggle') }}">
+                                ${row.status_label || data}
+                            </button>`;
+                    }
+                    return `<span class="badge ${row.status_badge || 'bg-label-success'}">${row.status_label || data}</span>`;
+                }
             },
             { 
                 data: 'created_at', 
@@ -544,34 +561,44 @@ window.addEventListener('load', function () {
             { 
                 data: null, 
                 orderable: false, 
-                searchable: false,
+                searchable: false, 
                 className: 'text-center',
-                render: (data, type, row) => `
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-nursery"
-                                title="{{ __('Edit') }}"
-                                data-id="${row.id}"
-                                data-name-ar="${row.name_ar || ''}"
-                                data-name-en="${row.name_en || ''}"
-                                data-desc-ar="${row.description_ar || ''}"
-                                data-desc-en="${row.description_en || ''}"
-                                data-employee-id="${row.employee_id || ''}"
-                                data-gov-id="${row.government_id || ''}"
-                                data-whatsapp="${row.whatsapp || ''}"
-                                data-email="${row.email || ''}"
-                                data-lat="${row.lat || ''}"
-                                data-lng="${row.lng || ''}"
-                                data-status="${row.status || 'active'}"
-                                data-image="${row.image_url || ''}">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-nursery"
-                                title="{{ __('Delete') }}"
-                                data-id="${row.id}"
-                                data-name="${row.name_ar}">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>`
+                render: (data, type, row) => {
+                    let buttons = '';
+                    if (canEditNursery) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-nursery"
+                                    title="{{ __('Edit') }}"
+                                    data-id="${row.id}"
+                                    data-name-ar="${row.name_ar || ''}"
+                                    data-name-en="${row.name_en || ''}"
+                                    data-desc-ar="${row.description_ar || ''}"
+                                    data-desc-en="${row.description_en || ''}"
+                                    data-employee-id="${row.employee_id || ''}"
+                                    data-gov-id="${row.government_id || ''}"
+                                    data-whatsapp="${row.whatsapp || ''}"
+                                    data-email="${row.email || ''}"
+                                    data-lat="${row.lat || ''}"
+                                    data-lng="${row.lng || ''}"
+                                    data-status="${row.status || 'active'}"
+                                    data-image="${row.image_url || ''}">
+                                <i class="icon-base bx bx-edit-alt"></i>
+                            </button>`;
+                    }
+                    if (canDeleteNursery) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-nursery"
+                                    title="{{ __('Delete') }}"
+                                    data-id="${row.id}"
+                                    data-name="${row.name_ar}">
+                                <i class="icon-base bx bx-trash"></i>
+                            </button>`;
+                    }
+                    if (!buttons) {
+                        return '<span class="text-muted">-</span>';
+                    }
+                    return `<div class="d-inline-flex gap-1">${buttons}</div>`;
+                }
             }
         ],
         order: [[0, 'asc']]

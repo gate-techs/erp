@@ -28,6 +28,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.view'), 403);
+
         $departments = Department::query()->active()->get();
 
         return view('tasks::task_groups.index', compact('departments'));
@@ -36,6 +38,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.view'), 403);
+
         $query = $this->taskGroupService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -57,40 +61,49 @@ class TaskGroupController extends Controller
             })
             ->editColumn('is_active', function (TaskGroup $group) {
                 $checked = $group->is_active ? 'checked' : '';
+                $canToggle = auth()->user()->can('tasks.task-groups.toggle-status');
+                $actionClass = $canToggle ? 'btn-toggle-status' : 'pe-none opacity-75';
+
                 return '<div class="form-check form-switch d-inline-block">
-                    <input class="form-check-input btn-toggle-status" type="checkbox" data-id="' . $group->id . '" ' . $checked . '>
+                    <input class="form-check-input ' . $actionClass . '" type="checkbox" data-id="' . $group->id . '" ' . $checked . ' ' . ($canToggle ? '' : 'disabled') . '>
                 </div>';
             })
             ->addColumn('actions', function (TaskGroup $group) {
-                $buttons = '<div class="d-inline-flex gap-1">';
+                $user = auth()->user();
+                $buttons = '';
                 
-                $buttons .= '<a href="' . route('tasks.task-groups.show', $group->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('Tasks') . '">
-                    <i class="icon-base bx bx-task"></i>
-                </a>';
+                if ($user->can('tasks.view')) {
+                    $buttons .= '<a href="' . route('tasks.task-groups.show', $group->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('Tasks') . '">
+                        <i class="icon-base bx bx-task"></i>
+                    </a> ';
+                }
 
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-group"
-                    data-id="' . $group->id . '"
-                    data-name-ar="' . e($group->translateOrNew('ar')->name ?? '') . '"
-                    data-name-en="' . e($group->translateOrNew('en')->name ?? '') . '"
-                    data-desc-ar="' . e($group->translateOrNew('ar')->description ?? '') . '"
-                    data-desc-en="' . e($group->translateOrNew('en')->description ?? '') . '"
-                    data-department-id="' . ($group->department_id ?? '') . '"
-                    data-start-date="' . ($group->start_date?->format('Y-m-d') ?? '') . '"
-                    data-end-date="' . ($group->end_date?->format('Y-m-d') ?? '') . '"
-                    data-is-active="' . ($group->is_active ? '1' : '0') . '"
-                    title="' . __('Edit') . '">
-                    <i class="icon-base bx bx-edit-alt"></i>
-                </button>';
+                if ($user->can('tasks.task-groups.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-group"
+                        data-id="' . $group->id . '"
+                        data-name-ar="' . e($group->translateOrNew('ar')->name ?? '') . '"
+                        data-name-en="' . e($group->translateOrNew('en')->name ?? '') . '"
+                        data-desc-ar="' . e($group->translateOrNew('ar')->description ?? '') . '"
+                        data-desc-en="' . e($group->translateOrNew('en')->description ?? '') . '"
+                        data-department-id="' . ($group->department_id ?? '') . '"
+                        data-start-date="' . ($group->start_date?->format('Y-m-d') ?? '') . '"
+                        data-end-date="' . ($group->end_date?->format('Y-m-d') ?? '') . '"
+                        data-is-active="' . ($group->is_active ? '1' : '0') . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </button> ';
+                }
 
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-group"
-                    data-id="' . $group->id . '"
-                    data-name="' . e($group->name) . '"
-                    title="' . __('Delete') . '">
-                    <i class="icon-base bx bx-trash"></i>
-                </button>';
-                $buttons .= '</div>';
+                if ($user->can('tasks.task-groups.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-group"
+                        data-id="' . $group->id . '"
+                        data-name="' . e($group->name) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
 
-                return $buttons;
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->rawColumns(['name', 'department_name', 'start_date', 'end_date', 'remaining_days', 'is_active', 'actions'])
             ->make(true);
@@ -99,6 +112,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function store(StoreTaskGroupRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.create'), 403);
+
         $group = $this->taskGroupService->create($request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -116,6 +131,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function show(int $id): View|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.view'), 403);
+
         $group = $this->taskGroupService->getById($id);
 
         if (!$group) {
@@ -132,6 +149,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function edit(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.edit'), 403);
+
         $group = $this->taskGroupService->getById($id);
 
         if (!$group) {
@@ -157,6 +176,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function update(UpdateTaskGroupRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.edit'), 403);
+
         $group = $this->taskGroupService->getById($id);
 
         if (!$group) {
@@ -182,6 +203,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.delete'), 403);
+
         try {
             $group = $this->taskGroupService->getById($id);
 
@@ -214,6 +237,8 @@ class TaskGroupController extends Controller
     //-----------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.task-groups.toggle-status'), 403);
+
         $group = $this->taskGroupService->getById($id);
 
         if (!$group) {

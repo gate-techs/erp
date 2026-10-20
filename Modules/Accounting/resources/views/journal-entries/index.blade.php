@@ -17,9 +17,11 @@
             </ol>
         </nav>
     </div>
+    @can('accounting.journal-entries.create')
     <a href="{{ route('accounting.journal-entries.create') }}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
         <i class="icon-base bx bx-plus font-18"></i><span>{{ __('New Journal Entry') }}</span>
     </a>
+    @endcan
 </div>
 
 <div id="alertContainer">

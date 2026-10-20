@@ -29,6 +29,8 @@ class HRSettingController extends Controller
     //======================
     public function administrations(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.administrations.view'), 403);
+
         $counts   = $this->getCounts();
         $branches = NurseryBranch::with('translations')->latest('id')->get();
 
@@ -38,6 +40,8 @@ class HRSettingController extends Controller
     //======================
     public function administrationsData(): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.administrations.view'), 403);
+
         $query = Department::with(['translations', 'branch.translations'])
             ->whereNull('parent_id')
             ->latest('id');
@@ -71,6 +75,8 @@ class HRSettingController extends Controller
     //======================
     public function storeAdministration(Request $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.administrations.create'), 403);
+
         $request->validate([
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
@@ -99,6 +105,8 @@ class HRSettingController extends Controller
     //======================
     public function updateAdministration(Request $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.administrations.edit'), 403);
+
         $request->validate([
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
@@ -125,6 +133,8 @@ class HRSettingController extends Controller
     //======================
     public function destroyAdministration(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.administrations.delete'), 403);
+
         $admin = Department::whereNull('parent_id')->findOrFail($id);
         $admin->delete();
 
@@ -139,6 +149,8 @@ class HRSettingController extends Controller
     //======================
     public function departments(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.departments.view'), 403);
+
         $counts          = $this->getCounts();
         $branches        = NurseryBranch::with('translations')->latest('id')->get();
         $administrations = Department::with('translations')
@@ -152,6 +164,8 @@ class HRSettingController extends Controller
     //======================
     public function departmentsData(): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.departments.view'), 403);
+
         $query = Department::with(['translations', 'parent.translations', 'branch.translations'])
             ->whereNotNull('parent_id')
             ->latest('id');
@@ -187,6 +201,8 @@ class HRSettingController extends Controller
     //======================
     public function storeDepartment(Request $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.departments.create'), 403);
+
         $request->validate([
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
@@ -216,6 +232,8 @@ class HRSettingController extends Controller
     //======================
     public function updateDepartment(Request $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.departments.edit'), 403);
+
         $request->validate([
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
@@ -244,6 +262,8 @@ class HRSettingController extends Controller
     //======================
     public function destroyDepartment(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.departments.delete'), 403);
+
         $dept = Department::whereNotNull('parent_id')->findOrFail($id);
         $dept->delete();
 

@@ -19,6 +19,7 @@
         </nav>
     </div>
 
+    @can('nursery.branches.create')
     <div>
         <!-- Button that opens the Side Offcanvas matching the theme design -->
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddBranch" aria-controls="offcanvasAddBranch">
@@ -26,6 +27,7 @@
             <span>{{ __('Add New Branch') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Filters Card (الحضانة - المسؤول - المحافظة - الحالة) -->
@@ -109,6 +111,7 @@
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add New Branch                                              -->
 <!-- ========================================================================= -->
+@can('nursery.branches.create')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasAddBranch" aria-labelledby="offcanvasAddBranchLabel" style="width: 500px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasAddBranchLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -351,10 +354,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Branch                                                 -->
 <!-- ========================================================================= -->
+@can('nursery.branches.edit')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasEditBranch" aria-labelledby="offcanvasEditBranchLabel" style="width: 500px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasEditBranchLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -531,10 +536,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 3. Modal: Delete Branch Confirmation                                      -->
 <!-- ========================================================================= -->
+@can('nursery.branches.delete')
 <div class="modal fade" id="deleteBranchModal" tabindex="-1" aria-labelledby="deleteBranchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <form id="deleteBranchForm" method="POST" class="modal-content">
@@ -558,10 +565,15 @@
         </form>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('page-script')
 <script>
+const canEditBranch = @json(auth()->user()->can('nursery.branches.edit'));
+const canDeleteBranch = @json(auth()->user()->can('nursery.branches.delete'));
+const canToggleBranch = @json(auth()->user()->can('nursery.branches.toggle-status'));
+
 // Image preview functions
 function previewAddImage(input) {
     if (input.files && input.files[0]) {
@@ -694,10 +706,15 @@ window.addEventListener('load', function () {
                 data: 'status', 
                 name: 'status',
                 className: 'text-center',
-                render: (data, type, row) => `
-                    <button type="button" class="btn btn-sm btn-toggle-status ${row.status_badge || 'bg-label-success'} border-0" data-id="${row.id}" title="{{ __('Click to toggle') }}">
-                        ${row.status_label || data}
-                    </button>`
+                render: (data, type, row) => {
+                    if (canToggleBranch) {
+                        return `
+                            <button type="button" class="btn btn-sm btn-toggle-status ${row.status_badge || 'bg-label-success'} border-0" data-id="${row.id}" title="{{ __('Click to toggle') }}">
+                                ${row.status_label || data}
+                            </button>`;
+                    }
+                    return `<span class="badge ${row.status_badge || 'bg-label-success'}">${row.status_label || data}</span>`;
+                }
             },
             { 
                 data: 'created_at', 
@@ -708,38 +725,48 @@ window.addEventListener('load', function () {
             { 
                 data: null, 
                 orderable: false, 
-                searchable: false,
+                searchable: false, 
                 className: 'text-center',
-                render: (data, type, row) => `
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-branch"
-                                title="{{ __('Edit') }}"
-                                data-id="${row.id}"
-                                data-nursery-id="${row.nursery_id || ''}"
-                                data-name-ar="${row.name_ar || ''}"
-                                data-name-en="${row.name_en || ''}"
-                                data-desc-ar="${row.description_ar || ''}"
-                                data-desc-en="${row.description_en || ''}"
-                                data-address-ar="${row.address_ar || ''}"
-                                data-address-en="${row.address_en || ''}"
-                                data-employee-id="${row.employee_id || ''}"
-                                data-gov-id="${row.government_id || ''}"
-                                data-city-id="${row.city_id || ''}"
-                                data-whatsapp="${row.whatsapp || ''}"
-                                data-email="${row.email || ''}"
-                                data-lat="${row.lat || ''}"
-                                data-lng="${row.lng || ''}"
-                                data-status="${row.status || 'active'}"
-                                data-image="${row.image_url || ''}">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-branch"
-                                title="{{ __('Delete') }}"
-                                data-id="${row.id}"
-                                data-name="${row.name_ar}">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>`
+                render: (data, type, row) => {
+                    let buttons = '';
+                    if (canEditBranch) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-branch"
+                                    title="{{ __('Edit') }}"
+                                    data-id="${row.id}"
+                                    data-nursery-id="${row.nursery_id || ''}"
+                                    data-name-ar="${row.name_ar || ''}"
+                                    data-name-en="${row.name_en || ''}"
+                                    data-desc-ar="${row.description_ar || ''}"
+                                    data-desc-en="${row.description_en || ''}"
+                                    data-address-ar="${row.address_ar || ''}"
+                                    data-address-en="${row.address_en || ''}"
+                                    data-employee-id="${row.employee_id || ''}"
+                                    data-gov-id="${row.government_id || ''}"
+                                    data-city-id="${row.city_id || ''}"
+                                    data-whatsapp="${row.whatsapp || ''}"
+                                    data-email="${row.email || ''}"
+                                    data-lat="${row.lat || ''}"
+                                    data-lng="${row.lng || ''}"
+                                    data-status="${row.status || 'active'}"
+                                    data-image="${row.image_url || ''}">
+                                <i class="icon-base bx bx-edit-alt"></i>
+                            </button>`;
+                    }
+                    if (canDeleteBranch) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-branch"
+                                    title="{{ __('Delete') }}"
+                                    data-id="${row.id}"
+                                    data-name="${row.name_ar}">
+                                <i class="icon-base bx bx-trash"></i>
+                            </button>`;
+                    }
+                    if (!buttons) {
+                        return '<span class="text-muted">-</span>';
+                    }
+                    return `<div class="d-inline-flex gap-1">${buttons}</div>`;
+                }
             }
         ],
         order: [[0, 'asc']]

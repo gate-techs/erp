@@ -38,6 +38,8 @@ class JobRequisitionController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.view'), 403);
+
         $kpis        = $this->requisitionService->getKPIs();
         $departments = Department::with('translations')->orderBy('id')->get();
         $branches    = NurseryBranch::with('translations')->latest('id')->get();
@@ -53,6 +55,8 @@ class JobRequisitionController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.view'), 403);
+
         $query = $this->requisitionRepository->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -116,25 +120,30 @@ class JobRequisitionController extends Controller
                 return '<span class="badge ' . $priority->badgeClass() . '">' . $priority->label() . '</span>';
             })
             ->addColumn('actions', function (JobRequisition $item) {
-                $btnShow = '<a href="' . route('hr.job-requisitions.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-info" title="' . __('View Requisition') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+                $btnShow = '';
+                if ($user->can('hr.job-requisitions.view')) {
+                    $btnShow = '<a href="' . route('hr.job-requisitions.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-info" title="' . __('View Requisition') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $btnEdit = '';
-                if (in_array($item->status, [JobRequisitionStatus::DRAFT, JobRequisitionStatus::PENDING_APPROVAL])) {
+                if (in_array($item->status, [JobRequisitionStatus::DRAFT, JobRequisitionStatus::PENDING_APPROVAL]) && $user->can('hr.job-requisitions.edit')) {
                     $btnEdit = '<a href="' . route('hr.job-requisitions.edit', $item->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Edit') . '">
                                     <i class="bx bx-edit font-16"></i>
                                 </a>';
                 }
 
                 $btnDelete = '';
-                if ($item->status === JobRequisitionStatus::DRAFT) {
+                if ($item->status === JobRequisitionStatus::DRAFT && $user->can('hr.job-requisitions.delete')) {
                     $btnDelete = '<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete-requisition" data-id="' . $item->id . '" data-num="' . e($item->requisition_number) . '" title="' . __('Delete') . '">
                                     <i class="bx bx-trash font-16"></i>
                                   </button>';
                 }
 
-                return '<div class="d-flex align-items-center gap-1">' . $btnShow . $btnEdit . $btnDelete . '</div>';
+                $buttons = $btnShow . $btnEdit . $btnDelete;
+                return $buttons ? '<div class="d-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['requisition_info', 'type_badge', 'headcount', 'salary_range', 'status_badge', 'priority_badge', 'actions'])
             ->make(true);
@@ -145,6 +154,8 @@ class JobRequisitionController extends Controller
      */
     public function create(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.create'), 403);
+
         $departments   = Department::with('translations')->orderBy('id')->get();
         $jobTitles     = JobTitle::with('translations')->orderBy('id')->get();
         $branches      = NurseryBranch::with('translations')->latest('id')->get();
@@ -174,6 +185,8 @@ class JobRequisitionController extends Controller
      */
     public function store(StoreJobRequisitionRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.create'), 403);
+
         try {
             $req = $this->requisitionService->createRequisition(
                 $request->validated(),
@@ -196,6 +209,8 @@ class JobRequisitionController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.view'), 403);
+
         $requisition = $this->requisitionRepository->findById($id);
 
         if (!$requisition) {
@@ -210,6 +225,8 @@ class JobRequisitionController extends Controller
      */
     public function edit(int $id): View|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.edit'), 403);
+
         $requisition = $this->requisitionRepository->findById($id);
 
         if (!$requisition) {
@@ -249,6 +266,8 @@ class JobRequisitionController extends Controller
      */
     public function update(UpdateJobRequisitionRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.edit'), 403);
+
         try {
             $req = $this->requisitionService->updateRequisition($id, $request->validated());
 
@@ -268,6 +287,8 @@ class JobRequisitionController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.delete'), 403);
+
         try {
             $this->requisitionService->deleteRequisition($id);
             return response()->json(['success' => true, 'message' => __('Job Requisition deleted successfully.')]);
@@ -281,6 +302,8 @@ class JobRequisitionController extends Controller
      */
     public function submit(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.submit'), 403);
+
         try {
             $this->requisitionService->submitRequisition($id);
             return back()->with('success', __('Requisition submitted for approval successfully.'));
@@ -294,6 +317,8 @@ class JobRequisitionController extends Controller
      */
     public function approve(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.approve'), 403);
+
         try {
             $this->requisitionService->approveRequisition($id, Auth::id());
             return back()->with('success', __('Requisition approved successfully.'));
@@ -307,6 +332,8 @@ class JobRequisitionController extends Controller
      */
     public function reject(RejectRequisitionRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.reject'), 403);
+
         try {
             $this->requisitionService->rejectRequisition($id, $request->input('rejection_reason'), Auth::id());
             return back()->with('success', __('Requisition rejected.'));
@@ -320,6 +347,8 @@ class JobRequisitionController extends Controller
      */
     public function startRecruitment(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.start-recruitment'), 403);
+
         try {
             $this->requisitionService->startRecruitment($id);
             return back()->with('success', __('Recruitment phase started for this position.'));
@@ -333,6 +362,8 @@ class JobRequisitionController extends Controller
      */
     public function cancel(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-requisitions.cancel'), 403);
+
         try {
             $this->requisitionService->cancelRequisition($id);
             return back()->with('success', __('Requisition cancelled.'));

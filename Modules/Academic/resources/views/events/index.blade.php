@@ -30,10 +30,12 @@
             <i class="icon-base bx bx-category font-18"></i>
             <span>{{ __('Event Types Settings') }}</span>
         </a>
+        @can('academic.events.create')
         <button type="button" id="btn_open_add_event" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Event') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -631,12 +633,15 @@ window.addEventListener('load', function () {
                         label = "{{ __('Completed') }}";
                     }
 
+                    const canToggle = {{ auth()->user()->can('academic.events.toggle-status') ? 'true' : 'false' }};
+                    const switchHtml = canToggle 
+                        ? `<div class="form-check form-switch m-0"><input class="form-check-input btn-toggle-event-status" type="checkbox" role="switch" data-id="${row.id}" ${isChecked}></div>`
+                        : '';
+
                     return `
                         <div class="d-flex flex-column align-items-center gap-1">
                             <span class="badge ${badgeClass} mb-1">${label}</span>
-                            <div class="form-check form-switch m-0">
-                                <input class="form-check-input btn-toggle-event-status" type="checkbox" role="switch" data-id="${row.id}" ${isChecked}>
-                            </div>
+                            ${switchHtml}
                         </div>`;
                 }
             },
@@ -645,24 +650,34 @@ window.addEventListener('load', function () {
                 orderable: false,
                 searchable: false,
                 className: 'text-center',
-                render: (actions, type, row) => `
-                    <div class="d-inline-flex gap-1">
-                        <a href="${actions.show_url}" class="btn btn-icon btn-sm btn-outline-info" title="{{ __('View') }}">
-                            <i class="icon-base bx bx-show"></i>
-                        </a>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-event"
-                                title="{{ __('Edit') }}"
-                                data-id="${row.id}">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-event"
-                                title="{{ __('Delete') }}"
-                                data-id="${row.id}"
-                                data-url="${actions.delete_url}"
-                                data-name="${row.name_display}">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>`
+                render: (actions, type, row) => {
+                    let buttons = '';
+                    if (actions.can_view) {
+                        buttons += `
+                            <a href="${actions.show_url}" class="btn btn-icon btn-sm btn-outline-info" title="{{ __('View') }}">
+                                <i class="icon-base bx bx-show"></i>
+                            </a>`;
+                    }
+                    if (actions.can_edit) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-event"
+                                    title="{{ __('Edit') }}"
+                                    data-id="${row.id}">
+                                <i class="icon-base bx bx-edit-alt"></i>
+                            </button>`;
+                    }
+                    if (actions.can_delete) {
+                        buttons += `
+                            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-event"
+                                    title="{{ __('Delete') }}"
+                                    data-id="${row.id}"
+                                    data-url="${actions.delete_url}"
+                                    data-name="${row.name_display}">
+                                <i class="icon-base bx bx-trash"></i>
+                            </button>`;
+                    }
+                    return buttons ? `<div class="d-inline-flex gap-1">${buttons}</div>` : '<span class="text-muted">-</span>';
+                }
             }
         ],
         order: [[6, 'desc']]

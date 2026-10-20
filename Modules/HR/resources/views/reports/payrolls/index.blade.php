@@ -67,11 +67,14 @@
             </div>
 
             <!-- Export CSV / Excel Button -->
+            @can('hr.reports.payrolls.export')
             <a href="{{ route('hr.reports.payrolls.export', request()->all()) }}" class="btn btn-label-success">
                 <i class="bx bx-export me-1"></i> {{ __('تصدير Excel') }}
             </a>
+            @endcan
 
             <!-- Smart Split Print Button -->
+            @can('hr.reports.payrolls.print')
             <div class="btn-group">
                 <a href="{{ route('hr.reports.payrolls.print', request()->all()) }}" target="_blank" class="btn btn-primary">
                     <i class="bx bx-printer me-1"></i> {{ __('طباعة الكشف') }}
@@ -99,6 +102,7 @@
                     @endforelse
                 </ul>
             </div>
+            @endcan
         </div>
     </div>
 

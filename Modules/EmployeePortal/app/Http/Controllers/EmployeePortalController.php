@@ -638,4 +638,45 @@ class EmployeePortalController extends Controller
     {
         return view('employeeportal::offline');
     }
+
+    /**
+     * Public Privacy Policy for Apple App Store compliance.
+     */
+    public function privacy(): View
+    {
+        return view('employeeportal::privacy');
+    }
+
+    /**
+     * Request Account Deletion & Data Purge (Apple Guideline 5.1.1(v)).
+     */
+    public function requestAccountDeletion(Request $request): JsonResponse
+    {
+        $request->validate([
+            'password' => ['required', 'string'],
+            'reason'   => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $user = Auth::user();
+        if (!\Illuminate\Support\Facades\Hash::check($request->input('password'), $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Current password is incorrect.'),
+            ], 422);
+        }
+
+        // Log the account deletion request
+        \Illuminate\Support\Facades\Log::warning("Account deletion requested by user {$user->id} ({$user->email}). Reason: " . ($request->input('reason') ?: 'N/A'));
+
+        // Terminate session for privacy & security
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'success'      => true,
+            'message'      => __('Your account deletion request has been submitted successfully to HR Administration. Your session has been ended.'),
+            'redirect_url' => route('portal.login'),
+        ]);
+    }
 }

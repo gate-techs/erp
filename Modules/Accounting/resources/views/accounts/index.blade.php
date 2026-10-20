@@ -129,6 +129,7 @@
             </div>
 
             <!-- Excel Actions Dropdown (Coordinated with Primary Theme) -->
+            @if(auth()->user()->can('accounting.accounts.export') || auth()->user()->can('accounting.accounts.import'))
             <div class="dropdown coa-excel-dropdown">
                 <button type="button" class="btn btn-outline-primary dropdown-toggle d-flex align-items-center justify-content-center gap-2"
                     data-bs-toggle="dropdown" aria-expanded="false" id="btnExcelDropdown">
@@ -142,6 +143,7 @@
                         <span
                             class="text-uppercase text-muted fs-tiny fw-bold tracking-wider">{{ __('Excel Management') }}</span>
                     </li>
+                    @can('accounting.accounts.export')
                     <li>
                         <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3"
                             href="{{ route('accounting.accounts.template.download') }}">
@@ -168,9 +170,13 @@
                             </div>
                         </a>
                     </li>
+                    @endcan
+                    @if(auth()->user()->can('accounting.accounts.export') && auth()->user()->can('accounting.accounts.import'))
                     <li>
                         <hr class="dropdown-divider my-2">
                     </li>
+                    @endif
+                    @can('accounting.accounts.import')
                     <li>
                         <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3" href="javascript:void(0);"
                             data-bs-toggle="modal" data-bs-target="#modalImportAccounts">
@@ -184,14 +190,18 @@
                             </div>
                         </a>
                     </li>
+                    @endcan
                 </ul>
             </div>
+            @endif
 
+            @can('accounting.accounts.create')
             <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm"
                 data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAccount" aria-controls="offcanvasAddAccount">
                 <i class="icon-base bx bx-plus font-18"></i>
                 <span class="fw-semibold">{{ __('New Account') }}</span>
             </button>
+            @endcan
         </div>
     </div>
 

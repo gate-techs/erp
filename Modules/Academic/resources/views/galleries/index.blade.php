@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.galleries.create')
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" id="btn_open_add_modal">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Album') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 

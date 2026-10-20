@@ -22,12 +22,16 @@ class UnitController extends Controller
     //------------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('inventory.units.view'), 403);
+
         return view('inventory::units.index');
     }
 
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.units.view'), 403);
+
         $query = $this->service->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -38,14 +42,24 @@ class UnitController extends Controller
                 $active = $unit->status === 'active';
                 $class  = $active ? 'success' : 'danger';
                 $label  = $active ? __('Active') : __('Inactive');
-                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 btn-toggle-unit-status" data-id="' . $unit->id . '">' . e($label) . '</button>';
+                $canToggle = auth()->user()->can('inventory.units.toggle-status');
+                $actionClass = $canToggle ? 'btn-toggle-unit-status' : 'pe-none opacity-75';
+
+                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 ' . $actionClass . '" data-id="' . $unit->id . '" ' . ($canToggle ? '' : 'disabled') . '>' . e($label) . '</button>';
             })
             ->addColumn('actions', function (Unit $unit) {
                 $name = $unit->translate(app()->getLocale())?->name ?? $unit->translate('ar')?->name ?? $unit->symbol;
-                return '<div class="d-inline-flex gap-1">
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-unit" data-id="' . $unit->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button>
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-unit" data-id="' . $unit->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>
-                </div>';
+                $user = auth()->user();
+                $buttons = '';
+
+                if ($user->can('inventory.units.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-unit" data-id="' . $unit->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button> ';
+                }
+                if ($user->can('inventory.units.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-unit" data-id="' . $unit->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->rawColumns(['status_badge', 'actions'])
             ->make(true);
@@ -54,6 +68,8 @@ class UnitController extends Controller
     //------------------------------------------
     public function store(StoreUnitRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.units.create'), 403);
+
         $unit = $this->service->create($request->validated(), auth()->id());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -66,10 +82,12 @@ class UnitController extends Controller
     //------------------------------------------
     public function show(Request $request, int $id): JsonResponse
     {
-        $unit = $this->service->getById($id);
+        abort_if(! auth()->user()->can('inventory.units.view'), 403);
+
+        $item = $this->service->getById($id);
 
         if ($request->wantsJson() || $request->ajax()) {
-            return response()->json(['success' => true, 'data' => $unit]);
+            return response()->json(['success' => true, 'data' => $item]);
         }
 
         abort(404);
@@ -78,6 +96,8 @@ class UnitController extends Controller
     //------------------------------------------
     public function update(UpdateUnitRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.units.edit'), 403);
+
         $unit = $this->service->update($id, $request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -90,6 +110,8 @@ class UnitController extends Controller
     //------------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.units.delete'), 403);
+
         $this->service->delete($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -102,6 +124,8 @@ class UnitController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.units.toggle-status'), 403);
+
         $unit = $this->service->toggleStatus($id);
         return response()->json(['success' => true, 'message' => __('Status updated successfully.'), 'status' => $unit->status]);
     }

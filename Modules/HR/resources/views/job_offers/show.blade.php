@@ -67,48 +67,65 @@
         </button>
 
         @if($offer->status === \Modules\HR\Enums\JobOfferStatus::DRAFT)
+            @can('hr.job-offers.edit')
             <a href="{{ route('hr.job-offers.edit', $offer->id) }}" class="btn btn-outline-secondary d-flex align-items-center gap-1 px-3 py-2 rounded-3">
                 <i class="bx bx-edit font-18"></i>
                 <span>{{ __('Edit') }}</span>
             </a>
+            @endcan
+
+            @can('hr.job-offers.submit')
             <button type="button" class="btn btn-warning d-flex align-items-center gap-1 px-3 py-2 rounded-3 btn-offer-action" data-url="{{ route('hr.job-offers.submit', $offer->id) }}" data-action="{{ __('Submit for Approval') }}">
                 <i class="bx bx-send font-18"></i>
                 <span class="fw-semibold">{{ __('Submit for Approval') }}</span>
             </button>
+            @endcan
         @endif
 
         @if($offer->status === \Modules\HR\Enums\JobOfferStatus::PENDING_APPROVAL)
+            @can('hr.job-offers.approve')
             <button type="button" class="btn btn-success d-flex align-items-center gap-1 px-3 py-2 rounded-3 btn-offer-action" data-url="{{ route('hr.job-offers.approve', $offer->id) }}" data-action="{{ __('Approve Offer') }}">
                 <i class="bx bx-check-shield font-18"></i>
                 <span class="fw-semibold">{{ __('Approve Offer') }}</span>
             </button>
+            @endcan
         @endif
 
         @if($offer->status === \Modules\HR\Enums\JobOfferStatus::APPROVED)
+            @can('hr.job-offers.send')
             <button type="button" class="btn btn-primary d-flex align-items-center gap-1 px-3 py-2 rounded-3 btn-offer-action" data-url="{{ route('hr.job-offers.send', $offer->id) }}" data-action="{{ __('Mark as Sent') }}">
                 <i class="bx bx-paper-plane font-18"></i>
                 <span class="fw-semibold">{{ __('Send to Candidate') }}</span>
             </button>
+            @endcan
         @endif
 
         @if($offer->status === \Modules\HR\Enums\JobOfferStatus::SENT)
+            @can('hr.job-offers.accept')
             <button type="button" class="btn btn-success d-flex align-items-center gap-1 px-3 py-2 rounded-3 btn-offer-action" data-url="{{ route('hr.job-offers.accept', $offer->id) }}" data-action="{{ __('Record Candidate Acceptance') }}">
                 <i class="bx bx-check-double font-18"></i>
                 <span class="fw-semibold">{{ __('Candidate Accepted') }}</span>
             </button>
+            @endcan
+
+            @can('hr.job-offers.decline')
             <button type="button" class="btn btn-outline-danger d-flex align-items-center gap-1 px-3 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#declineModal">
                 <i class="bx bx-x-circle font-18"></i>
                 <span>{{ __('Declined') }}</span>
             </button>
+            @endcan
         @endif
 
         @if($offer->status === \Modules\HR\Enums\JobOfferStatus::ACCEPTED)
             @if($offer->onboarding)
+                @can('hr.onboardings.view')
                 <a href="{{ route('hr.onboardings.show', $offer->onboarding->id) }}" class="btn btn-success d-flex align-items-center gap-1 px-3 py-2 rounded-3 shadow-sm">
                     <i class="bx bx-compass font-18"></i>
                     <span class="fw-semibold">{{ __('View Onboarding Journey') }}</span>
                 </a>
+                @endcan
             @else
+                @can('hr.job-offers.accept')
                 <form action="{{ route('hr.job-offers.accept', $offer->id) }}" method="POST" class="d-inline">
                     @csrf
                     <button type="submit" class="btn btn-success d-flex align-items-center gap-1 px-3 py-2 rounded-3 shadow-sm">
@@ -116,6 +133,7 @@
                         <span class="fw-semibold">{{ __('Start Onboarding') }}</span>
                     </button>
                 </form>
+                @endcan
             @endif
         @endif
     </div>

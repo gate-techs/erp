@@ -157,10 +157,12 @@
                                 {{ __('Last updated by') }}: <strong>{{ $lockDates->updatedBy->name }}</strong> · {{ $lockDates->updated_at?->format('Y-m-d') }}
                             @endif
                         </span>
+                        @can('accounting.lock-dates.edit')
                         <button type="submit" class="btn btn-primary px-4 d-flex align-items-center justify-content-center gap-1 shadow-sm text-nowrap flex-shrink-0 ms-auto">
                             <i class="icon-base bx bx-save font-18"></i>
                             <span>{{ __('Save Changes') }}</span>
                         </button>
+                        @endcan
                     </div>
                 </form>
             @else
@@ -180,10 +182,12 @@
                         <span>{{ __('Lock Exceptions') }}</span>
                     </h5>
                     <!-- Button to open Standard Offcanvas -->
+                    @can('accounting.lock-dates.exceptions.create')
                     <button type="button" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddException" aria-controls="offcanvasAddException">
                         <i class="icon-base bx bx-plus font-16"></i>
                         <span>{{ __('Add Exception') }}</span>
                     </button>
+                    @endcan
                 </div>
 
                 <div class="table-responsive">
@@ -227,12 +231,16 @@
                                     </td>
                                     <td class="text-end">
                                         @if(!$exception->revoked_at && $exception->valid_until->isFuture())
+                                            @can('accounting.lock-dates.exceptions.revoke')
                                             <form method="POST" action="{{ route('accounting.lock-dates.exceptions.revoke', $exception->id) }}" class="d-inline" onsubmit="return confirm('{{ __('Revoke this exception?') }}')">
                                                 @csrf
-                                                <button type="submit" class="btn btn-xs btn-outline-danger">{{ __('Revoke') }}</button>
+                                                <button type="submit" class="btn btn-icon btn-sm btn-outline-danger" title="{{ __('Revoke Exception') }}">
+                                                    <i class="icon-base bx bx-x font-18"></i>
+                                                </button>
                                             </form>
+                                            @endcan
                                         @else
-                                            <span class="text-muted small">-</span>
+                                            <span class="text-muted small">—</span>
                                         @endif
                                     </td>
                                 </tr>

@@ -28,6 +28,8 @@ class WorkScheduleController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.work-schedules.view'), 403);
+
         $formData = $this->workScheduleService->getFormData();
 
         return view('hr::settings.work_schedules.index', $formData);
@@ -39,6 +41,8 @@ class WorkScheduleController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.work-schedules.view'), 403);
+
         $query = $this->workScheduleService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -108,6 +112,8 @@ class WorkScheduleController extends Controller
             })
             ->editColumn('created_at', fn(WorkSchedule $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->addColumn('actions', function (WorkSchedule $item) {
+                $user = auth()->user();
+
                 $daysArray = [];
                 foreach ($item->days as $d) {
                     $daysArray[$d->day_of_week] = [
@@ -137,21 +143,27 @@ class WorkScheduleController extends Controller
                     'days'               => $daysArray,
                 ]), ENT_QUOTES, 'UTF-8');
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-schedule" 
-                            data-row="' . $rowJson . '" 
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-schedule" 
-                            data-id="' . $item->id . '" 
-                            data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $editBtn = '';
+                if ($user->can('hr.settings.work-schedules.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-schedule" 
+                        data-row="' . $rowJson . '" 
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('hr.settings.work-schedules.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-schedule" 
+                        data-id="' . $item->id . '" 
+                        data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['type_badge', 'working_days_info', 'scope_info', 'off_days_badge', 'color_badge', 'status', 'actions'])
             ->filterColumn('name_ar', function ($query, $keyword) {
@@ -169,6 +181,8 @@ class WorkScheduleController extends Controller
      */
     public function store(StoreWorkScheduleRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.work-schedules.create'), 403);
+
         try {
             $this->workScheduleService->createSchedule($request->validated(), auth()->id());
 
@@ -187,6 +201,8 @@ class WorkScheduleController extends Controller
      */
     public function update(UpdateWorkScheduleRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.work-schedules.edit'), 403);
+
         try {
             $schedule = $this->workScheduleService->getScheduleById($id);
             if (!$schedule) {
@@ -211,6 +227,8 @@ class WorkScheduleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.work-schedules.delete'), 403);
+
         try {
             $schedule = $this->workScheduleService->getScheduleById($id);
             if (!$schedule) {

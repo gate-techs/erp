@@ -35,6 +35,7 @@
             </h4>
             <p class="text-muted mb-0">{{ __('Organize and manage projects and functional task groups.') }}</p>
         </div>
+        @can('tasks.task-groups.create')
         <div>
             <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm"
                     data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddTaskGroup">
@@ -42,6 +43,7 @@
                 <span>{{ __('Add New Group') }}</span>
             </button>
         </div>
+        @endcan
     </div>
 
     <!-- Filter Card -->

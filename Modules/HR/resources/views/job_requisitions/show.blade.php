@@ -35,10 +35,13 @@
     <!-- Actions Toolbar -->
     <div class="d-flex flex-wrap align-items-center gap-2">
         @if ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::DRAFT)
+            @can('hr.job-requisitions.edit')
             <a href="{{ route('hr.job-requisitions.edit', $requisition->id) }}" class="btn btn-outline-primary d-flex align-items-center gap-1">
                 <i class="icon-base bx bx-edit font-16"></i>
                 <span>{{ __('Edit') }}</span>
             </a>
+            @endcan
+            @can('hr.job-requisitions.submit')
             <form action="{{ route('hr.job-requisitions.submit', $requisition->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Submit this job requisition for approval?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
@@ -46,7 +49,9 @@
                     <span>{{ __('Submit for Approval') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::PENDING_APPROVAL)
+            @can('hr.job-requisitions.approve')
             <form action="{{ route('hr.job-requisitions.approve', $requisition->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Approve this job requisition?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-success d-flex align-items-center gap-1 shadow-sm">
@@ -54,15 +59,21 @@
                     <span>{{ __('Approve Request') }}</span>
                 </button>
             </form>
+            @endcan
+            @can('hr.job-requisitions.reject')
             <button type="button" class="btn btn-outline-danger d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#rejectModal">
                 <i class="icon-base bx bx-x-circle font-16"></i>
                 <span>{{ __('Reject') }}</span>
             </button>
+            @endcan
         @elseif ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::APPROVED)
+            @can('hr.job-openings.create')
             <a href="{{ route('hr.job-openings.create', ['requisition_id' => $requisition->id]) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
                 <i class="icon-base bx bx-broadcast font-16"></i>
                 <span>{{ __('Create Job Opening') }}</span>
             </a>
+            @endcan
+            @can('hr.job-requisitions.start-recruitment')
             <form action="{{ route('hr.job-requisitions.start-recruitment', $requisition->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Start active candidate recruitment for this role?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-outline-primary d-flex align-items-center gap-1">
@@ -70,14 +81,18 @@
                     <span>{{ __('Start Recruitment') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif ($requisition->status === \Modules\HR\Enums\JobRequisitionStatus::IN_RECRUITMENT)
+            @can('hr.job-openings.create')
             <a href="{{ route('hr.job-openings.create', ['requisition_id' => $requisition->id]) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm">
                 <i class="icon-base bx bx-broadcast font-16"></i>
                 <span>{{ __('Create Job Opening') }}</span>
             </a>
+            @endcan
         @endif
 
         @if (!in_array($requisition->status, [\Modules\HR\Enums\JobRequisitionStatus::CANCELLED, \Modules\HR\Enums\JobRequisitionStatus::FULFILLED, \Modules\HR\Enums\JobRequisitionStatus::REJECTED]))
+            @can('hr.job-requisitions.cancel')
             <form action="{{ route('hr.job-requisitions.cancel', $requisition->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Cancel this requisition?') }}');">
                 @csrf
                 <button type="submit" class="btn btn-outline-secondary d-flex align-items-center gap-1">
@@ -85,6 +100,7 @@
                     <span>{{ __('Cancel Request') }}</span>
                 </button>
             </form>
+            @endcan
         @endif
     </div>
 </div>

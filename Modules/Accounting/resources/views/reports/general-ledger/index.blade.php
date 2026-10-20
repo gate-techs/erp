@@ -73,11 +73,14 @@
         </button>
 
         <!-- Export CSV / Excel Button -->
+        @can('accounting.reports.export')
         <a href="{{ route('accounting.reports.general-ledger.export', request()->all()) }}" class="btn btn-label-success">
             <i class="bx bx-export me-1"></i> {{ __('Export Excel') }}
         </a>
+        @endcan
 
         <!-- Smart Split Print Button -->
+        @can('accounting.reports.print')
         <div class="btn-group">
             <a href="{{ route('accounting.reports.general-ledger.print', array_merge(request()->all(), ['orientation' => 'landscape'])) }}" target="_blank" class="btn btn-primary">
                 <i class="bx bx-printer me-1"></i> {{ __('Print Report') }}
@@ -105,6 +108,7 @@
                 @endforelse
             </ul>
         </div>
+        @endcan
     </div>
 </div>
 

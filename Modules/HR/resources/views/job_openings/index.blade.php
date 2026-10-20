@@ -21,10 +21,12 @@
     </div>
 
     <div>
+        @can('hr.job-openings.create')
         <a href="{{ route('hr.job-openings.create') }}" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('New Job Opening') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 

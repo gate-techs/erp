@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>{{ __('Login | Astro Leaders - Employee Portal') }}</title>
+    <title>{{ __('Login | ALA ORBIT - Employee Portal') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#00334B" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="AstroLeaders" />
-    <meta name="application-name" content="AstroLeaders" />
+    <meta name="apple-mobile-web-app-title" content="ALA ORBIT" />
+    <meta name="application-name" content="ALA ORBIT" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
@@ -444,7 +444,7 @@
 <body>
     <!-- Top Mobile Status Notch Bar preview with language switch -->
     <div class="mobile-top-bar">
-        <span>{{ __('Astro Leaders') }}</span>
+        <span>{{ __('ALA ORBIT') }}</span>
         <a href="{{ route('lang.swap', app()->getLocale() === 'ar' ? 'en' : 'ar') }}" class="portal-login-lang-btn" title="{{ __('Change Language') }}" onclick="savePortalLocaleAndRedirect(event, '{{ app()->getLocale() === 'ar' ? 'en' : 'ar' }}', this.href)">
             <i class="bx bx-globe"></i>
             <span>{{ app()->getLocale() === 'ar' ? 'English' : 'عربي' }}</span>
@@ -464,7 +464,7 @@
         </div>
 
         <!-- App Title & Subtitle -->
-        <h1 class="app-title">{{ __('Astro Leaders') }}</h1>
+        <h1 class="app-title">{{ __('ALA ORBIT') }}</h1>
         <div class="app-subtitle-badge">
              <i class="bx bxs-badge-check"></i>
             <span>{{ __('Nursery Employee Portal • Kuwait') }}</span>
@@ -562,6 +562,11 @@
         <a href="mailto:hr@astroleaders.com" class="footer-hr-link">
             {{ __('Contact Nursery HR Administration') }}
         </a>
+        <div class="footer-privacy-box mb-2">
+            <a href="{{ route('portal.privacy') }}" class="footer-hr-link" style="font-size: 11.5px; opacity: 0.85;">
+                <i class="bx bx-shield-quarter me-1"></i>{{ __('Privacy Policy & Terms of Service') }}
+            </a>
+        </div>
         <div class="footer-version-tag">
             {{ __('Internal Release V2.4 • State of Kuwait') }}
         </div>

@@ -19,10 +19,12 @@
         </h4>
     </div>
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.events.edit')
         <a href="{{ route('academic.events.edit', $event->id) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm">
             <i class="icon-base bx bx-edit-alt font-18"></i>
             <span>{{ __('Edit Event') }}</span>
         </a>
+        @endcan
         <a href="{{ route('academic.events.index') }}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
             <i class="icon-base bx bx-arrow-back font-18"></i>
             <span>{{ __('Back to Events') }}</span>
@@ -169,6 +171,7 @@
         </div>
 
         <!-- Danger Zone Card -->
+        @can('academic.events.delete')
         <div class="card shadow-sm border-0 border-top border-danger border-3">
             <div class="card-body p-3">
                 <form action="{{ route('academic.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this event?') }}');">
@@ -181,6 +184,7 @@
                 </form>
             </div>
         </div>
+        @endcan
     </div>
 </div>
 @endsection

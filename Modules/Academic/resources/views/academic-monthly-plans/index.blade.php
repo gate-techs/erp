@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.monthly-plans.create')
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicMonthlyPlan" aria-controls="offcanvasAddAcademicMonthlyPlan">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Monthly Plan') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -136,6 +138,7 @@
     </div>
 </div>
 
+@can('academic.monthly-plans.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Monthly Plan                                    -->
 <!-- ========================================================================= -->
@@ -316,7 +319,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.monthly-plans.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Monthly Plan                                   -->
 <!-- ========================================================================= -->
@@ -505,7 +510,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.monthly-plans.view')
 <!-- ========================================================================= -->
 <!-- 3. Modal: View Plan Details                                               -->
 <!-- ========================================================================= -->
@@ -570,7 +577,9 @@
         </div>
     </div>
 </div>
+@endcan
 
+@can('academic.monthly-plans.delete')
 <!-- ========================================================================= -->
 <!-- 4. Modal: Delete Confirmation                                             -->
 <!-- ========================================================================= -->
@@ -598,6 +607,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('page-script')

@@ -27,6 +27,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.attendance.view'), 403);
+
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         if ($institutions->isEmpty()) {
             $institutions = Nursery::with('translations')->get();
@@ -61,6 +63,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.view'), 403);
+
         $filters = [
             'institution_id'    => $request->input('institution_id'),
             'branch_id'         => $request->input('branch_id'),
@@ -151,6 +155,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function classRoster(Request $request, int $classId): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.view'), 403);
+
         $date = $request->input('date', now()->toDateString());
 
         $data = $this->service->getClassDailyRoster($classId, $date);
@@ -165,6 +171,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function storeMulti(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.create'), 403);
+
         $request->validate([
             'classroom_id'                  => ['nullable', 'integer', 'exists:academic_classes,id'],
             'academic_class_id'             => ['nullable', 'integer', 'exists:academic_classes,id'],
@@ -206,6 +214,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function storeSingle(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.create'), 403);
+
         $request->validate([
             'student_id'          => ['nullable', 'integer', 'exists:academic_students,id'],
             'academic_student_id' => ['nullable', 'integer', 'exists:academic_students,id'],
@@ -250,6 +260,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function approve(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.edit'), 403);
+
         $request->validate([
             'ids'   => ['required', 'array'],
             'ids.*' => ['integer', 'exists:academic_student_attendances,id'],
@@ -278,6 +290,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function reject(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.edit'), 403);
+
         $request->validate([
             'ids'    => ['required', 'array'],
             'ids.*'  => ['integer', 'exists:academic_student_attendances,id'],
@@ -306,6 +320,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function studentReport(Request $request, int $studentId): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.view'), 403);
+
         $startDate = $request->input('start_date');
         $endDate   = $request->input('end_date');
 
@@ -321,6 +337,8 @@ class AcademicStudentAttendanceController extends Controller
      */
     public function guardianReport(Request $request, int $guardianId): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.attendance.view'), 403);
+
         $startDate = $request->input('start_date');
         $endDate   = $request->input('end_date');
 

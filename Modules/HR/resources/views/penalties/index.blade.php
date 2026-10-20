@@ -20,14 +20,18 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
+        @can('hr.settings.penalty-types.view')
         <a href="{{ route('hr.settings.penalty-types.index') }}" class="btn btn-label-secondary d-flex align-items-center gap-1 shadow-xs">
             <i class="icon-base bx bx-slider font-18"></i>
             <span>{{ __('Penalty Types') }}</span>
         </a>
+        @endcan
+        @can('hr.penalties.create')
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddPenalty" aria-controls="offcanvasAddPenalty">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Penalty') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 

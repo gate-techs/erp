@@ -15,6 +15,8 @@ class InventoryDashboardController extends Controller
 {
     public function index(): View
     {
+        abort_if(! auth()->user()->can('inventory.dashboard.view'), 403);
+
         $activeItems = Item::query()->where('status', 'active');
 
         $lowStockItems = (clone $activeItems)

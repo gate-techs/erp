@@ -26,6 +26,8 @@ class NurseryBranchController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(!auth()->user()->can('nursery.branches.view'), 403);
+
         $formData = $this->branchService->getFormData();
 
         return view('nursery::branches.index', [
@@ -42,6 +44,8 @@ class NurseryBranchController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.branches.view'), 403);
+
         $query = NurseryBranch::with([
             'translations',
             'nursery.translations',
@@ -113,6 +117,8 @@ class NurseryBranchController extends Controller
      */
     public function store(StoreNurseryBranchRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.branches.create'), 403);
+
         $branch = $this->branchService->createBranch(
             $request->validated(),
             $request->file('image'),
@@ -138,6 +144,8 @@ class NurseryBranchController extends Controller
      */
     public function update(UpdateNurseryBranchRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.branches.edit'), 403);
+
         $branch = $this->branchService->updateBranch(
             $id,
             $request->validated(),
@@ -163,6 +171,8 @@ class NurseryBranchController extends Controller
      */
     public function destroy(int $id): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.branches.delete'), 403);
+
         $this->branchService->deleteBranch($id);
 
         if (request()->wantsJson() || request()->ajax()) {
@@ -183,6 +193,8 @@ class NurseryBranchController extends Controller
      */
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.branches.toggle-status'), 403);
+
         $branch = $this->branchService->toggleStatus($id);
 
         return response()->json([
@@ -199,6 +211,8 @@ class NurseryBranchController extends Controller
      */
     public function getCities(int $governmentId): JsonResponse
     {
+        abort_if(!auth()->user()->hasAnyPermission(['nursery.branches.view', 'nursery.branches.create', 'nursery.branches.edit']), 403);
+
         $cities = $this->branchService->getCitiesByGovernment($governmentId);
 
         return response()->json([

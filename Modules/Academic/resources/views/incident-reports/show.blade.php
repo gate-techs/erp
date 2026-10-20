@@ -22,14 +22,18 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.incident-reports.view')
         <a href="{{ route('academic.incident-reports.print', $report->id) }}" target="_blank" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 shadow-sm">
             <i class="bx bx-printer font-16"></i>
             <span>{{ __('Print Report') }}</span>
         </a>
+        @endcan
+        @can('academic.incident-reports.edit')
         <a href="{{ route('academic.incident-reports.edit', $report->id) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm">
             <i class="bx bx-edit font-16"></i>
             <span>{{ __('Edit') }}</span>
         </a>
+        @endcan
         <a href="{{ route('academic.incident-reports.index') }}" class="btn btn-label-secondary btn-sm d-flex align-items-center gap-1">
             <i class="bx bx-arrow-back font-16"></i>
             <span>{{ __('Back to List') }}</span>

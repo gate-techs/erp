@@ -28,6 +28,8 @@ class OfficialHolidayController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.official-holidays.view'), 403);
+
         $formData = $this->officialHolidayService->getFormData();
 
         return view('hr::settings.official_holidays.index', $formData);
@@ -39,6 +41,7 @@ class OfficialHolidayController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.official-holidays.view'), 403);
         $query = $this->officialHolidayService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -86,6 +89,8 @@ class OfficialHolidayController extends Controller
                 return '<span class="badge ' . $badgeClass . '">' . $label . '</span>';
             })
             ->addColumn('actions', function (OfficialHoliday $item) {
+                $user = auth()->user();
+
                 $rowJson = htmlspecialchars(json_encode([
                     'id'             => $item->id,
                     'name_ar'        => $item->translate('ar')?->name ?? '',
@@ -100,21 +105,27 @@ class OfficialHolidayController extends Controller
                     'status'         => is_object($item->status) ? $item->status->value : $item->status,
                 ]), ENT_QUOTES, 'UTF-8');
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-holiday" 
-                            data-row="' . $rowJson . '" 
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-holiday" 
-                            data-id="' . $item->id . '" 
-                            data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $editBtn = '';
+                if ($user->can('hr.settings.official-holidays.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-holiday" 
+                        data-row="' . $rowJson . '" 
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('hr.settings.official-holidays.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-holiday" 
+                        data-id="' . $item->id . '" 
+                        data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['date_range', 'year', 'is_recurring', 'scope_info', 'color_badge', 'status', 'actions'])
             ->filterColumn('name_ar', function ($query, $keyword) {
@@ -132,6 +143,8 @@ class OfficialHolidayController extends Controller
      */
     public function store(StoreOfficialHolidayRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.official-holidays.create'), 403);
+
         try {
             $this->officialHolidayService->createHoliday($request->validated(), auth()->id());
 
@@ -150,6 +163,8 @@ class OfficialHolidayController extends Controller
      */
     public function update(UpdateOfficialHolidayRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.official-holidays.edit'), 403);
+
         try {
             $holiday = $this->officialHolidayService->getHolidayById($id);
             if (!$holiday) {
@@ -174,6 +189,8 @@ class OfficialHolidayController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.official-holidays.delete'), 403);
+
         try {
             $holiday = $this->officialHolidayService->getHolidayById($id);
             if (!$holiday) {

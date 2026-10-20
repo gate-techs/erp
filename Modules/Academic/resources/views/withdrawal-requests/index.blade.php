@@ -19,12 +19,14 @@
         </div>
     </div>
 
+    @can('academic.withdrawal-requests.create')
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
         <a href="{{ route('academic.withdrawal-requests.create') }}" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Withdrawal Request') }}</span>
         </a>
     </div>
+    @endcan
 </div>
 @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
 <div class="card shadow-sm border-0"><div class="card-body border-bottom"><div class="row g-2"><div class="col-md-4"><select id="filter_institution" class="form-select select2"><option value="">{{ __('All Nurseries') }}</option>@foreach($institutions as $item)<option value="{{ $item->id }}">{{ $item->name }}</option>@endforeach</select></div><div class="col-md-4"><select id="filter_branch" class="form-select select2"><option value="">{{ __('All Branches') }}</option>@foreach($branches as $item)<option value="{{ $item->id }}">{{ $item->name }}</option>@endforeach</select></div><div class="col-md-4"><select id="filter_status" class="form-select select2"><option value="">{{ __('All Statuses') }}</option>@foreach(['pending','approved','rejected','cancelled'] as $status)<option value="{{ $status }}">{{ __($status) }}</option>@endforeach</select></div></div></div><div class="card-datatable table-responsive"><table id="withdrawalTable" class="table table-hover border-top w-100 text-nowrap"><thead><tr><th>#</th><th>{{ __('Request Date') }}</th><th>{{ __('Student Name') }}</th><th>{{ __('Nursery') }}</th><th>{{ __('Branch') }}</th><th>{{ __('Status') }}</th><th>{{ __('Actions') }}</th></tr></thead></table></div></div>

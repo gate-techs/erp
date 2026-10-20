@@ -48,21 +48,27 @@
 
     <!-- Actions -->
     <div class="d-flex flex-wrap align-items-center gap-2">
+        @can('hr.onboardings.tasks')
         <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#addTaskModal">
             <i class="bx bx-plus-circle font-18"></i>
             <span class="fw-semibold">{{ __('Add Task') }}</span>
         </button>
+        @endcan
 
         @if($onboarding->employee_id && $onboarding->employee)
+            @can('hr.employees.view')
             <a href="{{ route('hr.employees.show', $onboarding->employee_id) }}" class="btn btn-success d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
                 <i class="bx bx-user-check font-18"></i>
                 <span class="fw-semibold">{{ __('View Employee Profile') }} ({{ $onboarding->employee->employee_code }})</span>
             </a>
+            @endcan
         @else
+            @can('hr.onboardings.convert')
             <button type="button" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#convertEmployeeModal">
                 <i class="bx bx-user-plus font-18"></i>
                 <span class="fw-semibold">{{ __('Convert to Official Employee') }}</span>
             </button>
+            @endcan
         @endif
     </div>
 </div>

@@ -25,6 +25,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function index()
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.view'), 403);
+
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $branches = NurseryBranch::with('translations')->where('status', 'active')->get();
         $academicYears = AcademicYear::with('translations')->where('status', 'active')->get();
@@ -44,6 +46,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -64,11 +68,16 @@ class AcademicMonthlyPlanController extends Controller
                 $imageUrl = e($plan->image_url);
                 $titleSafe = e($title);
 
+                $canEdit = auth()->user()?->can('academic.monthly-plans.edit');
+                $titleHtml = $canEdit
+                    ? '<button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('Edit')) . '">' . $titleSafe . '</button>'
+                    : '<span class="fw-bold text-heading">' . $titleSafe . '</span>';
+
                 return '
                     <div class="d-flex align-items-center gap-3">
                         <img src="' . $imageUrl . '" alt="' . $titleSafe . '" class="rounded border object-fit-cover shadow-xs" width="42" height="42" onerror="this.src=\'' . asset('assets/img/favicon/favicon.ico') . '\'">
                         <div class="d-flex flex-column">
-                            <button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('Edit')) . '">' . $titleSafe . '</button>
+                            ' . $titleHtml . '
                             <small class="text-muted">' . e($plan->translate($locale === 'ar' ? 'en' : 'ar')?->title ?? '') . '</small>
                         </div>
                     </div>
@@ -121,30 +130,57 @@ class AcademicMonthlyPlanController extends Controller
                 $class = $isActive ? 'bg-label-success' : 'bg-label-danger';
                 $icon = $isActive ? 'bx-check-circle' : 'bx-x-circle';
 
+                if (auth()->user()?->can('academic.monthly-plans.toggle-status')) {
+                    return '
+                        <button type="button" class="btn btn-sm p-0 border-0 bg-transparent btn-toggle-status" data-id="' . $plan->id . '" title="' . __('Click to toggle status') . '">
+                            <span class="badge ' . $class . ' d-inline-flex align-items-center gap-1 cursor-pointer">
+                                <i class="icon-base bx ' . $icon . '"></i> ' . $label . '
+                            </span>
+                        </button>
+                    ';
+                }
+
                 return '
-                    <button type="button" class="btn btn-sm p-0 border-0 bg-transparent btn-toggle-status" data-id="' . $plan->id . '" title="' . __('Click to toggle status') . '">
-                        <span class="badge ' . $class . ' d-inline-flex align-items-center gap-1 cursor-pointer">
-                            <i class="icon-base bx ' . $icon . '"></i> ' . $label . '
-                        </span>
-                    </button>
+                    <span class="badge ' . $class . ' d-inline-flex align-items-center gap-1">
+                        <i class="icon-base bx ' . $icon . '"></i> ' . $label . '
+                    </span>
                 ';
             })
             ->addColumn('actions', function (AcademicMonthlyPlan $plan) {
+                $user = auth()->user();
+                $canView = $user?->can('academic.monthly-plans.view');
+                $canEdit = $user?->can('academic.monthly-plans.edit');
+                $canDelete = $user?->can('academic.monthly-plans.delete');
+
+                if (!$canView && !$canEdit && !$canDelete) {
+                    return '<span class="text-muted">-</span>';
+                }
+
                 $title = $plan->translate(app()->getLocale())?->title ?? $plan->translate('ar')?->title ?? '';
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('View Details')) . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-monthly-plan" data-id="' . $plan->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $buttons = '<div class="d-inline-flex align-items-center gap-1">';
+
+                if ($canView) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('View Details')) . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </button>';
+                }
+
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-monthly-plan" data-id="' . $plan->id . '" title="' . e(__('Edit')) . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-monthly-plan" data-id="' . $plan->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
             ->rawColumns(['plan_info', 'classes_badges', 'dates_formatted', 'status_badge', 'actions'])
             ->toJson();
@@ -152,6 +188,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function store(StoreAcademicMonthlyPlanRequest $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.create'), 403);
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $image = $request->file('image');
@@ -168,6 +206,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.view'), 403);
+
         $plan = $this->service->findById($id);
 
         if (! $plan) {
@@ -229,6 +269,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function update(UpdateAcademicMonthlyPlanRequest $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.edit'), 403);
+
         $data = $request->validated();
         $image = $request->file('image');
         $attachments = $request->file('attachments') ?? [];
@@ -244,6 +286,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.delete'), 403);
+
         $deleted = $this->service->delete($id);
 
         if (! $deleted) {
@@ -261,6 +305,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.toggle-status'), 403);
+
         $plan = $this->service->toggleStatus($id);
 
         return response()->json([
@@ -275,6 +321,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function downloadAttachment(int $id)
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.view'), 403);
+
         $attachment = $this->service->findAttachment($id);
 
         if (! $attachment || ! Storage::disk('public')->exists($attachment->file_path)) {
@@ -286,6 +334,8 @@ class AcademicMonthlyPlanController extends Controller
 
     public function deleteAttachment(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.monthly-plans.edit'), 403);
+
         $deleted = $this->service->deleteAttachment($id);
 
         if (! $deleted) {
@@ -298,6 +348,7 @@ class AcademicMonthlyPlanController extends Controller
         return response()->json([
             'success' => true,
             'message' => __('Attachment deleted successfully.'),
+            'data'    => null,
         ]);
     }
 

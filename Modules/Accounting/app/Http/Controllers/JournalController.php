@@ -93,13 +93,27 @@ class JournalController extends Controller
             })
             ->addColumn('created_at', fn (Journal $journal) => $journal->created_at?->format('Y-m-d') ?? '-')
             ->addColumn('actions', function (Journal $journal) {
+                $user = auth()->user();
                 $name = $journal->translate(app()->getLocale())?->name ?? $journal->code;
                 $editUrl = route('accounting.journals.edit', $journal->id);
-                return '<div class="d-inline-flex gap-1">' .
-                    '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '"><i class="icon-base bx bx-edit"></i></a>' .
-                    '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-journal" data-id="' . $journal->id . '" data-status="' . ($journal->is_active ? 'active' : 'inactive') . '" title="' . __('Change Status') . '"><i class="icon-base bx bx-power-off"></i></button>' .
-                    '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-journal" data-id="' . $journal->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>' .
-                    '</div>';
+
+                $editBtn = '';
+                if ($user->can('accounting.journals.edit')) {
+                    $editBtn = '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '"><i class="icon-base bx bx-edit"></i></a>';
+                }
+
+                $toggleBtn = '';
+                if ($user->can('accounting.journals.toggle-status')) {
+                    $toggleBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-journal" data-id="' . $journal->id . '" data-status="' . ($journal->is_active ? 'active' : 'inactive') . '" title="' . __('Change Status') . '"><i class="icon-base bx bx-power-off"></i></button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.journals.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-journal" data-id="' . $journal->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                $buttons = $editBtn . $toggleBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['journal_info', 'default_account_info', 'entity_info', 'type_badge', 'status_badge', 'actions'])
             ->make(true);

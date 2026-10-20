@@ -26,6 +26,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('inventory.items.view'), 403);
+
         return view('inventory::items.index', [
             'categories' => ItemCategory::with('translations')->where('status', 'active')->latest('id')->get(),
             'units'      => Unit::with('translations')->where('status', 'active')->latest('id')->get(),
@@ -36,6 +38,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.view'), 403);
+
         $query = $this->service->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -54,14 +58,24 @@ class ItemController extends Controller
                 $active = $item->status === 'active';
                 $class  = $active ? 'success' : 'danger';
                 $label  = $active ? __('Active') : __('Inactive');
-                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 btn-toggle-item-status" data-id="' . $item->id . '">' . e($label) . '</button>';
+                $canToggle = auth()->user()->can('inventory.items.toggle-status');
+                $actionClass = $canToggle ? 'btn-toggle-item-status' : 'pe-none opacity-75';
+
+                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 ' . $actionClass . '" data-id="' . $item->id . '" ' . ($canToggle ? '' : 'disabled') . '>' . e($label) . '</button>';
             })
             ->addColumn('actions', function (Item $item) {
                 $name = $item->translate(app()->getLocale())?->name ?? $item->translate('ar')?->name ?? $item->code;
-                return '<div class="d-inline-flex gap-1">
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-item" data-id="' . $item->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button>
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-item" data-id="' . $item->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>
-                </div>';
+                $user = auth()->user();
+                $buttons = '';
+
+                if ($user->can('inventory.items.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-item" data-id="' . $item->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button> ';
+                }
+                if ($user->can('inventory.items.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-item" data-id="' . $item->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->rawColumns(['image_thumb', 'status_badge', 'actions'])
             ->make(true);
@@ -70,6 +84,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function store(StoreItemRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.create'), 403);
+
         $item = $this->service->create($request->validated(), auth()->id());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -82,6 +98,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function show(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.view'), 403);
+
         $item = $this->service->getById($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -94,6 +112,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function update(UpdateItemRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.edit'), 403);
+
         $item = $this->service->update($id, $request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -106,6 +126,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.delete'), 403);
+
         $this->service->delete($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -118,6 +140,8 @@ class ItemController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.items.toggle-status'), 403);
+
         $item = $this->service->toggleStatus($id);
         return response()->json(['success' => true, 'message' => __('Status updated successfully.'), 'status' => $item->status]);
     }

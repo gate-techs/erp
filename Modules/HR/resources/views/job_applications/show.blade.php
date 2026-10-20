@@ -61,34 +61,45 @@
             <!-- Right Side Action Buttons -->
             <div class="d-flex flex-wrap align-items-center gap-2">
                 @if ($application->candidate?->resume_path)
+                    @can('hr.job-applications.download-resume')
                     <a href="{{ route('hr.job-applications.download-resume', $application->id) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm rounded-3 px-3 py-2">
                         <i class="icon-base bx bx-download font-16"></i>
                         <span>{{ __('Download CV / Resume') }}</span>
                     </a>
+                    @endcan
                 @endif
 
+                @can('hr.interviews.create')
                 <a href="{{ route('hr.interviews.create', ['application_id' => $application->id]) }}" class="btn btn-outline-primary d-flex align-items-center gap-1 rounded-3 px-3 py-2">
                     <i class="icon-base bx bx-calendar-plus font-16"></i>
                     <span>{{ __('Schedule Interview') }}</span>
                 </a>
+                @endcan
 
+                @can('hr.job-offers.create')
                 <a href="{{ route('hr.job-offers.create', ['application_id' => $application->id]) }}" class="btn btn-outline-success d-flex align-items-center gap-1 rounded-3 px-3 py-2">
                     <i class="icon-base bx bx-gift font-16"></i>
                     <span>{{ __('Issue Job Offer') }}</span>
                 </a>
+                @endcan
 
                 @if ($application->status !== \Modules\HR\Enums\ApplicationStatus::REJECTED)
+                    @can('hr.job-applications.reject')
                     <button type="button" class="btn btn-outline-danger d-flex align-items-center gap-1 rounded-3 px-3 py-2" data-bs-toggle="modal" data-bs-target="#rejectCandidateModal">
                         <i class="icon-base bx bx-user-x font-16"></i>
                         <span>{{ __('Disqualify') }}</span>
                     </button>
+                    @endcan
                 @else
+                    @can('hr.job-applications.reopen')
                     <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 rounded-3 px-3 py-2" id="btnReopen">
                         <i class="icon-base bx bx-undo font-16"></i>
                         <span>{{ __('Reopen Application') }}</span>
                     </button>
+                    @endcan
                 @endif
 
+                @can('hr.job-applications.delete')
                 <form action="{{ route('hr.job-applications.destroy', $application->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this candidate application?') }}');">
                     @csrf
                     @method('DELETE')
@@ -96,6 +107,7 @@
                         <i class="icon-base bx bx-trash font-16"></i>
                     </button>
                 </form>
+                @endcan
             </div>
         </div>
     </div>

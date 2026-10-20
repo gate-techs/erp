@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.lessons.create')
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicLesson" aria-controls="offcanvasAddAcademicLesson">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Lesson') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -113,6 +115,7 @@
     </div>
 </div>
 
+@can('academic.lessons.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Lesson                                         -->
 <!-- ========================================================================= -->
@@ -275,7 +278,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.lessons.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Lesson                                        -->
 <!-- ========================================================================= -->
@@ -445,7 +450,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.lessons.view')
 <!-- ========================================================================= -->
 <!-- 3. Modal: View Lesson Details                                            -->
 <!-- ========================================================================= -->
@@ -502,7 +509,9 @@
         </div>
     </div>
 </div>
+@endcan
 
+@can('academic.lessons.delete')
 <!-- ========================================================================= -->
 <!-- 4. Modal: Confirm Delete                                                  -->
 <!-- ========================================================================= -->
@@ -528,6 +537,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @endsection
 

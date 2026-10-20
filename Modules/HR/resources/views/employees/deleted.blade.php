@@ -76,6 +76,7 @@
                             <td>{{ $departmentName }}</td>
                             <td>{{ $employee->deleted_at?->format('Y-m-d H:i') ?? '-' }}</td>
                             <td class="text-center">
+                                @can('hr.employees.edit')
                                 <form method="POST" action="{{ route('hr.employees.restore', $employee->id) }}" class="d-inline">
                                     @csrf
                                     @method('PATCH')
@@ -84,6 +85,9 @@
                                         <span>{{ __('Restore') }}</span>
                                     </button>
                                 </form>
+                                @else
+                                <span class="text-muted small">-</span>
+                                @endcan
                             </td>
                         </tr>
                     @empty

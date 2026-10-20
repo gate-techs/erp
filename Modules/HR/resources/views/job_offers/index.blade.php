@@ -20,15 +20,19 @@
     </div>
 
     <div class="d-flex flex-wrap align-items-center gap-2">
+        @can('hr.interviews.view')
         <a href="{{ route('hr.interviews.index') }}" class="btn btn-outline-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="bx bx-calendar-check font-18"></i>
             <span class="fw-semibold">{{ __('Interviews') }}</span>
         </a>
+        @endcan
 
+        @can('hr.job-offers.create')
         <a href="{{ route('hr.job-offers.create') }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="icon-base bx bx-plus font-18"></i>
             <span class="fw-semibold">{{ __('Create Job Offer') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 

@@ -19,6 +19,9 @@ Route::prefix('portal')->name('portal.')->group(function () {
     Route::post('login', [EmployeePortalController::class, 'login'])->name('login.submit');
     Route::post('logout', [EmployeePortalController::class, 'logout'])->name('logout');
 
+    // 2.1 Public Privacy Policy & Data Protection (Apple App Store Requirement)
+    Route::get('privacy', [EmployeePortalController::class, 'privacy'])->name('privacy');
+
     // 3. PWA Manifest & Service Worker & Offline Fallback
     Route::get('manifest.json', [EmployeePortalController::class, 'manifest'])->name('manifest');
     Route::get('sw.js', [EmployeePortalController::class, 'serviceWorker'])->name('sw');
@@ -56,6 +59,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
         // Security & Face ID Password Settings
         Route::get('profile/security', [EmployeePortalController::class, 'securitySettings'])->name('profile.security');
         Route::post('profile/security/password', [EmployeePortalController::class, 'updatePassword'])->name('profile.security.password');
+        Route::post('profile/security/delete-account', [EmployeePortalController::class, 'requestAccountDeletion'])->name('profile.security.deleteAccount');
 
         // Notifications Center
         Route::get('notifications', [PortalNotificationController::class, 'index'])->name('notifications.index');

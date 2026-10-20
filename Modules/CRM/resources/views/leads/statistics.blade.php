@@ -16,7 +16,9 @@
             <h4 class="fw-bold mb-1 d-flex align-items-center gap-2 text-heading"><i class="icon-base bx bx-bar-chart-alt-2 text-primary"></i>{{ __('Request Statistics') }}</h4>
             <p class="text-muted mb-0">{{ __('A complete overview of your potential customers.') }}</p>
         </div>
+        @can('crm.leads.view')
         <a href="{{ route('crm.leads.index') }}" class="btn btn-label-primary d-flex align-items-center gap-2"><i class="icon-base bx bx-group"></i>{{ __('Customers') }}</a>
+        @endcan
     </div>
 
     <div id="leadsStatistics">

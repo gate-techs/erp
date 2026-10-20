@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.students.edit')
         <a href="{{ route('academic.students.edit', $student->id) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm">
             <i class="icon-base bx bx-edit font-18"></i>
             <span>{{ __('Edit Data') }}</span>
         </a>
+        @endcan
         <a href="{{ route('academic.students.index') }}" class="btn btn-label-secondary btn-sm d-flex align-items-center gap-1">
             <i class="icon-base bx bx-arrow-back font-18"></i>
             <span>{{ __('Back to List') }}</span>

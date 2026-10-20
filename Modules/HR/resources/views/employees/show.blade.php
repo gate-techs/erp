@@ -546,12 +546,12 @@ body { background: var(--p-bg) !important; }
                 @endforelse
             </ul>
         </div>
-        @if(auth()->user() && auth()->user()->can('employees.edit'))
+        @can('hr.employees.edit')
             <a href="{{ route('hr.employees.edit', $employee->id) }}" class="btn btn-sm btn-dark d-flex align-items-center gap-1 px-3">
                 <i class="icon-base bx bx-edit font-15"></i>
                 <span>{{ __('Edit Profile') }}</span>
             </a>
-        @endif
+        @endcan
     </div>
 </div>
 

@@ -29,6 +29,8 @@ class TaskMonitoringController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('tasks.monitoring.view'), 403);
+
         // 1. Calculate KPI Metrics
         $totalTasks = Task::count();
         $openTasks = Task::whereNotIn('task_status', [TaskStatus::COMPLETED->value, TaskStatus::CANCELLED->value])->count();
@@ -225,6 +227,8 @@ class TaskMonitoringController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.monitoring.view'), 403);
+
         $query = $this->taskService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -307,32 +311,44 @@ class TaskMonitoringController extends Controller
                 }
             })
             ->addColumn('actions', function (Task $task) {
-                $html = '<div class="dropdown text-center">
+                $user = auth()->user();
+                $canView = $user?->can('tasks.view');
+                $canToggle = $user?->can('tasks.toggle-status');
+                $canDelete = $user?->can('tasks.delete');
+
+                $items = '';
+                if ($canView) {
+                    $items .= '<li><a class="dropdown-item d-flex align-items-center gap-2" href="' . route('tasks.tasks.show', $task->id) . '">
+                        <i class="icon-base bx bx-show text-info font-16"></i> ' . __('View Details') . '
+                    </a></li>';
+                }
+                if ($canToggle) {
+                    $items .= '<li><a class="dropdown-item d-flex align-items-center gap-2 btn-quick-status" href="javascript:void(0);" data-id="' . $task->id . '" data-status="' . ($task->task_status instanceof TaskStatus ? $task->task_status->value : $task->task_status) . '">
+                        <i class="icon-base bx bx-check-circle text-primary font-16"></i> ' . __('Update Status') . '
+                    </a></li>';
+                    $items .= '<li><a class="dropdown-item d-flex align-items-center gap-2 btn-quick-note" href="javascript:void(0);" data-id="' . $task->id . '" data-title="' . e($task->title) . '">
+                        <i class="icon-base bx bx-comment-add text-warning font-16"></i> ' . __('Add Note') . '
+                    </a></li>';
+                }
+                if ($canDelete) {
+                    if ($items) {
+                        $items .= '<li><hr class="dropdown-divider my-1"></li>';
+                    }
+                    $items .= '<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger btn-delete-task" href="javascript:void(0);" data-id="' . $task->id . '" data-title="' . e($task->title) . '">
+                        <i class="icon-base bx bx-trash font-16"></i> ' . __('Delete') . '
+                    </a></li>';
+                }
+
+                if (!$items) {
+                    return '<span class="text-muted small">-</span>';
+                }
+
+                return '<div class="dropdown text-center">
                     <button class="btn btn-sm btn-icon btn-outline-light border text-secondary dropdown-toggle hide-arrow py-1 px-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 6px;">
                         <i class="icon-base bx bx-dots-horizontal-rounded font-18"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">';
-                
-                $html .= '<li><a class="dropdown-item d-flex align-items-center gap-2" href="' . route('tasks.tasks.show', $task->id) . '">
-                    <i class="icon-base bx bx-show text-info font-16"></i> ' . __('View Details') . '
-                </a></li>';
-
-                $html .= '<li><a class="dropdown-item d-flex align-items-center gap-2 btn-quick-status" href="javascript:void(0);" data-id="' . $task->id . '" data-status="' . ($task->task_status instanceof TaskStatus ? $task->task_status->value : $task->task_status) . '">
-                    <i class="icon-base bx bx-check-circle text-primary font-16"></i> ' . __('Update Status') . '
-                </a></li>';
-
-                $html .= '<li><a class="dropdown-item d-flex align-items-center gap-2 btn-quick-note" href="javascript:void(0);" data-id="' . $task->id . '" data-title="' . e($task->title) . '">
-                    <i class="icon-base bx bx-comment-add text-warning font-16"></i> ' . __('Add Note') . '
-                </a></li>';
-
-                $html .= '<li><hr class="dropdown-divider my-1"></li>';
-
-                $html .= '<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger btn-delete-task" href="javascript:void(0);" data-id="' . $task->id . '" data-title="' . e($task->title) . '">
-                    <i class="icon-base bx bx-trash font-16"></i> ' . __('Delete') . '
-                </a></li>';
-
-                $html .= '</ul></div>';
-                return $html;
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">' . $items . '</ul>
+                </div>';
             })
             ->rawColumns(['task_code', 'title', 'department', 'branch', 'employee_name', 'priority', 'task_status', 'completion_date', 'remaining_duration', 'actions'])
             ->make(true);

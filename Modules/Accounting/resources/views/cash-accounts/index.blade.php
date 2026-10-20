@@ -18,9 +18,11 @@
         </nav>
     </div>
     <div class="d-flex align-items-center gap-2">
+        @can('accounting.cash-accounts.create')
         <a href="{{ route('accounting.cash-accounts.create') }}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i><span>{{ __('Add New Account') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 

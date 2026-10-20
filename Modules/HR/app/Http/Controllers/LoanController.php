@@ -31,6 +31,8 @@ class LoanController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.loans.view'), 403);
+
         $kpis        = $this->loanService->getKPIs();
         $branches    = class_exists(NurseryBranch::class) ? NurseryBranch::with('translations')->latest('id')->get() : collect();
         $departments = Department::with('translations')->active()->get();
@@ -57,6 +59,8 @@ class LoanController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.view'), 403);
+
         $query = $this->loanService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -131,16 +135,19 @@ class LoanController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (Loan $item) {
+                $user = auth()->user();
                 $buttons = '';
 
                 // 1. View Details Button
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-loan" 
-                                data-id="' . $item->id . '" title="' . __('View Details & Installments') . '">
-                                <i class="icon-base bx bx-show"></i>
-                             </button>';
+                if ($user->can('hr.loans.view')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-loan" 
+                                    data-id="' . $item->id . '" title="' . __('View Details & Installments') . '">
+                                    <i class="icon-base bx bx-show"></i>
+                                 </button>';
+                }
 
                 // 2. Approve Button (Pending)
-                if ($item->status === LoanStatus::PENDING) {
+                if ($item->status === LoanStatus::PENDING && $user->can('hr.loans.approve')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-loan" 
                                     data-id="' . $item->id . '" title="' . __('Approve Loan') . '">
                                     <i class="icon-base bx bx-check"></i>
@@ -148,7 +155,7 @@ class LoanController extends Controller
                 }
 
                 // 3. Disburse Button (Approved)
-                if ($item->status === LoanStatus::APPROVED) {
+                if ($item->status === LoanStatus::APPROVED && $user->can('hr.loans.disburse')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-disburse-loan" 
                                     data-id="' . $item->id . '" data-amount="' . $item->amount . '" title="' . __('Disburse Funds') . '">
                                     <i class="icon-base bx bx-dollar-circle"></i>
@@ -156,7 +163,7 @@ class LoanController extends Controller
                 }
 
                 // 4. Reject Button (Pending or Approved)
-                if (in_array($item->status, [LoanStatus::PENDING, LoanStatus::APPROVED])) {
+                if (in_array($item->status, [LoanStatus::PENDING, LoanStatus::APPROVED]) && $user->can('hr.loans.reject')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reject-loan" 
                                     data-id="' . $item->id . '" title="' . __('Reject Loan') . '">
                                     <i class="icon-base bx bx-x"></i>
@@ -164,14 +171,14 @@ class LoanController extends Controller
                 }
 
                 // 5. Delete Button (Pending or Rejected)
-                if (in_array($item->status, [LoanStatus::PENDING, LoanStatus::REJECTED])) {
+                if (in_array($item->status, [LoanStatus::PENDING, LoanStatus::REJECTED]) && $user->can('hr.loans.delete')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-loan" 
                                     data-id="' . $item->id . '" data-name="' . e($item->employee?->name ?? '') . '" title="' . __('Delete') . '">
                                     <i class="icon-base bx bx-trash"></i>
                                  </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['employee_info', 'type_badge', 'amount_formatted', 'installments_info', 'repayment_progress', 'status_badge', 'actions'])
             ->make(true);
@@ -183,6 +190,8 @@ class LoanController extends Controller
      */
     public function checkEligibility(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.create'), 403);
+
         try {
             $employeeId        = (int) $request->input('employee_id');
             $amount            = (float) $request->input('amount', 0);
@@ -213,6 +222,8 @@ class LoanController extends Controller
      */
     public function previewSchedule(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.create'), 403);
+
         try {
             $amount            = (float) $request->input('amount', 0);
             $installmentsCount = (int) $request->input('installments_count', 1);
@@ -242,6 +253,8 @@ class LoanController extends Controller
      */
     public function store(StoreLoanRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.create'), 403);
+
         try {
             $loan = $this->loanService->createLoan(
                 $request->validated(),
@@ -268,6 +281,8 @@ class LoanController extends Controller
      */
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.view'), 403);
+
         try {
             $loan = $this->loanService->getById($id, [
                 'employee.translations',
@@ -337,6 +352,8 @@ class LoanController extends Controller
      */
     public function approve(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.approve'), 403);
+
         try {
             $loan = $this->loanService->approveLoan($id, Auth::id() ?? 1);
 
@@ -356,6 +373,8 @@ class LoanController extends Controller
      */
     public function disburse(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.disburse'), 403);
+
         try {
             $validated = $request->validate([
                 'disbursement_method'    => 'required|string',
@@ -381,6 +400,8 @@ class LoanController extends Controller
      */
     public function reject(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.reject'), 403);
+
         try {
             $validated = $request->validate([
                 'rejection_reason' => 'required|string|max:1000',
@@ -404,6 +425,8 @@ class LoanController extends Controller
      */
     public function postponeInstallment(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.postpone'), 403);
+
         try {
             $validated = $request->validate([
                 'new_due_date' => 'required|date|after:today',
@@ -428,6 +451,8 @@ class LoanController extends Controller
      */
     public function payInstallment(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.pay-installment'), 403);
+
         try {
             $paidAmount = $request->filled('paid_amount') ? (float) $request->input('paid_amount') : null;
             $notes      = $request->input('notes');
@@ -450,6 +475,8 @@ class LoanController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.loans.delete'), 403);
+
         try {
             $this->loanService->deleteLoan($id);
 

@@ -20,6 +20,11 @@ class InventoryPermissionSeeder extends Seeder
         $guardName = 'web';
 
         $screens = [
+            // 0. لوحة التحكم
+            'inventory_dashboard' => [
+                'inventory.dashboard.view' => 'عرض لوحة تحكم المخزون',
+            ],
+
             // 1. الأصناف والمنتجات
             'inventory_items' => [
                 'inventory.items.view'          => 'عرض قائمة الأصناف والمنتجات',

@@ -101,16 +101,20 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+                @can('academic.calender.delete')
                 <button type="button" class="btn btn-outline-danger d-none" id="btnDeleteEventFromOffcanvas">
                     <i class="icon-base bx bx-trash me-1"></i>
                     <span>{{ __('Delete') }}</span>
                 </button>
+                @endcan
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                    @canany(['academic.calender.create', 'academic.calender.edit'])
                     <button type="submit" class="btn btn-primary" id="btnSaveEvent">
                         <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
                         <span>{{ __('Save') }}</span>
                     </button>
+                    @endcanany
                 </div>
             </div>
         </form>
@@ -149,16 +153,22 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-between border-top">
+                @can('academic.calender.delete')
                 <button type="button" class="btn btn-outline-danger btn-sm" id="btnDeleteEventFromView">
                     <i class="icon-base bx bx-trash font-16 me-1"></i>
                     <span>{{ __('Delete') }}</span>
                 </button>
+                @else
+                <div></div>
+                @endcan
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                    @can('academic.calender.edit')
                     <button type="button" class="btn btn-primary btn-sm" id="btnEditEventFromView">
                         <i class="icon-base bx bx-edit font-16 me-1"></i>
                         <span>{{ __('Edit') }}</span>
                     </button>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -236,15 +246,20 @@
     function initCalendar() {
         const calendarEl = document.getElementById('calendar');
 
-        calendar = window.createAppCalendar(calendarEl, {
-            customButtons: {
-                addEventButton: {
-                    text: '+ ' + '{{ __("Add Event") }}',
-                    click: function () {
-                        openAddEventOffcanvas();
-                    }
+        const canCreate = {{ auth()->user()->can('academic.calender.create') ? 'true' : 'false' }};
+        const canEdit = {{ auth()->user()->can('academic.calender.edit') ? 'true' : 'false' }};
+
+        const customButtonsConfig = canCreate ? {
+            addEventButton: {
+                text: '+ ' + '{{ __("Add Event") }}',
+                click: function () {
+                    openAddEventOffcanvas();
                 }
-            },
+            }
+        } : {};
+
+        calendar = window.createAppCalendar(calendarEl, {
+            customButtons: customButtonsConfig,
 
             // Fetch Events via AJAX
             events: function (fetchInfo, successCallback, failureCallback) {
@@ -264,16 +279,20 @@
                 });
             },
 
-            // Click on date -> open side modal
+            // Click on date -> open side modal if can create
             select: function (selectionInfo) {
-                openAddEventOffcanvas(selectionInfo.startStr, selectionInfo.endStr);
+                if (canCreate) {
+                    openAddEventOffcanvas(selectionInfo.startStr, selectionInfo.endStr);
+                }
                 calendar.unselect();
             },
 
-            // Click on event -> open edit modal directly
+            // Click on event -> open modal directly if can edit or view
             eventClick: function (info) {
                 info.jsEvent.preventDefault();
-                editEvent(info.event.id);
+                if (canEdit) {
+                    editEvent(info.event.id);
+                }
             },
 
             // Customize event render

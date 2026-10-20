@@ -35,6 +35,8 @@ class AttendanceController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.attendances.view'), 403);
+
         $selectedYear = (int)($request->get('year', now()->year));
         $selectedMonth = (int)($request->get('month', now()->month));
         $selectedEmployee = $request->get('employee_id');
@@ -93,6 +95,8 @@ class AttendanceController extends Controller
      */
     public function matrixData(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.view'), 403);
+
         try {
             $data = $this->attendanceService->getMonthlyMatrixData($request->all());
             return response()->json([
@@ -113,6 +117,8 @@ class AttendanceController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.view'), 403);
+
         $repo = app(\Modules\HR\Repositories\Contracts\AttendanceRepositoryInterface::class);
         $query = $repo->getDataTableQuery($request->all());
 
@@ -168,6 +174,14 @@ class AttendanceController extends Controller
                 return '<span class="badge ' . $badgeClass . '">' . $label . '</span>';
             })
             ->addColumn('actions', function (Attendance $item) {
+                $user = auth()->user();
+                $canEdit = $user->can('hr.attendances.edit');
+                $canDelete = $user->can('hr.attendances.delete');
+
+                if (! $canEdit && ! $canDelete) {
+                    return '<span class="text-muted">---</span>';
+                }
+
                 $rowJson = htmlspecialchars(json_encode([
                     'id'                  => $item->id,
                     'employee_id'         => $item->employee_id,
@@ -183,21 +197,26 @@ class AttendanceController extends Controller
                     'adjustment_reason'   => $item->adjustment_reason ?? '',
                 ]), ENT_QUOTES, 'UTF-8');
 
-                return '
-                    <div class="d-inline-flex gap-1">
+                $buttons = '<div class="d-inline-flex gap-1">';
+                if ($canEdit) {
+                    $buttons .= '
                         <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-attendance" 
                             data-row="' . $rowJson . '" 
                             title="' . __('Edit') . '">
                             <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
+                        </button>';
+                }
+                if ($canDelete) {
+                    $buttons .= '
                         <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-attendance" 
                             data-id="' . $item->id . '" 
                             data-name="' . e($item->employee?->name . ' (' . $item->date . ')') . '" 
                             title="' . __('Delete') . '">
                             <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                        </button>';
+                }
+                $buttons .= '</div>';
+                return $buttons;
             })
             ->rawColumns(['employee_name', 'check_in_badge', 'check_out_badge', 'late_early', 'status', 'actions'])
             ->make(true);
@@ -209,6 +228,8 @@ class AttendanceController extends Controller
      */
     public function recordPunch(RecordPunchRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.create'), 403);
+
         try {
             $attendance = $this->attendanceService->recordPunch($request->validated());
 
@@ -239,6 +260,8 @@ class AttendanceController extends Controller
      */
     public function store(SaveManualAttendanceRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.create'), 403);
+
         try {
             $this->attendanceService->saveManualAttendance($request->validated());
 
@@ -257,6 +280,8 @@ class AttendanceController extends Controller
      */
     public function update(SaveManualAttendanceRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.edit'), 403);
+
         try {
             $this->attendanceService->updateAttendance($id, $request->validated());
 
@@ -275,6 +300,8 @@ class AttendanceController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.delete'), 403);
+
         try {
             $this->attendanceService->deleteAttendance($id);
 
@@ -292,6 +319,8 @@ class AttendanceController extends Controller
      */
     public function importExcel(ImportAttendanceExcelRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.attendances.import'), 403);
+
         try {
             $result = $this->attendanceService->importExcel($request->file('file'));
 
@@ -312,6 +341,8 @@ class AttendanceController extends Controller
      */
     public function downloadTemplate()
     {
+        abort_if(! auth()->user()->can('hr.attendances.import'), 403);
+
         $headers = [
             'Content-Type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename="attendance_template.csv"',

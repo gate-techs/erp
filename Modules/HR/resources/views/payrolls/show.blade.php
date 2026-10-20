@@ -28,27 +28,35 @@
 
     <!-- Action Toolbar -->
     <div class="d-flex flex-wrap align-items-center gap-2">
+        @can('hr.payrolls.export-wps')
         <a href="{{ route('hr.payrolls.export-wps', $payroll->id) }}" class="btn btn-outline-secondary d-flex align-items-center gap-1">
             <i class="icon-base bx bx-download font-16"></i>
             <span>{{ __('Export WPS / Bank File') }}</span>
         </a>
+        @endcan
 
         @if ($payroll->status === \Modules\HR\Enums\PayrollStatus::DRAFT)
+            @can('hr.payrolls.recalculate')
             <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-1 btn-recalculate-payroll" data-id="{{ $payroll->id }}">
                 <i class="icon-base bx bx-refresh font-16"></i>
                 <span>{{ __('Recalculate') }}</span>
             </button>
+            @endcan
+            @can('hr.payrolls.approve')
             <button type="button" class="btn btn-outline-success d-flex align-items-center gap-1 btn-approve-payroll" data-id="{{ $payroll->id }}">
                 <i class="icon-base bx bx-check font-16"></i>
                 <span>{{ __('Approve') }}</span>
             </button>
+            @endcan
         @endif
 
         @if (in_array($payroll->status, [\Modules\HR\Enums\PayrollStatus::DRAFT, \Modules\HR\Enums\PayrollStatus::APPROVED]))
+            @can('hr.payrolls.disburse')
             <button type="button" class="btn btn-success d-flex align-items-center gap-1 btn-disburse-payroll" data-id="{{ $payroll->id }}" data-amount="{{ number_format($payroll->total_net, 2) }} {{ __('KWD') }}">
                 <i class="icon-base bx bx-wallet font-16"></i>
                 <span>{{ __('Disburse / Mark as Paid') }}</span>
             </button>
+            @endcan
         @endif
     </div>
 </div>

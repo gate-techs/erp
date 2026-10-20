@@ -20,20 +20,26 @@
     </div>
 
     <div class="d-flex flex-wrap align-items-center gap-2">
+        @can('hr.job-offers.view')
         <a href="{{ route('hr.job-offers.index') }}" class="btn btn-outline-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="bx bx-gift font-18"></i>
             <span class="fw-semibold">{{ __('Job Offers') }}</span>
         </a>
+        @endcan
 
+        @can('hr.employees.view')
         <a href="{{ route('hr.employees.index') }}" class="btn btn-outline-success d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="bx bx-user font-18"></i>
             <span class="fw-semibold">{{ __('Employees Directory') }}</span>
         </a>
+        @endcan
 
+        @can('hr.onboardings.create')
         <a href="{{ route('hr.onboardings.create') }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="icon-base bx bx-plus font-18"></i>
             <span class="fw-semibold">{{ __('Initiate Onboarding') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 

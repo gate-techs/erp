@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.weekly-plans.create')
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicWeeklyPlan" aria-controls="offcanvasAddAcademicWeeklyPlan">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Weekly Plan') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -124,6 +126,7 @@
     </div>
 </div>
 
+@can('academic.weekly-plans.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Weekly Plan                                     -->
 <!-- ========================================================================= -->
@@ -262,7 +265,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.weekly-plans.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Weekly Plan                                    -->
 <!-- ========================================================================= -->
@@ -409,7 +414,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.weekly-plans.view')
 <!-- ========================================================================= -->
 <!-- 3. Modal: View Plan Details                                               -->
 <!-- ========================================================================= -->
@@ -463,7 +470,9 @@
         </div>
     </div>
 </div>
+@endcan
 
+@can('academic.weekly-plans.delete')
 <!-- ========================================================================= -->
 <!-- 4. Modal: Confirm Delete                                                  -->
 <!-- ========================================================================= -->
@@ -489,6 +498,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @endsection
 

@@ -55,10 +55,12 @@
                     @endforeach
                 </select>
 
+                @can('hr.settings.official-holidays.create')
                 <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm text-nowrap" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddHoliday" aria-controls="offcanvasAddHoliday">
                     <i class="icon-base bx bx-plus font-18"></i>
                     <span>{{ __('Add New Holiday') }}</span>
                 </button>
+                @endcan
             </div>
         </div>
 

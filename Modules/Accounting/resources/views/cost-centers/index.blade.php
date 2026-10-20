@@ -19,12 +19,14 @@
         </nav>
     </div>
 
+    @can('accounting.cost-centers.create')
     <div>
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCostCenter" aria-controls="offcanvasAddCostCenter">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Cost Center') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Alert Notifications Container -->

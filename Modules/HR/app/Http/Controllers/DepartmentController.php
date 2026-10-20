@@ -26,6 +26,8 @@ class DepartmentController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! (auth()->user()->can('hr.settings.departments.view') || auth()->user()->can('hr.settings.administrations.view')), 403);
+
         $formData = $this->departmentService->getFormData();
 
         return view('hr::departments.index', [
@@ -43,6 +45,7 @@ class DepartmentController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! (auth()->user()->can('hr.settings.departments.view') || auth()->user()->can('hr.settings.administrations.view')), 403);
         $query = Department::with([
             'translations',
             'parent.translations',
@@ -127,6 +130,8 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! (auth()->user()->can('hr.settings.departments.create') || auth()->user()->can('hr.settings.administrations.create')), 403);
+
         $department = $this->departmentService->createDepartment(
             $request->validated(),
             auth()->id()
@@ -151,6 +156,8 @@ class DepartmentController extends Controller
      */
     public function update(UpdateDepartmentRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! (auth()->user()->can('hr.settings.departments.edit') || auth()->user()->can('hr.settings.administrations.edit')), 403);
+
         $department = $this->departmentService->updateDepartment(
             $id,
             $request->validated()
@@ -175,6 +182,8 @@ class DepartmentController extends Controller
      */
     public function destroy(int $id, Request $request): RedirectResponse|JsonResponse
     {
+        abort_if(! (auth()->user()->can('hr.settings.departments.delete') || auth()->user()->can('hr.settings.administrations.delete')), 403);
+
         $deleted = $this->departmentService->deleteDepartment($id);
 
         if ($request->wantsJson() || $request->ajax()) {

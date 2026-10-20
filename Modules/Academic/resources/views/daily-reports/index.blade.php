@@ -19,12 +19,14 @@
         </div>
     </div>
 
+    @can('academic.daily-reports.create')
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
         <a class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" href="{{ route('academic.daily-reports.create') }}">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Daily Report') }}</span>
         </a>
     </div>
+    @endcan
 </div>
 @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
 <div class="card border-0 shadow-sm"><div class="card-body border-bottom"><div class="row g-2"><div class="col-md-4"><select id="filter_institution" class="form-select select2"><option value="">{{ __('All Nurseries') }}</option>@foreach($institutions as $n)<option value="{{ $n->id }}">{{ $n->name }}</option>@endforeach</select></div><div class="col-md-4"><select id="filter_branch" class="form-select select2"><option value="">{{ __('All Branches') }}</option>@foreach($branches as $b)<option value="{{ $b->id }}">{{ $b->name }}</option>@endforeach</select></div><div class="col-md-4"><input id="filter_date" type="date" class="form-control js-flatpickr-date flatpickr-input active"></div></div></div><div class="card-datatable table-responsive"><table id="dailyReportsTable" class="table table-hover border-top w-100 text-nowrap"><thead><tr><th>#</th><th>{{ __('Date') }}</th><th>{{ __('Nursery') }}</th><th>{{ __('Branch') }}</th><th>{{ __('Children Present Today') }}</th><th>{{ __('Team Present Today') }}</th><th>{{ __('Actions') }}</th></tr></thead></table></div></div>

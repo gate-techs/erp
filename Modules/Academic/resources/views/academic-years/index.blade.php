@@ -21,12 +21,14 @@
         </div>
     </div>
 
+    @can('academic.years.create')
     <div class="mt-3 mt-md-0">
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicYear" aria-controls="offcanvasAddAcademicYear">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Year') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Filters Card -->
@@ -94,6 +96,7 @@
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Year                                           -->
 <!-- ========================================================================= -->
+@can('academic.years.create')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasAddAcademicYear" aria-labelledby="offcanvasAddAcademicYearLabel" style="width: 480px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasAddAcademicYearLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -192,10 +195,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Year                                          -->
 <!-- ========================================================================= -->
+@can('academic.years.edit')
 <div class="offcanvas {{ app()->getLocale() === 'ar' ? 'offcanvas-start' : 'offcanvas-end' }} shadow-lg" tabindex="-1" id="offcanvasEditAcademicYear" aria-labelledby="offcanvasEditAcademicYearLabel" style="width: 480px; max-width: 95vw;">
     <div class="offcanvas-header border-bottom py-3 px-4">
         <h5 id="offcanvasEditAcademicYearLabel" class="offcanvas-title fw-bold text-heading d-flex align-items-center gap-2 mb-0">
@@ -295,10 +300,12 @@
         </form>
     </div>
 </div>
+@endcan
 
 <!-- ========================================================================= -->
 <!-- 3. Modal: Delete Confirmation                                             -->
 <!-- ========================================================================= -->
+@can('academic.years.delete')
 <div class="modal fade" id="deleteAcademicYearModal" tabindex="-1" aria-labelledby="deleteAcademicYearModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
@@ -322,6 +329,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('page-script')

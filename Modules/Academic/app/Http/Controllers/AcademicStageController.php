@@ -22,6 +22,8 @@ class AcademicStageController extends Controller
 
     public function index(): View
     {
+        abort_if(!auth()->user()->can('academic.stages.view'), 403);
+
         $institutions = Nursery::with('translations')->get();
         $statuses = AcademicStage::statuses();
 
@@ -30,6 +32,8 @@ class AcademicStageController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->addColumn('name', function (AcademicStage $item) {
@@ -50,6 +54,8 @@ class AcademicStageController extends Controller
 
     public function store(StoreAcademicStageRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.create'), 403);
+
         $academicStage = $this->service->createAcademicStage(
             $request->validated(),
             auth()->id()
@@ -65,6 +71,8 @@ class AcademicStageController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.view'), 403);
+
         $academicStage = $this->service->getAcademicStage($id);
 
         if (!$academicStage) {
@@ -82,6 +90,8 @@ class AcademicStageController extends Controller
 
     public function update(UpdateAcademicStageRequest $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.edit'), 403);
+
         $academicStage = $this->service->updateAcademicStage($id, $request->validated());
 
         return $this->respond(
@@ -93,6 +103,8 @@ class AcademicStageController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.delete'), 403);
+
         $this->service->deleteAcademicStage($id);
 
         return $this->respond($request, __('Academic stage deleted successfully.'));
@@ -100,6 +112,8 @@ class AcademicStageController extends Controller
 
     public function toggleStatus(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.stages.toggle-status'), 403);
+
         $academicStage = $this->service->toggleStatus($id);
 
         return $this->respond(
@@ -139,20 +153,36 @@ class AcademicStageController extends Controller
                 ?? __('Academic Stage')
         );
 
-        return '<div class="d-inline-flex gap-1">
-            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-stage"
+        $user = auth()->user();
+        $canEdit = $user?->can('academic.stages.edit');
+        $canToggle = $user?->can('academic.stages.toggle-status');
+        $canDelete = $user?->can('academic.stages.delete');
+
+        $buttons = '';
+        if ($canEdit) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-stage"
                 data-id="' . $academicStage->id . '" title="' . e(__('Edit')) . '">
                 <i class="icon-base bx bx-edit"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-stage-status"
+            </button>';
+        }
+        if ($canToggle) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-stage-status"
                 data-id="' . $academicStage->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-stage"
+            </button>';
+        }
+        if ($canDelete) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-stage"
                 data-id="' . $academicStage->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '">
                 <i class="icon-base bx bx-trash"></i>
-            </button>
-        </div>';
+            </button>';
+        }
+
+        if (empty($buttons)) {
+            return '<span class="text-muted">-</span>';
+        }
+
+        return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
     }
 
     private function respond(

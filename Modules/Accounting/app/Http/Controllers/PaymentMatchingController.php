@@ -121,6 +121,9 @@ class PaymentMatchingController extends Controller
                 return '<span class="small text-muted">' . e($item->matchedBy?->name ?? '-') . '</span>';
             })
             ->addColumn('actions', function (PaymentMatching $item) {
+                if (! auth()->user()->can('accounting.payment-matchings.delete')) {
+                    return '<span class="text-muted">---</span>';
+                }
                 return '<div class="d-flex align-items-center gap-1 justify-content-end">
                     <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-unmatch" data-id="' . $item->id . '" title="' . __('Unmatch / Delete') . '">
                         <i class="icon-base bx bx-unlink font-16"></i>

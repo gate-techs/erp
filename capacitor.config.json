@@ -1,0 +1,33 @@
+{
+  "appId": "kw.astroleaders.alaorbit",
+  "appName": "ALA ORBIT",
+  "webDir": "mobile-app-shell",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://edu.astroleaderskw.com/portal/splash",
+    "cleartext": false,
+    "allowNavigation": [
+      "edu.astroleaderskw.com",
+      "*.astroleaderskw.com",
+      "*.jsdelivr.net",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1200,
+      "backgroundColor": "#012436",
+      "showSpinner": false
+    },
+    "Keyboard": {
+      "resize": "body"
+    }
+  },
+  "ios": {
+    "contentInset": "always",
+    "preferredContentMode": "mobile",
+    "scheme": "alaorbit",
+    "allowsLinkPreview": false
+  }
+}

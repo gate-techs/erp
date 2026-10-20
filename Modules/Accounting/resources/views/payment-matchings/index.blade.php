@@ -17,10 +17,12 @@
             </ol>
         </nav>
     </div>
+    @can('accounting.payment-matchings.create')
     <a href="{{ route('accounting.payment-matchings.create') }}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
         <i class="icon-base bx bx-plus font-18"></i>
         <span>{{ __('New Payment Matching') }}</span>
     </a>
+    @endcan
 </div>
 
 <div id="alertContainer">

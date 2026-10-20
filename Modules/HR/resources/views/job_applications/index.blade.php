@@ -237,10 +237,12 @@
             </button>
         </div>
 
+        @can('hr.job-applications.create')
         <a href="{{ route('hr.job-applications.create', $selectedOpeningId ? ['job_opening_id' => $selectedOpeningId] : []) }}" class="btn btn-primary d-flex align-items-center gap-1.5 shadow-sm px-3 py-2 rounded-3">
             <i class="icon-base bx bx-user-plus font-18"></i>
             <span class="fw-semibold">{{ __('New Candidate') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 
@@ -446,18 +448,25 @@
                                     @if ($item->status?->value === 'rejected')
                                         <span class="badge bg-label-danger rounded-pill font-10 px-1.5 py-0.5">{{ __('Disqualified') }}</span>
                                     @endif
+                                    @php
+                                        $canViewApp = auth()->user()->can('hr.job-applications.view');
+                                        $canRejectApp = auth()->user()->can('hr.job-applications.reject');
+                                    @endphp
+                                    @if ($canViewApp || ($canRejectApp && $item->status?->value !== 'rejected'))
                                     <div class="dropdown">
                                         <button type="button" class="btn btn-xs btn-icon btn-text-secondary rounded-circle" data-bs-toggle="dropdown" aria-expanded="false" title="{{ __('Actions') }}">
                                             <i class="bx bx-dots-horizontal-rounded font-16"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                            @if ($canViewApp)
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('hr.job-applications.show', $item->id) }}">
                                                     <i class="bx bx-show font-14 text-primary"></i>
                                                     <span>{{ __('View Profile') }}</span>
                                                 </a>
                                             </li>
-                                            @if ($item->status?->value !== 'rejected')
+                                            @endif
+                                            @if ($canRejectApp && $item->status?->value !== 'rejected')
                                                 <li>
                                                     <button type="button" class="dropdown-item d-flex align-items-center gap-2 text-danger btn-reject-candidate" data-id="{{ $item->id }}" data-name="{{ $c?->full_name }}">
                                                         <i class="bx bx-user-x font-14"></i>
@@ -467,6 +476,7 @@
                                             @endif
                                         </ul>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
 

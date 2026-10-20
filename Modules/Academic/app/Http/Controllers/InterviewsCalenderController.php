@@ -20,8 +20,11 @@ class InterviewsCalenderController extends Controller
     ) {}
 
     //------------------------------
+    //------------------------------
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view'), 403);
+
         if ($request->wantsJson()) {
             $filters = $request->only(['status', 'institution_id', 'branch_id', 'search']);
             $items = $this->service->all(auth()->id(), $filters);
@@ -48,6 +51,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function sidebarData(): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view'), 403);
+
         $data = $this->service->getSidebarData(auth()->id());
 
         return response()->json([
@@ -59,6 +64,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function calendarEvents(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -75,6 +82,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function checkGuardian(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view') && ! auth()->user()->can('academic.interviews_calender.create'), 403);
+
         $civilId = $request->query('civil_id', '');
         $result  = $this->service->checkGuardianByCivilId($civilId);
 
@@ -87,6 +96,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function branches(int $institutionId): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view'), 403);
+
         $locale = app()->getLocale();
         $branches = NurseryBranch::with('translations')
             ->where('nursery_id', $institutionId)
@@ -108,6 +119,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function store(StoreInterviewsCalenderRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.create'), 403);
+
         try {
             $data = $request->validated();
             $data['user_id'] = auth()->id();
@@ -130,6 +143,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.view'), 403);
+
         $interview = $this->service->find($id, auth()->id());
 
         if (! $interview) {
@@ -168,12 +183,16 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function edit(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.edit'), 403);
+
         return $this->show($id);
     }
 
     //------------------------------
     public function update(UpdateInterviewsCalenderRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.edit'), 403);
+
         try {
             $data = $request->validated();
             $updated = $this->service->update($id, $data, auth()->id());
@@ -200,6 +219,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.delete'), 403);
+
         try {
             $deleted = $this->service->delete($id, auth()->id());
 
@@ -225,6 +246,8 @@ class InterviewsCalenderController extends Controller
     //------------------------------
     public function updateStatus(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.interviews_calender.status'), 403);
+
         $request->validate([
             'status' => 'required|string|in:planned,completed,cancelled,absent',
         ]);

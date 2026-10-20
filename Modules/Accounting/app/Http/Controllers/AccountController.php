@@ -189,28 +189,40 @@ class AccountController extends Controller
                 return '<span class="badge bg-label-danger d-inline-flex align-items-center"><i class="icon-base bx bx-x-circle me-1 font-12"></i>' . __('Inactive') . '</span>';
             })
             ->addColumn('actions', function (Account $item) {
-                $addSubBtn = $item->is_group ? '
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-success btn-quick-add-child" data-parent-id="' . $item->id . '" data-parent-code="' . e($item->code) . '" data-type="' . $item->account_type->value . '" title="' . __('Add Sub-Account') . '">
+                $user = auth()->user();
+
+                $addSubBtn = '';
+                if ($item->is_group && $user->can('accounting.accounts.create')) {
+                    $addSubBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-quick-add-child" data-parent-id="' . $item->id . '" data-parent-code="' . e($item->code) . '" data-type="' . $item->account_type->value . '" title="' . __('Add Sub-Account') . '">
                         <i class="icon-base bx bx-plus"></i>
-                    </button>' : '';
+                    </button>';
+                }
 
-                $deprecateIcon = $item->is_deprecated ? 'bx-undo' : 'bx-archive';
-                $deprecateTitle = $item->is_deprecated ? __('Reactivate Account') : __('Deprecate Account');
+                $editBtn = '';
+                if ($user->can('accounting.accounts.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-account" data-id="' . $item->id . '" title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        ' . $addSubBtn . '
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-account" data-id="' . $item->id . '" title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-deprecate-account" data-id="' . $item->id . '" data-deprecated="' . ($item->is_deprecated ? '1' : '0') . '" data-code="' . e($item->code) . '" data-name="' . e($item->translateOrNew(app()->getLocale())->name ?? '') . '" title="' . $deprecateTitle . '">
-                            <i class="icon-base bx ' . $deprecateIcon . '"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-account" data-id="' . $item->id . '" data-has-children="' . ($item->children()->exists() ? '1' : '0') . '" data-code="' . e($item->code) . '" title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $deprecateBtn = '';
+                if ($user->can('accounting.accounts.toggle-status')) {
+                    $deprecateIcon = $item->is_deprecated ? 'bx-undo' : 'bx-archive';
+                    $deprecateTitle = $item->is_deprecated ? __('Reactivate Account') : __('Deprecate Account');
+                    $deprecateBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-deprecate-account" data-id="' . $item->id . '" data-deprecated="' . ($item->is_deprecated ? '1' : '0') . '" data-code="' . e($item->code) . '" data-name="' . e($item->translateOrNew(app()->getLocale())->name ?? '') . '" title="' . $deprecateTitle . '">
+                        <i class="icon-base bx ' . $deprecateIcon . '"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.accounts.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-account" data-id="' . $item->id . '" data-has-children="' . ($item->children()->exists() ? '1' : '0') . '" data-code="' . e($item->code) . '" title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $addSubBtn . $editBtn . $deprecateBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['account_name', 'code_formatted', 'parent_name', 'type_badge', 'balance_badge', 'nature_badge', 'status_badges', 'actions'])
             ->make(true);

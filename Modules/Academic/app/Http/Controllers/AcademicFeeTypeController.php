@@ -21,6 +21,7 @@ class AcademicFeeTypeController extends Controller
 
     public function index()
     {
+        abort_if(! auth()->user()->can('academic.fee-types.view'), 403);
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $branches = NurseryBranch::with('translations')->where('status', 'active')->get();
         $statuses = AcademicFeeType::statuses();
@@ -34,6 +35,12 @@ class AcademicFeeTypeController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.view'), 403);
+        $canEdit = auth()->user()->can('academic.fee-types.edit');
+        $canDelete = auth()->user()->can('academic.fee-types.delete');
+        $canToggle = auth()->user()->can('academic.fee-types.toggle-status');
+        $canView = auth()->user()->can('academic.fee-types.view');
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -45,14 +52,18 @@ class AcademicFeeTypeController extends Controller
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->addColumn('type_info', function (AcademicFeeType $type) {
+            ->addColumn('type_info', function (AcademicFeeType $type) use ($canEdit) {
                 $locale = app()->getLocale();
                 $name = $type->translate($locale)?->name ?? $type->translate('ar')?->name ?? '-';
                 $subName = $type->translate($locale === 'ar' ? 'en' : 'ar')?->name ?? '';
 
+                $titleHtml = $canEdit
+                    ? '<button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button>'
+                    : '<span class="fw-bold text-heading">' . e($name) . '</span>';
+
                 return '
                     <div class="d-flex flex-column">
-                        <button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button>
+                        ' . $titleHtml . '
                         <small class="text-muted">' . e($subName) . '</small>
                     </div>
                 ';
@@ -72,31 +83,39 @@ class AcademicFeeTypeController extends Controller
             ->addColumn('order_badge', function (AcademicFeeType $type) {
                 return '<span class="badge bg-label-secondary">' . $type->order . '</span>';
             })
-            ->addColumn('status_badge', function (AcademicFeeType $type) {
+            ->addColumn('status_badge', function (AcademicFeeType $type) use ($canToggle) {
                 $isActive = $type->status === AcademicFeeType::STATUS_ACTIVE;
                 $badgeClass = $isActive ? 'btn-success' : 'btn-label-danger';
                 $label = $isActive ? __('Active') : __('Inactive');
+
+                if (! $canToggle) {
+                    $class = $isActive ? 'bg-label-success' : 'bg-label-danger';
+                    return '<span class="badge ' . $class . '">' . e($label) . '</span>';
+                }
 
                 return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-fee-type-status" data-id="' . $type->id . '">'
                     . e($label) .
                 '</button>';
             })
-            ->addColumn('actions', function (AcademicFeeType $type) {
+            ->addColumn('actions', function (AcademicFeeType $type) use ($canView, $canEdit, $canDelete) {
                 $title = $type->translate(app()->getLocale())?->name ?? $type->translate('ar')?->name ?? '';
+                $buttons = [];
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('View Details')) . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-fee-type" data-id="' . $type->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                if ($canView) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('View Details')) . '"><i class="icon-base bx bx-show"></i></button>';
+                }
+                if ($canEdit) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-fee-type" data-id="' . $type->id . '" title="' . e(__('Edit')) . '"><i class="icon-base bx bx-edit"></i></button>';
+                }
+                if ($canDelete) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-fee-type" data-id="' . $type->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                if (empty($buttons)) {
+                    return '<span class="text-muted">-</span>';
+                }
+
+                return '<div class="d-inline-flex align-items-center gap-1">' . implode('', $buttons) . '</div>';
             })
             ->rawColumns(['type_info', 'order_badge', 'status_badge', 'actions'])
             ->toJson();
@@ -104,6 +123,7 @@ class AcademicFeeTypeController extends Controller
 
     public function store(StoreAcademicFeeTypeRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.create'), 403);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -118,6 +138,7 @@ class AcademicFeeTypeController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.view'), 403);
         $type = $this->service->find($id);
 
         if (! $type) {
@@ -150,6 +171,7 @@ class AcademicFeeTypeController extends Controller
 
     public function update(UpdateAcademicFeeTypeRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.edit'), 403);
         $type = $this->service->find($id);
 
         if (! $type) {
@@ -171,6 +193,7 @@ class AcademicFeeTypeController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.delete'), 403);
         $type = $this->service->find($id);
 
         if (! $type) {
@@ -190,6 +213,7 @@ class AcademicFeeTypeController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-types.toggle-status'), 403);
         $type = $this->service->find($id);
 
         if (! $type) {

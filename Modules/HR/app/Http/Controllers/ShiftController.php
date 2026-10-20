@@ -28,6 +28,8 @@ class ShiftController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.shifts.view'), 403);
+
         $formData = $this->shiftService->getFormData();
 
         return view('hr::settings.shifts.index', [
@@ -41,6 +43,8 @@ class ShiftController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.shifts.view'), 403);
+
         $query = $this->shiftService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -98,6 +102,8 @@ class ShiftController extends Controller
             ->addColumn('checkout_end_raw', fn(Shift $item) => $item->checkout_end ? Carbon::parse($item->checkout_end)->format('H:i') : '')
             ->editColumn('created_at', fn(Shift $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->addColumn('actions', function (Shift $item) {
+                $user = auth()->user();
+
                 $rowJson = htmlspecialchars(json_encode([
                     'id'               => $item->id,
                     'code'             => $item->code ?? '',
@@ -118,21 +124,27 @@ class ShiftController extends Controller
                     'status'           => is_object($item->status) ? $item->status->value : $item->status,
                 ]), ENT_QUOTES, 'UTF-8');
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-shift" 
-                            data-row="' . $rowJson . '" 
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-shift" 
-                            data-id="' . $item->id . '" 
-                            data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $editBtn = '';
+                if ($user->can('hr.settings.shifts.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-shift" 
+                        data-row="' . $rowJson . '" 
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('hr.settings.shifts.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-shift" 
+                        data-id="' . $item->id . '" 
+                        data-name="' . e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '') . '" 
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['time_range', 'grace_periods', 'is_overnight', 'color_badge', 'status', 'actions'])
             ->filterColumn('name_ar', function ($query, $keyword) {
@@ -150,6 +162,8 @@ class ShiftController extends Controller
      */
     public function store(StoreShiftRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.shifts.create'), 403);
+
         try {
             $this->shiftService->createShift($request->validated(), auth()->id());
 
@@ -168,6 +182,8 @@ class ShiftController extends Controller
      */
     public function update(UpdateShiftRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.shifts.edit'), 403);
+
         try {
             $shift = $this->shiftService->getShiftById($id);
             if (!$shift) {
@@ -192,6 +208,8 @@ class ShiftController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.shifts.delete'), 403);
+
         try {
             $shift = $this->shiftService->getShiftById($id);
             if (!$shift) {

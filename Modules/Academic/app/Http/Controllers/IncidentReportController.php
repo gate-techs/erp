@@ -24,6 +24,7 @@ class IncidentReportController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.view'), 403);
         return view('academic::incident-reports.index', $this->service->formData());
     }
 
@@ -32,6 +33,11 @@ class IncidentReportController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.view'), 403);
+        $canEdit = auth()->user()->can('academic.incident-reports.edit');
+        $canDelete = auth()->user()->can('academic.incident-reports.delete');
+        $canView = auth()->user()->can('academic.incident-reports.view');
+
         $query = $this->service->query($request->all());
 
         return DataTables::eloquent($query)
@@ -69,10 +75,13 @@ class IncidentReportController extends Controller
                 $type = $r->incident_type_name;
                 return '<span class="badge bg-label-warning px-2 py-1"><i class="bx bx-error-circle me-1"></i>' . e($type) . '</span>';
             })
-            ->addColumn('incident_datetime', function (IncidentReport $r) {
+            ->addColumn('incident_datetime', function (IncidentReport $r) use ($canEdit) {
                 $date = $r->date ? $r->date->format('Y-m-d') : '-';
                 $time = $r->time ? '<span class="badge bg-label-secondary ms-1"><i class="bx bx-time-five me-1 font-12"></i>' . e($r->time) . '</span>' : '';
-                return '<a href="' . route('academic.incident-reports.edit', $r->id) . '" class="fw-semibold text-heading text-hover-primary" title="' . e(__('تعديل')) . '">' . e($date) . '</a>' . $time;
+                if ($canEdit) {
+                    return '<a href="' . route('academic.incident-reports.edit', $r->id) . '" class="fw-semibold text-heading text-hover-primary" title="' . e(__('تعديل')) . '">' . e($date) . '</a>' . $time;
+                }
+                return '<span class="fw-semibold text-heading">' . e($date) . '</span>' . $time;
             })
             ->addColumn('location_html', function (IncidentReport $r) {
                 if (empty($r->location)) {
@@ -91,25 +100,28 @@ class IncidentReportController extends Controller
                 $names = e($r->persons_names);
                 return '<span class="badge bg-label-primary" data-bs-toggle="tooltip" title="' . $names . '"><i class="bx bx-group me-1"></i>' . $count . ' ' . __('شخص') . '</span>';
             })
-            ->addColumn('actions', function (IncidentReport $r) {
+            ->addColumn('actions', function (IncidentReport $r) use ($canView, $canEdit, $canDelete) {
                 $showUrl  = route('academic.incident-reports.show', $r->id);
                 $editUrl  = route('academic.incident-reports.edit', $r->id);
                 $printUrl = route('academic.incident-reports.print', $r->id);
 
-                return '<div class="d-flex gap-1 justify-content-center">
-                    <a class="btn btn-sm btn-icon btn-label-info" href="' . $showUrl . '" title="' . e(__('عرض التقرير')) . '">
-                        <i class="bx bx-show font-16"></i>
-                    </a>
-                    <a class="btn btn-sm btn-icon btn-label-secondary" href="' . $printUrl . '" target="_blank" title="' . e(__('طباعة')) . '">
-                        <i class="bx bx-printer font-16"></i>
-                    </a>
-                    <a class="btn btn-sm btn-icon btn-label-primary" href="' . $editUrl . '" title="' . e(__('تعديل')) . '">
-                        <i class="bx bx-edit font-16"></i>
-                    </a>
-                    <button type="button" class="btn btn-sm btn-icon btn-label-danger btn-delete-incident" data-id="' . $r->id . '" title="' . e(__('حذف')) . '">
-                        <i class="bx bx-trash font-16"></i>
-                    </button>
-                </div>';
+                $buttons = [];
+                if ($canView) {
+                    $buttons[] = '<a class="btn btn-sm btn-icon btn-label-info" href="' . $showUrl . '" title="' . e(__('عرض التقرير')) . '"><i class="bx bx-show font-16"></i></a>';
+                    $buttons[] = '<a class="btn btn-sm btn-icon btn-label-secondary" href="' . $printUrl . '" target="_blank" title="' . e(__('طباعة')) . '"><i class="bx bx-printer font-16"></i></a>';
+                }
+                if ($canEdit) {
+                    $buttons[] = '<a class="btn btn-sm btn-icon btn-label-primary" href="' . $editUrl . '" title="' . e(__('تعديل')) . '"><i class="bx bx-edit font-16"></i></a>';
+                }
+                if ($canDelete) {
+                    $buttons[] = '<button type="button" class="btn btn-sm btn-icon btn-label-danger btn-delete-incident" data-id="' . $r->id . '" title="' . e(__('حذف')) . '"><i class="bx bx-trash font-16"></i></button>';
+                }
+
+                if (empty($buttons)) {
+                    return '<span class="text-muted">-</span>';
+                }
+
+                return '<div class="d-flex gap-1 justify-content-center">' . implode('', $buttons) . '</div>';
             })
             ->filterColumn('student_html', function ($query, $keyword) {
                 $query->whereHas('student', function ($q) use ($keyword) {
@@ -139,6 +151,7 @@ class IncidentReportController extends Controller
      */
     public function create(Request $request): View
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.create'), 403);
         $selectedStudentId = $request->query('student_id');
         $data = $this->service->formData();
         $data['selectedStudentId'] = $selectedStudentId;
@@ -151,6 +164,7 @@ class IncidentReportController extends Controller
      */
     public function store(StoreIncidentReportRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.create'), 403);
         $report = $this->service->create($request->validated(), auth()->id());
 
         return redirect()->route('academic.incident-reports.show', $report->id)
@@ -162,6 +176,7 @@ class IncidentReportController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.view'), 403);
         $report = $this->service->find($id);
         abort_unless($report, 404, __('تقرير الحادث غير موجود.'));
 
@@ -173,6 +188,7 @@ class IncidentReportController extends Controller
      */
     public function edit(int $id): View
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.edit'), 403);
         $report = $this->service->find($id);
         abort_unless($report, 404, __('تقرير الحادث غير موجود.'));
 
@@ -186,6 +202,7 @@ class IncidentReportController extends Controller
      */
     public function update(UpdateIncidentReportRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.edit'), 403);
         $report = $this->service->update($id, $request->validated(), auth()->id());
         abort_unless($report, 404, __('تقرير الحادث غير موجود.'));
 
@@ -198,6 +215,7 @@ class IncidentReportController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.delete'), 403);
         $deleted = $this->service->delete($id, auth()->id());
         abort_unless($deleted, 404);
 
@@ -212,6 +230,7 @@ class IncidentReportController extends Controller
      */
     public function print(int $id): View
     {
+        abort_if(! auth()->user()->can('academic.incident-reports.view'), 403);
         $report = $this->service->find($id);
         abort_unless($report, 404, __('تقرير الحادث غير موجود.'));
 

@@ -59,13 +59,16 @@
             <!-- Right Side: Action Toolbar -->
             <div class="d-flex flex-wrap align-items-center gap-2">
                 @if ($opening->status !== \Modules\HR\Enums\JobOpeningStatus::CLOSED)
+                    @can('hr.job-openings.edit')
                     <a href="{{ route('hr.job-openings.edit', $opening->id) }}" class="btn btn-outline-primary d-flex align-items-center gap-1 rounded-3 px-3 py-2">
                         <i class="icon-base bx bx-edit font-16"></i>
                         <span>{{ __('Edit') }}</span>
                     </a>
+                    @endcan
                 @endif
 
                 @if ($opening->status === \Modules\HR\Enums\JobOpeningStatus::DRAFT || $opening->status === \Modules\HR\Enums\JobOpeningStatus::ON_HOLD)
+                    @can('hr.job-openings.publish')
                     <form action="{{ route('hr.job-openings.publish', $opening->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Publish this job opening now?') }}');">
                         @csrf
                         <button type="submit" class="btn btn-success d-flex align-items-center gap-1 shadow-sm rounded-3 px-3 py-2">
@@ -73,9 +76,11 @@
                             <span>{{ __('Publish Opening') }}</span>
                         </button>
                     </form>
+                    @endcan
                 @endif
 
                 @if ($opening->status === \Modules\HR\Enums\JobOpeningStatus::PUBLISHED)
+                    @can('hr.job-openings.close')
                     <form action="{{ route('hr.job-openings.close', $opening->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Close this job opening?') }}');">
                         @csrf
                         <button type="submit" class="btn btn-warning d-flex align-items-center gap-1 shadow-sm rounded-3 px-3 py-2">
@@ -83,9 +88,11 @@
                             <span>{{ __('Close Opening') }}</span>
                         </button>
                     </form>
+                    @endcan
                 @endif
 
                 @if ($opening->status === \Modules\HR\Enums\JobOpeningStatus::DRAFT)
+                    @can('hr.job-openings.delete')
                     <form action="{{ route('hr.job-openings.destroy', $opening->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this draft opening?') }}');">
                         @csrf
                         @method('DELETE')
@@ -94,6 +101,7 @@
                             <span>{{ __('Delete') }}</span>
                         </button>
                     </form>
+                    @endcan
                 @endif
             </div>
         </div>

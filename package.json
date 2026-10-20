@@ -87,6 +87,10 @@
     ]
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
     "@iconify/json": "2.2.392",
     "@iconify/tools": "4.1.4",
     "@iconify/types": "2.0.0",

@@ -134,21 +134,28 @@ class CostCenterController extends Controller
                 return $item->created_at ? $item->created_at->format('Y-m-d') : '-';
             })
             ->addColumn('actions', function (CostCenter $item) {
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-cost-center"
-                            data-id="' . $item->id . '"
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-cost-center"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($item->translate(app()->getLocale())?->name ?? $item->code) . '"
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $user = auth()->user();
+                $editBtn = '';
+                if ($user->can('accounting.cost-centers.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-cost-center"
+                        data-id="' . $item->id . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.cost-centers.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-cost-center"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($item->translate(app()->getLocale())?->name ?? $item->code) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['cost_center_info', 'entity_info', 'type_badge', 'parent_info', 'branch_info', 'status_badge', 'actions'])
             ->make(true);

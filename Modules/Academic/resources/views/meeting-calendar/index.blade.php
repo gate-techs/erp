@@ -319,16 +319,20 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+                @can('academic.meeting-calendar.delete')
                 <button type="button" class="btn btn-outline-danger d-none" id="btnDeleteMeetingFromOffcanvas">
                     <i class="icon-base bx bx-trash me-1"></i>
                     <span>{{ __('Delete') }}</span>
                 </button>
+                @endcan
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                    @canany(['academic.meeting-calendar.create', 'academic.meeting-calendar.edit'])
                     <button type="submit" class="btn btn-primary" id="btnSaveMeeting" style="background-color: #0b3252; border-color: #0b3252;">
                         <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
                         <span>{{ __('Save') }}</span>
                     </button>
+                    @endcanany
                 </div>
             </div>
         </form>
@@ -415,15 +419,20 @@
     function initCalendar() {
         const calendarEl = document.getElementById('calendar');
 
-        calendar = window.createAppCalendar(calendarEl, {
-            customButtons: {
-                addEventButton: {
-                    text: '{{ __("Add New Meeting") }}',
-                    click: function () {
-                        openAddMeetingOffcanvas();
-                    }
+        const canCreate = {{ auth()->user()->can('academic.meeting-calendar.create') ? 'true' : 'false' }};
+        const canEdit = {{ auth()->user()->can('academic.meeting-calendar.edit') ? 'true' : 'false' }};
+
+        const customButtonsConfig = canCreate ? {
+            addEventButton: {
+                text: '{{ __("Add New Meeting") }}',
+                click: function () {
+                    openAddMeetingOffcanvas();
                 }
-            },
+            }
+        } : {};
+
+        calendar = window.createAppCalendar(calendarEl, {
+            customButtons: customButtonsConfig,
             buttonText: {
                 month: 'Month',
                 week: 'Week',
@@ -451,14 +460,18 @@
 
             // Click on date -> open add offcanvas
             select: function (selectionInfo) {
-                openAddMeetingOffcanvas(selectionInfo.startStr);
+                if (canCreate) {
+                    openAddMeetingOffcanvas(selectionInfo.startStr);
+                }
                 calendar.unselect();
             },
 
             // Click on event -> open edit drawer
             eventClick: function (info) {
                 info.jsEvent.preventDefault();
-                editMeeting(info.event.id);
+                if (canEdit) {
+                    editMeeting(info.event.id);
+                }
             },
 
             // Custom event render
@@ -580,8 +593,17 @@
 
     // Build Meeting card HTML (Matching Image 2)
     function buildMeetingCardHtml(m) {
+        const canEdit = {{ auth()->user()->can('academic.meeting-calendar.edit') ? 'true' : 'false' }};
+        const clickAttr = canEdit ? `onclick="editMeeting(${m.id})"` : '';
+        const editBtnHtml = canEdit ? `
+            <div>
+                <button type="button" class="btn btn-icon btn-sm text-muted p-0" title="{{ __('Edit') }}" onclick="event.stopPropagation(); editMeeting(${m.id})">
+                    <i class="icon-base bx bx-edit-alt fs-5"></i>
+                </button>
+            </div>` : '';
+
         return `
-            <div class="meeting-card-item" onclick="editMeeting(${m.id})">
+            <div class="meeting-card-item" ${clickAttr}>
                 <div class="d-flex align-items-center justify-content-between">
                     <!-- Right in RTL: Time with Clock Icon -->
                     <div class="d-flex align-items-center gap-1" style="min-width: 130px;">
@@ -598,11 +620,7 @@
                     </div>
 
                     <!-- Left in RTL: Edit Pencil Action Button -->
-                    <div>
-                        <button type="button" class="btn btn-icon btn-sm text-muted p-0" title="{{ __('Edit') }}" onclick="event.stopPropagation(); editMeeting(${m.id})">
-                            <i class="icon-base bx bx-edit-alt fs-5"></i>
-                        </button>
-                    </div>
+                    ${editBtnHtml}
                 </div>
             </div>
         `;

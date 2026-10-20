@@ -26,6 +26,8 @@ class NurseryController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(!auth()->user()->can('nursery.view'), 403);
+
         $formData = $this->nurseryService->getFormData();
 
         return view('nursery::index', [
@@ -40,6 +42,8 @@ class NurseryController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.view'), 403);
+
         $query = Nursery::with(['translations', 'government.translations', 'employee', 'workDays'])
             ->latest('id');
 
@@ -80,6 +84,8 @@ class NurseryController extends Controller
      */
     public function create(): View
     {
+        abort_if(!auth()->user()->can('nursery.create'), 403);
+
         $formData = $this->nurseryService->getFormData();
 
         return view('nursery::create', [
@@ -94,6 +100,8 @@ class NurseryController extends Controller
      */
     public function store(StoreNurseryRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.create'), 403);
+
         $nursery = $this->nurseryService->createNursery(
             $request->validated(),
             $request->file('image'),
@@ -119,6 +127,8 @@ class NurseryController extends Controller
      */
     public function show(int $id): View|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.view'), 403);
+
         $nursery = $this->nurseryService->getNurseryById($id);
 
         if (!$nursery) {
@@ -140,6 +150,8 @@ class NurseryController extends Controller
      */
     public function edit(int $id): View
     {
+        abort_if(!auth()->user()->can('nursery.edit'), 403);
+
         $nursery = $this->nurseryService->getNurseryById($id);
 
         if (!$nursery) {
@@ -161,6 +173,8 @@ class NurseryController extends Controller
      */
     public function update(UpdateNurseryRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.edit'), 403);
+
         $nursery = $this->nurseryService->updateNursery(
             $id,
             $request->validated(),
@@ -186,6 +200,8 @@ class NurseryController extends Controller
      */
     public function destroy(int $id): RedirectResponse|JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.delete'), 403);
+
         $this->nurseryService->deleteNursery($id);
 
         if (request()->wantsJson() || request()->ajax()) {
@@ -206,6 +222,8 @@ class NurseryController extends Controller
      */
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('nursery.toggle-status'), 403);
+
         $nursery = $this->nurseryService->toggleStatus($id);
 
         return response()->json([

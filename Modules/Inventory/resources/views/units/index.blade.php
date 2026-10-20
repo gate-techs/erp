@@ -8,7 +8,9 @@
         <h4 class="fw-bold mb-1 d-flex align-items-center gap-2"><i class="icon-base bx bx-ruler text-primary font-24"></i><span>{{ __('Units of Measure') }}</span></h4>
         <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Dashboard') }}</a></li><li class="breadcrumb-item"><a href="{{ route('inventory.index') }}">{{ __('Inventory') }}</a></li><li class="breadcrumb-item active">{{ __('Units of Measure') }}</li></ol></nav>
     </div>
+    @can('inventory.units.create')
     <button type="button" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm" id="btnAddUnit"><i class="icon-base bx bx-plus font-18"></i>{{ __('Add New Unit') }}</button>
+    @endcan
 </div>
 
 <div id="alertContainer">@if(session('success'))<div class="alert alert-success alert-dismissible d-flex align-items-center mb-4" role="alert"><i class="icon-base bx bx-check-circle me-2 font-20"></i><div>{{ session('success') }}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>@endif</div>

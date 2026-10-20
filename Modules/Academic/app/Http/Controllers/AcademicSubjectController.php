@@ -25,6 +25,8 @@ class AcademicSubjectController extends Controller
 
     public function index(): View
     {
+        abort_if(!auth()->user()->can('academic.subjects.view'), 403);
+
         $institutions = Nursery::with('translations')->get();
         $academicYears = AcademicYear::with('translations')->get();
         $academicStages = AcademicStage::with('translations')->get();
@@ -40,6 +42,8 @@ class AcademicSubjectController extends Controller
 
     public function board(Request $request): View
     {
+        abort_if(!auth()->user()->can('academic.subjects.board'), 403);
+
         $institutions = Nursery::with('translations')->get();
         $academicYears = AcademicYear::with('translations')->get();
         $selectedInstitutionId = $request->get('institution_id', $institutions->first()?->id);
@@ -74,6 +78,8 @@ class AcademicSubjectController extends Controller
 
     public function syncSubjectStage(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.board'), 403);
+
         $request->validate([
             'subject_id' => 'required|exists:academic_subjects,id',
             'stage_id' => 'required|exists:academic_stages,id',
@@ -99,6 +105,8 @@ class AcademicSubjectController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->addColumn('name', function (AcademicSubject $item) {
@@ -118,7 +126,11 @@ class AcademicSubjectController extends Controller
                     </div>';
                 }
 
-                return '<div class="d-flex align-items-center">' . $avatar . '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-subject" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button></div>';
+                $canEdit = auth()->user()?->can('academic.subjects.edit');
+                if ($canEdit) {
+                    return '<div class="d-flex align-items-center">' . $avatar . '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-subject" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($name) . '</button></div>';
+                }
+                return '<div class="d-flex align-items-center">' . $avatar . '<span class="fw-semibold text-heading">' . e($name) . '</span></div>';
             })
             ->addColumn('institution_name', fn (AcademicSubject $item) => e($item->institution?->name ?? '-'))
             ->addColumn('stages_badges', function (AcademicSubject $item) {
@@ -156,36 +168,59 @@ class AcademicSubjectController extends Controller
                 $badgeClass = $isActive ? 'bg-label-success' : 'bg-label-danger';
                 $label = $isActive ? __('Active') : __('Inactive');
 
-                return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-subject-status" data-id="' . $item->id . '">'
-                    . e($label) .
-                '</button>';
+                if (auth()->user()?->can('academic.subjects.toggle-status')) {
+                    return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-subject-status" data-id="' . $item->id . '">'
+                        . e($label) .
+                    '</button>';
+                }
+
+                return '<span class="badge ' . $badgeClass . '">' . e($label) . '</span>';
             })
             ->addColumn('actions', function (AcademicSubject $item) {
+                $user = auth()->user();
+                $canClone = $user?->can('academic.subjects.clone');
+                $canEdit = $user?->can('academic.subjects.edit');
+                $canDelete = $user?->can('academic.subjects.delete');
+
+                if (!$canClone && !$canEdit && !$canDelete) {
+                    return '<span class="text-muted">-</span>';
+                }
+
                 $name = $item->translate(app()->getLocale())?->name
                     ?? $item->translate('ar')?->name
                     ?? $item->translate('en')?->name;
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info btn-clone-academic-subject"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($name) . '"
-                            title="' . __('Clone Subject') . '">
-                            <i class="icon-base bx bx-copy"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-subject"
-                            data-id="' . $item->id . '"
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-subject"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($name) . '"
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $buttons = '<div class="d-inline-flex align-items-center gap-1">';
+
+                if ($canClone) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-clone-academic-subject"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($name) . '"
+                        title="' . __('Clone Subject') . '">
+                        <i class="icon-base bx bx-copy"></i>
+                    </button>';
+                }
+
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-subject"
+                        data-id="' . $item->id . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-subject"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($name) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
             ->rawColumns(['name', 'stages_badges', 'attachments_count_badge', 'status_badge', 'actions'])
             ->make(true);
@@ -193,6 +228,8 @@ class AcademicSubjectController extends Controller
 
     public function store(StoreAcademicSubjectRequest $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.create'), 403);
+
         $subject = $this->service->createAcademicSubject(
             $request->validated(),
             $request->user()?->id,
@@ -208,6 +245,8 @@ class AcademicSubjectController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.view'), 403);
+
         $subject = $this->service->getAcademicSubject($id);
 
         if (!$subject) {
@@ -239,6 +278,8 @@ class AcademicSubjectController extends Controller
 
     public function update(UpdateAcademicSubjectRequest $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.edit'), 403);
+
         $subject = $this->service->updateAcademicSubject(
             $id,
             $request->validated(),
@@ -254,6 +295,8 @@ class AcademicSubjectController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.delete'), 403);
+
         $this->service->deleteAcademicSubject($id);
 
         return response()->json([
@@ -264,6 +307,8 @@ class AcademicSubjectController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.toggle-status'), 403);
+
         $subject = $this->service->toggleStatus($id);
 
         return response()->json([
@@ -279,6 +324,8 @@ class AcademicSubjectController extends Controller
 
     public function deleteAttachment(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.edit'), 403);
+
         $this->service->deleteAttachment($id);
 
         return response()->json([
@@ -289,6 +336,8 @@ class AcademicSubjectController extends Controller
 
     public function clone(Request $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.subjects.clone'), 403);
+
         $cloned = $this->service->cloneAcademicSubject($id, $request->user()?->id);
 
         return response()->json([
@@ -300,6 +349,8 @@ class AcademicSubjectController extends Controller
 
     public function downloadAttachment(int $id)
     {
+        abort_if(!auth()->user()->can('academic.subjects.view'), 403);
+
         $attachment = AcademicSubjectAttachment::findOrFail($id);
 
         if (!Storage::disk('public')->exists($attachment->file_path)) {

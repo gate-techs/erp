@@ -24,6 +24,8 @@ class ServiceRequestController extends Controller
 
     public function index(): View
     {
+        abort_if(! auth()->user()->can('crm.service-requests.view'), 403);
+
         $statusCounts = [
             'all' => ServiceRequest::count(),
             'pending' => ServiceRequest::where('status', ServiceRequestStatus::PENDING)->count(),
@@ -42,6 +44,8 @@ class ServiceRequestController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('crm.service-requests.view'), 403);
+
         $serviceRequest = $this->service->findById($id);
 
         if (!$serviceRequest) {
@@ -66,6 +70,8 @@ class ServiceRequestController extends Controller
 
     public function searchCivilId(Request $request): JsonResponse
     {
+        abort_if(! (auth()->user()->can('crm.service-requests.view') || auth()->user()->can('crm.service-requests.create') || auth()->user()->can('crm.service-requests.edit')), 403);
+
         $term = trim((string) ($request->input('civil_id') ?? $request->input('term') ?? $request->input('q') ?? ''));
 
         if (empty($term) || strlen($term) < 2) {
@@ -158,6 +164,8 @@ class ServiceRequestController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('crm.service-requests.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->editColumn('name', fn (ServiceRequest $item) => '<span class="fw-semibold text-heading">' . e($item->name) . '</span>')
@@ -268,6 +276,8 @@ class ServiceRequestController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.service-requests.create'), 403);
+
         $data = $this->validatedData($request);
 
         $this->service->create(
@@ -282,6 +292,8 @@ class ServiceRequestController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.service-requests.edit'), 403);
+
         $serviceRequest = $this->service->findById($id);
 
         if (!$serviceRequest) {
@@ -302,6 +314,8 @@ class ServiceRequestController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.service-requests.delete'), 403);
+
         try {
             $serviceRequest = $this->service->findById($id);
 

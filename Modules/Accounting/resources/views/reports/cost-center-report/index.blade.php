@@ -35,10 +35,13 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
+        @can('accounting.reports.export')
         <a href="{{ route('accounting.reports.cost-center-report.export', request()->all()) }}" class="btn btn-label-success">
             <i class="bx bx-export me-1"></i> {{ __('Export Excel') }}
         </a>
+        @endcan
 
+        @can('accounting.reports.print')
         <div class="btn-group">
             <a href="{{ route('accounting.reports.cost-center-report.print', array_merge(request()->all(), ['orientation' => 'portrait'])) }}" target="_blank" class="btn btn-primary">
                 <i class="bx bx-printer me-1"></i> {{ __('Print Report') }}
@@ -66,6 +69,7 @@
                 @endforelse
             </ul>
         </div>
+        @endcan
     </div>
 </div>
 

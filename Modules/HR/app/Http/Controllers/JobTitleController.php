@@ -27,6 +27,8 @@ class JobTitleController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.job-titles.view'), 403);
+
         $formData = $this->jobTitleService->getFormData();
 
         return view('hr::settings.job_titles.index', [
@@ -41,6 +43,8 @@ class JobTitleController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.job-titles.view'), 403);
+
         $query = $this->jobTitleService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -62,29 +66,37 @@ class JobTitleController extends Controller
             ->addColumn('description_en', fn(JobTitle $item) => $item->translate('en')?->description ?? '')
             ->editColumn('created_at', fn(JobTitle $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->addColumn('actions', function (JobTitle $item) {
+                $user = auth()->user();
                 $statusVal = is_object($item->status) ? $item->status->value : $item->status;
-                return '
-                    <div class="d-inline-block text-nowrap">
-                        <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect btn-edit-job-title" 
-                            data-id="' . $item->id . '" 
-                            data-name-ar="' . e($item->translate('ar')?->name ?? '') . '" 
-                            data-name-en="' . e($item->translate('en')?->name ?? '') . '" 
-                            data-description-ar="' . e($item->translate('ar')?->description ?? '') . '" 
-                            data-description-en="' . e($item->translate('en')?->description ?? '') . '" 
-                            data-code="' . e($item->code ?? '') . '" 
-                            data-department-id="' . ($item->department_id ?? '') . '" 
-                            data-status="' . $statusVal . '"
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit text-primary font-18"></i>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect btn-delete-job-title" 
-                            data-id="' . $item->id . '" 
-                            data-name="' . e($item->name ?? '') . '" 
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash text-danger font-18"></i>
-                        </button>
-                    </div>
-                ';
+
+                $editBtn = '';
+                if ($user->can('hr.settings.job-titles.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect btn-edit-job-title" 
+                        data-id="' . $item->id . '" 
+                        data-name-ar="' . e($item->translate('ar')?->name ?? '') . '" 
+                        data-name-en="' . e($item->translate('en')?->name ?? '') . '" 
+                        data-description-ar="' . e($item->translate('ar')?->description ?? '') . '" 
+                        data-description-en="' . e($item->translate('en')?->description ?? '') . '" 
+                        data-code="' . e($item->code ?? '') . '" 
+                        data-department-id="' . ($item->department_id ?? '') . '" 
+                        data-status="' . $statusVal . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit text-primary font-18"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('hr.settings.job-titles.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect btn-delete-job-title" 
+                        data-id="' . $item->id . '" 
+                        data-name="' . e($item->name ?? '') . '" 
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash text-danger font-18"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-block text-nowrap">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['department_name', 'status', 'actions'])
             ->filterColumn('name_ar', function ($query, $keyword) {
@@ -102,6 +114,8 @@ class JobTitleController extends Controller
      */
     public function store(StoreJobTitleRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.job-titles.create'), 403);
+
         try {
             $this->jobTitleService->createJobTitle($request->validated(), auth()->id());
 
@@ -120,6 +134,8 @@ class JobTitleController extends Controller
      */
     public function update(UpdateJobTitleRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.job-titles.edit'), 403);
+
         try {
             $jobTitle = $this->jobTitleService->getJobTitleById($id);
             if (!$jobTitle) {
@@ -144,6 +160,8 @@ class JobTitleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.job-titles.delete'), 403);
+
         try {
             $jobTitle = $this->jobTitleService->getJobTitleById($id);
             if (!$jobTitle) {

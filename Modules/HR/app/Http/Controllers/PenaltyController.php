@@ -31,6 +31,8 @@ class PenaltyController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.penalties.view'), 403);
+
         $kpis             = $this->penaltyService->getKPIs();
         $employees        = Employee::with('translations')
             ->active()
@@ -61,6 +63,8 @@ class PenaltyController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.view'), 403);
+
         $query = $this->penaltyService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -199,16 +203,19 @@ class PenaltyController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (Penalty $item) {
+                $user = auth()->user();
                 $buttons = '';
 
                 // View Details Button
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-penalty" 
-                                data-id="' . $item->id . '" title="' . __('View Details') . '">
-                                <i class="icon-base bx bx-show"></i>
-                             </button>';
+                if ($user->can('hr.penalties.view')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-penalty" 
+                                    data-id="' . $item->id . '" title="' . __('View Details') . '">
+                                    <i class="icon-base bx bx-show"></i>
+                                 </button>';
+                }
 
                 // Approve Button (Pending)
-                if ($item->status === PenaltyStatus::PENDING) {
+                if ($item->status === PenaltyStatus::PENDING && $user->can('hr.penalties.approve')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-penalty" 
                                     data-id="' . $item->id . '" title="' . __('Approve Penalty') . '">
                                     <i class="icon-base bx bx-check"></i>
@@ -216,7 +223,7 @@ class PenaltyController extends Controller
                 }
 
                 // Deduct / Apply Button (Pending or Approved)
-                if (in_array($item->status, [PenaltyStatus::PENDING, PenaltyStatus::APPROVED])) {
+                if (in_array($item->status, [PenaltyStatus::PENDING, PenaltyStatus::APPROVED]) && $user->can('hr.penalties.deduct')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-deduct-penalty" 
                                     data-id="' . $item->id . '" 
                                     data-amount="' . number_format($item->amount, 2) . ' ' . __('KWD') . '" 
@@ -226,7 +233,7 @@ class PenaltyController extends Controller
                 }
 
                 // Cancel / Waive Button (Pending or Approved)
-                if (in_array($item->status, [PenaltyStatus::PENDING, PenaltyStatus::APPROVED])) {
+                if (in_array($item->status, [PenaltyStatus::PENDING, PenaltyStatus::APPROVED]) && $user->can('hr.penalties.cancel')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-cancel-penalty" 
                                     data-id="' . $item->id . '" title="' . __('Cancel / Waive Penalty') . '">
                                     <i class="icon-base bx bx-block"></i>
@@ -234,14 +241,14 @@ class PenaltyController extends Controller
                 }
 
                 // Delete Button (if not deducted)
-                if ($item->status !== PenaltyStatus::DEDUCTED) {
+                if ($item->status !== PenaltyStatus::DEDUCTED && $user->can('hr.penalties.delete')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-secondary btn-delete-penalty" 
                                     data-id="' . $item->id . '" title="' . __('Delete') . '">
                                     <i class="icon-base bx bx-trash"></i>
                                  </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns([
                 'penalty_number_badge',
@@ -261,6 +268,8 @@ class PenaltyController extends Controller
      */
     public function calculate(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.create'), 403);
+
         $request->validate([
             'employee_id'       => 'required|integer|exists:employees,id',
             'calculation_type'  => 'required|string',
@@ -291,6 +300,8 @@ class PenaltyController extends Controller
      */
     public function store(StorePenaltyRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.create'), 403);
+
         try {
             $penalty = $this->penaltyService->createPenalty(
                 $request->validated(),
@@ -316,6 +327,8 @@ class PenaltyController extends Controller
      */
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.view'), 403);
+
         $penalty = $this->penaltyService->getById($id);
 
         if (!$penalty) {
@@ -376,6 +389,8 @@ class PenaltyController extends Controller
      */
     public function approve(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.approve'), 403);
+
         $penalty = $this->penaltyService->getById($id);
 
         if (!$penalty) {
@@ -405,6 +420,8 @@ class PenaltyController extends Controller
      */
     public function deduct(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.deduct'), 403);
+
         $penalty = $this->penaltyService->getById($id);
 
         if (!$penalty) {
@@ -435,6 +452,8 @@ class PenaltyController extends Controller
      */
     public function cancel(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.cancel'), 403);
+
         $request->validate([
             'reason' => 'required|string|max:1000',
         ]);
@@ -468,6 +487,8 @@ class PenaltyController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.penalties.delete'), 403);
+
         $penalty = $this->penaltyService->getById($id);
 
         if (!$penalty) {

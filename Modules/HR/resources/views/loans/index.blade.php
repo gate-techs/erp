@@ -20,10 +20,12 @@
     </div>
 
     <div>
+        @can('hr.loans.create')
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddLoan" aria-controls="offcanvasAddLoan">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('New Loan Request') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 

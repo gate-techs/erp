@@ -31,6 +31,8 @@ class RewardController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.rewards.view'), 403);
+
         $kpis             = $this->rewardService->getKPIs();
         $employees        = Employee::with('translations')
             ->active()
@@ -61,6 +63,8 @@ class RewardController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.view'), 403);
+
         $query = $this->rewardService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -187,16 +191,19 @@ class RewardController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (Reward $item) {
+                $user = auth()->user();
                 $buttons = '';
 
                 // View Details Button
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-reward" 
-                                data-id="' . $item->id . '" title="' . __('View Details') . '">
-                                <i class="icon-base bx bx-show"></i>
-                             </button>';
+                if ($user->can('hr.rewards.view')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-reward" 
+                                    data-id="' . $item->id . '" title="' . __('View Details') . '">
+                                    <i class="icon-base bx bx-show"></i>
+                                 </button>';
+                }
 
                 // Approve Button (Pending)
-                if ($item->status === RewardStatus::PENDING) {
+                if ($item->status === RewardStatus::PENDING && $user->can('hr.rewards.approve')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-reward" 
                                     data-id="' . $item->id . '" title="' . __('Approve Reward') . '">
                                     <i class="icon-base bx bx-check"></i>
@@ -204,7 +211,7 @@ class RewardController extends Controller
                 }
 
                 // Pay Button (Pending or Approved)
-                if (in_array($item->status, [RewardStatus::PENDING, RewardStatus::APPROVED])) {
+                if (in_array($item->status, [RewardStatus::PENDING, RewardStatus::APPROVED]) && $user->can('hr.rewards.pay')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-pay-reward" 
                                     data-id="' . $item->id . '" data-amount="' . $item->amount . '" title="' . __('Pay Reward') . '">
                                     <i class="icon-base bx bx-credit-card"></i>
@@ -212,7 +219,7 @@ class RewardController extends Controller
                 }
 
                 // Reject Button (Pending or Approved)
-                if (in_array($item->status, [RewardStatus::PENDING, RewardStatus::APPROVED])) {
+                if (in_array($item->status, [RewardStatus::PENDING, RewardStatus::APPROVED]) && $user->can('hr.rewards.reject')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reject-reward" 
                                     data-id="' . $item->id . '" title="' . __('Reject Reward') . '">
                                     <i class="icon-base bx bx-x"></i>
@@ -220,14 +227,14 @@ class RewardController extends Controller
                 }
 
                 // Delete Button (Not Paid)
-                if ($item->status !== RewardStatus::PAID) {
+                if ($item->status !== RewardStatus::PAID && $user->can('hr.rewards.delete')) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-reward" 
                                     data-id="' . $item->id . '" data-name="' . e($item->reward_number) . '" title="' . __('Delete') . '">
                                     <i class="icon-base bx bx-trash"></i>
                                  </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns([
                 'reward_number_badge',
@@ -247,6 +254,8 @@ class RewardController extends Controller
      */
     public function store(StoreRewardRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.create'), 403);
+
         try {
             $reward = $this->rewardService->createReward(
                 $request->validated(),
@@ -272,6 +281,8 @@ class RewardController extends Controller
      */
     public function calculate(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.create'), 403);
+
         $request->validate([
             'employee_id'        => 'required|integer|exists:employees,id',
             'calculation_type'   => 'required|string',
@@ -302,6 +313,8 @@ class RewardController extends Controller
      */
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.view'), 403);
+
         $reward = $this->rewardService->getById($id, [
             'employee.translations',
             'employee.department.translations',
@@ -371,6 +384,8 @@ class RewardController extends Controller
      */
     public function approve(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.approve'), 403);
+
         try {
             $reward = $this->rewardService->getById($id, []);
             if (!$reward) {
@@ -396,6 +411,8 @@ class RewardController extends Controller
      */
     public function pay(int $id, Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.pay'), 403);
+
         try {
             $reward = $this->rewardService->getById($id, []);
             if (!$reward) {
@@ -421,6 +438,8 @@ class RewardController extends Controller
      */
     public function reject(int $id, Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.reject'), 403);
+
         $request->validate([
             'reason' => 'required|string|max:1000',
         ]);
@@ -450,6 +469,8 @@ class RewardController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.rewards.delete'), 403);
+
         try {
             $reward = $this->rewardService->getById($id, []);
             if (!$reward) {

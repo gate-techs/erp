@@ -31,6 +31,8 @@ class JobOpeningController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.job-openings.view'), 403);
+
         $kpis           = $this->openingService->getKPIs();
         $departments    = Department::with('translations')->orderBy('id')->get();
         $branches       = NurseryBranch::with('translations')->latest('id')->get();
@@ -55,6 +57,8 @@ class JobOpeningController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.view'), 403);
+
         $filters = $request->only([
             'status',
             'department_id',
@@ -143,39 +147,44 @@ class JobOpeningController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (JobOpening $item) {
-                $btnShow = '<a href="' . route('hr.job-openings.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+                $btnShow = '';
+                if ($user->can('hr.job-openings.view')) {
+                    $btnShow = '<a href="' . route('hr.job-openings.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $btnEdit = '';
-                if ($item->status !== JobOpeningStatus::CLOSED) {
+                if ($item->status !== JobOpeningStatus::CLOSED && $user->can('hr.job-openings.edit')) {
                     $btnEdit = '<a href="' . route('hr.job-openings.edit', $item->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Edit') . '">
                                     <i class="bx bx-edit font-16"></i>
                                 </a>';
                 }
 
                 $btnPublish = '';
-                if ($item->status === JobOpeningStatus::DRAFT || $item->status === JobOpeningStatus::ON_HOLD) {
+                if (($item->status === JobOpeningStatus::DRAFT || $item->status === JobOpeningStatus::ON_HOLD) && $user->can('hr.job-openings.publish')) {
                     $btnPublish = '<button type="button" class="btn btn-sm btn-icon btn-outline-success btn-publish-opening" data-id="' . $item->id . '" title="' . __('Publish Opening') . '">
                                       <i class="bx bx-broadcast font-16"></i>
                                    </button>';
                 }
 
                 $btnClose = '';
-                if ($item->status === JobOpeningStatus::PUBLISHED) {
+                if ($item->status === JobOpeningStatus::PUBLISHED && $user->can('hr.job-openings.close')) {
                     $btnClose = '<button type="button" class="btn btn-sm btn-icon btn-outline-warning btn-close-opening" data-id="' . $item->id . '" title="' . __('Close Opening') . '">
                                     <i class="bx bx-check-circle font-16"></i>
                                  </button>';
                 }
 
                 $btnDelete = '';
-                if ($item->status === JobOpeningStatus::DRAFT) {
+                if ($item->status === JobOpeningStatus::DRAFT && $user->can('hr.job-openings.delete')) {
                     $btnDelete = '<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete-opening" data-id="' . $item->id . '" data-num="' . e($item->opening_code) . '" title="' . __('Delete') . '">
                                     <i class="bx bx-trash font-16"></i>
                                   </button>';
                 }
 
-                return '<div class="d-flex align-items-center gap-1">' . $btnShow . $btnEdit . $btnPublish . $btnClose . $btnDelete . '</div>';
+                $buttons = $btnShow . $btnEdit . $btnPublish . $btnClose . $btnDelete;
+                return $buttons ? '<div class="d-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['opening_info', 'workplace_badge', 'posting_badge', 'positions', 'salary_range', 'dates', 'status_badge', 'actions'])
             ->make(true);
@@ -186,6 +195,8 @@ class JobOpeningController extends Controller
      */
     public function create(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.job-openings.create'), 403);
+
         $departments    = Department::with('translations')->orderBy('id')->get();
         $jobTitles      = JobTitle::with('translations')->orderBy('id')->get();
         $branches       = NurseryBranch::with('translations')->latest('id')->get();
@@ -221,6 +232,8 @@ class JobOpeningController extends Controller
      */
     public function requisitionDetails(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.create'), 403);
+
         $requisitionId = $request->input('requisition_id');
         if (!$requisitionId) {
             return response()->json(['success' => false, 'message' => __('Requisition ID required')], 422);
@@ -240,6 +253,8 @@ class JobOpeningController extends Controller
      */
     public function store(StoreJobOpeningRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.create'), 403);
+
         $opening = $this->openingService->createOpening($request->validated(), auth()->id());
 
         return redirect()
@@ -252,6 +267,8 @@ class JobOpeningController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.job-openings.view'), 403);
+
         $opening = $this->openingService->findById($id);
         abort_if(!$opening, 404);
 
@@ -263,6 +280,8 @@ class JobOpeningController extends Controller
      */
     public function edit(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.job-openings.edit'), 403);
+
         $opening = $this->openingService->findById($id);
         abort_if(!$opening, 404);
 
@@ -293,6 +312,8 @@ class JobOpeningController extends Controller
      */
     public function update(UpdateJobOpeningRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.edit'), 403);
+
         $opening = $this->openingService->findById($id);
         abort_if(!$opening, 404);
 
@@ -308,6 +329,8 @@ class JobOpeningController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.delete'), 403);
+
         $opening = $this->openingService->findById($id);
         if (!$opening) {
             return response()->json(['success' => false, 'message' => __('Record not found.')], 404);
@@ -327,6 +350,8 @@ class JobOpeningController extends Controller
      */
     public function publish(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.publish'), 403);
+
         $opening = $this->openingService->findById($id);
         if (!$opening) {
             return response()->json(['success' => false, 'message' => __('Record not found.')], 404);
@@ -345,6 +370,8 @@ class JobOpeningController extends Controller
      */
     public function close(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-openings.close'), 403);
+
         $opening = $this->openingService->findById($id);
         if (!$opening) {
             return response()->json(['success' => false, 'message' => __('Record not found.')], 404);

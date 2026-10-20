@@ -25,10 +25,14 @@
         </button>
 
         @if($entry->canBeEdited())
+            @can('accounting.journal-entries.edit')
             <a href="{{ route('accounting.journal-entries.edit', $entry->id) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-xs">
                 <i class="icon-base bx bx-edit font-18"></i>
                 <span>{{ __('Edit Draft') }}</span>
             </a>
+            @endcan
+
+            @can('accounting.journal-entries.post')
             <form action="{{ route('accounting.journal-entries.post', $entry->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to post this journal entry? Once posted, it cannot be modified.') }}');">
                 @csrf
                 <button type="submit" class="btn btn-success d-flex align-items-center gap-1 shadow-xs">
@@ -36,11 +40,14 @@
                     <span>{{ __('Post Entry') }}</span>
                 </button>
             </form>
+            @endcan
         @elseif($entry->canBeReversed())
+            @can('accounting.journal-entries.reverse')
             <button type="button" class="btn btn-warning d-flex align-items-center gap-1 shadow-xs" data-bs-toggle="modal" data-bs-target="#reverseEntryModal">
                 <i class="icon-base bx bx-undo font-18"></i>
                 <span>{{ __('Reverse Entry') }}</span>
             </button>
+            @endcan
         @endif
 
         <a href="{{ route('accounting.journal-entries.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1 shadow-xs">

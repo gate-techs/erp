@@ -204,6 +204,7 @@
                     </div>
 
                     <!-- Add Note Form -->
+                    @can('tasks.toggle-status')
                     <form action="{{ route('tasks.tasks.notes.store', $task->id) }}" method="POST" id="addNoteForm" class="border-top pt-3">
                         @csrf
                         <div class="mb-3">
@@ -218,6 +219,7 @@
                             </button>
                         </div>
                     </form>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -225,6 +227,7 @@
         <!-- Sidebar Details & Status History -->
         <div class="col-12 col-lg-4">
             <!-- Status Update Card -->
+            @can('tasks.toggle-status')
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header border-bottom py-3">
                     <h5 class="card-title mb-0 d-flex align-items-center gap-2">
@@ -256,6 +259,7 @@
                     </form>
                 </div>
             </div>
+            @endcan
 
             <!-- Task Meta Card -->
             <div class="card shadow-sm border-0 mb-4">

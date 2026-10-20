@@ -27,18 +27,26 @@
         </h4>
     </div>
     <div class="d-flex flex-wrap gap-2">
+        @can('inventory.items.view')
         <a href="{{ route('inventory.items.index') }}" class="btn btn-primary btn-sm">
             <i class="bx bx-box me-1"></i>{{ __('Items') }}
         </a>
+        @endcan
+        @can('inventory.warehouses.view')
         <a href="{{ route('inventory.index') }}" class="btn btn-label-primary btn-sm">
             <i class="bx bx-store-alt me-1"></i>{{ __('Warehouses') }}
         </a>
+        @endcan
+        @can('inventory.categories.view')
         <a href="{{ route('inventory.categories.index') }}" class="btn btn-label-secondary btn-sm">
             <i class="bx bx-category me-1"></i>{{ __('Item Categories') }}
         </a>
+        @endcan
+        @can('inventory.units.view')
         <a href="{{ route('inventory.units.index') }}" class="btn btn-label-secondary btn-sm">
             <i class="bx bx-ruler me-1"></i>{{ __('Units') }}
         </a>
+        @endcan
     </div>
 </div>
 

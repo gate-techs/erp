@@ -16,6 +16,8 @@ class NurseryDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(NurseryPermissionSeeder::class);
+
         $adminUser = User::first();
         $adminId = $adminUser?->id ?? 1;
 

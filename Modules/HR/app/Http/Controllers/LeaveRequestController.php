@@ -31,6 +31,8 @@ class LeaveRequestController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.leaves.view'), 403);
+
         $kpis        = $this->leaveService->getKPIs();
         $employees   = Employee::with('translations')->where('status', 'active')->orderBy('id')->get();
         $branches    = NurseryBranch::with('translations')->latest('id')->get();
@@ -54,6 +56,8 @@ class LeaveRequestController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.view'), 403);
+
         $query = $this->leaveService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -128,34 +132,43 @@ class LeaveRequestController extends Controller
                         </a>';
             })
             ->addColumn('actions', function (LeaveRequest $item) {
+                $user      = auth()->user();
                 $statusVal = $item->status?->value ?? '';
                 $buttons   = '';
 
-                // View Details button (matching system-wide primary outline icon)
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-view-leave" 
-                                data-id="' . $item->id . '" title="' . __('View Details') . '">
-                                <i class="icon-base bx bx-show"></i>
-                             </button>';
-
-                // Approve, Reject & Delete buttons for Pending or Manager Approved
-                if ($statusVal === LeaveRequestStatus::PENDING->value || $statusVal === LeaveRequestStatus::MANAGER_APPROVED->value) {
-                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-leave" 
-                                    data-id="' . $item->id . '" title="' . __('Approve Request') . '">
-                                    <i class="icon-base bx bx-check"></i>
-                                 </button>';
-
-                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reject-leave" 
-                                    data-id="' . $item->id . '" title="' . __('Reject Request') . '">
-                                    <i class="icon-base bx bx-x"></i>
-                                 </button>';
-
-                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-leave" 
-                                    data-id="' . $item->id . '" data-name="' . e($item->employee?->name ?? '') . '" title="' . __('Delete') . '">
-                                    <i class="icon-base bx bx-trash"></i>
+                // View Details button
+                if ($user->can('hr.leaves.view')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-view-leave" 
+                                    data-id="' . $item->id . '" title="' . __('View Details') . '">
+                                    <i class="icon-base bx bx-show"></i>
                                  </button>';
                 }
 
-                return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
+                // Approve, Reject & Delete buttons for Pending or Manager Approved
+                if ($statusVal === LeaveRequestStatus::PENDING->value || $statusVal === LeaveRequestStatus::MANAGER_APPROVED->value) {
+                    if ($user->can('hr.leaves.approve')) {
+                        $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-approve-leave" 
+                                        data-id="' . $item->id . '" title="' . __('Approve Request') . '">
+                                        <i class="icon-base bx bx-check"></i>
+                                     </button>';
+                    }
+
+                    if ($user->can('hr.leaves.reject')) {
+                        $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reject-leave" 
+                                        data-id="' . $item->id . '" title="' . __('Reject Request') . '">
+                                        <i class="icon-base bx bx-x"></i>
+                                     </button>';
+                    }
+
+                    if ($user->can('hr.leaves.delete')) {
+                        $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-leave" 
+                                        data-id="' . $item->id . '" data-name="' . e($item->employee?->name ?? '') . '" title="' . __('Delete') . '">
+                                        <i class="icon-base bx bx-trash"></i>
+                                     </button>';
+                    }
+                }
+
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['employee_info', 'leave_type_badge', 'period', 'replacement_info', 'status_badge', 'attachment_btn', 'actions'])
             ->make(true);
@@ -167,6 +180,8 @@ class LeaveRequestController extends Controller
      */
     public function checkBalance(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.create'), 403);
+
         try {
             $employeeId = (int) $request->get('employee_id');
             $leaveType  = (string) $request->get('leave_type', 'annual');
@@ -203,6 +218,8 @@ class LeaveRequestController extends Controller
      */
     public function store(StoreLeaveRequestRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.create'), 403);
+
         try {
             $data = $request->validated();
             if ($request->hasFile('attachment')) {
@@ -230,6 +247,8 @@ class LeaveRequestController extends Controller
      */
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.view'), 403);
+
         try {
             $leave = $this->leaveService->getById($id);
             if (!$leave) {
@@ -302,6 +321,8 @@ class LeaveRequestController extends Controller
      */
     public function approve(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.approve'), 403);
+
         try {
             $role  = $request->get('role', 'hr');
             $leave = $this->leaveService->approveLeaveRequest($id, Auth::id() ?? 1, $role);
@@ -325,6 +346,8 @@ class LeaveRequestController extends Controller
      */
     public function reject(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.reject'), 403);
+
         try {
             $request->validate([
                 'rejection_reason' => ['required', 'string', 'max:500'],
@@ -351,6 +374,8 @@ class LeaveRequestController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.leaves.delete'), 403);
+
         try {
             $this->leaveService->deleteLeaveRequest($id);
 

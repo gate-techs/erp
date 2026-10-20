@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>{{ __('Astro Leaders') }} | {{ __('Smart HR & Employee Self-Service System') }}</title>
+    <title>{{ __('ALA ORBIT') }} | {{ __('Smart HR & Employee Self-Service System') }}</title>
 
     <!-- PWA Primary Meta Tags -->
     <meta name="theme-color" content="#012436" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="AstroLeaders" />
-    <meta name="application-name" content="AstroLeaders" />
+    <meta name="apple-mobile-web-app-title" content="ALA ORBIT" />
+    <meta name="application-name" content="ALA ORBIT" />
     <link rel="manifest" href="{{ route('portal.manifest') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
@@ -487,7 +487,7 @@
 
         <!-- Brand Typography -->
         <div class="splash-text-container">
-            <h1 class="splash-title">Astro Leaders </h1>
+            <h1 class="splash-title">ALA ORBIT</h1>
             <p class="splash-subtitle">{{ __('Smart HR & Employee Self-Service System') }}</p>
         </div>
     </main>

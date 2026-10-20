@@ -101,33 +101,44 @@ class FiscalYearController extends Controller
             })
             ->editColumn('created_at', fn(FiscalYear $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->addColumn('actions', function (FiscalYear $item) {
+                $user = auth()->user();
                 $locale = app()->getLocale();
                 $name = $item->translate($locale)?->name ?? $item->translate('ar')?->name ?? __('Fiscal Year');
                 $toggleTitle = $item->status === 'open' ? __('Close') : __('Reopen');
                 $toggleIcon = $item->status === 'open' ? 'bx-lock-alt' : 'bx-lock-open-alt';
                 $toggleColor = $item->status === 'open' ? 'btn-outline-warning' : 'btn-outline-success';
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-fiscal-year"
-                            data-id="' . $item->id . '"
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm ' . $toggleColor . ' btn-toggle-status"
-                            data-id="' . $item->id . '"
-                            data-status="' . $item->status . '"
-                            title="' . $toggleTitle . '">
-                            <i class="icon-base bx ' . $toggleIcon . '"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-fiscal-year"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($name) . '"
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $editBtn = '';
+                if ($user->can('accounting.fiscal-years.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-fiscal-year"
+                        data-id="' . $item->id . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                $toggleBtn = '';
+                if ($user->can('accounting.fiscal-years.toggle-status')) {
+                    $toggleBtn = '<button type="button" class="btn btn-icon btn-sm ' . $toggleColor . ' btn-toggle-status"
+                        data-id="' . $item->id . '"
+                        data-status="' . $item->status . '"
+                        title="' . $toggleTitle . '">
+                        <i class="icon-base bx ' . $toggleIcon . '"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.fiscal-years.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-fiscal-year"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($name) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $toggleBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['fiscal_year_info', 'entity_info', 'duration_info', 'status_badge', 'actions'])
             ->make(true);

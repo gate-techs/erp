@@ -21,12 +21,14 @@
         </div>
     </div>
 
+    @can('academic.fees.create')
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicFee" aria-controls="offcanvasAddAcademicFee">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Fee') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Filters Card (3 per row) -->

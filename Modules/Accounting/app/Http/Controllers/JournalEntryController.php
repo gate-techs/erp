@@ -90,6 +90,7 @@ class JournalEntryController extends Controller
                 return '<span class="badge ' . $entry->status->badgeClass() . ' fw-semibold">' . e($entry->status->label()) . '</span>';
             })
             ->addColumn('actions', function (JournalEntry $entry) {
+                $user = auth()->user();
                 $showUrl = route('accounting.journal-entries.show', $entry->id);
                 $editUrl = route('accounting.journal-entries.edit', $entry->id);
 
@@ -97,11 +98,19 @@ class JournalEntryController extends Controller
                 $actions .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-secondary" title="' . __('View Voucher') . '"><i class="icon-base bx bx-show"></i></a>';
 
                 if ($entry->canBeEdited()) {
-                    $actions .= '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit Draft') . '"><i class="icon-base bx bx-edit"></i></a>';
-                    $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-post-entry" data-id="' . $entry->id . '" title="' . __('Post Entry') . '"><i class="icon-base bx bx-check-double"></i></button>';
-                    $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-entry" data-id="' . $entry->id . '" data-number="' . e($entry->entry_number) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                    if ($user->can('accounting.journal-entries.edit')) {
+                        $actions .= '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit Draft') . '"><i class="icon-base bx bx-edit"></i></a>';
+                    }
+                    if ($user->can('accounting.journal-entries.post')) {
+                        $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-success btn-post-entry" data-id="' . $entry->id . '" title="' . __('Post Entry') . '"><i class="icon-base bx bx-check-double"></i></button>';
+                    }
+                    if ($user->can('accounting.journal-entries.delete')) {
+                        $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-entry" data-id="' . $entry->id . '" data-number="' . e($entry->entry_number) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                    }
                 } elseif ($entry->canBeReversed()) {
-                    $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reverse-entry" data-id="' . $entry->id . '" data-number="' . e($entry->entry_number) . '" title="' . __('Reverse Entry') . '"><i class="icon-base bx bx-undo"></i></button>';
+                    if ($user->can('accounting.journal-entries.reverse')) {
+                        $actions .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-reverse-entry" data-id="' . $entry->id . '" data-number="' . e($entry->entry_number) . '" title="' . __('Reverse Entry') . '"><i class="icon-base bx bx-undo"></i></button>';
+                    }
                 }
 
                 $actions .= '</div>';

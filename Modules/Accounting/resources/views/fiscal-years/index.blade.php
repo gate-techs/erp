@@ -19,6 +19,7 @@
         </nav>
     </div>
 
+    @can('accounting.fiscal-years.create')
     <div>
         <!-- Button that opens the Side Offcanvas matching the theme design -->
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddFiscalYear" aria-controls="offcanvasAddFiscalYear">
@@ -26,6 +27,7 @@
             <span>{{ __('Add New Fiscal Year') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Alert Notifications Container -->

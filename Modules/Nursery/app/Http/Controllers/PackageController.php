@@ -21,6 +21,7 @@ class PackageController extends Controller
 
     public function index(): View
     {
+        abort_if(! auth()->user()->can('nursery.packages.view'), 403);
         return view('nursery::packages.index', [
             'nurseries' => $this->packageService->getNurseries(),
         ]);
@@ -28,6 +29,7 @@ class PackageController extends Controller
 
     public function create(): View
     {
+        abort_if(! auth()->user()->can('nursery.packages.create'), 403);
         return view('nursery::packages.create', [
             'nurseries' => $this->packageService->getNurseries(),
         ]);
@@ -35,6 +37,12 @@ class PackageController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.view'), 403);
+        $canEdit = auth()->user()->can('nursery.packages.edit');
+        $canDelete = auth()->user()->can('nursery.packages.delete');
+        $canToggle = auth()->user()->can('nursery.packages.toggle-status');
+        $canView = auth()->user()->can('nursery.packages.view');
+
         $query = $this->packageService->getFilteredQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -48,18 +56,35 @@ class PackageController extends Controller
                     ? $item->discount_value . '%'
                     : number_format((float) $item->discount_value, 3);
             })
-            ->addColumn('status_badge', function (Package $item) {
+            ->addColumn('status_badge', function (Package $item) use ($canToggle) {
                 $class = $item->status === 'active' ? 'bg-label-success' : 'bg-label-danger';
                 $label = $item->status === 'active' ? __('Active') : __('Inactive');
+
+                if (! $canToggle) {
+                    return '<span class="badge ' . $class . '">' . e($label) . '</span>';
+                }
+
                 return '<button type="button" class="btn btn-sm ' . $class . ' btn-toggle-package-status border-0" data-id="' . $item->id . '">' . e($label) . '</button>';
             })
-            ->addColumn('actions', function (Package $item) {
+            ->addColumn('actions', function (Package $item) use ($canView, $canEdit, $canDelete) {
                 $name = e($item->translateOrNew(app()->getLocale())->name ?? $item->translateOrNew('ar')->name ?? '');
-                return '<div class="d-flex justify-content-center gap-1">'
-                    . '<button type="button" class="btn btn-sm btn-icon btn-label-info btn-view-package" data-id="' . $item->id . '" title="' . e(__('View')) . '"><i class="bx bx-show"></i></button>'
-                    . '<a href="' . route('packages.edit', $item->id) . '" class="btn btn-sm btn-icon btn-label-primary" title="' . e(__('Edit')) . '"><i class="bx bx-edit"></i></a>'
-                    . '<button type="button" class="btn btn-sm btn-icon btn-label-danger btn-delete-package" data-id="' . $item->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '"><i class="bx bx-trash"></i></button>'
-                    . '</div>';
+                $buttons = [];
+
+                if ($canView) {
+                    $buttons[] = '<button type="button" class="btn btn-sm btn-icon btn-label-info btn-view-package" data-id="' . $item->id . '" title="' . e(__('View')) . '"><i class="bx bx-show"></i></button>';
+                }
+                if ($canEdit) {
+                    $buttons[] = '<a href="' . route('packages.edit', $item->id) . '" class="btn btn-sm btn-icon btn-label-primary" title="' . e(__('Edit')) . '"><i class="bx bx-edit"></i></a>';
+                }
+                if ($canDelete) {
+                    $buttons[] = '<button type="button" class="btn btn-sm btn-icon btn-label-danger btn-delete-package" data-id="' . $item->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '"><i class="bx bx-trash"></i></button>';
+                }
+
+                if (empty($buttons)) {
+                    return '<span class="text-muted">-</span>';
+                }
+
+                return '<div class="d-flex justify-content-center gap-1">' . implode('', $buttons) . '</div>';
             })
             ->rawColumns(['status_badge', 'actions'])
             ->filterColumn('name_ar', fn ($query, $keyword) => $query->whereTranslationLike('name', "%{$keyword}%", 'ar'))
@@ -69,6 +94,7 @@ class PackageController extends Controller
 
     public function store(StorePackageRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.create'), 403);
         $package = $this->packageService->create(
             $request->validated(),
             $request->file('cover_image'),
@@ -81,6 +107,7 @@ class PackageController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.view'), 403);
         $package = $this->packageService->find($id);
         abort_unless($package, 404, __('Package not found.'));
 
@@ -110,6 +137,7 @@ class PackageController extends Controller
 
     public function edit(int $id): View
     {
+        abort_if(! auth()->user()->can('nursery.packages.edit'), 403);
         $package = $this->packageService->find($id);
         abort_unless($package, 404, __('Package not found.'));
 
@@ -121,6 +149,7 @@ class PackageController extends Controller
 
     public function update(UpdatePackageRequest $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.edit'), 403);
         $package = $this->packageService->update(
             $id,
             $request->validated(),
@@ -134,12 +163,14 @@ class PackageController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.delete'), 403);
         abort_unless($this->packageService->delete($id), 404, __('Package not found.'));
         return $this->response($request, __('Package deleted successfully.'));
     }
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('nursery.packages.toggle-status'), 403);
         $package = $this->packageService->toggleStatus($id);
         abort_unless($package, 404, __('Package not found.'));
 

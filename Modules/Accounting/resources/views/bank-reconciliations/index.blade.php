@@ -17,9 +17,11 @@
             </ol>
         </nav>
     </div>
+    @can('accounting.bank-reconciliations.create')
     <a href="{{ route('accounting.bank-reconciliations.create') }}" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm">
         <i class="icon-base bx bx-plus font-18"></i><span>{{ __('New Bank Reconciliation') }}</span>
     </a>
+    @endcan
 </div>
 
 <div id="alertContainer">

@@ -36,6 +36,8 @@ class InterviewController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.interviews.view'), 403);
+
         $selectedOpeningId = $request->filled('job_opening_id') ? (int) $request->job_opening_id : null;
         $selectedStatus    = $request->get('status');
         $selectedDate      = $request->get('date');
@@ -63,6 +65,8 @@ class InterviewController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.view'), 403);
+
         $filters = [
             'job_opening_id' => $request->get('job_opening_id'),
             'status'         => $request->get('status'),
@@ -184,31 +188,48 @@ class InterviewController extends Controller
                         </span>';
             })
             ->addColumn('actions', function (Interview $item) {
-                $btnShow = '<a href="' . route('hr.interviews.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Details') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
 
-                $btnEdit = '<a href="' . route('hr.interviews.edit', $item->id) . '" class="btn btn-sm btn-icon btn-outline-warning" title="' . __('Edit Interview') . '">
-                                <i class="bx bx-edit font-16"></i>
-                            </a>';
-
-                $btnEvaluate = '<a href="' . route('hr.interviews.evaluate', $item->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Scorecard / Evaluate') . '">
-                                    <i class="bx bx-check-square font-16"></i>
+                $btnShow = '';
+                if ($user->can('hr.interviews.view')) {
+                    $btnShow = '<a href="' . route('hr.interviews.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Details') . '">
+                                    <i class="bx bx-show font-16"></i>
                                 </a>';
+                }
+
+                $btnEdit = '';
+                if ($user->can('hr.interviews.edit')) {
+                    $btnEdit = '<a href="' . route('hr.interviews.edit', $item->id) . '" class="btn btn-sm btn-icon btn-outline-warning" title="' . __('Edit Interview') . '">
+                                    <i class="bx bx-edit font-16"></i>
+                                </a>';
+                }
+
+                $btnEvaluate = '';
+                if ($user->can('hr.interviews.evaluate')) {
+                    $btnEvaluate = '<a href="' . route('hr.interviews.evaluate', $item->id) . '" class="btn btn-sm btn-icon btn-outline-primary" title="' . __('Scorecard / Evaluate') . '">
+                                        <i class="bx bx-check-square font-16"></i>
+                                    </a>';
+                }
 
                 $btnCancel = '';
-                if ($item->status === InterviewStatus::SCHEDULED) {
+                if ($item->status === InterviewStatus::SCHEDULED && $user->can('hr.interviews.cancel')) {
                     $btnCancel = '<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-cancel-interview" data-id="' . $item->id . '" title="' . __('Cancel Interview') . '">
                                     <i class="bx bx-x font-16"></i>
                                   </button>';
                 }
 
-                return '<div class="d-flex align-items-center justify-content-center gap-1">
-                            ' . $btnShow . '
-                            ' . $btnEdit . '
-                            ' . $btnEvaluate . '
-                            ' . $btnCancel . '
-                        </div>';
+                $btnDelete = '';
+                if ($user->can('hr.interviews.delete')) {
+                    $btnDelete = '<form action="' . route('hr.interviews.destroy', $item->id) . '" method="POST" class="d-inline" onsubmit="return confirm(\'' . __('Are you sure?') . '\')">
+                                    ' . csrf_field() . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger" title="' . __('Delete') . '">
+                                        <i class="bx bx-trash font-16"></i>
+                                    </button>
+                                  </form>';
+                }
+
+                $buttons = $btnShow . $btnEdit . $btnEvaluate . $btnCancel . $btnDelete;
+                return $buttons ? '<div class="d-flex align-items-center justify-content-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['candidate_info', 'opening_info', 'interview_type_mode', 'schedule_info', 'interviewers_list', 'score_rating', 'status_badge', 'actions'])
             ->make(true);
@@ -219,6 +240,8 @@ class InterviewController extends Controller
      */
     public function create(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.interviews.create'), 403);
+
         $jobApplicationId = $request->get('job_application_id');
         $selectedApplication = $jobApplicationId ? JobApplication::with(['candidate', 'jobOpening.translations'])->find($jobApplicationId) : null;
 
@@ -248,6 +271,8 @@ class InterviewController extends Controller
      */
     public function store(StoreInterviewRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.create'), 403);
+
         $interview = $this->service->scheduleInterview($request->validated());
 
         return redirect()->route('hr.interviews.show', $interview->id)
@@ -259,6 +284,8 @@ class InterviewController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.interviews.view'), 403);
+
         $interview = $this->repository->findWithRelations($id);
         if (!$interview) {
             abort(404, __('Interview session not found.'));
@@ -275,6 +302,8 @@ class InterviewController extends Controller
      */
     public function edit(int $id): View
     {
+        abort_if(! auth()->user()->can('hr.interviews.edit'), 403);
+
         $interview = $this->repository->findWithRelations($id);
         if (!$interview) {
             abort(404, __('Interview session not found.'));
@@ -299,6 +328,8 @@ class InterviewController extends Controller
      */
     public function update(int $id, UpdateInterviewRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.edit'), 403);
+
         $interview = Interview::findOrFail($id);
         $this->service->updateInterview($interview, $request->validated());
 
@@ -311,6 +342,8 @@ class InterviewController extends Controller
      */
     public function evaluate(int $id, Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.interviews.evaluate'), 403);
+
         $interview = $this->repository->findWithRelations($id);
         if (!$interview) {
             abort(404);
@@ -327,6 +360,8 @@ class InterviewController extends Controller
      */
     public function storeEvaluation(int $id, StoreEvaluationRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.evaluate'), 403);
+
         $interview = Interview::findOrFail($id);
         $interviewerId = (int) $request->interviewer_id;
 
@@ -341,6 +376,8 @@ class InterviewController extends Controller
      */
     public function cancel(int $id, Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.cancel'), 403);
+
         $interview = Interview::findOrFail($id);
         $reason = $request->get('reason');
 
@@ -357,6 +394,8 @@ class InterviewController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.interviews.delete'), 403);
+
         $interview = Interview::findOrFail($id);
         $interview->delete();
 

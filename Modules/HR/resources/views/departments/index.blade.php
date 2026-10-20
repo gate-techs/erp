@@ -34,12 +34,14 @@
         </nav>
     </div>
 
+    @if(auth()->user()->can('hr.settings.departments.create') || auth()->user()->can('hr.settings.administrations.create'))
     <div>
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddDepartment" aria-controls="offcanvasAddDepartment">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Department') }}</span>
         </button>
     </div>
+    @endif
 </div>
 
 <!-- Alert Notifications -->
@@ -551,31 +553,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchable: false,
                 className: 'text-center align-middle',
                 render: function (data, type, row) {
-                    return `
-                        <div class="d-inline-flex gap-1">
-                            <button type="button" class="btn btn-icon btn-sm btn-label-primary btn-edit-department" 
-                                data-id="${data}"
-                                data-code="${row.code || ''}"
-                                data-name-ar="${row.name_ar || ''}"
-                                data-name-en="${row.name_en || ''}"
-                                data-desc-ar="${row.description_ar || ''}"
-                                data-desc-en="${row.description_en || ''}"
-                                data-parent-id="${row.parent_id || ''}"
-                                data-nursery-id="${row.nursery_id || ''}"
-                                data-branch-id="${row.branch_id || ''}"
-                                data-manager-id="${row.manager_id || ''}"
-                                data-status="${row.status || 'active'}"
-                                title="{{ __('Edit') }}">
-                                <i class="icon-base bx bx-edit-alt"></i>
-                            </button>
-                            <button type="button" class="btn btn-icon btn-sm btn-label-danger btn-delete-department"
-                                data-id="${data}"
-                                data-name="${row.name_ar}"
-                                title="{{ __('Delete') }}">
-                                <i class="icon-base bx bx-trash"></i>
-                            </button>
-                        </div>
-                    `;
+                    let canEdit = @json(auth()->user()->can('hr.settings.departments.edit') || auth()->user()->can('hr.settings.administrations.edit'));
+                    let canDelete = @json(auth()->user()->can('hr.settings.departments.delete') || auth()->user()->can('hr.settings.administrations.delete'));
+
+                    let editBtn = canEdit ? `
+                        <button type="button" class="btn btn-icon btn-sm btn-label-primary btn-edit-department" 
+                            data-id="${data}"
+                            data-code="${row.code || ''}"
+                            data-name-ar="${row.name_ar || ''}"
+                            data-name-en="${row.name_en || ''}"
+                            data-desc-ar="${row.description_ar || ''}"
+                            data-desc-en="${row.description_en || ''}"
+                            data-parent-id="${row.parent_id || ''}"
+                            data-nursery-id="${row.nursery_id || ''}"
+                            data-branch-id="${row.branch_id || ''}"
+                            data-manager-id="${row.manager_id || ''}"
+                            data-status="${row.status || 'active'}"
+                            title="{{ __('Edit') }}">
+                            <i class="icon-base bx bx-edit-alt"></i>
+                        </button>
+                    ` : '';
+
+                    let deleteBtn = canDelete ? `
+                        <button type="button" class="btn btn-icon btn-sm btn-label-danger btn-delete-department"
+                            data-id="${data}"
+                            data-name="${row.name_ar}"
+                            title="{{ __('Delete') }}">
+                            <i class="icon-base bx bx-trash"></i>
+                        </button>
+                    ` : '';
+
+                    let buttons = (editBtn + deleteBtn).trim();
+                    return buttons ? `<div class="d-inline-flex gap-1">${buttons}</div>` : '<span class="text-muted">---</span>';
                 }
             }
         ],

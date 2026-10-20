@@ -13,13 +13,13 @@ class PortalPwaService implements PortalPwaServiceInterface
      */
     public function getManifest(): array
     {
-        $appName = 'AstroLeaders';
-        $shortName = 'AstroLeaders';
+        $appName = 'ALA ORBIT';
+        $shortName = 'ALA ORBIT';
 
         return [
             'name'                        => $appName,
             'short_name'                  => $shortName,
-            'description'                 => 'منظومة الموارد البشرية وبوابة الخدمة الذاتية لحضانة أسترو ليدرز',
+            'description'                 => 'منظومة الموارد البشرية وبوابة الخدمة الذاتية - ALA ORBIT',
             'start_url'                   => route('portal.splash', [], false),
             'id'                          => '/portal/',
             'scope'                       => '/portal/',
@@ -101,7 +101,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-    let payload = { title: 'Astro Leaders', body: 'You have a new notification.' };
+    let payload = { title: 'ALA ORBIT', body: 'You have a new notification.' };
 
     try {
         if (event.data) payload = event.data.json();
@@ -110,7 +110,7 @@ self.addEventListener('push', (event) => {
     }
 
     event.waitUntil(
-        self.registration.showNotification(payload.title || 'Astro Leaders', {
+        self.registration.showNotification(payload.title || 'ALA ORBIT', {
             body: payload.body || '',
             icon: '/assets/portal/icon-192.png',
             badge: '/assets/portal/icon-192.png',

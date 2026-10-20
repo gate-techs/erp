@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ALA ORBIT</string>
+    <string name="title_activity_main">ALA ORBIT</string>
+    <string name="package_name">kw.astroleaders.alaorbit</string>
+    <string name="custom_url_scheme">kw.astroleaders.alaorbit</string>
+</resources>

@@ -20,14 +20,18 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
+        @can('hr.settings.reward-types.view')
         <a href="{{ route('hr.settings.reward-types.index') }}" class="btn btn-label-secondary d-flex align-items-center gap-1 shadow-xs">
             <i class="icon-base bx bx-slider font-18"></i>
             <span>{{ __('Reward Types') }}</span>
         </a>
+        @endcan
+        @can('hr.rewards.create')
         <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddReward" aria-controls="offcanvasAddReward">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Reward') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 

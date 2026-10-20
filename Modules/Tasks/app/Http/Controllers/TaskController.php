@@ -28,6 +28,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('tasks.view'), 403);
+
         $taskGroups = TaskGroup::query()->active()->get();
         $employees  = Employee::query()->active()->get();
         $priorities = TaskPriority::cases();
@@ -39,6 +41,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.view'), 403);
+
         $query = $this->taskService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -90,26 +94,33 @@ class TaskController extends Controller
                 </span>';
             })
             ->addColumn('actions', function (Task $task) {
-                $buttons = '<div class="d-inline-flex gap-1">';
-                $buttons .= '<a href="' . route('tasks.tasks.show', $task->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Details') . '">
-                    <i class="icon-base bx bx-show"></i>
-                </a>';
+                $user = auth()->user();
+                $buttons = '';
 
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-task"
-                    data-id="' . $task->id . '"
-                    title="' . __('Edit') . '">
-                    <i class="icon-base bx bx-edit-alt"></i>
-                </button>';
+                if ($user->can('tasks.view')) {
+                    $buttons .= '<a href="' . route('tasks.tasks.show', $task->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Details') . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </a> ';
+                }
 
-                $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-task"
-                    data-id="' . $task->id . '"
-                    data-title="' . e($task->title) . '"
-                    title="' . __('Delete') . '">
-                    <i class="icon-base bx bx-trash"></i>
-                </button>';
-                $buttons .= '</div>';
+                if ($user->can('tasks.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-task"
+                        data-id="' . $task->id . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </button> ';
+                }
 
-                return $buttons;
+                if ($user->can('tasks.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-task"
+                        data-id="' . $task->id . '"
+                        data-title="' . e($task->title) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->rawColumns(['title', 'task_group_name', 'employee_name', 'priority', 'task_status', 'completion_date', 'remaining_days', 'attachments_count', 'actions'])
             ->make(true);
@@ -118,6 +129,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function store(StoreTaskRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.create'), 403);
+
         $attachments = $request->file('attachments', []);
         $task = $this->taskService->create($request->validated(), $attachments);
 
@@ -135,6 +148,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function show(int $id): View
     {
+        abort_if(! auth()->user()->can('tasks.view'), 403);
+
         $task = $this->taskService->getById($id);
 
         if (!$task) {
@@ -149,6 +164,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function edit(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.edit'), 403);
+
         $task = $this->taskService->getById($id);
 
         if (!$task) {
@@ -184,6 +201,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function update(UpdateTaskRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.edit'), 403);
+
         $task = $this->taskService->getById($id);
 
         if (!$task) {
@@ -211,6 +230,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.delete'), 403);
+
         try {
             $task = $this->taskService->getById($id);
 
@@ -242,6 +263,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function updateStatus(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.toggle-status'), 403);
+
         $request->validate([
             'status'  => ['required', 'string', 'in:pending,in_progress,on_hold,completed,cancelled'],
             'comment' => ['nullable', 'string', 'max:1000'],
@@ -264,6 +287,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function addNote(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.toggle-status'), 403);
+
         $request->validate([
             'note' => ['required', 'string', 'max:5000'],
         ]);
@@ -292,6 +317,8 @@ class TaskController extends Controller
     //-----------------------------------------
     public function deleteAttachment(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('tasks.edit'), 403);
+
         $deleted = $this->taskService->deleteAttachment($id);
 
         return response()->json([

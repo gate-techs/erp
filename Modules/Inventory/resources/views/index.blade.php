@@ -18,10 +18,12 @@
             </ol>
         </nav>
     </div>
+    @can('inventory.warehouses.create')
     <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm" id="btnAddWarehouse">
         <i class="icon-base bx bx-plus font-18"></i>
         <span>{{ __('Add New Warehouse') }}</span>
     </button>
+    @endcan
 </div>
 
 <!-- Alert Notifications Container -->

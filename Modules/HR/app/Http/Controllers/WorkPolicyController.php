@@ -30,6 +30,8 @@ class WorkPolicyController extends Controller
      */
     public function index(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.policies.view'), 403);
+
         $viewData = $this->workPolicyService->getSettingsViewData();
         $counts   = $this->getCounts();
 
@@ -44,6 +46,8 @@ class WorkPolicyController extends Controller
      */
     public function update(Request $request): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.policies.edit'), 403);
+
         try {
             $payload = $request->all();
 
@@ -78,6 +82,8 @@ class WorkPolicyController extends Controller
      */
     public function resetDefaults(Request $request): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.policies.reset'), 403);
+
         try {
             $this->workPolicyService->resetToDefaults();
 

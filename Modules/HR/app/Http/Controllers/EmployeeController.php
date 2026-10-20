@@ -29,6 +29,8 @@ class EmployeeController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.employees.view'), 403);
+
         $formData = $this->employeeService->getFormData();
 
         return view('hr::employees.index', $formData);
@@ -40,6 +42,8 @@ class EmployeeController extends Controller
      */
     public function deleted(Request $request): View
     {
+        abort_if(! auth()->user()->can('hr.employees.delete'), 403);
+
         $search = trim((string) $request->input('search'));
 
         $employees = Employee::onlyTrashed()
@@ -68,6 +72,8 @@ class EmployeeController extends Controller
      */
     public function restore(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.edit'), 403);
+
         $employee = Employee::onlyTrashed()->findOrFail($id);
         $employee->restore();
 
@@ -81,6 +87,8 @@ class EmployeeController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.view'), 403);
+
         $query = $this->employeeService->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -250,31 +258,40 @@ class EmployeeController extends Controller
                 ';
             })
             ->addColumn('actions', function (Employee $item) {
+                $user = auth()->user();
+                $canView = $user?->can('hr.employees.view');
+                $canEdit = $user?->can('hr.employees.edit');
+                $canDelete = $user?->can('hr.employees.delete');
+
                 $name = e($item->translate('ar')?->name ?? $item->translate('en')?->name ?? '');
                 $waUrl = $item->whatsapp_url;
-                $waButton = $waUrl
+                $waButton = ($waUrl && $canView)
                     ? '<a href="' . $waUrl . '" target="_blank" rel="noopener noreferrer" class="btn btn-icon btn-sm btn-outline-success" title="' . __('Chat on WhatsApp') . '" data-bs-toggle="tooltip">
                            <i class="icon-base bx bxl-whatsapp font-18"></i>
-                       </a>'
+                       </a> '
                     : '';
 
-                return '
-                    <div class="d-inline-flex gap-1">
-                        ' . $waButton . '
-                        <a href="' . route('hr.employees.show', $item->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Profile') . '">
-                            <i class="icon-base bx bx-user"></i>
-                        </a>
-                        <a href="' . route('hr.employees.edit', $item->id) . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit-alt"></i>
-                        </a>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-employee" 
-                            data-id="' . $item->id . '" 
-                            data-name="' . $name . '" 
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $buttons = $waButton;
+                if ($canView) {
+                    $buttons .= '<a href="' . route('hr.employees.show', $item->id) . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Profile') . '">
+                        <i class="icon-base bx bx-user"></i>
+                    </a> ';
+                }
+                if ($canEdit) {
+                    $buttons .= '<a href="' . route('hr.employees.edit', $item->id) . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit-alt"></i>
+                    </a> ';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-employee" 
+                        data-id="' . $item->id . '" 
+                        data-name="' . $name . '" 
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->rawColumns(['employee_info', 'job_info', 'work_info', 'contact_info', 'salary_info', 'status', 'hire_date', 'actions'])
             ->filterColumn('employee_info', function ($query, $keyword) {
@@ -301,6 +318,8 @@ class EmployeeController extends Controller
      */
     public function create(): View
     {
+        abort_if(! auth()->user()->can('hr.employees.create'), 403);
+
         $formData = $this->employeeService->getFormData();
 
         return view('hr::employees.create', $formData);
@@ -312,6 +331,8 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.create'), 403);
+
         try {
             $employee = $this->employeeService->createEmployee($request->validated(), auth()->id());
 
@@ -345,6 +366,8 @@ class EmployeeController extends Controller
      */
     public function show(int $id): View|RedirectResponse
     {
+        abort_if(! (auth()->user()->can('hr.employees.view') || auth()->user()->employee?->id === $id), 403);
+
         $profileData = $this->employeeService->getProfileData($id);
 
         if (!$profileData) {
@@ -363,6 +386,8 @@ class EmployeeController extends Controller
      */
     public function printProfile(Request $request, int $id): View|RedirectResponse
     {
+        abort_if(! (auth()->user()->can('hr.employees.view') || auth()->user()->can('hr.reports.employees.print') || auth()->user()->employee?->id === $id), 403);
+
         $profileData = $this->employeeService->getProfileData($id);
 
         if (!$profileData) {
@@ -399,6 +424,8 @@ class EmployeeController extends Controller
      */
     public function edit(int $id): View|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.edit'), 403);
+
         $employee = $this->employeeService->getEmployeeById($id);
 
         if (!$employee) {
@@ -418,6 +445,8 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.edit'), 403);
+
         try {
             $employee = $this->employeeService->getEmployeeById($id);
             if (!$employee) {
@@ -458,6 +487,8 @@ class EmployeeController extends Controller
      */
     public function destroy(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.employees.delete'), 403);
+
         try {
             $employee = $this->employeeService->getEmployeeById($id);
             if (!$employee) {

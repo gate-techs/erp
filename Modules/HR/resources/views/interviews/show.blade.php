@@ -22,16 +22,20 @@
     </div>
 
     <div class="d-flex flex-wrap align-items-center gap-2">
+        @can('hr.interviews.evaluate')
         <a href="{{ route('hr.interviews.evaluate', $interview->id) }}" class="btn btn-primary d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
             <i class="bx bx-check-square font-18"></i>
             <span class="fw-semibold">{{ __('Submit Evaluation / Scorecard') }}</span>
         </a>
+        @endcan
 
         @if ($interview->job_application_id)
+            @can('hr.job-offers.create')
             <a href="{{ route('hr.job-offers.create', ['application_id' => $interview->job_application_id]) }}" class="btn btn-outline-success d-flex align-items-center gap-1 shadow-sm px-3 py-2 rounded-3">
                 <i class="bx bx-gift font-18"></i>
                 <span class="fw-semibold">{{ __('Issue Job Offer') }}</span>
             </a>
+            @endcan
         @endif
 
         @if ($interview->mode === \Modules\HR\Enums\InterviewMode::ONLINE && $interview->meeting_link)

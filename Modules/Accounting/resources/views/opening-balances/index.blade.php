@@ -42,10 +42,12 @@
         </nav>
     </div>
     <div class="d-flex align-items-center gap-2">
+        @can('accounting.opening-balances.print')
         <a id="btnPrintStatement" href="javascript:void(0);" class="btn btn-outline-primary d-flex align-items-center gap-2 shadow-xs">
             <i class="icon-base bx bx-printer font-18"></i>
             <span>{{ __('Print Statement') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 
@@ -62,10 +64,12 @@
                 <span class="d-block small text-muted" id="postedBannerDetails"></span>
             </div>
         </div>
+        @can('accounting.opening-balances.reopen')
         <button type="button" id="btnReopenEntry" class="btn btn-sm btn-outline-success d-flex align-items-center justify-content-center gap-1 shadow-xs text-nowrap flex-shrink-0 ms-auto">
             <i class="icon-base bx bx-lock-open font-16"></i>
             <span>{{ __('Reopen to Draft') }}</span>
         </button>
+        @endcan
     </div>
 </div>
 
@@ -165,6 +169,7 @@
         </div>
 
         <!-- Buttons -->
+        @can('accounting.opening-balances.create')
         <div class="d-flex align-items-center gap-2">
             <button type="button" id="btnSaveDraft" class="btn btn-label-secondary d-flex align-items-center gap-2 shadow-xs">
                 <i class="icon-base bx bx-save font-18"></i>
@@ -175,6 +180,7 @@
                 <span>{{ __('Post & Approve Entry') }}</span>
             </button>
         </div>
+        @endcan
     </div>
 </div>
 @endsection

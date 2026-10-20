@@ -5,12 +5,16 @@ use Modules\CRM\Http\Controllers\LeadController;
 use Modules\CRM\Http\Controllers\ServiceRequestController;
 
 Route::middleware(['auth', 'verified'])->prefix('crm')->name('crm.')->group(function () {
+    // 0. Statistics / Dashboard (إحصائيات الطلبات)
+    Route::middleware('permission:crm.dashboard.view')->group(function () {
+        Route::get('leads/statistics', [LeadController::class, 'statisticsPage'])->name('leads.statistics');
+        Route::get('leads/statistics/data', [LeadController::class, 'statistics'])->name('leads.statistics.data');
+    });
+
     // 1. Leads Management (العملاء المحتملين)
     Route::middleware('permission:crm.leads.view')->group(function () {
         Route::get('leads', [LeadController::class, 'index'])->name('leads.index');
         Route::get('leads/data', [LeadController::class, 'data'])->name('leads.data');
-        Route::get('leads/statistics', [LeadController::class, 'statisticsPage'])->name('leads.statistics');
-        Route::get('leads/statistics/data', [LeadController::class, 'statistics'])->name('leads.statistics.data');
     });
     Route::post('leads', [LeadController::class, 'store'])
         ->middleware('permission:crm.leads.create')

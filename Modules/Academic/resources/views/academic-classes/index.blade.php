@@ -21,12 +21,14 @@
         </div>
     </div>
 
+    @can('academic.classes.create')
     <div class="mt-3 mt-md-0">
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicClass" aria-controls="offcanvasAddAcademicClass">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Class') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Filters Card -->
@@ -126,6 +128,7 @@
     </div>
 </div>
 
+@can('academic.classes.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Class                                          -->
 <!-- ========================================================================= -->
@@ -282,7 +285,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.classes.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Class                                         -->
 <!-- ========================================================================= -->
@@ -440,7 +445,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.classes.delete')
 <!-- ========================================================================= -->
 <!-- 3. Modal: Delete Academic Class Confirmation                             -->
 <!-- ========================================================================= -->
@@ -466,6 +473,7 @@
         </div>
     </div>
 </div>
+@endcan
 
 @endsection
 

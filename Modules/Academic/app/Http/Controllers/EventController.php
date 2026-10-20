@@ -24,6 +24,8 @@ class EventController extends Controller
      */
     public function index(Request $request): View
     {
+        abort_if(!auth()->user()->can('academic.events.view'), 403);
+
         $formData = $this->eventService->getFormData();
 
         return view('academic::events.index', $formData);
@@ -34,6 +36,8 @@ class EventController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.events.view'), 403);
+
         $query = $this->eventService->getFilteredQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -58,7 +62,11 @@ class EventController extends Controller
                 ];
             })
             ->addColumn('actions', function (Event $event) {
+                $user = auth()->user();
                 return [
+                    'can_view'   => $user?->can('academic.events.view') ?? false,
+                    'can_edit'   => $user?->can('academic.events.edit') ?? false,
+                    'can_delete' => $user?->can('academic.events.delete') ?? false,
                     'show_url'   => route('academic.events.show', $event->id),
                     'edit_url'   => route('academic.events.edit', $event->id),
                     'delete_url' => route('academic.events.destroy', $event->id),
@@ -85,6 +93,8 @@ class EventController extends Controller
      */
     public function create(): View
     {
+        abort_if(!auth()->user()->can('academic.events.create'), 403);
+
         $formData = $this->eventService->getFormData();
 
         return view('academic::events.create', $formData);
@@ -95,6 +105,8 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.events.create'), 403);
+
         $event = $this->eventService->create(
             $request->validated(),
             auth()->id(),
@@ -118,6 +130,8 @@ class EventController extends Controller
      */
     public function show(int $id): View
     {
+        abort_if(!auth()->user()->can('academic.events.view'), 403);
+
         $event = $this->eventService->find($id);
         abort_unless($event, 404, __('Event not found.'));
 
@@ -129,6 +143,8 @@ class EventController extends Controller
      */
     public function edit(Request $request, int $id): View|JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.events.edit'), 403);
+
         $event = $this->eventService->find($id);
         abort_unless($event, 404, __('Event not found.'));
 
@@ -163,6 +179,8 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.events.edit'), 403);
+
         $updated = $this->eventService->update(
             $id,
             $request->validated(),
@@ -187,6 +205,8 @@ class EventController extends Controller
      */
     public function destroy(int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.events.delete'), 403);
+
         $deleted = $this->eventService->delete($id);
 
         if (request()->ajax() || request()->wantsJson()) {
@@ -205,6 +225,8 @@ class EventController extends Controller
      */
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.events.toggle-status'), 403);
+
         $toggled = $this->eventService->toggleStatus($id);
         $event = $this->eventService->find($id);
 

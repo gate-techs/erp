@@ -33,6 +33,8 @@ class HrGeneralSettingController extends Controller
      */
     public function allowanceTypes(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.allowance-types.view'), 403);
+
         $parents  = $this->service->getParentsList(HrSettingType::ALLOWANCE_TYPES->value);
         $statuses = HrSettingStatus::cases();
 
@@ -45,6 +47,8 @@ class HrGeneralSettingController extends Controller
      */
     public function allowanceTypesData(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.allowance-types.view'), 403);
+
         $filters = array_merge($request->all(), ['type' => HrSettingType::ALLOWANCE_TYPES->value]);
         $query   = $this->service->getDataTableQuery($filters);
 
@@ -57,6 +61,8 @@ class HrGeneralSettingController extends Controller
      */
     public function storeAllowanceType(StoreHrSettingRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.allowance-types.create'), 403);
+
         try {
             $data = $request->validated();
             $data['type'] = HrSettingType::ALLOWANCE_TYPES->value;
@@ -78,6 +84,8 @@ class HrGeneralSettingController extends Controller
      */
     public function updateAllowanceType(UpdateHrSettingRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.allowance-types.edit'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -105,6 +113,8 @@ class HrGeneralSettingController extends Controller
      */
     public function destroyAllowanceType(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.allowance-types.delete'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -132,6 +142,8 @@ class HrGeneralSettingController extends Controller
      */
     public function documentTypes(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.document-types.view'), 403);
+
         $parents  = $this->service->getParentsList(HrSettingType::DOCUMENT_TYPES->value);
         $statuses = HrSettingStatus::cases();
 
@@ -144,6 +156,8 @@ class HrGeneralSettingController extends Controller
      */
     public function documentTypesData(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.document-types.view'), 403);
+
         $filters = array_merge($request->all(), ['type' => HrSettingType::DOCUMENT_TYPES->value]);
         $query   = $this->service->getDataTableQuery($filters);
 
@@ -156,6 +170,8 @@ class HrGeneralSettingController extends Controller
      */
     public function storeDocumentType(StoreHrSettingRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.document-types.create'), 403);
+
         try {
             $data = $request->validated();
             $data['type'] = HrSettingType::DOCUMENT_TYPES->value;
@@ -177,6 +193,8 @@ class HrGeneralSettingController extends Controller
      */
     public function updateDocumentType(UpdateHrSettingRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.document-types.edit'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -204,6 +222,8 @@ class HrGeneralSettingController extends Controller
      */
     public function destroyDocumentType(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.document-types.delete'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -231,6 +251,8 @@ class HrGeneralSettingController extends Controller
      */
     public function rewardTypes(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.reward-types.view'), 403);
+
         $parents  = $this->service->getParentsList(HrSettingType::REWARD_TYPES->value);
         $statuses = HrSettingStatus::cases();
 
@@ -243,6 +265,8 @@ class HrGeneralSettingController extends Controller
      */
     public function rewardTypesData(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.reward-types.view'), 403);
+
         $filters = array_merge($request->all(), ['type' => HrSettingType::REWARD_TYPES->value]);
         $query   = $this->service->getDataTableQuery($filters);
 
@@ -255,6 +279,8 @@ class HrGeneralSettingController extends Controller
      */
     public function storeRewardType(StoreHrSettingRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.reward-types.create'), 403);
+
         try {
             $data = $request->validated();
             $data['type'] = HrSettingType::REWARD_TYPES->value;
@@ -276,6 +302,8 @@ class HrGeneralSettingController extends Controller
      */
     public function updateRewardType(UpdateHrSettingRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.reward-types.edit'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -303,6 +331,8 @@ class HrGeneralSettingController extends Controller
      */
     public function destroyRewardType(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.reward-types.delete'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -330,6 +360,8 @@ class HrGeneralSettingController extends Controller
      */
     public function penaltyTypes(): View
     {
+        abort_if(! auth()->user()->can('hr.settings.penalty-types.view'), 403);
+
         $parents  = $this->service->getParentsList(HrSettingType::PENALTY_TYPES->value);
         $statuses = HrSettingStatus::cases();
 
@@ -342,6 +374,8 @@ class HrGeneralSettingController extends Controller
      */
     public function penaltyTypesData(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.penalty-types.view'), 403);
+
         $filters = array_merge($request->all(), ['type' => HrSettingType::PENALTY_TYPES->value]);
         $query   = $this->service->getDataTableQuery($filters);
 
@@ -354,6 +388,8 @@ class HrGeneralSettingController extends Controller
      */
     public function storePenaltyType(StoreHrSettingRequest $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.penalty-types.create'), 403);
+
         try {
             $data = $request->validated();
             $data['type'] = HrSettingType::PENALTY_TYPES->value;
@@ -375,6 +411,8 @@ class HrGeneralSettingController extends Controller
      */
     public function updatePenaltyType(UpdateHrSettingRequest $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.penalty-types.edit'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 
@@ -402,6 +440,8 @@ class HrGeneralSettingController extends Controller
      */
     public function destroyPenaltyType(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('hr.settings.penalty-types.delete'), 403);
+
         try {
             $setting = $this->service->getSettingById($id);
 

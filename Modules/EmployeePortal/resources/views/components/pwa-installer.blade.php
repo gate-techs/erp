@@ -5,7 +5,7 @@
             <img src="{{ asset('assets/portal/icon-192.png') }}" alt="App Icon" class="pwa-app-icon" />
         </div>
         <div class="banner-content">
-            <div class="banner-title">{{ __('Install Astro Leaders App 📲') }}</div>
+            <div class="banner-title">{{ __('Install ALA ORBIT App 📲') }}</div>
             <div class="banner-desc">{{ __('Install the app on your home screen for quick, standalone access') }}</div>
         </div>
         <div class="banner-actions">

@@ -25,6 +25,7 @@ class AcademicFeeController extends Controller
 
     public function index()
     {
+        abort_if(! auth()->user()->can('academic.fees.view'), 403);
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $branches = NurseryBranch::with('translations')->where('status', 'active')->get();
         $academicYears = AcademicYear::with('translations')->where('status', 'active')->get();
@@ -46,6 +47,12 @@ class AcademicFeeController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.view'), 403);
+        $canEdit = auth()->user()->can('academic.fees.edit');
+        $canDelete = auth()->user()->can('academic.fees.delete');
+        $canToggle = auth()->user()->can('academic.fees.toggle-status');
+        $canView = auth()->user()->can('academic.fees.view');
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -61,18 +68,22 @@ class AcademicFeeController extends Controller
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->addColumn('fee_info', function (AcademicFee $fee) {
+            ->addColumn('fee_info', function (AcademicFee $fee) use ($canEdit) {
                 $locale = app()->getLocale();
                 $name = $fee->translate($locale)?->name ?? $fee->translate('ar')?->name ?? $fee->name ?? '-';
                 $imageUrl = e($fee->image_url);
                 $nameSafe = e($name);
                 $subName = e($fee->translate($locale === 'ar' ? 'en' : 'ar')?->name ?? '');
 
+                $titleHtml = $canEdit
+                    ? '<button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee" data-id="' . $fee->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>'
+                    : '<span class="fw-bold text-heading">' . $nameSafe . '</span>';
+
                 return '
                     <div class="d-flex align-items-center gap-3">
                         <img src="' . $imageUrl . '" alt="' . $nameSafe . '" class="rounded border object-fit-cover shadow-xs" width="42" height="42" onerror="this.src=\'' . asset('assets/img/favicon/favicon.ico') . '\'">
                         <div class="d-flex flex-column">
-                            <button type="button" class="btn btn-link p-0 text-start fw-bold text-heading text-decoration-none btn-edit-academic-fee" data-id="' . $fee->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>
+                            ' . $titleHtml . '
                             <small class="text-muted">' . $subName . '</small>
                         </div>
                     </div>
@@ -123,31 +134,39 @@ class AcademicFeeController extends Controller
             ->addColumn('amount_formatted', function (AcademicFee $fee) {
                 return '<span class="fw-bold text-success font-16">' . number_format($fee->amount, 2) . '</span>';
             })
-            ->addColumn('status_badge', function (AcademicFee $fee) {
+            ->addColumn('status_badge', function (AcademicFee $fee) use ($canToggle) {
                 $isActive = $fee->status === AcademicFee::STATUS_ACTIVE;
                 $badgeClass = $isActive ? 'btn-success' : 'btn-label-danger';
                 $label = $isActive ? __('Active') : __('Inactive');
+
+                if (! $canToggle) {
+                    $class = $isActive ? 'bg-label-success' : 'bg-label-danger';
+                    return '<span class="badge ' . $class . '">' . e($label) . '</span>';
+                }
 
                 return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-fee-status" data-id="' . $fee->id . '">'
                     . e($label) .
                 '</button>';
             })
-            ->addColumn('actions', function (AcademicFee $fee) {
+            ->addColumn('actions', function (AcademicFee $fee) use ($canView, $canEdit, $canDelete) {
                 $title = $fee->translate(app()->getLocale())?->name ?? $fee->translate('ar')?->name ?? '';
+                $buttons = [];
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-fee" data-id="' . $fee->id . '" title="' . e(__('View Details')) . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-fee" data-id="' . $fee->id . '" title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-fee" data-id="' . $fee->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                if ($canView) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-fee" data-id="' . $fee->id . '" title="' . e(__('View Details')) . '"><i class="icon-base bx bx-show"></i></button>';
+                }
+                if ($canEdit) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-fee" data-id="' . $fee->id . '" title="' . e(__('Edit')) . '"><i class="icon-base bx bx-edit"></i></button>';
+                }
+                if ($canDelete) {
+                    $buttons[] = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-fee" data-id="' . $fee->id . '" data-name="' . e($title) . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                if (empty($buttons)) {
+                    return '<span class="text-muted">-</span>';
+                }
+
+                return '<div class="d-inline-flex align-items-center gap-1">' . implode('', $buttons) . '</div>';
             })
             ->rawColumns(['fee_info', 'billing_period_badge', 'amount_formatted', 'status_badge', 'actions'])
             ->toJson();
@@ -155,6 +174,7 @@ class AcademicFeeController extends Controller
 
     public function store(StoreAcademicFeeRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.create'), 403);
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $image = $request->file('image');
@@ -170,6 +190,7 @@ class AcademicFeeController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.view'), 403);
         $fee = $this->service->find($id);
 
         if (! $fee) {
@@ -217,6 +238,7 @@ class AcademicFeeController extends Controller
 
     public function update(UpdateAcademicFeeRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.edit'), 403);
         $fee = $this->service->find($id);
 
         if (! $fee) {
@@ -240,6 +262,7 @@ class AcademicFeeController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.delete'), 403);
         $fee = $this->service->find($id);
 
         if (! $fee) {
@@ -259,6 +282,7 @@ class AcademicFeeController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fees.toggle-status'), 403);
         $fee = $this->service->find($id);
 
         if (! $fee) {

@@ -23,12 +23,14 @@
         </div>
     </div>
 
+    @can('academic.incident-reports.create')
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
         <a href="{{ route('academic.incident-reports.create') }}" class="btn btn-danger btn-sm d-flex align-items-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Incident Report') }}</span>
         </a>
     </div>
+    @endcan
 </div>
 
 @if (session('success'))

@@ -31,16 +31,20 @@
 
         <div class="mt-3 mt-md-0 d-flex flex-wrap align-items-center gap-2">
             <!-- Navy Quick Punch Button -->
+            @can('hr.attendances.create')
             <button type="button" class="btn btn-primary d-flex align-items-center gap-2 shadow-sm attendance-page-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasQuickPunch">
                 <i class="icon-base bx bx-plus font-18"></i>
                 <span>{{ __('+ تسجيل حضور / إنصراف') }}</span>
             </button>
+            @endcan
 
             <!-- Excel Import -->
+            @can('hr.attendances.import')
             <button type="button" class="btn btn-outline-secondary d-flex align-items-center gap-2 attendance-page-btn" data-bs-toggle="modal" data-bs-target="#modalImportExcel">
                 <i class="icon-base bx bx-upload font-18"></i>
                 <span>{{ __('استيراد إكسيل') }}</span>
             </button>
+            @endcan
 
             <!-- Segmented Switcher -->
             <div class="btn-group shadow-sm" role="group">

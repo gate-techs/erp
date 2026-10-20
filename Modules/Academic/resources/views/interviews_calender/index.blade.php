@@ -385,14 +385,18 @@
 
             <!-- Form Action Buttons -->
             <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                @can('academic.interviews_calender.delete')
                 <button type="button" class="btn btn-outline-danger d-none" id="btnDeleteInterview">
                     <i class="icon-base bx bx-trash me-1"></i> {{ __('Delete') }}
                 </button>
+                @endcan
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                    @canany(['academic.interviews_calender.create', 'academic.interviews_calender.edit'])
                     <button type="submit" class="btn text-white" id="btnSaveInterview" style="background-color: #0b3252;">
                         <i class="icon-base bx bx-check me-1"></i> {{ __('Save') }}
                     </button>
+                    @endcanany
                 </div>
             </div>
         </form>
@@ -443,12 +447,16 @@
                 </div>
             </div>
             <div class="modal-footer border-top py-2">
+                @can('academic.interviews_calender.delete')
                 <button type="button" class="btn btn-outline-danger me-auto" id="btnDeleteFromViewModal">
                     <i class="icon-base bx bx-trash me-1"></i> {{ __('Delete') }}
                 </button>
+                @endcan
+                @can('academic.interviews_calender.edit')
                 <button type="button" class="btn btn-outline-primary" id="btnEditFromViewModal">
                     <i class="icon-base bx bx-edit me-1"></i> {{ __('Edit') }}
                 </button>
+                @endcan
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
             </div>
         </div>
@@ -489,16 +497,21 @@
         // Initialize FullCalendar
         const calendarEl = document.getElementById('calendar');
 
+        const canCreate = {{ auth()->user()->can('academic.interviews_calender.create') ? 'true' : 'false' }};
+        const canEdit = {{ auth()->user()->can('academic.interviews_calender.edit') ? 'true' : 'false' }};
+
+        const customButtonsConfig = canCreate ? {
+            addEventButton: {
+                text: '{{ __("Add New Interview") }}',
+                click: function () {
+                    openAddInterviewDrawer();
+                }
+            }
+        } : {};
+
         if (window.createAppCalendar && calendarEl) {
             calendar = window.createAppCalendar(calendarEl, {
-                customButtons: {
-                    addEventButton: {
-                        text: '{{ __("Add New Interview") }}',
-                        click: function () {
-                            openAddInterviewDrawer();
-                        }
-                    }
-                },
+                customButtons: customButtonsConfig,
                 buttonText: {
                     month: 'Month',
                     week: 'Week',
@@ -522,16 +535,24 @@
                     });
                 },
                 select: function (selectionInfo) {
-                    openAddInterviewDrawer(selectionInfo.startStr);
+                    if (canCreate) {
+                        openAddInterviewDrawer(selectionInfo.startStr);
+                    }
                     if (calendar && calendar.unselect) calendar.unselect();
                 },
                 eventClick: function (info) {
                     info.jsEvent.preventDefault();
                     const id = info.event.id || (info.event.extendedProps ? info.event.extendedProps.id : null);
-                    openEditInterviewDrawer(id);
+                    if (canEdit) {
+                        openEditInterviewDrawer(id);
+                    } else {
+                        window.openViewInterviewModal(id);
+                    }
                 },
                 dateClick: function (info) {
-                    openAddInterviewDrawer(info.dateStr);
+                    if (canCreate) {
+                        openAddInterviewDrawer(info.dateStr);
+                    }
                 },
                 eventContent: function (arg) {
                     const props = arg.event.extendedProps;
@@ -1032,10 +1053,18 @@
     }
 
     function buildInterviewCardHtml(interview) {
+        const canEdit = {{ auth()->user()->can('academic.interviews_calender.edit') ? 'true' : 'false' }};
         const subtitleText = interview.notes || interview.guardian_phone || '';
+        const clickAttr = canEdit ? `onclick="openEditInterviewDrawer(${interview.id})"` : `onclick="openViewInterviewModal(${interview.id})"`;
+        const editBtnHtml = canEdit ? `
+            <div>
+                <button type="button" class="btn btn-icon btn-sm text-muted p-0" title="{{ __('Edit') }}" onclick="event.stopPropagation(); openEditInterviewDrawer(${interview.id})">
+                    <i class="icon-base bx bx-edit-alt fs-5"></i>
+                </button>
+            </div>` : '';
 
         return `
-            <div class="interview-card-item" onclick="openEditInterviewDrawer(${interview.id})">
+            <div class="interview-card-item" ${clickAttr}>
                 <div class="d-flex align-items-center justify-content-between">
                     <!-- Right in RTL: Time with Clock Icon -->
                     <div class="d-flex align-items-center gap-1" style="min-width: 130px;">
@@ -1052,11 +1081,7 @@
                     </div>
 
                     <!-- Left in RTL: Edit Pencil Button -->
-                    <div>
-                        <button type="button" class="btn btn-icon btn-sm text-muted p-0" title="{{ __('Edit') }}" onclick="event.stopPropagation(); openEditInterviewDrawer(${interview.id})">
-                            <i class="icon-base bx bx-edit-alt fs-5"></i>
-                        </button>
-                    </div>
+                    ${editBtnHtml}
                 </div>
             </div>
         `;

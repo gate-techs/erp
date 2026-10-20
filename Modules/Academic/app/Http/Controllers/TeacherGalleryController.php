@@ -25,6 +25,8 @@ class TeacherGalleryController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.galleries.view'), 403);
+
         $institutions = \Modules\Nursery\Models\Nursery::with('translations')->get();
         $branches = \Modules\Nursery\Models\NurseryBranch::with('translations')->get();
         $academicStages = \Modules\Academic\Models\AcademicStage::with('translations')->get();
@@ -46,7 +48,12 @@ class TeacherGalleryController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.view'), 403);
+
         $query = $this->service->getFilteredQuery($request->all());
+
+        $canEdit = auth()->user()->can('academic.galleries.edit');
+        $canDelete = auth()->user()->can('academic.galleries.delete');
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
@@ -137,24 +144,19 @@ class TeacherGalleryController extends Controller
                 }
                 return '<span class="text-nowrap text-secondary font-13">' . e($date->format('d-m-Y')) . '</span>';
             })
-            ->addColumn('actions', function (TeacherGallery $gallery) {
+            ->addColumn('actions', function (TeacherGallery $gallery) use ($canEdit, $canDelete) {
                 $id = $gallery->id;
                 $title = e($gallery->title ?: ('#' . $gallery->id));
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-gallery-btn"
-                            data-id="' . $id . '"
-                            title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-gallery-btn"
-                            data-id="' . $id . '"
-                            data-title="' . $title . '"
-                            title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>';
+                $buttons = '';
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-gallery-btn" data-id="' . $id . '" title="' . e(__('Edit')) . '"><i class="icon-base bx bx-edit"></i></button>';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-gallery-btn" data-id="' . $id . '" data-title="' . $title . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return $buttons ? '<div class="d-inline-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">-</span>';
             })
             ->rawColumns(['record_id', 'gallery_images', 'student_name', 'stage_name', 'class_name', 'branch_name', 'added_by', 'institution_name', 'date_formatted', 'actions'])
             ->make(true);
@@ -166,6 +168,8 @@ class TeacherGalleryController extends Controller
      */
     public function store(StoreTeacherGalleryRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.create'), 403);
+
         try {
             $gallery = $this->service->createGallery(
                 $request->validated(),
@@ -191,6 +195,8 @@ class TeacherGalleryController extends Controller
      */
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.view'), 403);
+
         $gallery = $this->service->find($id);
 
         if (!$gallery) {
@@ -235,6 +241,8 @@ class TeacherGalleryController extends Controller
      */
     public function update(UpdateTeacherGalleryRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.edit'), 403);
+
         try {
             $updated = $this->service->updateGallery(
                 $id,
@@ -267,6 +275,8 @@ class TeacherGalleryController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.delete'), 403);
+
         try {
             $deleted = $this->service->deleteGallery($id);
 
@@ -295,6 +305,8 @@ class TeacherGalleryController extends Controller
      */
     public function deleteImage(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.delete'), 403);
+
         try {
             $deleted = $this->service->deleteImage($id);
 
@@ -323,6 +335,8 @@ class TeacherGalleryController extends Controller
      */
     public function getClassStudents(int $classroomId): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.galleries.view') && ! auth()->user()->can('academic.galleries.create') && ! auth()->user()->can('academic.galleries.edit'), 403);
+
         $students = $this->service->getClassStudents($classroomId);
 
         $formatted = $students->map(function ($student) {

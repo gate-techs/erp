@@ -19,6 +19,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.teachers.view'), 403);
+
         $institutions = $this->service->getInstitutions();
         $branches     = $this->service->getBranches();
         $jobTitles    = $this->service->getJobTitles();
@@ -35,6 +37,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.view'), 403);
+
         $filters = $request->only([
             'branch_id',
             'job_title_id',
@@ -44,12 +48,16 @@ class AcademicTeacherController extends Controller
 
         $query = $this->service->getFilteredQuery($filters);
 
+        $canEdit = auth()->user()->can('academic.teachers.edit');
+        $canDelete = auth()->user()->can('academic.teachers.delete');
+        $canToggle = auth()->user()->can('academic.teachers.toggle-status');
+
         return DataTables::eloquent($query)
             ->addIndexColumn()
             ->addColumn('employee_code_formatted', function (Employee $teacher) {
                 return '<span class="badge bg-label-dark font-monospace fw-bold">' . e($teacher->employee_code) . '</span>';
             })
-            ->addColumn('teacher_name', function (Employee $teacher) {
+            ->addColumn('teacher_name', function (Employee $teacher) use ($canEdit) {
                 $locale = app()->getLocale();
                 $name = $teacher->translate($locale)?->name
                     ?? $teacher->translate('ar')?->name
@@ -57,10 +65,14 @@ class AcademicTeacherController extends Controller
                     ?? '-';
                 $avatar = $teacher->avatar_url ?? asset('assets/img/avatars/1.png');
 
+                $nameHtml = $canEdit 
+                    ? '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none teacher-name-text edit-teacher-btn" data-id="' . $teacher->id . '" title="' . e(__('Edit Basic Info')) . '">' . e($name) . '</button>'
+                    : '<span class="fw-semibold text-heading teacher-name-text">' . e($name) . '</span>';
+
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <img src="' . e($avatar) . '" alt="' . e($name) . '" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
-                        <button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none teacher-name-text edit-teacher-btn" data-id="' . $teacher->id . '" title="' . e(__('Edit Basic Info')) . '">' . e($name) . '</button>
+                        ' . $nameHtml . '
                     </div>';
             })
             ->addColumn('job_title', function (Employee $teacher) {
@@ -104,36 +116,28 @@ class AcademicTeacherController extends Controller
 
                 return '<a href="tel:' . e($teacher->phone) . '" class="badge bg-label-secondary font-monospace text-decoration-none" dir="ltr"><i class="icon-base bx bx-phone me-1"></i>' . e($teacher->phone) . '</a>';
             })
-            ->addColumn('status_badge', function (Employee $teacher) {
+            ->addColumn('status_badge', function (Employee $teacher) use ($canToggle) {
                 $isActive = $teacher->status === 'active';
                 $label = $isActive ? __('Active') : __('Inactive');
                 $class = $isActive ? 'bg-label-success' : 'bg-label-danger';
+                $cursor = $canToggle ? 'cursor-pointer toggle-status-btn' : '';
 
-                return '<span class="badge ' . $class . ' cursor-pointer toggle-status-btn" data-id="' . $teacher->id . '">' . e($label) . '</span>';
+                return '<span class="badge ' . $class . ' ' . $cursor . '" data-id="' . $teacher->id . '">' . e($label) . '</span>';
             })
-            ->addColumn('actions', function (Employee $teacher) {
+            ->addColumn('actions', function (Employee $teacher) use ($canEdit, $canDelete) {
                 $id = $teacher->id;
                 $name = e($teacher->translate(app()->getLocale())?->name ?? $teacher->translate('ar')?->name ?? $teacher->name ?? '');
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info assign-teacher-btn"
-                            data-id="' . $id . '"
-                            title="' . e(__('Assign Stages & Classes')) . '">
-                            <i class="icon-base bx bx-layer"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-teacher-btn"
-                            data-id="' . $id . '"
-                            title="' . e(__('Edit Basic Info')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-teacher-btn"
-                            data-id="' . $id . '"
-                            data-name="' . $name . '"
-                            title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>';
+                $buttons = '';
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info assign-teacher-btn" data-id="' . $id . '" title="' . e(__('Assign Stages & Classes')) . '"><i class="icon-base bx bx-layer"></i></button>';
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-teacher-btn" data-id="' . $id . '" title="' . e(__('Edit Basic Info')) . '"><i class="icon-base bx bx-edit"></i></button>';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-teacher-btn" data-id="' . $id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return $buttons ? '<div class="d-inline-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">-</span>';
             })
             ->rawColumns(['employee_code_formatted', 'teacher_name', 'role', 'allocations', 'phone_formatted', 'status_badge', 'actions'])
             ->make(true);
@@ -142,6 +146,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function store(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.create'), 403);
+
         $validated = $request->validate([
             'name'              => 'required|string|max:255',
             'name_ar'           => 'nullable|string|max:255',
@@ -173,6 +179,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.view'), 403);
+
         $teacher = $this->service->find($id);
 
         if (! $teacher) {
@@ -202,6 +210,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function update(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.edit'), 403);
+
         $validated = $request->validate([
             'name'              => 'required|string|max:255',
             'name_ar'           => 'nullable|string|max:255',
@@ -238,6 +248,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.delete'), 403);
+
         try {
             $deleted = $this->service->deleteTeacher($id);
 
@@ -263,6 +275,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.toggle-status'), 403);
+
         $teacher = $this->service->toggleStatus($id);
 
         if (! $teacher) {
@@ -282,6 +296,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function getAllocation(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.edit'), 403);
+
         $data = $this->service->getAllocationData($id);
 
         if (empty($data)) {
@@ -300,6 +316,8 @@ class AcademicTeacherController extends Controller
     //------------------------------------------
     public function saveAllocation(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.teachers.edit'), 403);
+
         $classes = $request->input('classes', []);
         $subjects = $request->input('subjects', []);
 

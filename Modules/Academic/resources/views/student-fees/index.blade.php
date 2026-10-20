@@ -20,10 +20,12 @@
             <h4 class="mb-0 fw-bold text-heading">{{ __('Student Fees') }}</h4>
         </div>
     </div>
+    @can('academic.student-fees.create')
     <button type="button" id="btn_add_student_fee" class="btn btn-primary btn-sm d-flex align-items-center gap-2 mt-3 mt-md-0 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddStudentFee">
         <i class="icon-base bx bx-plus font-18"></i>
         <span>{{ __('Assign Fee to Student') }}</span>
     </button>
+    @endcan
 </div>
 
 <!-- Filters Card -->

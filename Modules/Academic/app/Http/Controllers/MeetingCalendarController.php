@@ -21,6 +21,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.view'), 403);
+
         if ($request->wantsJson()) {
             $filters = $request->only(['status', 'institution_id', 'search']);
             $items = $this->service->all(auth()->id(), $filters);
@@ -47,6 +49,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function sidebarData(): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.view'), 403);
+
         $data = $this->service->getSidebarData(auth()->id());
 
         return response()->json([
@@ -58,6 +62,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function calendarEvents(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'status',
@@ -73,6 +79,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function store(StoreMeetingCalendarRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.create'), 403);
+
         try {
             $data = $request->validated();
             $data['user_id'] = auth()->id();
@@ -95,6 +103,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.view'), 403);
+
         $item = $this->service->find($id, auth()->id());
 
         if (! $item) {
@@ -124,6 +134,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function update(UpdateMeetingCalendarRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.edit'), 403);
+
         try {
             $updated = $this->service->update($id, $request->validated(), auth()->id());
 
@@ -149,6 +161,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.delete'), 403);
+
         try {
             $deleted = $this->service->delete($id, auth()->id());
 
@@ -174,6 +188,8 @@ class MeetingCalendarController extends Controller
     //------------------------------
     public function updateStatus(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.meeting-calendar.status'), 403);
+
         $request->validate([
             'status' => ['required', 'in:planned,in_progress,completed,cancelled'],
         ]);

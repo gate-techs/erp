@@ -875,14 +875,14 @@ function sendTestNotification() {
 
     if (Notification.permission === 'granted') {
         try {
-            new Notification('{{ __("Astro Leaders") }}', {
+            new Notification('{{ __("ALA ORBIT") }}', {
                 body: '{{ __("Test Notification Sent") }} 🔔',
                 icon: '{{ asset("assets/portal/icon-192.png") }}',
             });
         } catch (e) {
             if (navigator.serviceWorker && navigator.serviceWorker.ready) {
                 navigator.serviceWorker.ready.then(reg => {
-                    reg.showNotification('{{ __("Astro Leaders") }}', {
+                    reg.showNotification('{{ __("ALA ORBIT") }}', {
                         body: '{{ __("Test Notification Sent") }} 🔔',
                         icon: '{{ asset("assets/portal/icon-192.png") }}',
                     });

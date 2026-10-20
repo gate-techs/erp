@@ -103,14 +103,19 @@
                             </p>
                         </div>
                         <div class="d-flex align-items-center gap-2">
+                            @can('hr.settings.policies.reset')
                             <button type="button" id="btnResetDefaults" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 shadow-sm">
                                 <i class="icon-base bx bx-reset font-16"></i>
                                 <span>{{ __('Reset Defaults') }}</span>
                             </button>
+                            @endcan
+
+                            @can('hr.settings.policies.edit')
                             <button type="submit" class="btn btn-primary btn-sm d-flex align-items-center gap-1 shadow-sm px-3">
                                 <i class="icon-base bx bx-save font-16"></i>
                                 <span>{{ __('Save All Changes') }}</span>
                             </button>
+                            @endcan
                         </div>
                     </div>
                 </div>

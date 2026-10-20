@@ -17,6 +17,7 @@ class AcademicFeeStatisticsController extends Controller
 {
     public function index()
     {
+        abort_if(! auth()->user()->can('academic.fee-statistics.view'), 403);
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $branches = NurseryBranch::with('translations')->where('status', 'active')->get();
         $statuses = AcademicFeeType::statuses();
@@ -36,6 +37,7 @@ class AcademicFeeStatisticsController extends Controller
 
     public function stats(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.fee-statistics.view'), 403);
         $filters = $request->only(['institution_id', 'branch_id', 'status']);
         $data = $this->calculateStatistics($filters);
 

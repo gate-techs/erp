@@ -677,6 +677,31 @@
                 "accounting.reports",
                 "accounting.audit-logs"
             ],
+            "permission": [
+                "accounting.dashboard.view",
+                "accounting.accounts.view",
+                "accounting.journal-entries.view",
+                "accounting.bank-reconciliations.view",
+                "accounting.payment-matchings.view",
+                "accounting.reports.view",
+                "accounting.reports.general-ledger",
+                "accounting.reports.account-statement",
+                "accounting.reports.trial-balance",
+                "accounting.reports.income-statement",
+                "accounting.reports.balance-sheet",
+                "accounting.reports.cash-flow",
+                "accounting.reports.cost-center",
+                "accounting.entities.view",
+                "accounting.opening-balances.view",
+                "accounting.journals.view",
+                "accounting.cash-accounts.view",
+                "accounting.cost-centers.view",
+                "accounting.fiscal-years.view",
+                "accounting.lock-dates.view",
+                "accounting.audit-logs.view",
+                "accounting.guide.view",
+                "accounting.ai-assistant.view"
+            ],
             "submenu": [
                 {
                     "name": "Dashboard",

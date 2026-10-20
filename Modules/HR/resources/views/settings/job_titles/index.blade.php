@@ -29,6 +29,7 @@
                     </h5>
                 </div>
 
+                @can('hr.settings.job-titles.create')
                 <div>
                     <button type="button"
                         class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm w-100 w-sm-auto"
@@ -38,6 +39,7 @@
                         <span>{{ __('Add New Job Title') }}</span>
                     </button>
                 </div>
+                @endcan
             </div>
 
             <!-- Job Titles Server-Side DataTable Card -->

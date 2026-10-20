@@ -21,6 +21,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.view'), 403);
+
         if ($request->wantsJson()) {
             $filters = $request->only(['status', 'institution_id', 'search']);
             $items = $this->service->all(auth()->id(), $filters);
@@ -45,6 +47,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function calendarEvents(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'status',
@@ -60,6 +64,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function store(StorePersonalCalendarRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.create'), 403);
+
         try {
             $data = $request->validated();
             $data['user_id'] = auth()->id();
@@ -82,6 +88,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.view'), 403);
+
         $item = $this->service->find($id, auth()->id());
 
         if (! $item) {
@@ -112,6 +120,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function update(UpdatePersonalCalendarRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.edit'), 403);
+
         try {
             $updated = $this->service->update($id, $request->validated(), auth()->id());
 
@@ -137,6 +147,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.delete'), 403);
+
         try {
             $deleted = $this->service->delete($id, auth()->id());
 
@@ -162,6 +174,8 @@ class PersonalCalendarController extends Controller
     //------------------------------
     public function updateStatus(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.personal-calendar.status'), 403);
+
         $request->validate([
             'status' => ['required', 'in:planned,in_progress,completed,cancelled'],
         ]);

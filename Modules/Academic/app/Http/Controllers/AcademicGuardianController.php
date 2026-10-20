@@ -22,6 +22,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function index()
     {
+        abort_if(! auth()->user()->can('academic.guardians.view'), 403);
+
         $institutions = Nursery::with('translations')->where('status', 'active')->get();
         $branches = NurseryBranch::with('translations')->where('status', 'active')->get();
         $statuses = AcademicGuardian::statuses();
@@ -38,6 +40,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -47,14 +51,21 @@ class AcademicGuardianController extends Controller
 
         $query = $this->service->getFilteredQuery($filters);
 
+        $canEdit = auth()->user()->can('academic.guardians.edit');
+        $canDelete = auth()->user()->can('academic.guardians.delete');
+        $canToggle = auth()->user()->can('academic.guardians.toggle-status');
+
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->addColumn('name', function (AcademicGuardian $guardian) {
+            ->addColumn('name', function (AcademicGuardian $guardian) use ($canEdit) {
                 $locale = app()->getLocale();
                 $name = $guardian->translate($locale)?->name ?? $guardian->translate('ar')?->name ?? $guardian->name ?? '-';
                 $nameSafe = e($name);
 
-                $html = '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none guardian-name-text edit-record-btn" data-id="' . $guardian->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>';
+                $html = $canEdit 
+                    ? '<button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none guardian-name-text edit-record-btn" data-id="' . $guardian->id . '" title="' . e(__('Edit')) . '">' . $nameSafe . '</button>'
+                    : '<span class="fw-semibold text-heading guardian-name-text">' . $nameSafe . '</span>';
+
                 if ($guardian->user && $guardian->user->employee) {
                     $html .= ' <span class="badge bg-label-warning font-11 ms-1"><i class="icon-base bx bx-briefcase font-12 me-1"></i>' . e(__('Staff')) . '</span>';
                 }
@@ -85,32 +96,27 @@ class AcademicGuardianController extends Controller
                     '<i class="icon-base bx bx-group me-1"></i>' . (int) $guardian->students_count .
                     '</a>';
             })
-            ->addColumn('status_badge', function (AcademicGuardian $guardian) {
+            ->addColumn('status_badge', function (AcademicGuardian $guardian) use ($canToggle) {
                 $isActive = $guardian->status === AcademicGuardian::STATUS_ACTIVE;
                 $label = $isActive ? __('Active') : __('Inactive');
                 $class = $isActive ? 'bg-label-success' : 'bg-label-danger';
+                $cursor = $canToggle ? 'cursor-pointer toggle-status-btn' : '';
 
-                return '<span class="badge ' . $class . ' cursor-pointer toggle-status-btn" data-id="' . $guardian->id . '">' . e($label) . '</span>';
+                return '<span class="badge ' . $class . ' ' . $cursor . '" data-id="' . $guardian->id . '">' . e($label) . '</span>';
             })
-            ->addColumn('actions', function (AcademicGuardian $guardian) {
+            ->addColumn('actions', function (AcademicGuardian $guardian) use ($canEdit, $canDelete) {
                 $id = $guardian->id;
                 $name = e($guardian->translate(app()->getLocale())?->name ?? $guardian->translate('ar')?->name ?? $guardian->name ?? '');
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-record-btn"
-                            data-id="' . $id . '"
-                            title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-record-btn"
-                            data-id="' . $id . '"
-                            data-name="' . $name . '"
-                            title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $buttons = '';
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary edit-record-btn" data-id="' . $id . '" title="' . e(__('Edit')) . '"><i class="icon-base bx bx-edit"></i></button>';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-record-btn" data-id="' . $id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return $buttons ? '<div class="d-inline-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">-</span>';
             })
             ->rawColumns(['name', 'email', 'phone_formatted', 'institution_name', 'branch_name', 'students_count', 'status_badge', 'actions'])
             ->toJson();
@@ -119,6 +125,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function store(StoreAcademicGuardianRequest $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.create'), 403);
+
         $guardian = $this->service->create($request->validated(), $request->file('photo'));
 
         return response()->json([
@@ -131,6 +139,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function show(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.view'), 403);
+
         $guardian = $this->service->find($id);
 
         if (! $guardian) {
@@ -149,6 +159,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function edit(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.edit'), 403);
+
         $guardian = $this->service->find($id);
 
         if (! $guardian) {
@@ -182,6 +194,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function update(UpdateAcademicGuardianRequest $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.edit'), 403);
+
         $guardian = $this->service->update($id, $request->validated(), $request->file('photo'));
 
         if (! $guardian) {
@@ -201,6 +215,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.delete'), 403);
+
         $deleted = $this->service->delete($id);
 
         if (! $deleted) {
@@ -219,6 +235,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.toggle-status'), 403);
+
         $guardian = $this->service->toggleStatus($id);
 
         if (! $guardian) {
@@ -238,6 +256,8 @@ class AcademicGuardianController extends Controller
     //------------------------------------------
     public function getAvailableEmployees(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.guardians.view') && ! auth()->user()->can('academic.guardians.create') && ! auth()->user()->can('academic.guardians.edit'), 403);
+
         $branchId = $request->input('branch_id');
         $employees = $this->service->getAvailableEmployees($branchId ? (int)$branchId : null);
 

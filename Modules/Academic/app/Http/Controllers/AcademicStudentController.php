@@ -25,6 +25,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.students.view'), 403);
+
         $institutions = $this->service->getInstitutions();
         $branches     = $this->service->getBranches();
         $years        = $this->service->getAcademicYears();
@@ -49,6 +51,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.students.view'), 403);
+
         $filters = $request->only([
             'institution_id',
             'branch_id',
@@ -63,9 +67,14 @@ class AcademicStudentController extends Controller
 
         $query = $this->service->getFilteredQuery($filters);
 
+        $canView = auth()->user()->can('academic.students.view');
+        $canEdit = auth()->user()->can('academic.students.edit');
+        $canDelete = auth()->user()->can('academic.students.delete');
+        $canToggle = auth()->user()->can('academic.students.toggle-status');
+
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->addColumn('student', function (AcademicStudent $student) {
+            ->addColumn('student', function (AcademicStudent $student) use ($canView) {
                 $locale = app()->getLocale();
                 $name = $student->translate($locale)?->name
                     ?? $student->translate('ar')?->name
@@ -73,10 +82,14 @@ class AcademicStudentController extends Controller
                     ?? '-';
                 $photo = e($student->photo_url);
 
+                $nameLink = $canView
+                    ? '<a href="' . route('academic.students.show', $student->id) . '" class="fw-semibold text-heading text-hover-primary text-decoration-none student-name-text" title="' . e(__('View Profile')) . '">' . e($name) . '</a>'
+                    : '<span class="fw-semibold text-heading student-name-text">' . e($name) . '</span>';
+
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <img src="' . $photo . '" alt="' . e($name) . '" class="rounded-circle shadow-sm" style="width: 36px; height: 36px; object-fit: cover;">
-                        <a href="' . route('academic.students.show', $student->id) . '" class="fw-semibold text-heading text-hover-primary text-decoration-none student-name-text" title="' . e(__('View Profile')) . '">' . e($name) . '</a>
+                        ' . $nameLink . '
                     </div>';
             })
             ->addColumn('civil_id', function (AcademicStudent $student) {
@@ -129,7 +142,7 @@ class AcademicStudentController extends Controller
 
                 return $html ?: '<span class="text-muted">-</span>';
             })
-            ->addColumn('status', function (AcademicStudent $student) {
+            ->addColumn('status', function (AcademicStudent $student) use ($canToggle) {
                 $isActive = $student->status === AcademicStudent::STATUS_ACTIVE;
                 $label = $isActive ? __('Active') : ($student->status === AcademicStudent::STATUS_PENDING ? __('Pending') : __('Inactive'));
                 $class = match ($student->status) {
@@ -140,37 +153,39 @@ class AcademicStudentController extends Controller
                     default                           => 'bg-label-secondary',
                 };
 
-                return '<span class="badge ' . $class . ' cursor-pointer toggle-status-btn" data-id="' . $student->id . '">' . e($label) . '</span>';
+                $cursor = $canToggle ? 'cursor-pointer toggle-status-btn' : '';
+
+                return '<span class="badge ' . $class . ' ' . $cursor . '" data-id="' . $student->id . '">' . e($label) . '</span>';
             })
-            ->addColumn('actions', function (AcademicStudent $student) {
+            ->addColumn('actions', function (AcademicStudent $student) use ($canView, $canEdit, $canDelete) {
                 $id = $student->id;
                 $showUrl = route('academic.students.show', $id);
                 $editUrl = route('academic.students.edit', $id);
                 $name = e($student->translate(app()->getLocale())?->name ?? $student->translate('ar')?->name ?? $student->name ?? '');
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . e(__('View Profile')) . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </a>
-                        <a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary edit-record-btn" title="' . e(__('Edit')) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </a>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-record-btn btn-delete"
-                            data-id="' . $id . '"
-                            data-name="' . $name . '"
-                            title="' . e(__('Delete')) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>';
+                $buttons = '';
+                if ($canView) {
+                    $buttons .= '<a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . e(__('View Profile')) . '"><i class="icon-base bx bx-show"></i></a>';
+                }
+                if ($canEdit) {
+                    $buttons .= '<a href="' . $editUrl . '" class="btn btn-icon btn-sm btn-outline-primary edit-record-btn" title="' . e(__('Edit')) . '"><i class="icon-base bx bx-edit"></i></a>';
+                }
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger delete-record-btn btn-delete" data-id="' . $id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return $buttons ? '<div class="d-inline-flex align-items-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">-</span>';
             })
             ->rawColumns(['student', 'civil_id', 'class_name', 'academic_year_name', 'branch_name', 'institution_name', 'created_date', 'created_by', 'parents_info', 'status', 'actions'])
             ->make(true);
     }
 
     //------------------------------------------
+    //------------------------------------------
     public function create(Request $request)
     {
+        abort_if(! auth()->user()->can('academic.students.create'), 403);
+
         $institutions  = $this->service->getInstitutions();
         $branches      = $this->service->getBranches();
         $years         = $this->service->getAcademicYears();
@@ -205,6 +220,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function store(StoreAcademicStudentRequest $request)
     {
+        abort_if(! auth()->user()->can('academic.students.create'), 403);
+
         try {
             $data = $request->validated();
             $photo = $request->file('photo');
@@ -245,6 +262,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function show(int $id)
     {
+        abort_if(! auth()->user()->can('academic.students.view'), 403);
+
         $student = $this->service->findWithAllRelations($id);
         if (! $student) {
             abort(404, __('Student not found.'));
@@ -256,6 +275,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function edit(int $id)
     {
+        abort_if(! auth()->user()->can('academic.students.edit'), 403);
+
         $student = $this->service->findWithAllRelations($id);
         if (! $student) {
             abort(404, __('Student not found.'));
@@ -301,11 +322,13 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function update(UpdateAcademicStudentRequest $request, int $id)
     {
+        abort_if(! auth()->user()->can('academic.students.edit'), 403);
+
         try {
             $data = $request->validated();
             $photo = $request->file('photo');
 
-            $student = $this->service->update($id, $data, $photo);
+            $student = $this->service->update($id, $data, photo: $photo);
 
             if ($request->ajax()) {
                 return response()->json([
@@ -333,6 +356,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function destroy(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.students.delete'), 403);
+
         try {
             $deleted = $this->service->delete($id);
 
@@ -351,6 +376,8 @@ class AcademicStudentController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('academic.students.toggle-status'), 403);
+
         try {
             $student = $this->service->toggleStatus($id);
 

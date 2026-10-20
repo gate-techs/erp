@@ -134,16 +134,20 @@
             </div>
 
             <div class="d-flex justify-content-between align-items-center pt-4 mt-4 border-top">
+                @can('academic.personal-calendar.delete')
                 <button type="button" class="btn btn-outline-danger d-none" id="btnDeleteEventFromOffcanvas">
                     <i class="icon-base bx bx-trash me-1"></i>
                     <span>{{ __('Delete') }}</span>
                 </button>
+                @endcan
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
+                    @canany(['academic.personal-calendar.create', 'academic.personal-calendar.edit'])
                     <button type="submit" class="btn btn-primary" id="btnSavePersonalEvent">
                         <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
                         <span>{{ __('Save') }}</span>
                     </button>
+                    @endcanany
                 </div>
             </div>
         </form>
@@ -239,15 +243,20 @@
     function initCalendar() {
         const calendarEl = document.getElementById('calendar');
 
-        calendar = window.createAppCalendar(calendarEl, {
-            customButtons: {
-                addEventButton: {
-                    text: '+ ' + '{{ __("Add Personal Event") }}',
-                    click: function () {
-                        openAddEventOffcanvas();
-                    }
+        const canCreate = {{ auth()->user()->can('academic.personal-calendar.create') ? 'true' : 'false' }};
+        const canEdit = {{ auth()->user()->can('academic.personal-calendar.edit') ? 'true' : 'false' }};
+
+        const customButtonsConfig = canCreate ? {
+            addEventButton: {
+                text: '+ ' + '{{ __("Add Personal Event") }}',
+                click: function () {
+                    openAddEventOffcanvas();
                 }
-            },
+            }
+        } : {};
+
+        calendar = window.createAppCalendar(calendarEl, {
+            customButtons: customButtonsConfig,
 
             // Fetch Personal Events via AJAX
             events: function (fetchInfo, successCallback, failureCallback) {
@@ -269,14 +278,18 @@
 
             // Click on date -> open add offcanvas
             select: function (selectionInfo) {
-                openAddEventOffcanvas(selectionInfo.startStr);
+                if (canCreate) {
+                    openAddEventOffcanvas(selectionInfo.startStr);
+                }
                 calendar.unselect();
             },
 
             // Click on event -> open edit modal directly
             eventClick: function (info) {
                 info.jsEvent.preventDefault();
-                editEvent(info.event.id);
+                if (canEdit) {
+                    editEvent(info.event.id);
+                }
             },
 
             // Custom event render

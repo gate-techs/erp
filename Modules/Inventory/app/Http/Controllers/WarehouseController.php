@@ -24,6 +24,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function index(): View
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.view'), 403);
+
         return view('inventory::index', [
             'entities' => Entity::with('translations')->orderBy('id')->get(),
             'branches' => NurseryBranch::with('translations')->orderBy('id')->get(),
@@ -33,6 +35,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.view'), 403);
+
         $query = $this->service->getDataTableQuery($request->all());
 
         return DataTables::eloquent($query)
@@ -70,18 +74,26 @@ class WarehouseController extends Controller
                 $active = $warehouse->status === 'active';
                 $class = $active ? 'success' : 'danger';
                 $label = $active ? __('Active') : __('Inactive');
+                $canToggle = auth()->user()->can('inventory.warehouses.toggle-status');
+                $actionClass = $canToggle ? 'btn-toggle-status' : 'pe-none opacity-75';
 
-                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 btn-toggle-status" data-id="' . $warehouse->id . '">' . e($label) . '</button>';
+                return '<button type="button" class="btn btn-sm bg-label-' . $class . ' border-0 ' . $actionClass . '" data-id="' . $warehouse->id . '" ' . ($canToggle ? '' : 'disabled') . '>' . e($label) . '</button>';
             })
             ->addColumn('actions', function (Warehouse $warehouse) {
                 $name = $warehouse->translate(app()->getLocale())?->name
                     ?? $warehouse->translate('ar')?->name
                     ?? $warehouse->code;
+                $user = auth()->user();
+                $buttons = '';
 
-                return '<div class="d-inline-flex gap-1">
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-warehouse" data-id="' . $warehouse->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button>
-                    <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-warehouse" data-id="' . $warehouse->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>
-                </div>';
+                if ($user->can('inventory.warehouses.edit')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-warehouse" data-id="' . $warehouse->id . '" title="' . __('Edit') . '"><i class="icon-base bx bx-edit-alt"></i></button> ';
+                }
+                if ($user->can('inventory.warehouses.delete')) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-warehouse" data-id="' . $warehouse->id . '" data-name="' . e($name) . '" title="' . __('Delete') . '"><i class="icon-base bx bx-trash"></i></button>';
+                }
+
+                return '<div class="d-inline-flex gap-1">' . ($buttons ?: '<span class="text-muted small">-</span>') . '</div>';
             })
             ->filterColumn('name_ar', function ($query, $keyword) {
                 $query->where(function ($q) use ($keyword) {
@@ -101,6 +113,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function store(StoreWarehouseRequest $request): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.create'), 403);
+
         $warehouse = $this->service->create($request->validated(), auth()->id());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -117,6 +131,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function show(Request $request, int $id): View|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.view'), 403);
+
         $warehouse = $this->service->getById($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -129,6 +145,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function update(UpdateWarehouseRequest $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.edit'), 403);
+
         $warehouse = $this->service->update($id, $request->validated());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -145,6 +163,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function destroy(Request $request, int $id): RedirectResponse|JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.delete'), 403);
+
         $this->service->delete($id);
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -160,6 +180,8 @@ class WarehouseController extends Controller
     //------------------------------------------
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('inventory.warehouses.toggle-status'), 403);
+
         $warehouse = $this->service->toggleStatus($id);
 
         return response()->json([

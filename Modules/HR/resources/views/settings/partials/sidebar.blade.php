@@ -25,6 +25,7 @@
     <div class="card-body p-2">
         <div class="nav nav-pills flex-row flex-md-column flex-nowrap overflow-auto gap-1" role="tablist" style="scrollbar-width: none;">
             <!-- 1- الإدارات -->
+            @can('hr.settings.administrations.view')
             <a href="{{ route('hr.settings.administrations.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.administrations.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -35,8 +36,10 @@
                     {{ $counts['administrations'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 2- الأقسام -->
+            @can('hr.settings.departments.view')
             <a href="{{ route('hr.settings.departments.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.departments.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -47,8 +50,10 @@
                     {{ $counts['departments'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 3- المسميات الوظيفية -->
+            @can('hr.settings.job-titles.view')
             <a href="{{ route('hr.settings.job-titles.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.job-titles.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -59,8 +64,10 @@
                     {{ $counts['job_titles'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 4- أنواع البدلات -->
+            @can('hr.settings.allowance-types.view')
             <a href="{{ route('hr.settings.allowance-types.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.allowance-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -71,8 +78,10 @@
                     {{ $counts['allowance_types'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 5- أنواع المستندات -->
+            @can('hr.settings.document-types.view')
             <a href="{{ route('hr.settings.document-types.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.document-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -83,8 +92,10 @@
                     {{ $counts['document_types'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 5.1- أنواع المكافآت -->
+            @can('hr.settings.reward-types.view')
             <a href="{{ route('hr.settings.reward-types.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.reward-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -95,8 +106,10 @@
                     {{ $counts['reward_types'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 5.2- أنواع الجزاءات والمخالفات -->
+            @can('hr.settings.penalty-types.view')
             <a href="{{ route('hr.settings.penalty-types.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.penalty-types.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -107,8 +120,10 @@
                     {{ $counts['penalty_types'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 6- الورديات -->
+            @can('hr.settings.shifts.view')
             <a href="{{ route('hr.settings.shifts.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.shifts.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -119,8 +134,10 @@
                     {{ $counts['shifts'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 7- جداول العمل -->
+            @can('hr.settings.work-schedules.view')
             <a href="{{ route('hr.settings.work-schedules.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.work-schedules.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -131,8 +148,10 @@
                     {{ $counts['work_schedules'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 8- العطلات الرسمية -->
+            @can('hr.settings.official-holidays.view')
             <a href="{{ route('hr.settings.official-holidays.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.official-holidays.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -143,8 +162,10 @@
                     {{ $counts['official_holidays'] ?? 0 }}
                 </span>
             </a>
+            @endcan
 
             <!-- 9- سياسات العمل واللوائح -->
+            @can('hr.settings.policies.view')
             <a href="{{ route('hr.settings.policies.index') }}" 
                class="nav-link text-nowrap d-flex align-items-center justify-content-between px-3 py-2 rounded {{ request()->routeIs('hr.settings.policies.*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-body' }}">
                 <div class="d-flex align-items-center gap-2">
@@ -155,6 +176,7 @@
                     <i class="bx bx-check font-12"></i>
                 </span>
             </a>
+            @endcan
         </div>
     </div>
 </div>

@@ -25,6 +25,8 @@ class AcademicLessonController extends Controller
 
     public function index(): View
     {
+        abort_if(!auth()->user()->can('academic.lessons.view'), 403);
+
         $institutions = Nursery::with('translations')->get();
         $academicStages = AcademicStage::with('translations')->get();
         $academicSubjects = AcademicSubject::with('translations')->where('status', AcademicSubject::STATUS_ACTIVE)->get();
@@ -40,6 +42,8 @@ class AcademicLessonController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->addColumn('title', function (AcademicLesson $item) {
@@ -62,7 +66,11 @@ class AcademicLessonController extends Controller
                 $subtitle = $item->translate(app()->getLocale() === 'ar' ? 'en' : 'ar')?->title;
                 $subtitleHtml = $subtitle ? '<small class="text-muted d-block text-truncate" style="max-width: 220px;">' . e($subtitle) . '</small>' : '';
 
-                return '<div class="d-flex align-items-center">' . $avatar . '<div><button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-lesson d-block" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($title) . '</button>' . $subtitleHtml . '</div></div>';
+                $canEdit = auth()->user()?->can('academic.lessons.edit');
+                if ($canEdit) {
+                    return '<div class="d-flex align-items-center">' . $avatar . '<div><button type="button" class="btn btn-link p-0 text-start fw-semibold text-heading text-decoration-none btn-edit-academic-lesson d-block" data-id="' . $item->id . '" title="' . e(__('Edit')) . '">' . e($title) . '</button>' . $subtitleHtml . '</div></div>';
+                }
+                return '<div class="d-flex align-items-center">' . $avatar . '<div><span class="fw-semibold text-heading d-block">' . e($title) . '</span>' . $subtitleHtml . '</div></div>';
             })
             ->addColumn('institution_name', function (AcademicLesson $item) {
                 return e(
@@ -109,11 +117,24 @@ class AcademicLessonController extends Controller
                 $badgeClass = $isActive ? 'bg-label-success' : 'bg-label-danger';
                 $label = $isActive ? __('Active') : __('Inactive');
 
-                return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-lesson-status" data-id="' . $item->id . '">'
-                    . e($label) .
-                '</button>';
+                if (auth()->user()?->can('academic.lessons.toggle-status')) {
+                    return '<button type="button" class="btn btn-xs ' . $badgeClass . ' btn-toggle-academic-lesson-status" data-id="' . $item->id . '">'
+                        . e($label) .
+                    '</button>';
+                }
+
+                return '<span class="badge ' . $badgeClass . '">' . e($label) . '</span>';
             })
             ->addColumn('actions', function (AcademicLesson $item) {
+                $user = auth()->user();
+                $canView = $user?->can('academic.lessons.view');
+                $canEdit = $user?->can('academic.lessons.edit');
+                $canDelete = $user?->can('academic.lessons.delete');
+
+                if (!$canView && !$canEdit && !$canDelete) {
+                    return '<span class="text-muted">-</span>';
+                }
+
                 $title = $item->translate(app()->getLocale())?->title
                     ?? $item->translate('ar')?->title
                     ?? $item->translate('en')?->title;
@@ -122,26 +143,36 @@ class AcademicLessonController extends Controller
                 $editTitle = __('Edit');
                 $deleteTitle = __('Delete');
 
-                return '
-                    <div class="d-inline-flex align-items-center gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-lesson"
-                            data-id="' . $item->id . '"
-                            title="' . e($viewTitle) . '">
-                            <i class="icon-base bx bx-show"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-lesson"
-                            data-id="' . $item->id . '"
-                            title="' . e($editTitle) . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-lesson"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($title) . '"
-                            title="' . e($deleteTitle) . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $buttons = '<div class="d-inline-flex align-items-center gap-1">';
+
+                if ($canView) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-info btn-view-academic-lesson"
+                        data-id="' . $item->id . '"
+                        title="' . e($viewTitle) . '">
+                        <i class="icon-base bx bx-show"></i>
+                    </button>';
+                }
+
+                if ($canEdit) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-lesson"
+                        data-id="' . $item->id . '"
+                        title="' . e($editTitle) . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                if ($canDelete) {
+                    $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-lesson"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($title) . '"
+                        title="' . e($deleteTitle) . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons .= '</div>';
+
+                return $buttons;
             })
             ->rawColumns(['title', 'stage_name', 'subject_name', 'dates_formatted', 'order_badge', 'attachments_count_badge', 'status_badge', 'actions'])
             ->make(true);
@@ -149,6 +180,8 @@ class AcademicLessonController extends Controller
 
     public function store(StoreAcademicLessonRequest $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.create'), 403);
+
         $lesson = $this->service->createAcademicLesson(
             $request->validated(),
             $request->user()?->id,
@@ -164,6 +197,8 @@ class AcademicLessonController extends Controller
 
     public function show(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.view'), 403);
+
         $lesson = $this->service->getAcademicLesson($id);
 
         if (!$lesson) {
@@ -204,6 +239,8 @@ class AcademicLessonController extends Controller
 
     public function update(UpdateAcademicLessonRequest $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.edit'), 403);
+
         $lesson = $this->service->updateAcademicLesson(
             $id,
             $request->validated(),
@@ -219,6 +256,8 @@ class AcademicLessonController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.delete'), 403);
+
         $this->service->deleteAcademicLesson($id);
 
         return response()->json([
@@ -229,6 +268,8 @@ class AcademicLessonController extends Controller
 
     public function toggleStatus(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.toggle-status'), 403);
+
         $lesson = $this->service->toggleStatus($id);
 
         return response()->json([
@@ -244,6 +285,8 @@ class AcademicLessonController extends Controller
 
     public function deleteAttachment(int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.lessons.edit'), 403);
+
         $this->service->deleteAttachment($id);
 
         return response()->json([
@@ -254,6 +297,8 @@ class AcademicLessonController extends Controller
 
     public function downloadAttachment(int $id)
     {
+        abort_if(!auth()->user()->can('academic.lessons.view'), 403);
+
         $attachment = AcademicLessonAttachment::findOrFail($id);
 
         if (!Storage::disk('public')->exists($attachment->file_path)) {

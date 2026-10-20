@@ -26,16 +26,22 @@ class LeadController extends Controller
 
     public function index(): View
     {
+        abort_if(! auth()->user()->can('crm.leads.view'), 403);
+
         return view('crm::leads.index');
     }
 
     public function statisticsPage(): View
     {
+        abort_if(! auth()->user()->can('crm.dashboard.view'), 403);
+
         return view('crm::leads.statistics');
     }
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('crm.leads.view'), 403);
+
         return DataTables::eloquent($this->leadService->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->editColumn('email', fn (Lead $lead) => $lead->email ?: '-')
@@ -82,6 +88,8 @@ class LeadController extends Controller
 
     public function statistics(): JsonResponse
     {
+        abort_if(! auth()->user()->can('crm.dashboard.view'), 403);
+
         $now = now();
         $last30DaysStart = $now->copy()->subDays(29)->startOfDay();
         $previous30DaysStart = $now->copy()->subDays(59)->startOfDay();
@@ -156,6 +164,8 @@ class LeadController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.leads.create'), 403);
+
         $this->leadService->createLead($this->validatedData($request));
 
         return redirect()->route('crm.leads.index')->with('success', __('Lead created successfully.'));
@@ -163,6 +173,8 @@ class LeadController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.leads.edit'), 403);
+
         $lead = $this->leadService->getLeadById($id);
 
         if (!$lead) {
@@ -176,6 +188,8 @@ class LeadController extends Controller
 
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(! auth()->user()->can('crm.leads.delete'), 403);
+
         try {
             $lead = $this->leadService->getLeadById($id);
 

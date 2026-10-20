@@ -121,21 +121,28 @@ class EntityController extends Controller
             })
             ->editColumn('created_at', fn(Entity $item) => $item->created_at ? $item->created_at->format('Y-m-d') : '-')
             ->addColumn('actions', function (Entity $item) {
-                return '
-                    <div class="d-inline-flex gap-1">
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-entity"
-                            data-id="' . $item->id . '"
-                            title="' . __('Edit') . '">
-                            <i class="icon-base bx bx-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-entity"
-                            data-id="' . $item->id . '"
-                            data-name="' . e($item->name ?? $item->code) . '"
-                            title="' . __('Delete') . '">
-                            <i class="icon-base bx bx-trash"></i>
-                        </button>
-                    </div>
-                ';
+                $user = auth()->user();
+                $editBtn = '';
+                if ($user->can('accounting.entities.edit')) {
+                    $editBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-entity"
+                        data-id="' . $item->id . '"
+                        title="' . __('Edit') . '">
+                        <i class="icon-base bx bx-edit"></i>
+                    </button>';
+                }
+
+                $deleteBtn = '';
+                if ($user->can('accounting.entities.delete')) {
+                    $deleteBtn = '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-entity"
+                        data-id="' . $item->id . '"
+                        data-name="' . e($item->name ?? $item->code) . '"
+                        title="' . __('Delete') . '">
+                        <i class="icon-base bx bx-trash"></i>
+                    </button>';
+                }
+
+                $buttons = $editBtn . $deleteBtn;
+                return $buttons ? '<div class="d-inline-flex gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['entity_info', 'type_badge', 'nursery_info', 'currency_badge', 'status_badge', 'actions'])
             ->make(true);

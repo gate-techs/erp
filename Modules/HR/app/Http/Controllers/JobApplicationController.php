@@ -28,6 +28,8 @@ class JobApplicationController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.view'), 403);
+
         $selectedOpeningId = $request->filled('job_opening_id') ? (int) $request->job_opening_id : null;
         $search = $request->get('search');
 
@@ -53,6 +55,8 @@ class JobApplicationController extends Controller
      */
     public function data(Request $request): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-applications.view'), 403);
+
         $filters = [
             'job_opening_id' => $request->get('job_opening_id'),
             'stage'          => $request->get('stage'),
@@ -118,31 +122,37 @@ class JobApplicationController extends Controller
                 return '<span class="font-12 text-muted">' . $item->created_at->format('Y-m-d H:i') . '</span>';
             })
             ->addColumn('actions', function (JobApplication $item) {
-                $btnShow = '<a href="' . route('hr.job-applications.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Profile') . '">
-                                <i class="bx bx-show font-16"></i>
-                            </a>';
+                $user = auth()->user();
+                $btnShow = '';
+                if ($user->can('hr.job-applications.view')) {
+                    $btnShow = '<a href="' . route('hr.job-applications.show', $item->id) . '" class="btn btn-sm btn-icon btn-outline-secondary" title="' . __('View Profile') . '">
+                                    <i class="bx bx-show font-16"></i>
+                                </a>';
+                }
 
                 $btnReject = '';
-                if ($item->status !== ApplicationStatus::REJECTED) {
+                if ($item->status !== ApplicationStatus::REJECTED && $user->can('hr.job-applications.reject')) {
                     $btnReject = '<button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-reject-candidate" data-id="' . $item->id . '" data-name="' . e($item->candidate?->full_name) . '" title="' . __('Reject Candidate') . '">
                                     <i class="bx bx-user-x font-16"></i>
                                   </button>';
-                } else {
+                } elseif ($item->status === ApplicationStatus::REJECTED && $user->can('hr.job-applications.reopen')) {
                     $btnReject = '<button type="button" class="btn btn-sm btn-icon btn-outline-success btn-reopen-candidate" data-id="' . $item->id . '" title="' . __('Reopen Application') . '">
                                     <i class="bx bx-undo font-16"></i>
                                   </button>';
                 }
 
-                $btnDelete = '<form action="' . route('hr.job-applications.destroy', $item->id) . '" method="POST" class="d-inline delete-app-form">
-                                ' . csrf_field() . method_field('DELETE') . '
-                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger btn-delete-app" title="' . __('Delete') . '">
-                                    <i class="bx bx-trash font-16"></i>
-                                </button>
-                              </form>';
+                $btnDelete = '';
+                if ($user->can('hr.job-applications.delete')) {
+                    $btnDelete = '<form action="' . route('hr.job-applications.destroy', $item->id) . '" method="POST" class="d-inline delete-app-form">
+                                    ' . csrf_field() . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger btn-delete-app" title="' . __('Delete') . '">
+                                        <i class="bx bx-trash font-16"></i>
+                                    </button>
+                                  </form>';
+                }
 
-                return '<div class="d-flex align-items-center justify-content-center gap-1">
-                            ' . $btnShow . $btnReject . $btnDelete . '
-                        </div>';
+                $buttons = $btnShow . $btnReject . $btnDelete;
+                return $buttons ? '<div class="d-flex align-items-center justify-content-center gap-1">' . $buttons . '</div>' : '<span class="text-muted">---</span>';
             })
             ->rawColumns(['candidate_info', 'opening_info', 'stage_badge', 'status_badge', 'salary_rating', 'applied_at', 'actions'])
             ->make(true);
@@ -153,6 +163,8 @@ class JobApplicationController extends Controller
      */
     public function create(Request $request)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.create'), 403);
+
         $selectedOpeningId = $request->get('job_opening_id');
         $jobOpenings = JobOpening::with(['translations', 'jobTitle'])->where('status', 'published')->latest()->get();
         $stages = ApplicationStage::orderedStages();
@@ -165,6 +177,8 @@ class JobApplicationController extends Controller
      */
     public function store(StoreJobApplicationRequest $request)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.create'), 403);
+
         try {
             $app = $this->service->submitApplication($request->validated(), $request->file('resume'));
             return redirect()
@@ -183,6 +197,8 @@ class JobApplicationController extends Controller
      */
     public function show(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.view'), 403);
+
         $application = $this->repository->findById($id);
         if (!$application) {
             abort(404, __('Application not found.'));
@@ -199,6 +215,8 @@ class JobApplicationController extends Controller
      */
     public function updateStage(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-applications.update-stage'), 403);
+
         $request->validate([
             'stage' => ['required', 'string', 'in:new,screening,interview,offer,hired'],
         ]);
@@ -225,6 +243,8 @@ class JobApplicationController extends Controller
      */
     public function reject(Request $request, int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-applications.reject'), 403);
+
         $request->validate([
             'rejection_reason' => ['required', 'string'],
             'rejection_notes'  => ['nullable', 'string', 'max:1000'],
@@ -250,6 +270,8 @@ class JobApplicationController extends Controller
      */
     public function reopen(int $id): JsonResponse
     {
+        abort_if(! auth()->user()->can('hr.job-applications.reopen'), 403);
+
         try {
             $application = $this->service->reopenApplication($id);
 
@@ -270,6 +292,8 @@ class JobApplicationController extends Controller
      */
     public function updateRating(Request $request, int $id): JsonResponse
     {
+        abort_if(! (auth()->user()->can('hr.job-applications.edit') || auth()->user()->can('hr.interviews.evaluate')), 403);
+
         $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
         ]);
@@ -295,6 +319,8 @@ class JobApplicationController extends Controller
      */
     public function downloadResume(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.download-resume'), 403);
+
         $application = $this->repository->findById($id);
         if (!$application || !$application->candidate || !$application->candidate->resume_path) {
             return back()->with('error', __('Resume file not found.'));
@@ -313,6 +339,8 @@ class JobApplicationController extends Controller
      */
     public function destroy(int $id)
     {
+        abort_if(! auth()->user()->can('hr.job-applications.delete'), 403);
+
         try {
             $this->repository->delete($id);
             return redirect()

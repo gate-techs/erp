@@ -46,12 +46,14 @@
                 <p class="text-muted mb-0 small">{{ __('Configure weekly shift plans, weekend off-days, and department schedules.') }}</p>
             </div>
 
+            @can('hr.settings.work-schedules.create')
             <div>
                 <button type="button" class="btn btn-primary d-flex align-items-center justify-content-center gap-2 shadow-sm w-100 w-sm-auto" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddWorkSchedule" aria-controls="offcanvasAddWorkSchedule">
                     <i class="icon-base bx bx-plus font-18"></i>
                     <span>{{ __('Add New Work Schedule') }}</span>
                 </button>
             </div>
+            @endcan
         </div>
 
         <!-- Work Schedules Server-Side DataTable Card -->

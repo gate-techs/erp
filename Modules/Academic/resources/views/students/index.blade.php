@@ -22,10 +22,12 @@
     </div>
 
     <div class="mt-3 mt-md-0 d-flex align-items-center gap-2">
+        @can('academic.students.create')
         <a href="{{ route('academic.students.create', $guardianId ? ['guardian_id' => $guardianId] : []) }}" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add New Student') }}</span>
         </a>
+        @endcan
     </div>
 </div>
 

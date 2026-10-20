@@ -21,12 +21,14 @@
         </div>
     </div>
 
+    @can('academic.stages.create')
     <div class="mt-3 mt-md-0">
         <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddAcademicStage" aria-controls="offcanvasAddAcademicStage">
             <i class="icon-base bx bx-plus font-18"></i>
             <span>{{ __('Add Academic Stage') }}</span>
         </button>
     </div>
+    @endcan
 </div>
 
 <!-- Filters Card -->
@@ -89,6 +91,7 @@
     </div>
 </div>
 
+@can('academic.stages.create')
 <!-- ========================================================================= -->
 <!-- 1. Offcanvas: Add Academic Stage                                          -->
 <!-- ========================================================================= -->
@@ -183,7 +186,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.stages.edit')
 <!-- ========================================================================= -->
 <!-- 2. Offcanvas: Edit Academic Stage                                         -->
 <!-- ========================================================================= -->
@@ -279,7 +284,9 @@
         </form>
     </div>
 </div>
+@endcan
 
+@can('academic.stages.delete')
 <!-- ========================================================================= -->
 <!-- 3. Modal: Delete Confirmation                                             -->
 <!-- ========================================================================= -->
@@ -306,6 +313,7 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
 
 @section('page-script')

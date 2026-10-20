@@ -12,7 +12,9 @@
         </ol></nav>
         <h4 class="mb-0 fw-bold text-heading"><i class="bx bx-package text-primary me-1"></i>{{ __('Packages') }}</h4>
     </div>
+    @can('nursery.packages.create')
     <a href="{{ route('packages.create') }}" class="btn btn-primary btn-sm mt-3 mt-md-0"><i class="bx bx-plus me-1"></i>{{ __('Add Package') }}</a>
+    @endcan
 </div>
 
 @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif

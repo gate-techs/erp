@@ -19,10 +19,12 @@
         </nav>
     </div>
     <div class="d-flex align-items-center gap-2">
+        @can('accounting.bank-reconciliations.print')
         <a href="{{ route('accounting.bank-reconciliations.print', $reconciliation->id) }}" target="_blank" class="btn btn-outline-primary d-flex align-items-center gap-1 shadow-xs">
             <i class="icon-base bx bx-printer font-18"></i>
             <span>{{ __('Print Statement') }}</span>
         </a>
+        @endcan
         <a href="{{ route('accounting.bank-reconciliations.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-1 shadow-xs">
             <i class="icon-base bx bx-arrow-back font-18"></i>
             <span>{{ __('Back') }}</span>

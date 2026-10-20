@@ -22,6 +22,8 @@ class AcademicYearController extends Controller
 
     public function index(): View
     {
+        abort_if(!auth()->user()->can('academic.years.view'), 403);
+
         $institutions = Nursery::all();
         $statuses = AcademicYear::statuses();
 
@@ -30,6 +32,8 @@ class AcademicYearController extends Controller
 
     public function data(Request $request): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.years.view'), 403);
+
         return DataTables::eloquent($this->service->getDataTableQuery($request->all()))
             ->addIndexColumn()
             ->addColumn('name', fn (AcademicYear $item) => e(
@@ -60,6 +64,8 @@ class AcademicYearController extends Controller
 
     public function store(StoreAcademicYearRequest $request): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.years.create'), 403);
+
         $academicYear = $this->service->createAcademicYear(
             $request->validated(),
             auth()->id()
@@ -75,6 +81,8 @@ class AcademicYearController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
+        abort_if(!auth()->user()->can('academic.years.view'), 403);
+
         $academicYear = $this->service->getAcademicYear($id);
 
         if (!$academicYear) {
@@ -92,6 +100,8 @@ class AcademicYearController extends Controller
 
     public function update(UpdateAcademicYearRequest $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.years.edit'), 403);
+
         $academicYear = $this->service->updateAcademicYear($id, $request->validated());
 
         return $this->respond(
@@ -103,6 +113,8 @@ class AcademicYearController extends Controller
 
     public function destroy(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.years.delete'), 403);
+
         $this->service->deleteAcademicYear($id);
 
         return $this->respond($request, __('Academic year deleted successfully.'));
@@ -110,6 +122,8 @@ class AcademicYearController extends Controller
 
     public function toggleStatus(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.years.toggle-status'), 403);
+
         $academicYear = $this->service->toggleStatus($id);
 
         return $this->respond(
@@ -121,6 +135,8 @@ class AcademicYearController extends Controller
 
     public function setCurrent(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        abort_if(!auth()->user()->can('academic.years.set-current'), 403);
+
         $academicYear = $this->service->setCurrent($id);
 
         return $this->respond(
@@ -141,24 +157,43 @@ class AcademicYearController extends Controller
 
         $isCurrent = (bool) $academicYear->is_current;
 
-        return '<div class="d-inline-flex gap-1">
-            <button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-year"
+        $user = auth()->user();
+        $canEdit = $user?->can('academic.years.edit');
+        $canToggle = $user?->can('academic.years.toggle-status');
+        $canSetCurrent = $user?->can('academic.years.set-current');
+        $canDelete = $user?->can('academic.years.delete');
+
+        $buttons = '';
+        if ($canEdit) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-primary btn-edit-academic-year"
                 data-id="' . $academicYear->id . '" title="' . e(__('Edit')) . '">
                 <i class="icon-base bx bx-edit"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-year-status"
+            </button>';
+        }
+        if ($canToggle) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-toggle-academic-year-status"
                 data-id="' . $academicYear->id . '" title="' . e(__('Change status')) . '">
                 <i class="icon-base bx bx-refresh"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm ' . ($isCurrent ? 'btn-success' : 'btn-outline-success') . ' btn-set-current-academic-year"
+            </button>';
+        }
+        if ($canSetCurrent) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm ' . ($isCurrent ? 'btn-success' : 'btn-outline-success') . ' btn-set-current-academic-year"
                 data-id="' . $academicYear->id . '" title="' . e(__('Set as current')) . '" ' . ($isCurrent ? 'disabled' : '') . '>
                 <i class="icon-base bx bx-check-circle"></i>
-            </button>
-            <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-year"
+            </button>';
+        }
+        if ($canDelete) {
+            $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-academic-year"
                 data-id="' . $academicYear->id . '" data-name="' . $name . '" title="' . e(__('Delete')) . '" ' . ($isCurrent ? 'disabled' : '') . '>
                 <i class="icon-base bx bx-trash"></i>
-            </button>
-        </div>';
+            </button>';
+        }
+
+        if (empty($buttons)) {
+            return '<span class="text-muted">-</span>';
+        }
+
+        return '<div class="d-inline-flex gap-1">' . $buttons . '</div>';
     }
 
     private function respond(

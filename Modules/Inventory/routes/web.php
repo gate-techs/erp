@@ -10,7 +10,7 @@ use Modules\Inventory\Http\Controllers\InventoryDashboardController;
 Route::middleware(['auth', 'verified'])->group(function () {
     // Store dashboard
     Route::get('inventory-dashboard', [InventoryDashboardController::class, 'index'])
-        ->middleware('permission:inventory.items.view')
+        ->middleware('permission:inventory.dashboard.view')
         ->name('inventory.dashboard');
 
     // 1. Warehouses (المستودعات والمخازن)
