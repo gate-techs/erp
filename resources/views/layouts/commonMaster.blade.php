@@ -45,6 +45,7 @@
         $siteSlogan = $globalSetting?->slogan ?? config('variables.templateDescription', '');
         $siteLogo = $globalSetting?->logo_url ?? asset('assets/img/illustrations/astro-logo.png');
         $siteFavicon = $globalSetting?->favicon_url ?? asset('assets/img/favicon/favicon.ico');
+        $siteLoginImage = $globalSetting?->login_image_url ?? asset('assets/img/illustrations/auth-bg-login.jpeg');
         $primaryColor = $globalSetting?->primary_color ?? '#0b284e';
     @endphp
 

@@ -27,9 +27,10 @@ class SettingService
      * @param array $data
      * @param UploadedFile|null $logo
      * @param UploadedFile|null $favicon
+     * @param UploadedFile|null $loginImage
      * @return Setting
      */
-    public function updateSettings(array $data, ?UploadedFile $logo = null, ?UploadedFile $favicon = null): Setting
+    public function updateSettings(array $data, ?UploadedFile $logo = null, ?UploadedFile $favicon = null, ?UploadedFile $loginImage = null): Setting
     {
         $currentSetting = $this->getSettings();
 
@@ -41,6 +42,11 @@ class SettingService
         // Handle Favicon Upload via Centralized Upload Helper
         if ($favicon) {
             $data['favicon'] = upload_image($favicon, 'settings', $currentSetting->favicon);
+        }
+
+        // Handle Login Image Upload via Centralized Upload Helper
+        if ($loginImage) {
+            $data['login_image'] = upload_image($loginImage, 'settings', $currentSetting->login_image);
         }
 
         return $this->settingRepository->updateSettings($data);

@@ -9,10 +9,11 @@ class InventoryDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            InventoryPermissionSeeder::class,
             WarehouseDatabaseSeeder::class,
             ItemCategoryDatabaseSeeder::class,
             UnitDatabaseSeeder::class,
         ]);
     }
 }
+
+

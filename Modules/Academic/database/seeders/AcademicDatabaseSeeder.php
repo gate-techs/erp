@@ -12,7 +12,6 @@ class AcademicDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            AcademicPermissionSeeder::class,
             AcademicStageDatabaseSeeder::class,
             AcademicClassDatabaseSeeder::class,
             AcademicSubjectDatabaseSeeder::class,
@@ -23,3 +22,4 @@ class AcademicDatabaseSeeder extends Seeder
         ]);
     }
 }
+

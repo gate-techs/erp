@@ -41,10 +41,10 @@
             <div class="card-body pt-4">
                 <div class="row g-4">
                     <!-- Logo -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label class="form-label fw-semibold mb-2">{{ __('Academy Logo') }}</label>
                         <div class="d-flex align-items-center gap-3 p-3 border rounded bg-lighter">
-                            <div class="bg-white border rounded p-2 d-flex align-items-center justify-content-center" style="width: 170px; height: 80px; flex-shrink: 0;">
+                            <div class="bg-white border rounded p-2 d-flex align-items-center justify-content-center" style="width: 140px; height: 80px; flex-shrink: 0;">
                                 <img id="logoPreview" src="{{ $settings->logo_url }}" alt="Logo" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
                             </div>
                             <div>
@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- Favicon -->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <label class="form-label fw-semibold mb-2">{{ __('Website Favicon') }}</label>
                         <div class="d-flex align-items-center gap-3 p-3 border rounded bg-lighter">
                             <div class="bg-white border rounded p-2 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; flex-shrink: 0;">
@@ -72,6 +72,24 @@
                                     <input type="file" id="faviconInput" name="favicon" class="d-none" accept="image/*" onchange="previewImage(this, 'faviconPreview')">
                                 </label>
                                 <div class="text-muted small">ICO, PNG (32x32 px)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Image -->
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-semibold mb-2">{{ __('Login Page Image') }}</label>
+                        <div class="d-flex align-items-center gap-3 p-3 border rounded bg-lighter">
+                            <div class="bg-white border rounded p-2 d-flex align-items-center justify-content-center" style="width: 120px; height: 80px; flex-shrink: 0;">
+                                <img id="loginImagePreview" src="{{ $settings->login_image_url }}" alt="Login Image" style="max-width: 100%; max-height: 100%; object-fit: cover; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label for="loginImageInput" class="btn btn-sm btn-outline-primary mb-2">
+                                    <i class="icon-base bx bx-upload me-1"></i>
+                                    {{ __('Click to upload image') }}
+                                    <input type="file" id="loginImageInput" name="login_image" class="d-none" accept="image/*" onchange="previewImage(this, 'loginImagePreview')">
+                                </label>
+                                <div class="text-muted small">JPG, PNG, WebP (Max 4MB)</div>
                             </div>
                         </div>
                     </div>

@@ -11,8 +11,7 @@ class CRMDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            CRMPermissionSeeder::class,
-        ]);
-    }
 }
+}
+
+

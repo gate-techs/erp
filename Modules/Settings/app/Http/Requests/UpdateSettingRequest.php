@@ -25,6 +25,7 @@ class UpdateSettingRequest extends FormRequest
             // Branding
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
             'favicon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,ico,svg', 'max:1024'],
+            'login_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:4096'],
             'primary_color' => ['nullable', 'string', 'max:20'],
 
             // Contact

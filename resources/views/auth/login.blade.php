@@ -335,7 +335,7 @@
             <!-- Logo -->
             <div class="text-center">
                 <a href="{{ url('/') }}">
-                    <img src="{{ asset('assets/img/illustrations/astro-logo.png') }}" alt="{{ $siteName ?? 'Astro Leaders Academy' }}" class="auth-logo-img" />
+                    <img src="{{ $siteLogo ?? asset('assets/img/illustrations/astro-logo.png') }}" alt="{{ $siteName ?? 'Astro Leaders Academy' }}" class="auth-logo-img" />
                 </a>
             </div>
 
@@ -420,7 +420,7 @@
     <!-- Column: Illustration -->
     <div class="auth-col-illustration">
         <div class="auth-illustration-card">
-            <img src="{{ asset('assets/img/illustrations/auth-bg-login.jpeg') }}" alt="{{ $siteName ?? 'Astro Leaders Academy' }}" />
+            <img src="{{ $siteLoginImage ?? asset('assets/img/illustrations/auth-bg-login.jpeg') }}" alt="{{ $siteName ?? 'Astro Leaders Academy' }}" />
         </div>
     </div>
 </div>

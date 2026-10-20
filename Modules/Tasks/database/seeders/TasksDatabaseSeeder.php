@@ -12,9 +12,10 @@ class TasksDatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            TasksPermissionSeeder::class,
             TaskGroupSeeder::class,
             TaskSeeder::class,
         ]);
     }
 }
+
+

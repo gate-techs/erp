@@ -11,11 +11,6 @@ class AccessControlDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            RoleSeeder::class,
-            PermissionSeeder::class,
-            StudentAndFeesPermissionSeeder::class,
-            SchedulesAndDashboardsPermissionSeeder::class,
-        ]);
+        $this->call(\Database\Seeders\PermissionDatabaseSeeder::class);
     }
 }

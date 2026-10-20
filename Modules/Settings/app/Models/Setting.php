@@ -44,6 +44,7 @@ class Setting extends Model implements TranslatableContract
         // Branding
         'logo',
         'favicon',
+        'login_image',
         'primary_color',
 
         // Regional & Financial
@@ -126,6 +127,18 @@ class Setting extends Model implements TranslatableContract
         }
 
         return asset('assets/img/favicon/favicon.ico');
+    }
+
+    /**
+     * Accessor for full login image URL with fallback to default auth-bg-login.jpeg.
+     */
+    public function getLoginImageUrlAttribute(): string
+    {
+        if (!empty($this->login_image)) {
+            return asset('storage/' . $this->login_image);
+        }
+
+        return asset('assets/img/illustrations/auth-bg-login.jpeg');
     }
 
     /**

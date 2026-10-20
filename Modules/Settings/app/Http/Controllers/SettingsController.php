@@ -32,7 +32,8 @@ class SettingsController extends Controller
         $this->settingService->updateSettings(
             $request->validated(),
             $request->file('logo'),
-            $request->file('favicon')
+            $request->file('favicon'),
+            $request->file('login_image')
         );
 
         return redirect()
