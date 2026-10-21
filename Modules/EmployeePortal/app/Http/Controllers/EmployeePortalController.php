@@ -648,6 +648,14 @@ class EmployeePortalController extends Controller
     }
 
     /**
+     * Public Terms of Use & Conditions.
+     */
+    public function terms(): View
+    {
+        return view('employeeportal::terms');
+    }
+
+    /**
      * Request Account Deletion & Data Purge (Apple Guideline 5.1.1(v)).
      */
     public function requestAccountDeletion(Request $request): JsonResponse

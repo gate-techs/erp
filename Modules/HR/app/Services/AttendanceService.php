@@ -586,4 +586,110 @@ class AttendanceService
             'errors'         => $errors,
         ];
     }
+
+    //==========================================================================
+    // 8. Employee Day Attendance Timeline
+    //==========================================================================
+    /**
+     * Get real-time/day timeline progression for an employee.
+     *
+     * @param int $employeeId
+     * @param string|null $date
+     * @return array
+     */
+    public function getEmployeeDayTimeline(int $employeeId, ?string $date = null): array
+    {
+        $dateStr = $date ? Carbon::parse($date)->format('Y-m-d') : now()->format('Y-m-d');
+        $targetDate = Carbon::parse($dateStr);
+        $isToday = $targetDate->isToday();
+
+        $employee = Employee::with(['shift.translations', 'department.translations', 'primaryBranch'])
+            ->find($employeeId);
+
+        if (!$employee) {
+            throw new Exception(__('Employee not found.'));
+        }
+
+        $attendance = Attendance::where('employee_id', $employeeId)
+            ->whereDate('date', $dateStr)
+            ->first();
+
+        $shift = $employee->shift;
+        $shiftStart = $shift?->start_time ? Carbon::parse($dateStr . ' ' . $shift->start_time) : null;
+        $shiftEnd = $shift?->end_time ? Carbon::parse($dateStr . ' ' . $shift->end_time) : null;
+        if ($shift && $shift->is_overnight && $shiftEnd && $shiftStart && $shiftEnd->lessThan($shiftStart)) {
+            $shiftEnd->addDay();
+        }
+
+        $checkInTime = $attendance?->check_in ? Carbon::parse($dateStr . ' ' . $attendance->check_in) : null;
+        $checkOutTime = $attendance?->check_out ? Carbon::parse($dateStr . ' ' . $attendance->check_out) : null;
+
+        $hasCheckIn = !empty($checkInTime);
+        $hasCheckOut = !empty($checkOutTime);
+
+        // Progress status calculation
+        // States: 'not_started', 'in_progress', 'completed'
+        $progressState = 'not_started';
+        $statusBadge = __('لم يبدأ بعد');
+        $statusBadgeColor = 'secondary';
+        $progressPercent = 0;
+
+        if ($hasCheckIn && $hasCheckOut) {
+            $progressState = 'completed';
+            $statusBadge = __('مكتملة ✓');
+            $statusBadgeColor = 'success';
+            $progressPercent = 100;
+        } elseif ($hasCheckIn) {
+            $progressState = 'in_progress';
+            $statusBadge = __('الدوام جاري حالياً');
+            $statusBadgeColor = 'primary';
+            $progressPercent = 50;
+
+            // Calculate dynamic progress if today and shift exists
+            if ($isToday && $shiftStart && $shiftEnd) {
+                $now = now();
+                if ($now->greaterThanOrEqualTo($shiftEnd)) {
+                    $progressPercent = 90;
+                } elseif ($now->greaterThan($shiftStart)) {
+                    $totalShiftMinutes = max(1, $shiftStart->diffInMinutes($shiftEnd));
+                    $elapsedMinutes = $shiftStart->diffInMinutes($now);
+                    $calcPct = round(($elapsedMinutes / $totalShiftMinutes) * 100);
+                    $progressPercent = min(90, max(20, $calcPct));
+                } else {
+                    $progressPercent = 25;
+                }
+            }
+        }
+
+        return [
+            'employee' => [
+                'id'          => $employee->id,
+                'name'        => $employee->name,
+                'code'        => $employee->employee_code,
+                'avatar_url'  => $employee->avatar ? asset('storage/' . $employee->avatar) : null,
+                'department'  => $employee->department?->name ?? '-',
+                'branch'      => $employee->primaryBranch?->name ?? '-',
+                'shift_name'  => $shift?->name ?? __('وردية قياسية'),
+                'shift_start' => $shiftStart ? $shiftStart->format('h:i A') : null,
+                'shift_end'   => $shiftEnd ? $shiftEnd->format('h:i A') : null,
+            ],
+            'date'                  => $dateStr,
+            'is_today'              => $isToday,
+            'has_attendance'        => !empty($attendance),
+            'has_check_in'          => $hasCheckIn,
+            'has_check_out'         => $hasCheckOut,
+            'check_in_formatted'    => $checkInTime ? $checkInTime->format('h:i A') : null,
+            'check_out_formatted'   => $checkOutTime ? $checkOutTime->format('h:i A') : null,
+            'progress_state'        => $progressState,
+            'progress_percent'      => $progressPercent,
+            'status_badge'          => $statusBadge,
+            'status_badge_color'    => $statusBadgeColor,
+            'attendance_status'     => $attendance?->status?->value ?? ($hasCheckIn ? 'present' : 'absent'),
+            'attendance_status_lbl' => $attendance?->status?->label() ?? ($hasCheckIn ? __('حاضر') : __('غائب / لم يسجل')),
+            'total_working_hours'   => $attendance?->total_working_hours ?? 0,
+            'late_minutes'          => $attendance?->late_minutes ?? 0,
+            'early_leave_minutes'   => $attendance?->early_leave_minutes ?? 0,
+        ];
+    }
 }
+

@@ -79,6 +79,17 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
             $shiftStatusText = __('Checked in') . ': ' . $checkInTimeFormatted;
         }
 
+        // Generate day timeline for tracker
+        $dayTimeline = null;
+        if ($employee) {
+            $hrService = $this->hrAttendanceService ?? app(AttendanceService::class);
+            try {
+                $dayTimeline = $hrService->getEmployeeDayTimeline($employee->id, $today);
+            } catch (Exception $e) {
+                $dayTimeline = null;
+            }
+        }
+
         return [
             'employee'               => $employee,
             'avatarUrl'              => $employee?->avatar_url ?? $user?->avatar_url ?? asset('assets/portal/teacher-avatar.png'),
@@ -90,6 +101,7 @@ class PortalAttendanceService implements PortalAttendanceServiceInterface
             'checkInTimeFormatted'   => $checkInTimeFormatted,
             'checkOutTimeFormatted'  => $checkOutTimeFormatted,
             'shiftStatusText'        => $shiftStatusText,
+            'dayTimeline'            => $dayTimeline,
         ];
     }
 

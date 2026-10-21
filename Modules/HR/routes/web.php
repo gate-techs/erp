@@ -114,6 +114,7 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
     // Attendance & Absence Management (إدارة الحضور والإنصراف)
     Route::get('attendances/data', [AttendanceController::class, 'data'])->name('attendances.data');
     Route::get('attendances/matrix-data', [AttendanceController::class, 'matrixData'])->name('attendances.matrix-data');
+    Route::get('attendances/timeline-data', [AttendanceController::class, 'timelineData'])->name('attendances.timeline-data');
     Route::post('attendances/record-punch', [AttendanceController::class, 'recordPunch'])->name('attendances.record-punch');
     Route::post('attendances/import-excel', [AttendanceController::class, 'importExcel'])->name('attendances.import-excel');
     Route::get('attendances/download-template', [AttendanceController::class, 'downloadTemplate'])->name('attendances.download-template');

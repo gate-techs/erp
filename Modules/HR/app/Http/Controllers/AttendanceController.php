@@ -74,6 +74,18 @@ class AttendanceController extends Controller
 
         $years = range(now()->year - 2, now()->year + 2);
 
+        $selectedEmployeeTimeline = null;
+        if (!empty($selectedEmployee)) {
+            try {
+                $selectedEmployeeTimeline = $this->attendanceService->getEmployeeDayTimeline(
+                    (int)$selectedEmployee,
+                    now()->format('Y-m-d')
+                );
+            } catch (Exception $e) {
+                $selectedEmployeeTimeline = null;
+            }
+        }
+
         return view('hr::attendances.index', compact(
             'matrixData',
             'employees',
@@ -85,8 +97,43 @@ class AttendanceController extends Controller
             'selectedMonth',
             'selectedEmployee',
             'selectedBranch',
-            'selectedDepartment'
+            'selectedDepartment',
+            'selectedEmployeeTimeline'
         ));
+    }
+
+    //======================
+    /**
+     * AJAX endpoint for live Employee Day Timeline tracker.
+     */
+    public function timelineData(Request $request): JsonResponse
+    {
+        abort_if(! auth()->user()->can('hr.attendances.view'), 403);
+
+        $employeeId = $request->get('employee_id');
+        if (!$employeeId) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Employee ID is required.'),
+            ], 422);
+        }
+
+        try {
+            $data = $this->attendanceService->getEmployeeDayTimeline(
+                (int)$employeeId,
+                $request->get('date')
+            );
+
+            return response()->json([
+                'success' => true,
+                'data'    => $data,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     //======================

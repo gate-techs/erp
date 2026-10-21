@@ -213,6 +213,239 @@
         margin-top: 8px;
     }
 
+    /* =========================================================================
+       Daily Attendance Timeline Tracker (شريط متابعة الدوام اليومي - بتصميم احترافي مبسط)
+       ========================================================================= */
+    .portal-tracker-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 16px 18px;
+        box-shadow: 0 3px 18px rgba(0, 51, 75, 0.04);
+        border: 1px solid rgba(0, 51, 75, 0.06);
+        margin-bottom: 12px;
+    }
+
+    .portal-tracker-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #F1F5F9;
+    }
+
+    .portal-tracker-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .portal-tracker-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: #F1F5F9;
+        color: #00334B;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+
+    .portal-tracker-title {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #00334B;
+        margin: 0;
+    }
+
+    .portal-tracker-status-tag {
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+
+    .portal-tracker-status-tag.tag-completed {
+        background: #DCFCE7;
+        color: #15803D;
+    }
+
+    .portal-tracker-status-tag.tag-in_progress {
+        background: #E0F2FE;
+        color: #0369A1;
+    }
+
+    .portal-tracker-status-tag.tag-not_started {
+        background: #F1F5F9;
+        color: #64748B;
+    }
+
+    /* Vertical Minimalist Milestones (تحت بعض بشكل احترافي وبسيط جداً) */
+    .portal-vtrack-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+        padding: 4px 6px;
+    }
+
+    .portal-vtrack-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        position: relative;
+        padding-bottom: 16px;
+    }
+
+    .portal-vtrack-item:last-child {
+        padding-bottom: 0;
+    }
+
+    /* Vertical connecting line */
+    .portal-vtrack-item:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        top: 26px;
+        right: 14px; /* for RTL */
+        bottom: 0;
+        width: 2px;
+        background: #E2E8F0;
+        z-index: 1;
+    }
+
+    [dir="ltr"] .portal-vtrack-item:not(:last-child)::before {
+        right: auto;
+        left: 14px;
+    }
+
+    .portal-vtrack-item.is-done:not(:last-child)::before {
+        background: #10B981;
+    }
+
+    .portal-vtrack-item.is-live:not(:last-child)::before {
+        background: linear-gradient(180deg, #0EA5E9 0%, #E2E8F0 100%);
+    }
+
+    .portal-vtrack-icon-box {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 800;
+        z-index: 2;
+        flex-shrink: 0;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .portal-vtrack-icon-box.box-done {
+        background: #10B981;
+        color: #ffffff;
+    }
+
+    .portal-vtrack-icon-box.box-live {
+        background: #0EA5E9;
+        color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+    }
+
+    .portal-vtrack-icon-box.box-wait {
+        background: #F1F5F9;
+        color: #94A3B8;
+        border-color: #E2E8F0;
+    }
+
+    .portal-vtrack-content {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 4px;
+    }
+
+    .portal-vtrack-label-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .portal-vtrack-label {
+        font-size: 13px;
+        font-weight: 800;
+        color: #00334B;
+        line-height: 1.2;
+    }
+
+    .portal-vtrack-desc {
+        font-size: 11px;
+        color: #94A3B8;
+        margin-top: 2px;
+        font-weight: 600;
+    }
+
+    .portal-vtrack-time-col {
+        text-align: left;
+    }
+
+    [dir="ltr"] .portal-vtrack-time-col {
+        text-align: right;
+    }
+
+    .portal-vtrack-time {
+        font-size: 12.5px;
+        font-weight: 800;
+        color: #00334B;
+        direction: ltr;
+        display: block;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .portal-vtrack-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 2px;
+    }
+
+    .portal-vtrack-badge.b-green {
+        background: #DCFCE7;
+        color: #15803D;
+    }
+
+    .portal-vtrack-badge.b-blue {
+        background: #E0F2FE;
+        color: #0369A1;
+    }
+
+    .portal-vtrack-badge.b-gray {
+        background: #F1F5F9;
+        color: #64748B;
+    }
+
+    .portal-tracker-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #F1F5F9;
+        font-size: 11px;
+        color: #64748B;
+        font-weight: 600;
+    }
+
+    .portal-tracker-footer strong {
+        color: #00334B;
+    }
+
     /* Modal Dialog Popup for Successful Punch (Centered in middle of screen) */
     .punch-success-overlay {
         position: fixed;
@@ -418,55 +651,6 @@
         background: rgba(253, 187, 34, 0.25);
     }
 
-    /* 0. Dashboard Top Navigation Header matching all other portal screens */
-    .portal-dashboard-container {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 0 0 90px 0;
-    }
-
-    .portal-dashboard-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        padding: 0 4px;
-    }
-
-    .portal-dashboard-nav-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        background: #ffffff;
-        border: 1px solid rgba(0, 51, 75, 0.08);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 51, 75, 0.04);
-        color: #00334B;
-        font-size: 24px;
-        text-decoration: none;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
-    }
-
-    .portal-dashboard-nav-btn:hover {
-        transform: translateY(-1px);
-        background: #f8fafc;
-        box-shadow: 0 4px 12px rgba(0, 51, 75, 0.08);
-        border-color: rgba(0, 51, 75, 0.15);
-        color: #00334B;
-    }
-
-    .portal-dashboard-header-title {
-        font-size: 18px;
-        font-weight: 800;
-        color: #00334B;
-        margin: 0;
-        text-align: center;
-        flex-grow: 1;
-    }
-
     .portal-dashboard-container .portal-header {
         margin: 0 0 14px 0;
     }
@@ -497,20 +681,20 @@
             <!-- 1. Date Badge (Kuwait) -->
             <div class="badge-date-pill">
                 <i class="bx bxs-calendar"></i>
-                <span>{{ $portalCurrentDate ?? (now('Asia/Kuwait')->translatedFormat('l, d F Y') . ' • ' . __('Kuwait')) }}</span>
+                <span>{{ $portalCurrentDate ?? (now('Asia/Kuwait')->translatedFormat('d M Y') . ' • ' . __('Kuwait')) }}</span>
             </div>
 
             <!-- 2. Status Pill with dot -->
             <div class="badge-status-pill">
                 @if($hasCheckIn && $hasCheckOut)
                     <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                    <span>{{ __("Today's shift completed ✓ (Out: :time)", ['time' => $checkOutTimeFormatted]) }}</span>
+                    <span>{{ __('انصراف') }} {{ $checkOutTimeFormatted }}</span>
                 @elseif($hasCheckIn)
                     <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                    <span>{{ __('Checked in') }} {{ $checkInTimeFormatted }}</span>
+                    <span>{{ __('حضور') }} {{ $checkInTimeFormatted }}</span>
                 @else
                     <span class="status-dot"></span>
-                    <span>{{ __('Awaiting Punch') }}</span>
+                    <span>{{ __('لم يبدأ') }}</span>
                 @endif
             </div>
         </div>
@@ -585,20 +769,11 @@
 
         <!-- Punch Title & Subtitle -->
         @if($hasCheckIn && $hasCheckOut)
-            <h4 class="punch-prompt-title" style="color: #059669;">{{ __("Today's shift completed successfully") }}</h4>
-            <p class="punch-prompt-desc">
-                {{ __('Checked in at (:in) and checked out at (:out)', ['in' => $checkInTimeFormatted, 'out' => $checkOutTimeFormatted]) }}
-            </p>
+            <h4 class="punch-prompt-title" style="color: #059669; font-size: 15px; margin-bottom: 2px;">{{ __("اكتمل دوام اليوم ✓") }}</h4>
         @elseif($hasCheckIn)
-            <h4 class="punch-prompt-title" style="color: #DC2626;">{{ __('Tap to record check-out') }}</h4>
-            <p class="punch-prompt-desc">
-                {{ __('Your check-in was recorded at (:time). Please place your thumb on the screen to end your work shift.', ['time' => $checkInTimeFormatted]) }}
-            </p>
+            <h4 class="punch-prompt-title" style="color: #DC2626; font-size: 15px; margin-bottom: 2px;">{{ __('تسجيل الانصراف') }}</h4>
         @else
-            <h4 class="punch-prompt-title">{{ __('Tap to record punch') }}</h4>
-            <p class="punch-prompt-desc">
-                {{ __('Please place your thumb on the screen to start your work shift') }}
-            </p>
+            <h4 class="punch-prompt-title" style="font-size: 15px; margin-bottom: 2px;">{{ __('تسجيل الحضور') }}</h4>
         @endif
 
         @if(!$hasCheckIn || !$hasCheckOut)
@@ -614,33 +789,146 @@
         <input type="hidden" id="geoLng" />
     </div>
 
-    <!-- 3. Teacher Profile Card -->
-    <div class="teacher-status-card">
-        <div class="teacher-info">
-            <img src="{{ auth()->user()?->avatar_url ?? asset('assets/portal/male-avatar.png') }}" alt="Avatar" class="teacher-avatar" />
+    <!-- ========================================================================= -->
+    <!-- 2. Daily Attendance Timeline Tracker (تحت البصمة بتصميم عمودي بسيط واحترافي) -->
+    <!-- ========================================================================= -->
+    @php
+        $tData = $dayTimeline ?? [];
+        $tState = $tData['progress_state'] ?? ($hasCheckIn && $hasCheckOut ? 'completed' : ($hasCheckIn ? 'in_progress' : 'not_started'));
+        $tInTime = $tData['check_in_formatted'] ?? $checkInTimeFormatted;
+        $tOutTime = $tData['check_out_formatted'] ?? $checkOutTimeFormatted;
+        $tEmp = $tData['employee'] ?? [];
+        $tShiftStart = $tEmp['shift_start'] ?? null;
+        $tShiftEnd = $tEmp['shift_end'] ?? null;
+        $tWorkingHours = $tData['total_working_hours'] ?? ($todayAttendance?->total_working_hours ?? 0);
+    @endphp
+
+    <div class="portal-tracker-card" id="portalAttendanceTracker">
+        <!-- Tracker Header -->
+        <div class="portal-tracker-header">
             <div>
-                <div class="teacher-name">
-                    {{ auth()->user()?->employee?->name ?? (auth()->user()?->name ?? __('Employee')) }}
+                @if($tState === 'completed')
+                    <span class="portal-tracker-status-tag tag-completed">
+                        <i class="bx bx-check-circle"></i>
+                        <span>{{ __('مكتملة ✓') }}</span>
+                    </span>
+                @elseif($tState === 'in_progress')
+                    <span class="portal-tracker-status-tag tag-in_progress">
+                        <i class="bx bx-loader-alt bx-spin font-13"></i>
+                        <span>{{ __('الدوام جاري حالياً') }}</span>
+                    </span>
+                @else
+                    <span class="portal-tracker-status-tag tag-not_started">
+                        <i class="bx bx-time"></i>
+                        <span>{{ __('لم يبدأ بعد') }}</span>
+                    </span>
+                @endif
+            </div>
+
+            <div class="portal-tracker-title-wrap">
+                <h5 class="portal-tracker-title">{{ __('شريط متابعة الدوام') }}</h5>
+                <span class="portal-tracker-icon">
+                    <i class="bx bx-run"></i>
+                </span>
+            </div>
+        </div>
+
+        <!-- Clean Vertical Pipeline (خطوات متتالية فوق بعضها بانسيابية) -->
+        <div class="portal-vtrack-list">
+            <!-- Step 1: Check-In (الحضور) -->
+            <div class="portal-vtrack-item {{ $hasCheckIn ? 'is-done' : '' }}">
+                <div class="portal-vtrack-icon-box {{ $hasCheckIn ? 'box-done' : 'box-wait' }}">
+                    <i class="bx bx-check"></i>
                 </div>
-                <div class="teacher-dept">
-                    {{ auth()->user()?->employee?->jobTitle?->name ?? __('Staff Member') }}
+                <div class="portal-vtrack-content">
+                    <div class="portal-vtrack-label-col">
+                        <span class="portal-vtrack-label">{{ __('تسجيل الحضور') }}</span>
+                        <span class="portal-vtrack-desc">
+                            @if($tShiftStart)
+                                {{ __('بدء الوردية') }}: {{ $tShiftStart }}
+                            @else
+                                {{ __('بداية الوردية المقررة') }}
+                            @endif
+                        </span>
+                    </div>
+                    <div class="portal-vtrack-time-col">
+                        <span class="portal-vtrack-time">{{ $hasCheckIn ? $tInTime : '--:--' }}</span>
+                        <span class="portal-vtrack-badge {{ $hasCheckIn ? 'b-green' : 'b-gray' }}">
+                            {{ $hasCheckIn ? __('تم التسجيل') : __('في الانتظار') }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: During Shift (الدوام جاري حالياً) -->
+            <div class="portal-vtrack-item {{ $hasCheckIn && $hasCheckOut ? 'is-done' : ($hasCheckIn ? 'is-live' : '') }}">
+                <div class="portal-vtrack-icon-box {{ $hasCheckIn && $hasCheckOut ? 'box-done' : ($hasCheckIn ? 'box-live' : 'box-wait') }}">
+                    @if($hasCheckIn && $hasCheckOut)
+                        <i class="bx bx-check-double font-16"></i>
+                    @elseif($hasCheckIn)
+                        <i class="bx bx-time-five font-16"></i>
+                    @else
+                        <i class="bx bx-circle font-13"></i>
+                    @endif
+                </div>
+                <div class="portal-vtrack-content">
+                    <div class="portal-vtrack-label-col">
+                        <span class="portal-vtrack-label">{{ __('الدوام جاري حالياً') }}</span>
+                        <span class="portal-vtrack-desc">{{ __('ساعات العمل الفعلية المسجلة') }}</span>
+                    </div>
+                    <div class="portal-vtrack-time-col">
+                        <span class="portal-vtrack-time">{{ $tWorkingHours }} {{ __('س') }}</span>
+                        @if($hasCheckIn && $hasCheckOut)
+                            <span class="portal-vtrack-badge b-green">{{ __('مكتمل') }}</span>
+                        @elseif($hasCheckIn)
+                            <span class="portal-vtrack-badge b-blue">{{ __('قيد العمل') }}</span>
+                        @else
+                            <span class="portal-vtrack-badge b-gray">-</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Check-Out (الانصراف) -->
+            <div class="portal-vtrack-item {{ $hasCheckIn && $hasCheckOut ? 'is-done' : '' }}">
+                <div class="portal-vtrack-icon-box {{ $hasCheckIn && $hasCheckOut ? 'box-done' : 'box-wait' }}">
+                    <i class="bx bx-log-out-circle"></i>
+                </div>
+                <div class="portal-vtrack-content">
+                    <div class="portal-vtrack-label-col">
+                        <span class="portal-vtrack-label">{{ __('تسجيل الانصراف') }}</span>
+                        <span class="portal-vtrack-desc">
+                            @if($tShiftEnd)
+                                {{ __('نهاية الوردية') }}: {{ $tShiftEnd }}
+                            @else
+                                {{ __('نهاية وقت الدوام الرسمي') }}
+                            @endif
+                        </span>
+                    </div>
+                    <div class="portal-vtrack-time-col">
+                        <span class="portal-vtrack-time">{{ $hasCheckOut ? $tOutTime : '--:--' }}</span>
+                        <span class="portal-vtrack-badge {{ $hasCheckOut ? 'b-green' : 'b-gray' }}">
+                            {{ $hasCheckOut ? __('تم الانصراف') : __('بانتظار البصمة') }}
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="status-side">
-            <span class="status-label">{{ __("Today's Status") }}</span>
-            <span class="status-value" style="{{ $hasCheckIn ? 'color: #059669;' : '' }}">
-                @if($hasCheckIn && $hasCheckOut)
-                    {{ __("Shift Completed (Out: :time)", ['time' => $checkOutTimeFormatted]) }}
-                @elseif($hasCheckIn)
-                    {{ __('Checked in') }}: {{ $checkInTimeFormatted }}
-                @else
-                    {{ __('Awaiting Punch') }}
-                @endif
-            </span>
+        <!-- Tracker Footer -->
+        <div class="portal-tracker-footer">
+            <div>
+                <span>{{ __('إجمالي الساعات') }}:</span>
+                <strong id="portalFooterHours">{{ $tWorkingHours }} {{ __('ساعة') }}</strong>
+            </div>
+            <div>
+                <span>{{ __('الوردية') }}:</span>
+                <strong>{{ $tEmp['shift_name'] ?? __('الوردية الأساسية') }}</strong>
+            </div>
         </div>
     </div>
+
+
 
     <!-- 4. Success Modal / Bottom Sheet -->
     <div class="punch-success-overlay" id="punchSuccessModal">

@@ -52,11 +52,6 @@
                         </div>
                     @endif
                 </div>
-
-                <!-- Delete Action Button -->
-                <button type="button" class="notif-card-trash-btn" onclick="event.stopPropagation(); deleteNotificationItem('{{ $item->id }}')" aria-label="{{ __('Delete notification') }}" title="{{ __('Delete notification') }}">
-                    <i class="bx bx-trash"></i>
-                </button>
             </div>
         @empty
             <div class="notif-empty-card">
@@ -282,7 +277,6 @@
 .notif-card-body-col {
     flex-grow: 1;
     min-width: 0;
-    padding-inline-end: 28px;
 }
 
 .notif-card-meta-row {
@@ -312,7 +306,7 @@
 }
 
 .cat-workflows {
-    background: #DBEAFE;
+    background: #EFF6FF;
     color: #1E40AF;
 }
 
@@ -377,30 +371,6 @@
     background: #0284C7;
     color: #ffffff;
     border-color: #0284C7;
-}
-
-/* Card Delete Trash Button */
-.notif-card-trash-btn {
-    position: absolute;
-    top: 12px;
-    inset-inline-end: 10px;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: transparent;
-    border: none;
-    color: #94A3B8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.notif-card-trash-btn:hover {
-    background: #FEE2E2;
-    color: #EF4444;
 }
 
 /* Empty State Card */

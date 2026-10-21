@@ -176,6 +176,47 @@
             <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
         </a>
 
+        <!-- 5.4 Privacy Policy -->
+        <a href="{{ route('portal.privacy') }}" class="portal-profile-item">
+            <div class="portal-profile-item-right">
+                <div class="portal-profile-item-icon icon-indigo">
+                    <i class="bx bx-shield-quarter"></i>
+                </div>
+                <div>
+                    <h4 class="portal-profile-item-title">{{ __('Privacy Policy') }}</h4>
+                    <p class="portal-profile-item-subtitle">{{ __('Review how ALA ORBIT protects your personal data') }}</p>
+                </div>
+            </div>
+            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
+        </a>
+
+        <!-- 5.5 Terms & Conditions -->
+        <a href="{{ route('portal.terms') }}" class="portal-profile-item">
+            <div class="portal-profile-item-right">
+                <div class="portal-profile-item-icon icon-purple">
+                    <i class="bx bx-file"></i>
+                </div>
+                <div>
+                    <h4 class="portal-profile-item-title">{{ __('Terms & Conditions') }}</h4>
+                    <p class="portal-profile-item-subtitle">{{ __('System usage agreement and attendance regulations') }}</p>
+                </div>
+            </div>
+            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron"></i>
+        </a>
+
+        <!-- 5.6 Request Account Deletion -->
+        <a href="javascript:void(0)" onclick="openProfileDeleteAccountModal()" class="portal-profile-item" style="background: rgba(239, 68, 68, 0.02);">
+            <div class="portal-profile-item-right">
+                <div class="portal-profile-item-icon" style="background: #FEE2E2; color: #DC2626;">
+                    <i class="bx bx-user-x"></i>
+                </div>
+                <div>
+                    <h4 class="portal-profile-item-title" style="color: #DC2626;">{{ __('Request Account Deletion') }}</h4>
+                    <p class="portal-profile-item-subtitle">{{ __('Account deactivation and data purging from HR system') }}</p>
+                </div>
+            </div>
+            <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-chevron-left' : 'bx-chevron-right' }} portal-profile-item-chevron" style="color: #DC2626;"></i>
+        </a>
     </div>
 
     <!-- 6. Logout Action Button -->
@@ -187,4 +228,95 @@
         </button>
     </form>
 </div>
+
+<!-- Account Deletion Modal -->
+<div class="modal fade" id="profileDeleteAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-2">
+                    <i class="bx bx-error-circle fs-3"></i>
+                    {{ __('Request Account Deletion') }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted" style="font-size: 13px;">
+                    {{ __('Please enter your current password to confirm account deactivation and data purge request. Your active sessions will be terminated.') }}
+                </p>
+                <form id="profileDeleteAccountForm" onsubmit="submitProfileDeleteAccount(event)">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 12.5px;">{{ __('Current Password') }} <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control rounded-3" id="profileDelCurrentPassword" required placeholder="••••••••" style="font-size: 13px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" style="font-size: 12.5px;">{{ __('Reason for Leaving (Optional)') }}</label>
+                        <textarea class="form-control rounded-3" id="profileDelReason" rows="2" placeholder="{{ __('Optional notes for HR administration...') }}" style="font-size: 13px;"></textarea>
+                    </div>
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal" style="font-size: 13px; font-weight: 700;">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4" id="btnConfirmProfileDeleteAccount" style="font-size: 13px; font-weight: 700;">{{ __('Confirm Deletion Request') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    let profileDeleteModalInstance = null;
+    function openProfileDeleteAccountModal() {
+        const modalEl = document.getElementById('profileDeleteAccountModal');
+        if (modalEl) {
+            profileDeleteModalInstance = new bootstrap.Modal(modalEl);
+            profileDeleteModalInstance.show();
+        }
+    }
+
+    async function submitProfileDeleteAccount(event) {
+        event.preventDefault();
+        const pwd = document.getElementById('profileDelCurrentPassword').value;
+        const reason = document.getElementById('profileDelReason').value;
+        const btn = document.getElementById('btnConfirmProfileDeleteAccount');
+
+        if (!pwd) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> {{ __("Processing...") }}';
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+            const response = await fetch("{{ route('portal.profile.security.deleteAccount') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ password: pwd, reason: reason })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                alert('✅ ' + data.message);
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                }
+            } else {
+                alert('⚠️ ' + (data.message || '{{ __("Failed to process account deletion request.") }}'));
+                btn.disabled = false;
+                btn.innerHTML = '{{ __("Confirm Deletion Request") }}';
+            }
+        } catch (err) {
+            console.error('Account deletion error:', err);
+            alert('⚠️ {{ __("Connection error with server") }}');
+            btn.disabled = false;
+            btn.innerHTML = '{{ __("Confirm Deletion Request") }}';
+        }
+    }
+</script>
+@endpush
 @endsection

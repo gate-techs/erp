@@ -48,15 +48,17 @@ body {
 }
 
 /* ==============================================================================
- * 2. Mobile App Shell Wrapper
+ * 2. Mobile & Tablet App Shell Wrapper
  * ============================================================================== */
 .portal-app-wrapper {
+    width: 100%;
     max-width: 440px;
     margin: 0 auto;
     position: relative;
     min-height: 100vh;
     min-height: 100dvh;
     padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+    transition: max-width 0.25s ease;
 }
 
 /* ==============================================================================
@@ -346,79 +348,183 @@ body {
  * 5. Common Navigation Headers (All Subpages)
  * ============================================================================== */
 .portal-page-container,
+.portal-dashboard-container,
 .requests-page-container,
 .leave-page-container,
 .perm-page-container,
+.perm-history-page-container,
 .profile-page-container,
+.salary-page-container,
+.rewards-page-container,
+.policies-page-container,
+.privacy-page-container,
+.terms-page-container,
+.notifications-page-container,
+.loans-page-container,
+.portal-docs-page-container,
+.security-page-container,
 .edit-profile-container {
-    padding-bottom: 30px;
+    padding-bottom: 90px;
+    max-width: 440px;
+    margin: 0 auto;
 }
 
 .portal-nav-header,
+.portal-dashboard-header,
 .requests-nav-header,
 .leave-nav-header,
 .perm-nav-header,
 .profile-nav-header,
+.portal-profile-header,
+.salary-nav-header,
+.privacy-nav-header,
+.terms-nav-header,
+.rewards-nav-header,
+.policies-nav-header,
+.notif-nav-header,
+.loans-nav-header,
+.loan-nav-header,
+.portal-docs-nav-header,
+.security-nav-header,
 .edit-profile-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    height: 44px;
+    min-height: 44px;
+    margin: 0 0 14px 0 !important;
+    padding: 0 4px !important;
     position: relative;
+    box-sizing: border-box;
 }
 
 .portal-back-btn,
+.portal-dashboard-nav-btn,
 .requests-back-btn,
 .leave-back-btn,
 .perm-back-btn,
 .profile-back-btn,
+.portal-profile-back-btn,
+.salary-back-btn,
+.privacy-back-btn,
+.terms-back-btn,
+.rewards-back-btn,
+.policies-back-btn,
+.notif-back-btn,
+.loans-back-btn,
+.loan-back-btn,
+.portal-docs-back-btn,
+.security-back-btn,
 .edit-profile-back-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: #ffffff;
-    border: 1px solid var(--portal-border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--portal-primary);
-    font-size: 20px;
-    text-decoration: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-    transition: all 0.2s ease;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 51, 75, 0.08) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--portal-primary, #00334B) !important;
+    font-size: 24px !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(0, 51, 75, 0.04) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    flex-shrink: 0 !important;
+}
+
+.portal-back-btn:hover,
+.portal-dashboard-nav-btn:hover,
+.requests-back-btn:hover,
+.leave-back-btn:hover,
+.perm-back-btn:hover,
+.profile-back-btn:hover,
+.portal-profile-back-btn:hover,
+.salary-back-btn:hover,
+.privacy-back-btn:hover,
+.terms-back-btn:hover,
+.rewards-back-btn:hover,
+.policies-back-btn:hover,
+.notif-back-btn:hover,
+.loans-back-btn:hover,
+.loan-back-btn:hover,
+.portal-docs-back-btn:hover,
+.security-back-btn:hover,
+.edit-profile-back-btn:hover {
+    background: #f8fafc !important;
+    border-color: rgba(0, 51, 75, 0.15) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 51, 75, 0.08) !important;
+    color: var(--portal-primary, #00334B) !important;
 }
 
 .portal-back-btn:active,
+.portal-dashboard-nav-btn:active,
 .requests-back-btn:active,
 .leave-back-btn:active,
 .perm-back-btn:active,
 .profile-back-btn:active,
+.portal-profile-back-btn:active,
+.salary-back-btn:active,
+.privacy-back-btn:active,
+.terms-back-btn:active,
+.rewards-back-btn:active,
+.policies-back-btn:active,
+.notif-back-btn:active,
+.loans-back-btn:active,
+.loan-back-btn:active,
+.portal-docs-back-btn:active,
+.security-back-btn:active,
 .edit-profile-back-btn:active {
-    background: #EEF5F8;
-    transform: scale(0.95);
+    transform: scale(0.95) !important;
+    background: #EEF5F8 !important;
 }
 
 .portal-header-title,
+.portal-dashboard-header-title,
 .requests-header-title,
 .leave-header-title,
 .perm-header-title,
 .profile-header-title,
+.portal-profile-header-title,
+.salary-header-title,
+.privacy-header-title,
+.terms-header-title,
+.rewards-header-title,
+.policies-header-title,
+.notif-header-title,
+.loans-header-title,
+.loan-header-title,
+.portal-docs-header-title,
+.security-header-title,
 .edit-profile-title {
-    font-family: 'Tajawal', sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--portal-primary);
-    margin: 0;
-    text-align: center;
-    flex: 1;
+    font-family: 'Tajawal', sans-serif !important;
+    font-size: 17.5px !important;
+    font-weight: 800 !important;
+    color: var(--portal-primary, #00334B) !important;
+    margin: 0 !important;
+    padding: 0 8px !important;
+    text-align: center !important;
+    flex: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.2 !important;
 }
 
 .portal-nav-placeholder,
+.portal-profile-header-spacer,
+.privacy-nav-placeholder,
+.terms-nav-placeholder,
 .requests-nav-placeholder,
 .leave-nav-placeholder,
 .perm-nav-placeholder,
 .edit-profile-nav-placeholder {
-    width: 38px;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0 !important;
 }
 
 /* ==============================================================================
@@ -3839,7 +3945,404 @@ body {
     font-size: 18px;
 }
 
+/* ==============================================================================
+ * Global intl-tel-input Styling for Mobile Portal
+ * Ensures phone number pickers render beautifully across all pages
+ * ============================================================================== */
+.iti {
+    width: 100% !important;
+    display: block !important;
+    position: relative !important;
+    direction: ltr !important;
+}
 
+.iti * {
+    box-sizing: border-box;
+}
 
+.iti__country-list {
+    list-style: none !important;
+    padding: 6px 0 !important;
+    margin: 6px 0 0 0 !important;
+    background: #ffffff !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+    max-height: 230px !important;
+    overflow-y: auto !important;
+    z-index: 10000 !important;
+    text-align: left !important;
+    direction: ltr !important;
+    font-family: 'Inter', 'Tajawal', sans-serif !important;
+}
 
+.iti__country {
+    list-style: none !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 9px 14px !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    color: #1E293B !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s ease !important;
+}
 
+.iti__country:hover,
+.iti__country.iti__highlight {
+    background-color: #F1F5F9 !important;
+}
+
+.iti__country-name {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #0F172A !important;
+}
+
+.iti__dial-code {
+    font-size: 12.5px !important;
+    color: #64748B !important;
+    font-weight: 600 !important;
+    margin-left: auto !important;
+}
+
+[dir="rtl"] .iti--separate-dial-code .iti__flag-container,
+[dir="rtl"] .iti--allow-dropdown .iti__flag-container,
+.iti--separate-dial-code .iti__flag-container,
+.iti__flag-container {
+    left: 0 !important;
+    right: auto !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    direction: ltr !important;
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+    background-color: #F8FAFC !important;
+    border-radius: 12px 0 0 12px !important;
+    padding: 0 10px 0 12px !important;
+    border-right: 1px solid #E2E8F0 !important;
+    border-left: none !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    position: relative !important;
+    direction: ltr !important;
+}
+
+.iti--separate-dial-code .iti__selected-dial-code {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: #0F172A !important;
+    direction: ltr !important;
+    unicode-bidi: embed !important;
+}
+
+[dir="rtl"] .iti--separate-dial-code input[type="tel"],
+.iti--separate-dial-code input[type="tel"] {
+    padding-left: 98px !important;
+    padding-right: 14px !important;
+    direction: ltr !important;
+    text-align: left !important;
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* ==============================================================================
+ * Universal Responsive Tablet & iPad Design System
+ * Unlocks and optimizes all portal screens for iPad / Tablets / Foldables
+ * (Dashboard, Profile, Leaves, Edit Profile, Notifications, Legal, Settings)
+ * ============================================================================== */
+
+/* Small Tablets / Large Phablets (>= 640px) */
+@media (min-width: 640px) {
+    .portal-app-wrapper {
+        max-width: 700px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    .portal-bottom-nav {
+        max-width: 620px !important;
+        width: calc(100% - 36px) !important;
+        bottom: 14px !important;
+        height: 72px !important;
+        padding: 0 20px !important;
+        border-radius: 28px !important;
+    }
+
+    .portal-nav-tab span {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+    }
+
+    .portal-nav-tab .tab-icon-wrapper i {
+        font-size: 24px !important;
+    }
+
+    /* Unclamp hardcoded mobile container widths across ALL screens */
+    main#portalMainContent > div,
+    .policies-page-container,
+    .salary-page-container,
+    .rewards-page-container,
+    .terms-page-container,
+    .privacy-page-container,
+    .notif-page-container,
+    .security-page-container,
+    .portal-profile-container,
+    .edit-profile-container,
+    .portal-notif-container,
+    .portal-docs-container,
+    .portal-create-doc-container,
+    .loan-details-page-container,
+    .loans-history-page-container,
+    .loan-page-container,
+    .requests-page-container,
+    .leave-page-container,
+    .perm-history-page-container,
+    .perm-page-container,
+    .portal-dashboard-container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+
+/* Standard Tablets & iPads (iPad mini, iPad 10.2", iPad Air, iPad Pro in portrait - >= 768px) */
+@media (min-width: 768px) {
+    .portal-app-wrapper {
+        max-width: 860px !important;
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
+    }
+
+    .portal-bottom-nav {
+        max-width: 680px !important;
+        bottom: 18px !important;
+        height: 74px !important;
+        border-radius: 30px !important;
+    }
+
+    /* Universal Navigation Headers across all pages */
+    .portal-dashboard-header,
+    .portal-profile-header,
+    .portal-notif-header,
+    .leave-nav-header,
+    .edit-profile-nav,
+    .portal-legal-header {
+        margin-bottom: 20px !important;
+        padding: 0 4px !important;
+    }
+
+    .portal-dashboard-header-title,
+    .portal-profile-header-title,
+    .portal-notif-header-title,
+    .leave-header-title,
+    .edit-profile-title,
+    .portal-legal-title {
+        font-size: 21px !important;
+    }
+
+    .portal-dashboard-nav-btn,
+    .portal-profile-back-btn,
+    .portal-notif-nav-btn,
+    .leave-back-btn,
+    .edit-profile-back-btn,
+    .portal-legal-back-btn {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 24px !important;
+        border-radius: 14px !important;
+    }
+
+    .notification-bell-btn {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 23px !important;
+    }
+
+    /* 1. Dashboard on Tablet / iPad: 2-Column Balanced Layout */
+    .portal-dashboard-container {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+        align-items: stretch !important;
+    }
+
+    .portal-dashboard-container > .portal-dashboard-header,
+    .portal-dashboard-container > .portal-header,
+    .portal-dashboard-container > .punch-success-overlay {
+        grid-column: 1 / -1 !important;
+    }
+
+    .portal-header {
+        padding: 18px 24px 22px 24px !important;
+        border-radius: 24px !important;
+        margin: 0 0 18px 0 !important;
+    }
+
+    .header-user-row .user-avatar-ring {
+        width: 58px !important;
+        height: 58px !important;
+    }
+
+    .greeting-name {
+        font-size: 17.5px !important;
+    }
+
+    .punch-hero-card {
+        margin-bottom: 0 !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 30px 22px 34px 22px !important;
+        border-radius: 24px !important;
+    }
+
+    .digital-live-clock {
+        font-size: 40px !important;
+    }
+
+    .fingerprint-outer-halo {
+        width: 204px !important;
+        height: 204px !important;
+        margin: 14px auto 24px auto !important;
+    }
+
+    .fingerprint-inner-btn {
+        width: 160px !important;
+        height: 160px !important;
+    }
+
+    .portal-tracker-card {
+        margin-bottom: 0 !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 24px 24px !important;
+        border-radius: 24px !important;
+    }
+
+    .portal-tracker-card .portal-vtrack-list {
+        flex-grow: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-around !important;
+        padding: 14px 0 !important;
+    }
+
+    .portal-vtrack-label {
+        font-size: 15px !important;
+    }
+
+    .portal-vtrack-time {
+        font-size: 14.5px !important;
+    }
+
+    /* 2. Profile Screen on Tablet */
+    .portal-profile-hero-card {
+        padding: 26px 30px !important;
+        border-radius: 24px !important;
+        margin-bottom: 22px !important;
+    }
+
+    .portal-profile-hero-avatar-box,
+    .portal-profile-hero-avatar {
+        width: 86px !important;
+        height: 86px !important;
+        border-radius: 22px !important;
+    }
+
+    .portal-profile-hero-name {
+        font-size: 23px !important;
+    }
+
+    .portal-profile-hero-role {
+        font-size: 14.5px !important;
+    }
+
+    .portal-profile-hero-branch {
+        font-size: 13.5px !important;
+    }
+
+    .portal-profile-item {
+        padding: 16px 22px !important;
+    }
+
+    .portal-profile-item-title {
+        font-size: 15.5px !important;
+    }
+
+    .portal-profile-item-subtitle {
+        font-size: 13.5px !important;
+    }
+
+    .portal-profile-item-icon {
+        width: 46px !important;
+        height: 46px !important;
+        font-size: 23px !important;
+    }
+
+    /* 3. Notifications Feed on Tablet */
+    .portal-notif-feed-list {
+        gap: 14px !important;
+    }
+
+    .notif-card-item {
+        padding: 18px 22px !important;
+        border-radius: 20px !important;
+    }
+
+    .notif-card-title-text {
+        font-size: 16px !important;
+    }
+
+    .notif-card-message-text {
+        font-size: 13.5px !important;
+    }
+
+    /* 4. Leaves & Requests on Tablet */
+    .leave-hero-card {
+        padding: 26px 28px !important;
+        border-radius: 24px !important;
+    }
+
+    .leave-section-card {
+        padding: 24px 26px !important;
+        border-radius: 22px !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* 5. Legal / Privacy & Terms on Tablet */
+    .portal-legal-card {
+        padding: 30px 32px !important;
+        border-radius: 24px !important;
+    }
+
+    .portal-legal-paragraph {
+        font-size: 15px !important;
+        line-height: 1.85 !important;
+    }
+}
+
+/* Large Tablet / Desktop / iPad Pro (>= 1024px) */
+@media (min-width: 1024px) {
+    .portal-app-wrapper {
+        max-width: 980px !important;
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+    }
+
+    .portal-bottom-nav {
+        max-width: 760px !important;
+        height: 76px !important;
+        border-radius: 32px !important;
+    }
+}

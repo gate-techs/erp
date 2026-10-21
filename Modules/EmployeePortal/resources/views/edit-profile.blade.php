@@ -298,33 +298,106 @@
         background-position: right 12px center;
     }
 
-    /* intl-tel-input Custom Overrides */
-    .iti {
+    /* intl-tel-input Custom Overrides in Edit Profile */
+    .portal-phone-field-wrapper {
+        direction: ltr !important;
+        text-align: left !important;
         width: 100%;
         position: relative;
-        display: block;
     }
 
-    .iti__country-list {
-        z-index: 1060;
-        font-family: inherit;
-        font-size: 12px;
-        border-radius: 12px;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    .iti {
+        width: 100% !important;
+        position: relative !important;
+        display: block !important;
+        direction: ltr !important;
+    }
+
+    [dir="rtl"] .iti--separate-dial-code .iti__flag-container,
+    [dir="rtl"] .iti--allow-dropdown .iti__flag-container,
+    .iti--separate-dial-code .iti__flag-container,
+    .iti__flag-container {
+        left: 0 !important;
+        right: auto !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        position: absolute !important;
+        z-index: 2 !important;
+        direction: ltr !important;
     }
 
     .iti--separate-dial-code .iti__selected-flag {
-        background-color: #F1F5F9;
-        border-radius: 12px 0 0 12px;
-        padding: 0 10px 0 12px;
-        border-right: 1px solid #E2E8F0;
+        background-color: #F8FAFC !important;
+        border-radius: 12px 0 0 12px !important;
+        padding: 0 10px 0 12px !important;
+        border-right: 1px solid #E2E8F0 !important;
+        border-left: none !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        position: relative !important;
+        direction: ltr !important;
     }
 
+    .iti--separate-dial-code .iti__selected-dial-code {
+        font-size: 13.5px !important;
+        font-weight: 600 !important;
+        color: #0F172A !important;
+        direction: ltr !important;
+        unicode-bidi: embed !important;
+    }
+
+    [dir="rtl"] .iti--separate-dial-code input[type="tel"],
+    .iti--separate-dial-code input[type="tel"].portal-phone-input,
     .iti--separate-dial-code input[type="tel"] {
-        padding-left: 118px !important;
+        padding-left: 98px !important;
         padding-right: 14px !important;
         direction: ltr !important;
         text-align: left !important;
+        width: 100% !important;
+        height: 48px !important;
+        font-size: 14.5px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    [dir="rtl"] .iti__country-list,
+    .iti__country-list {
+        z-index: 1060 !important;
+        font-family: inherit !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        border: 1px solid #E2E8F0 !important;
+        max-height: 220px !important;
+        direction: ltr !important;
+        text-align: left !important;
+        list-style: none !important;
+        padding: 4px 0 !important;
+        margin: 4px 0 0 0 !important;
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .iti__country {
+        padding: 8px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        list-style: none !important;
+    }
+
+    .iti__country-name {
+        font-size: 13px !important;
+        color: #0F172A !important;
+    }
+
+    .iti__dial-code {
+        font-size: 12.5px !important;
+        color: #64748B !important;
+        font-weight: 600 !important;
+        margin-left: auto !important;
     }
 
     /* 3. Bottom Action Buttons matching exact user dimensions */
@@ -544,12 +617,12 @@
                 <div class="portal-label-row">
                     <label class="portal-input-label">{{ __('Primary Phone Number') }}</label>
                 </div>
-                <div>
+                <div class="portal-phone-field-wrapper" dir="ltr">
                     @php
                         $rawPortalPhone = $employee?->phone ?? '99112233';
                         $cleanedPortalPhone = preg_replace('/^\+965/', '', $rawPortalPhone);
                     @endphp
-                    <input type="tel" id="portalPhoneInput" name="phone" class="portal-form-control" value="{{ $cleanedPortalPhone }}" dir="ltr" />
+                    <input type="tel" id="portalPhoneInput" name="phone" class="portal-form-control portal-phone-input" value="{{ $cleanedPortalPhone }}" dir="ltr" />
                 </div>
             </div>
 
