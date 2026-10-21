@@ -688,13 +688,13 @@
             <div class="badge-status-pill">
                 @if($hasCheckIn && $hasCheckOut)
                     <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                    <span>{{ __('انصراف') }} {{ $checkOutTimeFormatted }}</span>
+                    <span>{{ __('Check-out') }} {{ $checkOutTimeFormatted }}</span>
                 @elseif($hasCheckIn)
                     <span class="status-dot" style="background: #10B981; box-shadow: 0 0 6px #10B981;"></span>
-                    <span>{{ __('حضور') }} {{ $checkInTimeFormatted }}</span>
+                    <span>{{ __('Check-in') }} {{ $checkInTimeFormatted }}</span>
                 @else
                     <span class="status-dot"></span>
-                    <span>{{ __('لم يبدأ') }}</span>
+                    <span>{{ __('Not Started') }}</span>
                 @endif
             </div>
         </div>
@@ -769,11 +769,11 @@
 
         <!-- Punch Title & Subtitle -->
         @if($hasCheckIn && $hasCheckOut)
-            <h4 class="punch-prompt-title" style="color: #059669; font-size: 15px; margin-bottom: 2px;">{{ __("اكتمل دوام اليوم ✓") }}</h4>
+            <h4 class="punch-prompt-title" style="color: #059669; font-size: 15px; margin-bottom: 2px;">{{ __("Today's Shift Completed ✓") }}</h4>
         @elseif($hasCheckIn)
-            <h4 class="punch-prompt-title" style="color: #DC2626; font-size: 15px; margin-bottom: 2px;">{{ __('تسجيل الانصراف') }}</h4>
+            <h4 class="punch-prompt-title" style="color: #DC2626; font-size: 15px; margin-bottom: 2px;">{{ __('Check-Out Punch') }}</h4>
         @else
-            <h4 class="punch-prompt-title" style="font-size: 15px; margin-bottom: 2px;">{{ __('تسجيل الحضور') }}</h4>
+            <h4 class="punch-prompt-title" style="font-size: 15px; margin-bottom: 2px;">{{ __('Check-In Punch') }}</h4>
         @endif
 
         @if(!$hasCheckIn || !$hasCheckOut)
@@ -810,23 +810,23 @@
                 @if($tState === 'completed')
                     <span class="portal-tracker-status-tag tag-completed">
                         <i class="bx bx-check-circle"></i>
-                        <span>{{ __('مكتملة ✓') }}</span>
+                        <span>{{ __('Completed ✓') }}</span>
                     </span>
                 @elseif($tState === 'in_progress')
                     <span class="portal-tracker-status-tag tag-in_progress">
                         <i class="bx bx-loader-alt bx-spin font-13"></i>
-                        <span>{{ __('الدوام جاري حالياً') }}</span>
+                        <span>{{ __('Shift in Progress') }}</span>
                     </span>
                 @else
                     <span class="portal-tracker-status-tag tag-not_started">
                         <i class="bx bx-time"></i>
-                        <span>{{ __('لم يبدأ بعد') }}</span>
+                        <span>{{ __('Not Started Yet') }}</span>
                     </span>
                 @endif
             </div>
 
             <div class="portal-tracker-title-wrap">
-                <h5 class="portal-tracker-title">{{ __('شريط متابعة الدوام') }}</h5>
+                <h5 class="portal-tracker-title">{{ __('Daily Attendance Tracker') }}</h5>
                 <span class="portal-tracker-icon">
                     <i class="bx bx-run"></i>
                 </span>
@@ -842,19 +842,19 @@
                 </div>
                 <div class="portal-vtrack-content">
                     <div class="portal-vtrack-label-col">
-                        <span class="portal-vtrack-label">{{ __('تسجيل الحضور') }}</span>
+                        <span class="portal-vtrack-label">{{ __('Check-In Punch') }}</span>
                         <span class="portal-vtrack-desc">
                             @if($tShiftStart)
-                                {{ __('بدء الوردية') }}: {{ $tShiftStart }}
+                                {{ __('Shift Start') }}: {{ $tShiftStart }}
                             @else
-                                {{ __('بداية الوردية المقررة') }}
+                                {{ __('Scheduled Shift Start') }}
                             @endif
                         </span>
                     </div>
                     <div class="portal-vtrack-time-col">
                         <span class="portal-vtrack-time">{{ $hasCheckIn ? $tInTime : '--:--' }}</span>
                         <span class="portal-vtrack-badge {{ $hasCheckIn ? 'b-green' : 'b-gray' }}">
-                            {{ $hasCheckIn ? __('تم التسجيل') : __('في الانتظار') }}
+                            {{ $hasCheckIn ? __('Recorded') : __('Pending') }}
                         </span>
                     </div>
                 </div>
@@ -873,15 +873,15 @@
                 </div>
                 <div class="portal-vtrack-content">
                     <div class="portal-vtrack-label-col">
-                        <span class="portal-vtrack-label">{{ __('الدوام جاري حالياً') }}</span>
-                        <span class="portal-vtrack-desc">{{ __('ساعات العمل الفعلية المسجلة') }}</span>
+                        <span class="portal-vtrack-label">{{ __('Shift in Progress') }}</span>
+                        <span class="portal-vtrack-desc">{{ __('Logged Working Hours') }}</span>
                     </div>
                     <div class="portal-vtrack-time-col">
-                        <span class="portal-vtrack-time">{{ $tWorkingHours }} {{ __('س') }}</span>
+                        <span class="portal-vtrack-time">{{ $tWorkingHours }} {{ __('hrs') }}</span>
                         @if($hasCheckIn && $hasCheckOut)
-                            <span class="portal-vtrack-badge b-green">{{ __('مكتمل') }}</span>
+                            <span class="portal-vtrack-badge b-green">{{ __('Completed') }}</span>
                         @elseif($hasCheckIn)
-                            <span class="portal-vtrack-badge b-blue">{{ __('قيد العمل') }}</span>
+                            <span class="portal-vtrack-badge b-blue">{{ __('Working') }}</span>
                         @else
                             <span class="portal-vtrack-badge b-gray">-</span>
                         @endif
@@ -896,19 +896,19 @@
                 </div>
                 <div class="portal-vtrack-content">
                     <div class="portal-vtrack-label-col">
-                        <span class="portal-vtrack-label">{{ __('تسجيل الانصراف') }}</span>
+                        <span class="portal-vtrack-label">{{ __('Check-Out Punch') }}</span>
                         <span class="portal-vtrack-desc">
                             @if($tShiftEnd)
-                                {{ __('نهاية الوردية') }}: {{ $tShiftEnd }}
+                                {{ __('Shift End') }}: {{ $tShiftEnd }}
                             @else
-                                {{ __('نهاية وقت الدوام الرسمي') }}
+                                {{ __('Official Shift End Time') }}
                             @endif
                         </span>
                     </div>
                     <div class="portal-vtrack-time-col">
                         <span class="portal-vtrack-time">{{ $hasCheckOut ? $tOutTime : '--:--' }}</span>
                         <span class="portal-vtrack-badge {{ $hasCheckOut ? 'b-green' : 'b-gray' }}">
-                            {{ $hasCheckOut ? __('تم الانصراف') : __('بانتظار البصمة') }}
+                            {{ $hasCheckOut ? __('Checked Out') : __('Awaiting Punch') }}
                         </span>
                     </div>
                 </div>
@@ -918,12 +918,12 @@
         <!-- Tracker Footer -->
         <div class="portal-tracker-footer">
             <div>
-                <span>{{ __('إجمالي الساعات') }}:</span>
-                <strong id="portalFooterHours">{{ $tWorkingHours }} {{ __('ساعة') }}</strong>
+                <span>{{ __('Total Hours') }}:</span>
+                <strong id="portalFooterHours">{{ $tWorkingHours }} {{ __('Hours') }}</strong>
             </div>
             <div>
-                <span>{{ __('الوردية') }}:</span>
-                <strong>{{ $tEmp['shift_name'] ?? __('الوردية الأساسية') }}</strong>
+                <span>{{ __('Shift') }}:</span>
+                <strong>{{ $tEmp['shift_name'] ?? __('Primary Shift') }}</strong>
             </div>
         </div>
     </div>

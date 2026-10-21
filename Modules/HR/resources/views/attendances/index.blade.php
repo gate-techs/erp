@@ -176,7 +176,7 @@
                 <div>
                     <h5 class="attendance-tracker-title">
                         <i class="bx bx-run text-primary font-20"></i>
-                        <span>{{ __('شريط متابعة الدوام اليومي') }}</span>
+                        <span>{{ __('Daily Attendance Tracker') }}</span>
                         <span class="text-muted fw-normal font-13" id="trackerEmpNameWrap">
                             ( <strong class="text-heading" id="trackerEmpName">{{ $tEmp['name'] ?? '-' }}</strong> )
                         </span>
@@ -193,7 +193,7 @@
                 <!-- Status Pill -->
                 <div class="attendance-tracker-status-pill status-{{ $tState }}" id="trackerStatusPill">
                     <span class="pulse-dot"></span>
-                    <span id="trackerStatusText">{{ $trackerData['status_badge'] ?? __('لم يبدأ بعد') }}</span>
+                    <span id="trackerStatusText">{{ $trackerData['status_badge'] ?? __('Not Started Yet') }}</span>
                 </div>
 
                 <!-- Date Info Badge -->
@@ -202,7 +202,7 @@
                 </span>
 
                 <!-- Close / Hide Tracker Button -->
-                <button type="button" class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" onclick="closeAttendanceTracker()" title="{{ __('إخفاء الشريط') }}">
+                <button type="button" class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" onclick="closeAttendanceTracker()" title="{{ __('Hide Tracker') }}">
                     <i class="bx bx-x font-18"></i>
                 </button>
             </div>
@@ -221,9 +221,9 @@
                 <div class="att-track-node {{ $hasIn ? 'node-active' : 'node-pending' }}" id="trackerNodeIn">
                     <i class="bx bx-check font-22"></i>
                 </div>
-                <div class="att-track-step-label">{{ __('الحضور') }}</div>
+                <div class="att-track-step-label">{{ __('Check-In') }}</div>
                 <div class="att-track-step-time" id="trackerTimeIn">{{ $trackerData['check_in_formatted'] ?? '--:--' }}</div>
-                <div class="att-track-step-sub" id="trackerShiftStart">{{ __('بدء الوردية') }}: {{ $tEmp['shift_start'] ?? '--:--' }}</div>
+                <div class="att-track-step-sub" id="trackerShiftStart">{{ __('Shift Start') }}: {{ $tEmp['shift_start'] ?? '--:--' }}</div>
             </div>
 
             <!-- Node 2: Shift In Progress (الدوام جاري حالياً) -->
@@ -237,18 +237,18 @@
                         <i class="bx bx-circle font-18"></i>
                     @endif
                 </div>
-                <div class="att-track-step-label">{{ __('الدوام جاري حالياً') }}</div>
+                <div class="att-track-step-label">{{ __('Shift in Progress') }}</div>
                 <div class="att-track-step-time" id="trackerStateMid">
                     @if($hasOut)
                         <span class="text-success font-14">✓</span>
                     @elseif($hasIn)
-                        <span class="text-info">{{ __('قيد العمل') }}</span>
+                        <span class="text-info">{{ __('In Progress') }}</span>
                     @else
                         <span class="text-muted">-</span>
                     @endif
                 </div>
                 <div class="att-track-step-sub" id="trackerHoursCount">
-                    {{ __('ساعات العمل') }}: <strong class="text-heading" id="trackerHoursVal">{{ $trackerData['total_working_hours'] ?? 0 }}</strong> {{ __('ساعة') }}
+                    {{ __('Working Hours') }}: <strong class="text-heading" id="trackerHoursVal">{{ $trackerData['total_working_hours'] ?? 0 }}</strong> {{ __('Hours') }}
                 </div>
             </div>
 
@@ -257,9 +257,9 @@
                 <div class="att-track-node {{ $hasOut ? 'node-active' : 'node-pending' }}" id="trackerNodeOut">
                     <i class="bx bx-check-double font-22"></i>
                 </div>
-                <div class="att-track-step-label">{{ __('الانصراف') }}</div>
+                <div class="att-track-step-label">{{ __('Check-Out') }}</div>
                 <div class="att-track-step-time" id="trackerTimeOut">{{ $trackerData['check_out_formatted'] ?? '--:--' }}</div>
-                <div class="att-track-step-sub" id="trackerShiftEnd">{{ __('نهاية الوردية') }}: {{ $tEmp['shift_end'] ?? '--:--' }}</div>
+                <div class="att-track-step-sub" id="trackerShiftEnd">{{ __('Shift End') }}: {{ $tEmp['shift_end'] ?? '--:--' }}</div>
             </div>
         </div>
 
@@ -267,26 +267,26 @@
         <div class="att-track-metrics-strip">
             <div class="att-track-metric-item">
                 <i class="bx bx-timer text-primary font-18"></i>
-                <span>{{ __('إجمالي ساعات العمل') }}:</span>
-                <strong id="trackerStripHours">{{ $trackerData['total_working_hours'] ?? 0 }} {{ __('ساعة') }}</strong>
+                <span>{{ __('Total Working Hours') }}:</span>
+                <strong id="trackerStripHours">{{ $trackerData['total_working_hours'] ?? 0 }} {{ __('Hours') }}</strong>
             </div>
 
             <div class="att-track-metric-item">
                 <i class="bx bx-alarm-exclamation text-warning font-18"></i>
-                <span>{{ __('دقائق التأخير') }}:</span>
-                <strong id="trackerStripLate">{{ $trackerData['late_minutes'] ?? 0 }} {{ __('دقيقة') }}</strong>
+                <span>{{ __('Late Minutes') }}:</span>
+                <strong id="trackerStripLate">{{ $trackerData['late_minutes'] ?? 0 }} {{ __('Minutes') }}</strong>
             </div>
 
             <div class="att-track-metric-item">
                 <i class="bx bx-door-open text-danger font-18"></i>
-                <span>{{ __('خروج مبكر') }}:</span>
-                <strong id="trackerStripEarly">{{ $trackerData['early_leave_minutes'] ?? 0 }} {{ __('دقيقة') }}</strong>
+                <span>{{ __('Early Leave') }}:</span>
+                <strong id="trackerStripEarly">{{ $trackerData['early_leave_minutes'] ?? 0 }} {{ __('Minutes') }}</strong>
             </div>
 
             <div class="att-track-metric-item">
                 <i class="bx bx-calendar-star text-info font-18"></i>
-                <span>{{ __('الوردية المحددة') }}:</span>
-                <strong id="trackerStripShift">{{ $tEmp['shift_name'] ?? __('وردية قياسية') }}</strong>
+                <span>{{ __('Assigned Shift') }}:</span>
+                <strong id="trackerStripShift">{{ $tEmp['shift_name'] ?? __('Standard Shift') }}</strong>
             </div>
         </div>
     </div>
@@ -879,7 +879,7 @@
         const nodeIn = document.getElementById('trackerNodeIn');
         nodeIn.className = `att-track-node ${data.has_check_in ? 'node-active' : 'node-pending'}`;
         document.getElementById('trackerTimeIn').textContent = data.check_in_formatted || '--:--';
-        document.getElementById('trackerShiftStart').textContent = `{{ __('بدء الوردية') }}: ${emp.shift_start || '--:--'}`;
+        document.getElementById('trackerShiftStart').textContent = `{{ __('Shift Start') }}: ${emp.shift_start || '--:--'}`;
 
         // 6. Node Mid (In Progress)
         const nodeMid = document.getElementById('trackerNodeMid');
@@ -891,7 +891,7 @@
         } else if (data.has_check_in) {
             nodeMid.className = 'att-track-node node-in-progress';
             nodeMid.innerHTML = '<i class="bx bx-time-five font-22"></i>';
-            stateMid.innerHTML = '<span class="text-info">{{ __("قيد العمل") }}</span>';
+            stateMid.innerHTML = '<span class="text-info">{{ __("In Progress") }}</span>';
         } else {
             nodeMid.className = 'att-track-node node-pending';
             nodeMid.innerHTML = '<i class="bx bx-circle font-18"></i>';
@@ -903,13 +903,13 @@
         const nodeOut = document.getElementById('trackerNodeOut');
         nodeOut.className = `att-track-node ${data.has_check_out ? 'node-active' : 'node-pending'}`;
         document.getElementById('trackerTimeOut').textContent = data.check_out_formatted || '--:--';
-        document.getElementById('trackerShiftEnd').textContent = `{{ __('نهاية الوردية') }}: ${emp.shift_end || '--:--'}`;
+        document.getElementById('trackerShiftEnd').textContent = `{{ __('Shift End') }}: ${emp.shift_end || '--:--'}`;
 
         // 8. Bottom Metrics Strip
-        document.getElementById('trackerStripHours').textContent = `${data.total_working_hours || 0} {{ __('ساعة') }}`;
-        document.getElementById('trackerStripLate').textContent = `${data.late_minutes || 0} {{ __('دقيقة') }}`;
-        document.getElementById('trackerStripEarly').textContent = `${data.early_leave_minutes || 0} {{ __('دقيقة') }}`;
-        document.getElementById('trackerStripShift').textContent = emp.shift_name || '{{ __("وردية قياسية") }}';
+        document.getElementById('trackerStripHours').textContent = `${data.total_working_hours || 0} {{ __('Hours') }}`;
+        document.getElementById('trackerStripLate').textContent = `${data.late_minutes || 0} {{ __('Minutes') }}`;
+        document.getElementById('trackerStripEarly').textContent = `${data.early_leave_minutes || 0} {{ __('Minutes') }}`;
+        document.getElementById('trackerStripShift').textContent = emp.shift_name || '{{ __("Standard Shift") }}';
 
         // Reveal smoothly
         container.style.display = 'block';

@@ -630,18 +630,18 @@ class AttendanceService
         // Progress status calculation
         // States: 'not_started', 'in_progress', 'completed'
         $progressState = 'not_started';
-        $statusBadge = __('لم يبدأ بعد');
+        $statusBadge = __('Not Started Yet');
         $statusBadgeColor = 'secondary';
         $progressPercent = 0;
 
         if ($hasCheckIn && $hasCheckOut) {
             $progressState = 'completed';
-            $statusBadge = __('مكتملة ✓');
+            $statusBadge = __('Completed ✓');
             $statusBadgeColor = 'success';
             $progressPercent = 100;
         } elseif ($hasCheckIn) {
             $progressState = 'in_progress';
-            $statusBadge = __('الدوام جاري حالياً');
+            $statusBadge = __('Shift in Progress');
             $statusBadgeColor = 'primary';
             $progressPercent = 50;
 
@@ -669,7 +669,7 @@ class AttendanceService
                 'avatar_url'  => $employee->avatar ? asset('storage/' . $employee->avatar) : null,
                 'department'  => $employee->department?->name ?? '-',
                 'branch'      => $employee->primaryBranch?->name ?? '-',
-                'shift_name'  => $shift?->name ?? __('وردية قياسية'),
+                'shift_name'  => $shift?->name ?? __('Standard Shift'),
                 'shift_start' => $shiftStart ? $shiftStart->format('h:i A') : null,
                 'shift_end'   => $shiftEnd ? $shiftEnd->format('h:i A') : null,
             ],
