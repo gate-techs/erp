@@ -151,7 +151,145 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 3. Legend & Report Subtitle Bar (Exact Replica of Reference Image)        -->
+    <!-- 2.5 Dynamic Employee Attendance Timeline Tracker (شريط متابعة الدوام)     -->
+    <!-- ========================================================================= -->
+    <div id="attendanceTrackerContainer" class="attendance-tracker-card" style="{{ empty($selectedEmployeeTimeline) ? 'display: none;' : '' }}">
+        @php
+            $trackerData = $selectedEmployeeTimeline ?? [];
+            $tEmp = $trackerData['employee'] ?? [];
+            $tState = $trackerData['progress_state'] ?? 'not_started';
+            $tPct = $trackerData['progress_percent'] ?? 0;
+            $hasIn = !empty($trackerData['has_check_in']);
+            $hasOut = !empty($trackerData['has_check_out']);
+        @endphp
+
+        <!-- Tracker Header -->
+        <div class="attendance-tracker-header">
+            <div class="attendance-tracker-emp-info">
+                <div class="attendance-tracker-avatar" id="trackerAvatar">
+                    @if(!empty($tEmp['avatar_url']))
+                        <img src="{{ $tEmp['avatar_url'] }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    @else
+                        <span id="trackerAvatarInitial">{{ mb_substr($tEmp['name'] ?? 'م', 0, 1) }}</span>
+                    @endif
+                </div>
+                <div>
+                    <h5 class="attendance-tracker-title">
+                        <i class="bx bx-run text-primary font-20"></i>
+                        <span>{{ __('Daily Attendance Tracker') }}</span>
+                        <span class="text-muted fw-normal font-13" id="trackerEmpNameWrap">
+                            ( <strong class="text-heading" id="trackerEmpName">{{ $tEmp['name'] ?? '-' }}</strong> )
+                        </span>
+                    </h5>
+                    <p class="attendance-tracker-sub" id="trackerEmpSub">
+                        <span id="trackerEmpCode">{{ $tEmp['code'] ?? '-' }}</span> • 
+                        <span id="trackerEmpDept">{{ $tEmp['department'] ?? '-' }}</span> • 
+                        <span id="trackerEmpBranch">{{ $tEmp['branch'] ?? '-' }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- Status Pill -->
+                <div class="attendance-tracker-status-pill status-{{ $tState }}" id="trackerStatusPill">
+                    <span class="pulse-dot"></span>
+                    <span id="trackerStatusText">{{ $trackerData['status_badge'] ?? __('Not Started Yet') }}</span>
+                </div>
+
+                <!-- Date Info Badge -->
+                <span class="badge bg-label-secondary px-3 py-2 rounded-pill font-12" id="trackerDateBadge">
+                    <i class="bx bx-calendar me-1"></i> {{ $trackerData['date'] ?? now()->format('Y-m-d') }}
+                </span>
+
+                <!-- Close / Hide Tracker Button -->
+                <button type="button" class="btn btn-sm btn-icon btn-outline-secondary rounded-circle" onclick="closeAttendanceTracker()" title="{{ __('Hide Tracker') }}">
+                    <i class="bx bx-x font-18"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3-Node Timeline Pipeline Track (مطابق للمرجع بتصميم أرقى) -->
+        <div class="att-track-pipeline">
+            <!-- Background Full Line -->
+            <div class="att-track-line-bg"></div>
+
+            <!-- Active Gradient Fill Line -->
+            <div class="att-track-line-fill" id="trackerLineFill" style="width: {{ $tPct }}%;"></div>
+
+            <!-- Node 1: Attendance Check-In (الحضور) -->
+            <div class="att-track-step">
+                <div class="att-track-node {{ $hasIn ? 'node-active' : 'node-pending' }}" id="trackerNodeIn">
+                    <i class="bx bx-check font-22"></i>
+                </div>
+                <div class="att-track-step-label">{{ __('Check-In') }}</div>
+                <div class="att-track-step-time" id="trackerTimeIn">{{ $trackerData['check_in_formatted'] ?? '--:--' }}</div>
+                <div class="att-track-step-sub" id="trackerShiftStart">{{ __('Shift Start') }}: {{ $tEmp['shift_start'] ?? '--:--' }}</div>
+            </div>
+
+            <!-- Node 2: Shift In Progress (الدوام جاري حالياً) -->
+            <div class="att-track-step">
+                <div class="att-track-node {{ $hasOut ? 'node-active' : ($hasIn ? 'node-in-progress' : 'node-pending') }}" id="trackerNodeMid">
+                    @if($hasOut)
+                        <i class="bx bx-check-double font-22"></i>
+                    @elseif($hasIn)
+                        <i class="bx bx-time-five font-22"></i>
+                    @else
+                        <i class="bx bx-circle font-18"></i>
+                    @endif
+                </div>
+                <div class="att-track-step-label">{{ __('Shift in Progress') }}</div>
+                <div class="att-track-step-time" id="trackerStateMid">
+                    @if($hasOut)
+                        <span class="text-success font-14">✓</span>
+                    @elseif($hasIn)
+                        <span class="text-info">{{ __('In Progress') }}</span>
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </div>
+                <div class="att-track-step-sub" id="trackerHoursCount">
+                    {{ __('Working Hours') }}: <strong class="text-heading" id="trackerHoursVal">{{ $trackerData['total_working_hours'] ?? 0 }}</strong> {{ __('Hours') }}
+                </div>
+            </div>
+
+            <!-- Node 3: Check-Out (الانصراف) -->
+            <div class="att-track-step">
+                <div class="att-track-node {{ $hasOut ? 'node-active' : 'node-pending' }}" id="trackerNodeOut">
+                    <i class="bx bx-check-double font-22"></i>
+                </div>
+                <div class="att-track-step-label">{{ __('Check-Out') }}</div>
+                <div class="att-track-step-time" id="trackerTimeOut">{{ $trackerData['check_out_formatted'] ?? '--:--' }}</div>
+                <div class="att-track-step-sub" id="trackerShiftEnd">{{ __('Shift End') }}: {{ $tEmp['shift_end'] ?? '--:--' }}</div>
+            </div>
+        </div>
+
+        <!-- Quick Summary Metrics Strip -->
+        <div class="att-track-metrics-strip">
+            <div class="att-track-metric-item">
+                <i class="bx bx-timer text-primary font-18"></i>
+                <span>{{ __('Total Working Hours') }}:</span>
+                <strong id="trackerStripHours">{{ $trackerData['total_working_hours'] ?? 0 }} {{ __('Hours') }}</strong>
+            </div>
+
+            <div class="att-track-metric-item">
+                <i class="bx bx-alarm-exclamation text-warning font-18"></i>
+                <span>{{ __('Late Minutes') }}:</span>
+                <strong id="trackerStripLate">{{ $trackerData['late_minutes'] ?? 0 }} {{ __('Minutes') }}</strong>
+            </div>
+
+            <div class="att-track-metric-item">
+                <i class="bx bx-door-open text-danger font-18"></i>
+                <span>{{ __('Early Leave') }}:</span>
+                <strong id="trackerStripEarly">{{ $trackerData['early_leave_minutes'] ?? 0 }} {{ __('Minutes') }}</strong>
+            </div>
+
+            <div class="att-track-metric-item">
+                <i class="bx bx-calendar-star text-info font-18"></i>
+                <span>{{ __('Assigned Shift') }}:</span>
+                <strong id="trackerStripShift">{{ $tEmp['shift_name'] ?? __('Standard Shift') }}</strong>
+            </div>
+        </div>
+    </div>
     <!-- ========================================================================= -->
     <div class="attendance-legend-card">
         <!-- Right Title -->
@@ -664,13 +802,157 @@
         }
     }
 
+    // =========================================================================
+    // Dynamic Employee Attendance Timeline Tracker (شريط متابعة الدوام)
+    // =========================================================================
+    function closeAttendanceTracker() {
+        const container = document.getElementById('attendanceTrackerContainer');
+        if (container) {
+            container.style.transition = 'all 0.3s ease';
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                container.style.display = 'none';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    }
+
+    function fetchEmployeeTimeline(employeeId, date = null) {
+        if (!employeeId) {
+            closeAttendanceTracker();
+            return;
+        }
+
+        const dateVal = date || $('#filter_year').val() + '-' + String($('#filter_month').val()).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+
+        $.ajax({
+            url: '{{ route("hr.attendances.timeline-data") }}',
+            type: 'GET',
+            data: {
+                employee_id: employeeId,
+                date: dateVal
+            },
+            success: function (res) {
+                if (res.success && res.data) {
+                    renderAttendanceTracker(res.data);
+                }
+            },
+            error: function () {
+                // Keep quiet or log error
+            }
+        });
+    }
+
+    function renderAttendanceTracker(data) {
+        const container = document.getElementById('attendanceTrackerContainer');
+        if (!container) return;
+
+        const emp = data.employee || {};
+
+        // 1. Employee Info
+        document.getElementById('trackerEmpName').textContent = emp.name || '-';
+        document.getElementById('trackerEmpCode').textContent = emp.code || '-';
+        document.getElementById('trackerEmpDept').textContent = emp.department || '-';
+        document.getElementById('trackerEmpBranch').textContent = emp.branch || '-';
+
+        const avatarBox = document.getElementById('trackerAvatar');
+        if (emp.avatar_url) {
+            avatarBox.innerHTML = `<img src="${emp.avatar_url}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+        } else {
+            avatarBox.innerHTML = `<span id="trackerAvatarInitial">${(emp.name || 'م').substring(0, 1)}</span>`;
+        }
+
+        // 2. Status Pill
+        const pill = document.getElementById('trackerStatusPill');
+        pill.className = `attendance-tracker-status-pill status-${data.progress_state}`;
+        document.getElementById('trackerStatusText').textContent = data.status_badge || '-';
+
+        // 3. Date
+        document.getElementById('trackerDateBadge').innerHTML = `<i class="bx bx-calendar me-1"></i> ${data.date}`;
+
+        // 4. Progress Fill
+        document.getElementById('trackerLineFill').style.width = `${data.progress_percent}%`;
+
+        // 5. Node In (Check-In)
+        const nodeIn = document.getElementById('trackerNodeIn');
+        nodeIn.className = `att-track-node ${data.has_check_in ? 'node-active' : 'node-pending'}`;
+        document.getElementById('trackerTimeIn').textContent = data.check_in_formatted || '--:--';
+        document.getElementById('trackerShiftStart').textContent = `{{ __('Shift Start') }}: ${emp.shift_start || '--:--'}`;
+
+        // 6. Node Mid (In Progress)
+        const nodeMid = document.getElementById('trackerNodeMid');
+        const stateMid = document.getElementById('trackerStateMid');
+        if (data.has_check_out) {
+            nodeMid.className = 'att-track-node node-active';
+            nodeMid.innerHTML = '<i class="bx bx-check-double font-22"></i>';
+            stateMid.innerHTML = '<span class="text-success font-14">✓</span>';
+        } else if (data.has_check_in) {
+            nodeMid.className = 'att-track-node node-in-progress';
+            nodeMid.innerHTML = '<i class="bx bx-time-five font-22"></i>';
+            stateMid.innerHTML = '<span class="text-info">{{ __("In Progress") }}</span>';
+        } else {
+            nodeMid.className = 'att-track-node node-pending';
+            nodeMid.innerHTML = '<i class="bx bx-circle font-18"></i>';
+            stateMid.innerHTML = '<span class="text-muted">-</span>';
+        }
+        document.getElementById('trackerHoursVal').textContent = data.total_working_hours || 0;
+
+        // 7. Node Out (Check-Out)
+        const nodeOut = document.getElementById('trackerNodeOut');
+        nodeOut.className = `att-track-node ${data.has_check_out ? 'node-active' : 'node-pending'}`;
+        document.getElementById('trackerTimeOut').textContent = data.check_out_formatted || '--:--';
+        document.getElementById('trackerShiftEnd').textContent = `{{ __('Shift End') }}: ${emp.shift_end || '--:--'}`;
+
+        // 8. Bottom Metrics Strip
+        document.getElementById('trackerStripHours').textContent = `${data.total_working_hours || 0} {{ __('Hours') }}`;
+        document.getElementById('trackerStripLate').textContent = `${data.late_minutes || 0} {{ __('Minutes') }}`;
+        document.getElementById('trackerStripEarly').textContent = `${data.early_leave_minutes || 0} {{ __('Minutes') }}`;
+        document.getElementById('trackerStripShift').textContent = emp.shift_name || '{{ __("Standard Shift") }}';
+
+        // Reveal smoothly
+        container.style.display = 'block';
+        container.style.opacity = '1';
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         // Auto submit filter on change
-        $('#filter_branch_id, #filter_department_id, #filter_employee_id, #filter_month, #filter_year').on('change', function () {
+        $('#filter_branch_id, #filter_department_id, #filter_month, #filter_year').on('change', function () {
             if ($('#listTableViewBox').is(':visible')) {
                 if (dataTableInstance) dataTableInstance.ajax.reload();
             } else {
                 $('#attendanceFilterForm').submit();
+            }
+        });
+
+        // If Employee filter changes, fetch timeline immediately via AJAX without full page reload if preferred or on submit
+        $('#filter_employee_id').on('change', function () {
+            const empId = $(this).val();
+            if (empId) {
+                fetchEmployeeTimeline(empId);
+            } else {
+                closeAttendanceTracker();
+            }
+            if ($('#listTableViewBox').is(':visible')) {
+                if (dataTableInstance) dataTableInstance.ajax.reload();
+            } else {
+                $('#attendanceFilterForm').submit();
+            }
+        });
+
+        // Click on employee avatar / name row in matrix grid to view their live timeline
+        $(document).on('click', '.col-sticky-emp', function () {
+            const row = $(this).closest('tr');
+            const firstCell = row.find('td[data-employee-id]').first();
+            const empId = firstCell.data('employeeId');
+            if (empId) {
+                fetchEmployeeTimeline(empId);
+                // Smooth scroll to tracker if not fully visible
+                const tracker = document.getElementById('attendanceTrackerContainer');
+                if (tracker) {
+                    tracker.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
             }
         });
 
@@ -690,6 +972,9 @@
                 }
             };
             openAttendanceModal(fakeEl);
+            if (rowData.employee_id) {
+                fetchEmployeeTimeline(rowData.employee_id, rowData.date);
+            }
         });
 
         $(document).on('click', '.btn-delete-attendance', function () {

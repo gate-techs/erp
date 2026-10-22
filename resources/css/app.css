@@ -2529,6 +2529,274 @@ html[dir="ltr"] .layout-menu .menu-sub .menu-item {
     }
 
 /* ==========================================================================
+   Interactive Employee Attendance Timeline Tracker (شريط متابعة الدوام)
+   ========================================================================== */
+.attendance-tracker-card {
+    background: var(--bs-paper-bg, #ffffff);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.attendance-tracker-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
+}
+
+.attendance-tracker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.attendance-tracker-emp-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.attendance-tracker-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(16, 185, 129, 0.25);
+    background: var(--bs-primary-bg-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--bs-primary);
+    flex-shrink: 0;
+}
+
+.attendance-tracker-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bs-heading-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.attendance-tracker-sub {
+    font-size: 12px;
+    color: var(--bs-secondary-color);
+    margin: 2px 0 0 0;
+}
+
+.attendance-tracker-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.attendance-tracker-status-pill.status-completed {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.attendance-tracker-status-pill.status-in_progress {
+    background: rgba(14, 165, 233, 0.12);
+    color: #0284c7;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.attendance-tracker-status-pill.status-not_started {
+    background: var(--bs-secondary-bg-subtle);
+    color: var(--bs-secondary-color);
+    border: 1px solid var(--bs-border-color);
+}
+
+.attendance-tracker-status-pill .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+    display: inline-block;
+    animation: trackerPulse 2s infinite;
+}
+
+@keyframes trackerPulse {
+    0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.6); }
+    70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 6px rgba(14, 165, 233, 0); }
+    100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
+/* Timeline Pipeline Track (3 Key Milestones: In, In-Progress, Out) */
+.att-track-pipeline {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 20px 24px 20px;
+    padding: 0;
+}
+
+.att-track-line-bg {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+    right: 24px;
+    height: 4px;
+    background: var(--bs-border-color, #e2e8f0);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.att-track-line-fill {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    height: 4px;
+    background: linear-gradient(270deg, #10b981 0%, #06b6d4 100%);
+    border-radius: 4px;
+    z-index: 2;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[dir="ltr"] .att-track-line-fill {
+    right: auto;
+    left: 24px;
+    background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+}
+
+.att-track-step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 90px;
+}
+
+.att-track-node {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 3px solid var(--bs-paper-bg, #ffffff);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.att-track-node.node-active {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2), 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.att-track-node.node-in-progress {
+    background: #0ea5e9;
+    color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2), 0 4px 14px rgba(14, 165, 233, 0.35);
+}
+
+.att-track-node.node-pending {
+    background: var(--bs-secondary-bg-subtle, #f1f5f9);
+    color: var(--bs-secondary-color, #94a3b8);
+    border-color: var(--bs-border-color);
+}
+
+.att-track-step-label {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bs-heading-color);
+}
+
+.att-track-step-time {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bs-primary);
+    direction: ltr;
+    display: inline-block;
+}
+
+.att-track-step-sub {
+    font-size: 11px;
+    color: var(--bs-secondary-color);
+    margin-top: 2px;
+}
+
+/* Quick Metrics Strip below pipeline */
+.att-track-metrics-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--bs-border-color);
+}
+
+.att-track-metric-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--bs-secondary-color);
+}
+
+.att-track-metric-item strong {
+    color: var(--bs-heading-color);
+    font-weight: 700;
+}
+
+@media (max-width: 576px) {
+    .attendance-tracker-card {
+        padding: 14px 16px;
+    }
+    .att-track-pipeline {
+        margin: 14px 0 18px 0;
+    }
+    .att-track-node {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+    .att-track-line-bg, .att-track-line-fill {
+        top: 19px;
+    }
+    .att-track-step {
+        min-width: 75px;
+    }
+    .att-track-step-label {
+        font-size: 11.5px;
+    }
+    .att-track-step-time {
+        font-size: 11px;
+    }
+}
+
+/* ==========================================================================
    Phase 7A: Dark Mode Contrast Fixes
    ========================================================================== */
 

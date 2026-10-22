@@ -37,6 +37,9 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     @endif
 
+    <!-- intl-tel-input CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.min.css" />
+
     <!-- Unified Portal CSS (Dynamic cache-busting on file change) -->
     <link rel="stylesheet" href="{{ asset('assets/portal/css/portal.css') }}?v={{ file_exists(public_path('assets/portal/css/portal.css')) ? filemtime(public_path('assets/portal/css/portal.css')) : '2.0.0' }}" />
 
@@ -78,6 +81,77 @@
     </style>
 
 @stack('styles')
+
+    <!-- Universal Tablet & iPad Responsive Overrides (Ensures all pages adapt to tablet width) -->
+    <style>
+        @media (min-width: 640px) {
+            .portal-app-wrapper {
+                max-width: 720px !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+            .portal-bottom-nav {
+                max-width: 620px !important;
+                width: calc(100% - 40px) !important;
+                bottom: 14px !important;
+                height: 72px !important;
+                border-radius: 28px !important;
+            }
+            /* Unclamp EVERY page container in the portal */
+            main#portalMainContent > div,
+            .policies-page-container,
+            .salary-page-container,
+            .rewards-page-container,
+            .terms-page-container,
+            .privacy-page-container,
+            .notif-page-container,
+            .security-page-container,
+            .portal-profile-container,
+            .edit-profile-container,
+            .portal-notif-container,
+            .portal-docs-container,
+            .portal-create-doc-container,
+            .loan-details-page-container,
+            .loans-history-page-container,
+            .loan-page-container,
+            .requests-page-container,
+            .leave-page-container,
+            .perm-history-page-container,
+            .perm-page-container,
+            .portal-dashboard-container {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .portal-app-wrapper {
+                max-width: 860px !important;
+                padding-left: 24px !important;
+                padding-right: 24px !important;
+                padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
+            }
+            .portal-bottom-nav {
+                max-width: 680px !important;
+                bottom: 18px !important;
+                height: 74px !important;
+                border-radius: 30px !important;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .portal-app-wrapper {
+                max-width: 980px !important;
+                padding-left: 32px !important;
+                padding-right: 32px !important;
+            }
+            .portal-bottom-nav {
+                max-width: 760px !important;
+                height: 76px !important;
+                border-radius: 32px !important;
+            }
+        }
+    </style>
 </head>
 
 <body>

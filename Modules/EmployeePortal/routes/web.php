@@ -21,6 +21,7 @@ Route::prefix('portal')->name('portal.')->group(function () {
 
     // 2.1 Public Privacy Policy & Data Protection (Apple App Store Requirement)
     Route::get('privacy', [EmployeePortalController::class, 'privacy'])->name('privacy');
+    Route::get('terms', [EmployeePortalController::class, 'terms'])->name('terms');
 
     // 3. PWA Manifest & Service Worker & Offline Fallback
     Route::get('manifest.json', [EmployeePortalController::class, 'manifest'])->name('manifest');
