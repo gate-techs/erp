@@ -9,7 +9,7 @@
 | :--- | :--- |
 | **اسم التطبيق (App Name)** | `ALA ORBIT` |
 | **العنوان الفرعي (Subtitle)** | `Employee Portal & Smart HR` |
-| **معرف الحزمة (Bundle Identifier)** | `kw.astroleaders.alaorbit` |
+| **معرف الحزمة (Bundle Identifier)** | `com.gtaps.alaorbit` |
 | **اللغة الأساسية (Primary Language)** | العربية أو الإنجليزية (يدعم اللغتين تلقائياً) |
 | **التصنيف الأساسي (Primary Category)** | `Business` (أعمال) |
 | **التصنيف الثانوي (Secondary Category)** | `Productivity` (إنتاجية) |
