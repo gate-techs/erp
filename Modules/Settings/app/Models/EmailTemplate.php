@@ -36,16 +36,32 @@ class EmailTemplate extends Model
         'is_system' => 'boolean',
     ];
 
-    //-----------------------------------------
+    /**
+     * Get the corresponding EmailTemplateKey enum instance if registered.
+     */
+    public function getEnumAttribute(): ?\Modules\Settings\Enums\EmailTemplateKey
+    {
+        return \Modules\Settings\Enums\EmailTemplateKey::tryFrom($this->code);
+    }
+
     /**
      * Get normalized list of variables as key => description string.
      */
     public function getNormalizedVariablesAttribute(): array
     {
-        $raw = $this->variables ?? [];
-        $normalized = [];
         $isAr = app()->getLocale() === 'ar';
+        $normalized = [];
 
+        // 1. Prefer variables defined in EmailTemplateKey enum
+        if ($enum = $this->enum) {
+            foreach ($enum->variables() as $key => $desc) {
+                $normalized[$key] = $isAr ? ($desc['desc_ar'] ?? $key) : ($desc['desc_en'] ?? $key);
+            }
+            return $normalized;
+        }
+
+        // 2. Fallback to database JSON variables
+        $raw = $this->variables ?? [];
         foreach ($raw as $k => $v) {
             if (is_array($v)) {
                 $key = $v['key'] ?? (is_string($k) ? $k : '');

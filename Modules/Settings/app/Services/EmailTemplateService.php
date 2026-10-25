@@ -3,22 +3,34 @@
 namespace Modules\Settings\Services;
 
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Modules\Settings\Enums\EmailTemplateKey;
 use Modules\Settings\Models\EmailTemplate;
+use Modules\Settings\Repositories\Contracts\EmailTemplateRepositoryInterface;
+use Modules\Settings\Services\Contracts\EmailTemplateServiceInterface;
 
-class EmailTemplateService
+class EmailTemplateService implements EmailTemplateServiceInterface
 {
+    public function __construct(
+        protected EmailTemplateRepositoryInterface $repository
+    ) {}
+
     /**
      * Get all email templates grouped or with stats.
      */
-    public function getAllTemplates(?string $module = null)
+    public function getAllTemplates(?string $module = null): Collection
     {
-        $query = EmailTemplate::query();
-        if ($module && $module !== 'all') {
-            $query->where('module', $module);
-        }
-        return $query->orderBy('module')->orderBy('name_ar')->get();
+        return $this->repository->getAll($module);
+    }
+
+    /**
+     * Get stats by module and total.
+     */
+    public function getModuleStats(): array
+    {
+        return $this->repository->getStats();
     }
 
     /**
@@ -26,7 +38,7 @@ class EmailTemplateService
      */
     public function getTemplateById(int $id): ?EmailTemplate
     {
-        return EmailTemplate::find($id);
+        return $this->repository->findById($id);
     }
 
     /**
@@ -34,11 +46,7 @@ class EmailTemplateService
      */
     public function updateTemplate(int $id, array $data): ?EmailTemplate
     {
-        $template = $this->getTemplateById($id);
-        if ($template) {
-            $template->update($data);
-        }
-        return $template;
+        return $this->repository->update($id, $data);
     }
 
     /**
@@ -46,103 +54,62 @@ class EmailTemplateService
      */
     public function toggleStatus(int $id): bool
     {
-        $template = $this->getTemplateById($id);
-        if (!$template) {
+        return $this->repository->toggleStatus($id);
+    }
+
+    /**
+     * Sync templates with Enum.
+     */
+    public function syncTemplates(): void
+    {
+        $this->repository->syncFromEnum();
+    }
+
+    /**
+     * Dispatch an email based on a template key or enum instance.
+     */
+    public function send(string|EmailTemplateKey $key, string $toEmail, array $data = [], ?string $locale = null): bool
+    {
+        $template = $this->repository->findByKey($key);
+
+        if (!$template || !$template->is_active) {
+            Log::warning("EmailTemplateService: Template [{$key}] not found or inactive.");
             return false;
         }
 
-        $template->is_active = !$template->is_active;
-        $template->save();
-
-        return (bool) $template->is_active;
-    }
-
-    /**
-     * Get unique modules list with template counts.
-     */
-    public function getModuleStats(): array
-    {
-        $all = EmailTemplate::all();
-        $stats = [
-            'total' => $all->count(),
-            'active' => $all->where('is_active', true)->count(),
-            'inactive' => $all->where('is_active', false)->count(),
-            'modules' => $all->groupBy('module')->map->count()->toArray(),
-        ];
-        return $stats;
-    }
-
-    //-----------------------------------------
-    /**
-     * Get active template by its unique code.
-     */
-    public function getTemplate(string $code): ?EmailTemplate
-    {
-        return EmailTemplate::where('code', $code)->where('is_active', true)->first();
-    }
-
-    //-----------------------------------------
-    /**
-     * Render subject, body and complete HTML for an email event.
-     */
-    public function render(string $code, array $data = [], ?string $locale = null): ?array
-    {
-        $template = $this->getTemplate($code);
-        if (!$template) {
-            return null;
-        }
-
-        $locale = $locale ?: app()->getLocale();
-
-        return [
-            'template' => $template,
-            'subject'  => $template->renderSubject($data, $locale),
-            'body'     => $template->renderBody($data, $locale),
-            'button'   => $template->renderButton($data, $locale),
-            'html'     => $template->renderFullHtml($data, $locale),
-        ];
-    }
-
-    //-----------------------------------------
-    /**
-     * Send email using the configured template.
-     */
-    public function send(string $toEmail, string $code, array $data = [], ?string $locale = null): bool
-    {
         try {
-            $rendered = $this->render($code, $data, $locale);
-            if (!$rendered) {
-                Log::info("EmailTemplateService: Template [{$code}] is inactive or not found.");
-                return false;
-            }
+            $locale = $locale ?: app()->getLocale();
+            $renderedHtml = $template->renderFullHtml($data, $locale);
+            $subject = $template->renderSubject($data, $locale);
 
-            Mail::html($rendered['html'], function ($message) use ($toEmail, $rendered) {
-                $message->to($toEmail)
-                    ->subject($rendered['subject']);
+            Mail::html($renderedHtml, function ($message) use ($toEmail, $subject, $template) {
+                $message->to($toEmail)->subject($subject);
+                if (!empty($template->from_name)) {
+                    $message->from(config('mail.from.address'), $template->from_name);
+                }
             });
 
             return true;
         } catch (Exception $e) {
-            Log::error("EmailTemplateService: Failed to send email [{$code}] to [{$toEmail}]: " . $e->getMessage());
+            $codeStr = $key instanceof EmailTemplateKey ? $key->value : $key;
+            Log::error("EmailTemplateService: Failed sending email [{$codeStr}] to [{$toEmail}]: " . $e->getMessage());
             return false;
         }
     }
 
-    //-----------------------------------------
     /**
      * Send test email for template editor.
      */
     public function sendTest(EmailTemplate $template, string $recipientEmail): bool
     {
         try {
-            // Generate sample data based on template variables
             $sampleData = $this->generateSampleData($template);
-            $renderedHtml = $template->renderFullHtml($sampleData, app()->getLocale());
-            $subject = '[TEST / تجربة] ' . $template->renderSubject($sampleData, app()->getLocale());
+            $locale = app()->getLocale();
+            $renderedHtml = $template->renderFullHtml($sampleData, $locale);
+            $subject = '[TEST / تجربة] ' . $template->renderSubject($sampleData, $locale);
 
             Mail::html($renderedHtml, function ($message) use ($recipientEmail, $subject) {
-                $message->to($recipientEmail)
-                    ->subject($subject);
+                $message->to($recipientEmail)->subject($subject);
             });
 
             return true;
@@ -152,37 +119,102 @@ class EmailTemplateService
         }
     }
 
-    //-----------------------------------------
     /**
-     * Generate sample values for placeholders for live preview.
+     * Generate sample placeholder values for live preview or testing.
      */
     public function generateSampleData(EmailTemplate $template): array
     {
         return [
-            '{employee_name}'   => 'محمد العتيبي',
-            '{task_title}'      => 'تطوير تقرير الإيرادات والتحصيلات الربع سنوية',
-            '{task_code}'       => 'TSK-2026-1042',
-            '{priority}'        => 'عالية (High)',
-            '{status}'          => 'قيد التنفيذ (In Progress)',
-            '{due_date}'        => date('Y-m-d', strtotime('+3 days')),
-            '{assigned_by}'     => 'م. أحمد خالد (مدير القسم)',
-            '{task_url}'        => url('/tasks/tasks'),
-            '{note_content}'    => 'يرجى التأكد من تدقيق الأرقام مع الإدارة المالية قبل الاعتماد النهائي.',
-            '{note_author}'     => 'سارة القحطاني',
-            '{days_overdue}'    => '3',
-            '{month_year}'      => date('F Y'),
-            '{basic_salary}'    => '12,500.00 ر.س',
-            '{allowances}'      => '2,500.00 ر.س',
-            '{deductions}'      => '500.00 ر.س',
-            '{net_salary}'      => '14,500.00 ر.س',
-            '{payslip_url}'     => url('/hr/payroll'),
-            '{leave_type}'      => 'إجازة سنوية (Annual Leave)',
-            '{start_date}'      => date('Y-m-d', strtotime('+7 days')),
-            '{end_date}'        => date('Y-m-d', strtotime('+21 days')),
-            '{total_days}'      => '14',
+            // Generic System
+            '{app_name}'        => config('app.name', 'Gate ERP'),
             '{company_name}'    => config('app.name', 'Gate ERP'),
-            '{current_year}'    => date('Y'),
+            '{app_url}'         => url('/'),
             '{system_url}'      => url('/'),
+            '{current_year}'    => date('Y'),
+
+            // HR & Recruitment
+            '{employee_name}'   => 'م. أحمد خالد',
+            '{manager_name}'    => 'د. فيصل السعيد (المدير الإداري)',
+            '{job_title}'       => 'مهندس برمجيات أول (Senior Software Engineer)',
+            '{department}'      => 'إدارة تقنية المعلومات (IT)',
+            '{login_email}'     => 'ahmed.khaled@example.com',
+            '{login_url}'       => url('/login'),
+            '{leave_type}'      => 'إجازة سنوية اعتيادية (Annual Leave)',
+            '{start_date}'      => date('Y-m-d', strtotime('+3 days')),
+            '{end_date}'        => date('Y-m-d', strtotime('+17 days')),
+            '{days_count}'      => '14',
+            '{total_days}'      => '14',
+            '{status}'          => 'معتمد (Approved)',
+            '{rejection_reason}'=> '',
+            '{permission_date}' => date('Y-m-d'),
+            '{hours_count}'     => '2',
+            '{amount}'          => '15,000.00 ر.س',
+            '{month_year}'      => date('F Y'),
+            '{basic_salary}'    => '14,000.00 ر.س',
+            '{allowances}'      => '3,500.00 ر.س',
+            '{deductions}'      => '700.00 ر.س',
+            '{net_salary}'      => '16,800.00 ر.س',
+            '{payslip_url}'     => url('/hr/payroll'),
+            '{penalty_title}'   => 'لفت نظر إداري',
+            '{penalty_reason}'  => 'التأخر عن موعد الحضور دون إذن مسبق',
+            '{deduction_days}'  => 'خصم نصف يوم',
+            '{reward_title}'    => 'مكافأة الإنجاز المتميز للربع الأول',
+            '{reward_amount}'   => '2,500.00 ر.س',
+            '{candidate_name}'  => 'سارة عبد الرحمن',
+            '{interview_date}'  => date('Y-m-d', strtotime('+2 days')),
+            '{interview_time}'  => '11:00 صباحاً (11:00 AM)',
+            '{interview_type}'  => 'مقابلة عن بعد عبر Zoom (Online Video Call)',
+            '{location_link}'   => 'https://meet.google.com/sample-interview-room',
+            '{salary}'          => '18,500.00 ر.س شهرياً',
+            '{expiry_date}'     => date('Y-m-d', strtotime('+7 days')),
+            '{offer_url}'       => url('/careers/offers/preview'),
+
+            // Accounting & Finance
+            '{entity_name}'     => 'شركة الأفق للاستشارات والتقنية',
+            '{receipt_number}'  => 'REC-2026-0089',
+            '{payment_method}'  => 'تحويل بنكي - مصرف الراجحي',
+            '{payment_date}'    => date('Y-m-d'),
+            '{balance_due}'     => '42,600.00 ر.س',
+            '{due_date}'        => date('Y-m-d', strtotime('+5 days')),
+            '{pay_url}'         => url('/payments/pay-now'),
+            '{receipt_url}'     => url('/accounting/receipts/preview'),
+            '{approver_name}'   => 'أ. خالد التميمي (المدير المالي)',
+            '{entry_number}'    => 'JV-2026-0412',
+            '{entry_amount}'    => '125,000.00 ر.س',
+            '{created_by}'      => 'سليمان الحربي (محاسب عام)',
+            '{entry_url}'       => url('/accounting/journal-entries'),
+
+            // CRM
+            '{agent_name}'      => 'عمر الزهراني (مستشار مبيعات)',
+            '{lead_name}'       => 'عبد الله الشمري',
+            '{lead_phone}'      => '+966 50 123 4567',
+            '{lead_source}'     => 'الموقع الإلكتروني (Website Form)',
+            '{lead_url}'        => url('/crm/leads'),
+            '{client_name}'     => 'مؤسسة الرياض الحديثة',
+            '{ticket_number}'   => 'TKT-99482',
+            '{ticket_title}'    => 'طلب ربط نقطة بيع إضافية',
+            '{ticket_url}'      => url('/crm/service-requests'),
+
+            // Tasks
+            '{task_title}'      => 'إعداد وتجهيز التقرير المالي للربع السنوي',
+            '{task_code}'       => 'TSK-2026-104',
+            '{priority}'        => 'أولوية قصوى (High)',
+            '{assigned_by}'     => 'إدارة العمليات',
+            '{task_url}'        => url('/tasks/tasks'),
+
+            // Inventory
+            '{item_name}'       => 'ماسح باركود لاسلكي صناعي Zebra DS3678',
+            '{item_code}'       => 'ITM-SKU-9921',
+            '{warehouse_name}'  => 'المستودع المركزي - الرياض',
+            '{current_stock}'   => '4 قطع فقط',
+            '{reorder_level}'   => '15 قطعة',
+            '{item_url}'        => url('/inventory/items'),
+
+            // System
+            '{user_name}'       => 'فهد الناصر',
+            '{activation_url}'  => url('/setup-password?token=sample_demo_token'),
+            '{reset_url}'       => url('/reset-password?token=sample_demo_token'),
+            '{action_url}'      => url('/'),
         ];
     }
 }

@@ -31,8 +31,25 @@
         </div>
     </div>
 
+    <!-- Server-Side Error Alert Banner -->
+    @if(session('error'))
+        <div class="portal-form-alert-banner">
+            <div class="alert-icon"><i class="bx bx-error"></i></div>
+            <div class="alert-text">{{ session('error') }}</div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="portal-form-alert-banner">
+            <div class="alert-icon"><i class="bx bx-error-circle"></i></div>
+            <div class="alert-text">
+                {{ __('Please correct the highlighted errors before submitting the document.') }}
+            </div>
+        </div>
+    @endif
+
     <!-- 3. Form Submission -->
-    <form action="{{ route('portal.documents.upload') }}" method="POST" enctype="multipart/form-data" id="portalDocumentForm">
+    <form action="{{ route('portal.documents.upload') }}" method="POST" enctype="multipart/form-data" id="portalDocumentForm" novalidate onsubmit="return validateDocumentForm(event)">
         @csrf
         <input type="hidden" name="document_id" value="{{ $document?->id ?? '' }}" />
 
@@ -45,7 +62,7 @@
                     <span class="text-danger">*</span>
                 </label>
             </div>
-            <select name="document_type_id" id="portalDocTypeSelect" class="form-select select2 select2-hidden-accessible" style="width: 100%;" required>
+            <select name="document_type_id" id="portalDocTypeSelect" class="form-select select2 select2-hidden-accessible @error('document_type_id') is-invalid @enderror" style="width: 100%;">
                 <option value=""></option>
                 @foreach($documentTypes as $type)
                     <option value="{{ $type->id }}" {{ ($document?->document_type_id == $type->id || old('document_type_id') == $type->id) ? 'selected' : '' }}>
@@ -53,6 +70,9 @@
                     </option>
                 @endforeach
             </select>
+            <div class="portal-invalid-feedback" id="docTypeError">
+                @error('document_type_id') {{ $message }} @enderror
+            </div>
         </div>
 
         <!-- الحقل الثاني: اسم الوثيقة / جهة الإصدار -->
@@ -67,9 +87,12 @@
             <input type="text" 
                    name="issuing_authority" 
                    id="issuingAuthorityInput" 
-                   class="portal-create-doc-input" 
-                   value="{{ $document?->notes ?? old('issuing_authority') }}" 
-                   required />
+                   class="portal-create-doc-input @error('issuing_authority') is-invalid @enderror" 
+                   value="{{ old('issuing_authority', $document?->notes ?? '') }}" 
+                   placeholder="{{ __('e.g. Ministry of Interior, Public Authority for Civil Information...') }}" />
+            <div class="portal-invalid-feedback" id="issuingAuthError">
+                @error('issuing_authority') {{ $message }} @enderror
+            </div>
         </div>
 
         <!-- الحقل الثالث: رقم الوثيقة أو كود الاعتماد (اختياري) -->
@@ -84,8 +107,12 @@
             <input type="text" 
                    name="document_number" 
                    id="documentNumberInput" 
-                   class="portal-create-doc-input" 
-                   value="{{ $document?->document_number ?? old('document_number') }}" />
+                   class="portal-create-doc-input @error('document_number') is-invalid @enderror" 
+                   value="{{ old('document_number', $document?->document_number ?? '') }}" 
+                   placeholder="{{ __('e.g. DOC-849201') }}" />
+            <div class="portal-invalid-feedback" id="docNumberError">
+                @error('document_number') {{ $message }} @enderror
+            </div>
         </div>
 
         <!-- الحقل الرابع: تاريخ انتهاء الصلاحية -->
@@ -101,10 +128,14 @@
                 <input type="text" 
                        name="expiry_date" 
                        id="docExpiryDateInput" 
-                       class="form-control js-flatpickr-date flatpickr-input flatpickr-custom-input active portal-create-doc-date-input" 
-                       value="{{ $document?->expiry_date ? $document->expiry_date->format('Y-m-d') : old('expiry_date') }}" 
+                       class="form-control js-flatpickr-date flatpickr-input flatpickr-custom-input active portal-create-doc-date-input @error('expiry_date') is-invalid @enderror" 
+                       value="{{ old('expiry_date', $document?->expiry_date ? $document->expiry_date->format('Y-m-d') : '') }}" 
+                       placeholder="YYYY-MM-DD"
                        autocomplete="off" />
                 <i class="bx bx-calendar portal-create-doc-date-icon"></i>
+            </div>
+            <div class="portal-invalid-feedback" id="expiryDateError">
+                @error('expiry_date') {{ $message }} @enderror
             </div>
 
             <label class="portal-create-doc-checkbox-row">
@@ -126,11 +157,13 @@
                 <label class="portal-create-doc-label">
                     <i class="bx bx-cloud-upload"></i>
                     <span>{{ __('Document File or Scan') }}</span>
+                    @if(!$isEdit)
                     <span class="text-danger">*</span>
+                    @endif
                 </label>
             </div>
 
-            <div class="portal-create-doc-dropzone" onclick="document.getElementById('docFileInput').click()">
+            <div class="portal-create-doc-dropzone @error('file') is-invalid @enderror" id="docDropzoneBox" onclick="document.getElementById('docFileInput').click()">
                 <div class="portal-create-doc-dropzone-icon">
                     <i class="bx bx-cloud-upload"></i>
                 </div>
@@ -154,15 +187,18 @@
                        id="docFileInput" 
                        accept=".pdf,image/png,image/jpeg,image/webp" 
                        style="display: none;" 
-                       onchange="handleFileSelected(this)" 
-                       {{ $isEdit ? '' : 'required' }} />
+                       onchange="handleFileSelected(this)" />
+            </div>
+            <div class="portal-invalid-feedback" id="fileError">
+                @error('file') {{ $message }} @enderror
             </div>
         </div>
 
         <!-- زر الإرسال -->
         <div class="portal-create-doc-submit-wrap">
-            <button type="submit" class="portal-create-doc-submit-btn">
+            <button type="submit" class="portal-create-doc-submit-btn" id="btnSubmitDoc">
                 <span>{{ $isEdit ? __('Update Document') : __('Submit Document') }}</span>
+                <i class="bx bx-check-circle fs-5"></i>
             </button>
         </div>
     </form>
@@ -175,11 +211,19 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+    const isEditMode = {{ $isEdit ? 'true' : 'false' }};
+
     $(document).ready(function() {
         if ($.fn.select2) {
             $('#portalDocTypeSelect').select2({
                 width: '100%',
+                placeholder: "{{ __('Select Document Type...') }}",
+                allowClear: true,
                 dir: '{{ app()->getLocale() === "ar" ? "rtl" : "ltr" }}'
+            }).on('change', function() {
+                clearFieldError('portalDocTypeSelect', 'docTypeError');
+                const s2Container = $(this).next('.select2-container');
+                s2Container.removeClass('is-invalid');
             });
         }
 
@@ -190,7 +234,10 @@
                     locale: '{{ app()->getLocale() === "ar" ? "ar" : "en" }}',
                     dateFormat: 'Y-m-d',
                     allowInput: true,
-                    disableMobile: true
+                    disableMobile: true,
+                    onChange: function() {
+                        clearFieldError('docExpiryDateInput', 'expiryDateError');
+                    }
                 });
             }
         }
@@ -199,13 +246,50 @@
         if (isPerm && isPerm.checked) {
             togglePermanent(true);
         }
+
+        // Live input error clearing
+        const authInput = document.getElementById('issuingAuthorityInput');
+        if (authInput) {
+            authInput.addEventListener('input', () => clearFieldError('issuingAuthorityInput', 'issuingAuthError'));
+        }
     });
+
+    function setFieldError(fieldId, errorId, message) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) {
+            field.classList.add('is-invalid');
+            if (field.id === 'portalDocTypeSelect') {
+                $(field).next('.select2-container').addClass('is-invalid');
+            }
+        }
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.add('d-block');
+        }
+    }
+
+    function clearFieldError(fieldId, errorId) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) {
+            field.classList.remove('is-invalid');
+            if (field.id === 'portalDocTypeSelect') {
+                $(field).next('.select2-container').removeClass('is-invalid');
+            }
+        }
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.remove('d-block');
+        }
+    }
 
     function togglePermanent(isPermanent) {
         const dateInput = document.getElementById('docExpiryDateInput');
         if (dateInput) {
             dateInput.disabled = isPermanent;
             if (isPermanent) {
+                clearFieldError('docExpiryDateInput', 'expiryDateError');
                 if (dateInput._flatpickr) {
                     dateInput._flatpickr.clear();
                 } else {
@@ -216,14 +300,82 @@
     }
 
     function handleFileSelected(input) {
+        clearFieldError('docDropzoneBox', 'fileError');
         const displayBox = document.getElementById('pickedFileDisplay');
         const nameSpan = document.getElementById('pickedFileName');
         if (input.files && input.files[0]) {
-            nameSpan.textContent = input.files[0].name;
+            const file = input.files[0];
+            const maxBytes = 5 * 1024 * 1024; // 5MB
+            if (file.size > maxBytes) {
+                setFieldError('docDropzoneBox', 'fileError', "{{ __('File size exceeds 5MB limit!') }}");
+                input.value = '';
+                displayBox.style.display = 'none';
+                return;
+            }
+            nameSpan.textContent = file.name;
             displayBox.style.display = 'flex';
         } else {
             displayBox.style.display = 'none';
         }
+    }
+
+    function validateDocumentForm(e) {
+        let hasError = false;
+
+        const docType = document.getElementById('portalDocTypeSelect');
+        const issuingAuth = document.getElementById('issuingAuthorityInput');
+        const isPerm = document.getElementById('isPermanentCheckbox');
+        const expiryDate = document.getElementById('docExpiryDateInput');
+        const fileInput = document.getElementById('docFileInput');
+
+        // 1. Validate Document Type
+        if (!docType || !docType.value) {
+            setFieldError('portalDocTypeSelect', 'docTypeError', "{{ __('Please select the document type.') }}");
+            hasError = true;
+        } else {
+            clearFieldError('portalDocTypeSelect', 'docTypeError');
+        }
+
+        // 2. Validate Issuing Authority
+        if (!issuingAuth || !issuingAuth.value.trim()) {
+            setFieldError('issuingAuthorityInput', 'issuingAuthError', "{{ __('Please enter document name or issuing authority.') }}");
+            hasError = true;
+        } else {
+            clearFieldError('issuingAuthorityInput', 'issuingAuthError');
+        }
+
+        // 3. Validate Expiry Date if not permanent
+        if (isPerm && !isPerm.checked) {
+            if (!expiryDate || !expiryDate.value.trim()) {
+                setFieldError('docExpiryDateInput', 'expiryDateError', "{{ __('Please specify the document expiry date or mark as permanent.') }}");
+                hasError = true;
+            } else {
+                clearFieldError('docExpiryDateInput', 'expiryDateError');
+            }
+        }
+
+        // 4. Validate File Attachment (Required on create, optional on edit)
+        if (!isEditMode && (!fileInput || !fileInput.files || fileInput.files.length === 0)) {
+            setFieldError('docDropzoneBox', 'fileError', "{{ __('Please upload the document file or image.') }}");
+            hasError = true;
+        }
+
+        if (hasError) {
+            e.preventDefault();
+            if (typeof showPortalToast === 'function') {
+                showPortalToast('error', "{{ __('Required Fields Missing') }}", "{{ __('Please fill all mandatory fields marked in red.') }}");
+            }
+            return false;
+        }
+
+        // Prevent double submit
+        const submitBtn = document.getElementById('btnSubmitDoc');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>{{ __('Submitting...') }}</span> <i class="bx bx-loader-alt bx-spin fs-5"></i>`;
+        }
+
+        return true;
     }
 </script>
 @endpush

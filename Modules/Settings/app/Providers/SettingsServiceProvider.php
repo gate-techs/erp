@@ -90,6 +90,16 @@ class SettingsServiceProvider extends ModuleServiceProvider
         );
 
         $this->app->bind(
+            \Modules\Settings\Repositories\Contracts\EmailTemplateRepositoryInterface::class,
+            \Modules\Settings\Repositories\EmailTemplateRepository::class
+        );
+
+        $this->app->bind(
+            \Modules\Settings\Services\Contracts\EmailTemplateServiceInterface::class,
+            \Modules\Settings\Services\EmailTemplateService::class
+        );
+
+        $this->app->bind(
             \Modules\Settings\Services\Contracts\NotificationServiceInterface::class,
             \Modules\Settings\Services\NotificationService::class
         );

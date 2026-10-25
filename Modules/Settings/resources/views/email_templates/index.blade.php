@@ -92,17 +92,29 @@
                     <i class="icon-base bx bx-layer me-1 font-16"></i>
                     {{ __('All Modules') }} ({{ $stats['total'] ?? 0 }})
                 </a>
-                <a href="{{ route('settings.email-templates.index', ['module' => 'tasks']) }}" class="btn btn-sm {{ $selectedModule === 'tasks' ? 'btn-primary' : 'btn-outline-secondary' }}">
-                    <i class="icon-base bx bx-task me-1 font-16"></i>
-                    {{ __('Tasks & Projects') }} ({{ $stats['modules']['tasks'] ?? 0 }})
-                </a>
                 <a href="{{ route('settings.email-templates.index', ['module' => 'hr']) }}" class="btn btn-sm {{ $selectedModule === 'hr' ? 'btn-primary' : 'btn-outline-secondary' }}">
                     <i class="icon-base bx bx-user-pin me-1 font-16"></i>
-                    {{ __('Human Resources') }} ({{ $stats['modules']['hr'] ?? 0 }})
+                    {{ __('Human Resources') }} ({{ $stats['by_module']['hr'] ?? 0 }})
                 </a>
                 <a href="{{ route('settings.email-templates.index', ['module' => 'accounting']) }}" class="btn btn-sm {{ $selectedModule === 'accounting' ? 'btn-primary' : 'btn-outline-secondary' }}">
                     <i class="icon-base bx bx-calculator me-1 font-16"></i>
-                    {{ __('Accounting') }} ({{ $stats['modules']['accounting'] ?? 0 }})
+                    {{ __('Accounting') }} ({{ $stats['by_module']['accounting'] ?? 0 }})
+                </a>
+                <a href="{{ route('settings.email-templates.index', ['module' => 'crm']) }}" class="btn btn-sm {{ $selectedModule === 'crm' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    <i class="icon-base bx bx-phone-call me-1 font-16"></i>
+                    {{ __('CRM') }} ({{ $stats['by_module']['crm'] ?? 0 }})
+                </a>
+                <a href="{{ route('settings.email-templates.index', ['module' => 'tasks']) }}" class="btn btn-sm {{ $selectedModule === 'tasks' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    <i class="icon-base bx bx-task me-1 font-16"></i>
+                    {{ __('Tasks & Projects') }} ({{ $stats['by_module']['tasks'] ?? 0 }})
+                </a>
+                <a href="{{ route('settings.email-templates.index', ['module' => 'inventory']) }}" class="btn btn-sm {{ $selectedModule === 'inventory' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    <i class="icon-base bx bx-package me-1 font-16"></i>
+                    {{ __('Inventory') }} ({{ $stats['by_module']['inventory'] ?? 0 }})
+                </a>
+                <a href="{{ route('settings.email-templates.index', ['module' => 'general']) }}" class="btn btn-sm {{ $selectedModule === 'general' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                    <i class="icon-base bx bx-cog me-1 font-16"></i>
+                    {{ __('General System') }} ({{ $stats['by_module']['general'] ?? 0 }})
                 </a>
             </div>
 
@@ -117,103 +129,96 @@
     </div>
 </div>
 
-<!-- Templates Cards Grid -->
-<div class="row g-4" id="templatesContainer">
-    @forelse($templates as $tpl)
-        @php
-            $moduleStyles = [
-                'tasks'      => ['bg' => 'bg-label-primary', 'text' => 'text-primary', 'badge' => 'bg-label-primary', 'icon' => 'bx-task', 'title' => __('Tasks')],
-                'hr'         => ['bg' => 'bg-label-success', 'text' => 'text-success', 'badge' => 'bg-label-success', 'icon' => 'bx-user-pin', 'title' => __('HR')],
-                'accounting' => ['bg' => 'bg-label-warning', 'text' => 'text-warning', 'badge' => 'bg-label-warning', 'icon' => 'bx-dollar-circle', 'title' => __('Accounting')],
-                'general'    => ['bg' => 'bg-label-info',    'text' => 'text-info',    'badge' => 'bg-label-info',    'icon' => 'bx-cog', 'title' => __('General')],
-            ];
-            $style = $moduleStyles[$tpl->module] ?? $moduleStyles['general'];
-        @endphp
-        <div class="col-xl-4 col-md-6 col-12 template-item" data-name="{{ strtolower($tpl->name_ar . ' ' . $tpl->name . ' ' . $tpl->code) }}">
-            <div class="card h-100 shadow-sm border-0 position-relative transition-all">
-                <div class="card-body p-4 d-flex flex-column justify-content-between">
-                    <div>
-                        <!-- Header & Active Switch -->
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="avatar avatar-md {{ $style['bg'] }} rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="icon-base bx {{ $style['icon'] }} font-22 {{ $style['text'] }}"></i>
-                                </div>
-                                <div>
-                                    <span class="badge {{ $style['badge'] }} font-11">{{ $style['title'] }}</span>
-                                    <code class="d-block font-11 text-muted mt-1">{{ $tpl->code }}</code>
-                                </div>
-                            </div>
-                            <div class="form-check form-switch mb-0" title="{{ __('Toggle Template Status') }}">
-                                <input class="form-check-input toggle-email-status" type="checkbox" data-id="{{ $tpl->id }}" {{ $tpl->is_active ? 'checked' : '' }}>
-                            </div>
+<!-- Templates Table Card -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="table-responsive text-nowrap">
+        <table class="table table-hover align-middle mb-0" id="templatesTable">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 45%;">
+                        <div class="d-flex align-items-center gap-1 cursor-pointer">
+                            <span>{{ __('Template Name') }}</span>
+                            <i class="icon-base bx bx-up-arrow-alt font-14 text-muted"></i>
                         </div>
+                    </th>
+                    <th class="text-center" style="width: 20%;">
+                        <div class="d-flex align-items-center justify-content-center gap-1 cursor-pointer">
+                            <span>{{ __('Module / Unit') }}</span>
+                            <i class="icon-base bx bx-sort-alt-2 font-14 text-muted"></i>
+                        </div>
+                    </th>
+                    <th class="text-center" style="width: 15%;">
+                        <span>{{ __('Status') }}</span>
+                    </th>
+                    <th class="text-center" style="width: 20%;">
+                        <span>{{ __('Actions') }}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0" id="templatesContainer">
+                @forelse($templates as $tpl)
+                    @php
+                        $moduleStyles = [
+                            'tasks'      => ['badge' => 'bg-label-primary', 'text' => 'text-primary', 'title' => 'Tasks'],
+                            'hr'         => ['badge' => 'bg-label-success', 'text' => 'text-success', 'title' => 'HR / Recruitment'],
+                            'accounting' => ['badge' => 'bg-label-warning', 'text' => 'text-warning', 'title' => 'Accounting'],
+                            'crm'        => ['badge' => 'bg-label-info',    'text' => 'text-info',    'title' => 'CRM'],
+                            'inventory'  => ['badge' => 'bg-label-danger',  'text' => 'text-danger',  'title' => 'Inventory'],
+                            'general'    => ['badge' => 'bg-label-secondary','text' => 'text-secondary','title' => 'System'],
+                        ];
+                        $style = $moduleStyles[$tpl->module] ?? $moduleStyles['general'];
+                    @endphp
+                    <tr class="template-item" data-name="{{ strtolower($tpl->name_ar . ' ' . $tpl->name . ' ' . $tpl->code) }}">
+                        <!-- Name & Code -->
+                        <td>
+                            <div class="d-flex flex-column">
+                                <a href="{{ route('settings.email-templates.edit', $tpl->id) }}" class="fw-semibold text-heading text-hover-primary font-14 mb-0">
+                                    {{ $tpl->display_name }}
+                                </a>
+                                <small class="text-muted font-11"><code>{{ $tpl->code }}</code></small>
+                            </div>
+                        </td>
 
-                        <!-- Title & Description -->
-                        <h5 class="fw-bold mb-1 text-heading">{{ $tpl->display_name }}</h5>
-                        <p class="text-muted font-13 mb-3" style="min-height: 38px;">
-                            {{ $tpl->description ?: __('Standard dynamic notification email template.') }}
-                        </p>
-
-                        <!-- Subject preview -->
-                        <div class="bg-light p-2 rounded mb-3 border">
-                            <span class="text-muted font-11 d-block fw-semibold mb-1">
-                                <i class="icon-base bx bx-comment-detail me-1"></i>{{ __('Subject Preview') }}:
+                        <!-- Module Badge -->
+                        <td class="text-center">
+                            <span class="badge {{ $style['badge'] }} px-3 py-1 font-12 fw-medium rounded-pill">
+                                {{ strtoupper($tpl->module) }}
                             </span>
-                            <div class="font-12 text-truncate text-dark fw-medium" title="{{ $tpl->subject_ar }}">
-                                {{ $tpl->subject_ar }}
+                        </td>
+
+                        <!-- Active Toggle Status -->
+                        <td class="text-center">
+                            <div class="form-check form-switch d-inline-block mb-0" title="{{ __('Toggle Template Status') }}">
+                                <input class="form-check-input toggle-email-status cursor-pointer" type="checkbox" data-id="{{ $tpl->id }}" {{ $tpl->is_active ? 'checked' : '' }}>
                             </div>
-                        </div>
+                        </td>
 
-                        <!-- Variables Pills Preview -->
-                        <div class="d-flex flex-wrap gap-1 mb-4">
-                            @php 
-                                $normVars = $tpl->normalized_variables;
-                                $varCount = 0; 
-                            @endphp
-                            @foreach($normVars as $tag => $label)
-                                @if($varCount < 4)
-                                    <span class="badge bg-label-secondary font-11" title="{{ is_string($label) ? $label : $tag }}">{{ is_string($tag) ? $tag : '' }}</span>
-                                    @php $varCount++; @endphp
-                                @endif
-                            @endforeach
-                            @if(count($normVars) > 4)
-                                <span class="badge bg-label-secondary font-11">+{{ count($normVars) - 4 }}</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons Footer -->
-                    <div class="d-flex gap-2 pt-3 border-top">
-                        <button type="button" class="btn btn-outline-secondary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 btn-preview-template" data-id="{{ $tpl->id }}" data-name="{{ $tpl->display_name }}">
-                            <i class="icon-base bx bx-show font-16"></i>
-                            <span>{{ __('Preview') }}</span>
-                        </button>
-                        <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center btn-test-modal" data-id="{{ $tpl->id }}" data-name="{{ $tpl->display_name }}" title="{{ __('Send Test Email') }}">
-                            <i class="icon-base bx bx-paper-plane font-16"></i>
-                        </button>
-                        <a href="{{ route('settings.email-templates.edit', $tpl->id) }}" class="btn btn-primary btn-sm flex-grow-1 d-flex align-items-center justify-content-center gap-1 shadow-sm">
-                            <i class="icon-base bx bx-edit-alt font-16"></i>
-                            <span>{{ __('Customize') }}</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @empty
-        <div class="col-12">
-            <div class="card shadow-sm border-0 text-center py-5">
-                <div class="card-body">
-                    <i class="icon-base bx bx-envelope-open font-48 text-muted mb-3 d-block"></i>
-                    <h5 class="fw-bold">{{ __('No email templates found') }}</h5>
-                    <p class="text-muted font-13">{{ __('No templates available for the selected module filter.') }}</p>
-                    <a href="{{ route('settings.email-templates.index') }}" class="btn btn-primary btn-sm">
-                        {{ __('View All Templates') }}
-                    </a>
-                </div>
-            </div>
-        </div>
-    @endforelse
+                        <!-- Actions -->
+                        <td class="text-center">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary btn-preview-template" data-id="{{ $tpl->id }}" data-name="{{ $tpl->display_name }}" title="{{ __('Live Preview') }}">
+                                    <i class="icon-base bx bx-show font-16"></i>
+                                </button>
+                                <button type="button" class="btn btn-icon btn-sm btn-label-info btn-test-modal" data-id="{{ $tpl->id }}" data-name="{{ $tpl->display_name }}" title="{{ __('Send Test Email') }}">
+                                    <i class="icon-base bx bx-paper-plane font-16"></i>
+                                </button>
+                                <a href="{{ route('settings.email-templates.edit', $tpl->id) }}" class="btn btn-icon btn-sm btn-label-primary" title="{{ __('Edit Template') }}">
+                                    <i class="icon-base bx bx-edit-alt font-16"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="icon-base bx bx-envelope-open font-40 text-muted mb-2 d-block"></i>
+                            <span class="text-muted font-13">{{ __('No email templates found.') }}</span>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Modal: Interactive Live Preview -->

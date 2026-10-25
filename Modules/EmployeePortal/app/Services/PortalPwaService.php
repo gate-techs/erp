@@ -63,7 +63,7 @@ class PortalPwaService implements PortalPwaServiceInterface
     public function getServiceWorkerScript(): string
     {
         return <<<'JS'
-const CACHE_NAME = 'astro-portal-v4';
+const CACHE_NAME = 'astro-portal-v6';
 const OFFLINE_URL = '/portal/offline';
 
 const PRECACHE_ASSETS = [
@@ -109,11 +109,15 @@ self.addEventListener('push', (event) => {
         payload.body = event.data ? event.data.text() : payload.body;
     }
 
+    const notifTag = payload.tag || ('notif_' + (payload.id || (payload.title ? payload.title.replace(/\s+/g, '_') : 'default')));
+
     event.waitUntil(
         self.registration.showNotification(payload.title || 'ALA ORBIT', {
             body: payload.body || '',
             icon: '/assets/portal/icon-192.png',
             badge: '/assets/portal/icon-192.png',
+            tag: notifTag,
+            renotify: false,
             data: { url: payload.action_url || '/portal/dashboard' },
             dir: 'auto',
             lang: 'ar'
@@ -136,6 +140,30 @@ self.addEventListener('notificationclick', (event) => {
             return clients.openWindow(targetUrl);
         })
     );
+});
+
+// Background Sync (offline submissions, queue syncing)
+self.addEventListener('sync', (event) => {
+    if (event.tag === 'sync-portal-data' || event.tag === 'sync-push-subscription') {
+        event.waitUntil(
+            self.clients.matchAll().then((clients) => {
+                clients.forEach((client) => {
+                    client.postMessage({ type: 'SYNC_COMPLETED', tag: event.tag });
+                });
+            })
+        );
+    }
+});
+
+// Periodic Background Sync (keeps badge and notifications updated)
+self.addEventListener('periodicsync', (event) => {
+    if (event.tag === 'update-notifications') {
+        event.waitUntil(
+            fetch('/portal/notifications')
+                .then((res) => res.text())
+                .catch(() => null)
+        );
+    }
 });
 
 self.addEventListener('fetch', (event) => {

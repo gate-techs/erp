@@ -2,6 +2,58 @@
 
 @section('title', __('Edit Email Template') . ' - ' . $template->display_name)
 
+@section('page-style')
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<style>
+    .ql-toolbar.ql-snow {
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        background-color: #f8fafc;
+        border-color: #d9dee3;
+    }
+    .ql-container.ql-snow {
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        border-color: #d9dee3;
+        font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .ql-editor {
+        min-height: 280px;
+        font-size: 14.5px;
+        line-height: 1.7;
+    }
+    #quill_editor_ar .ql-editor {
+        direction: rtl;
+        text-align: right;
+    }
+    #quill_editor_en .ql-editor {
+        direction: ltr;
+        text-align: left;
+    }
+    .variable-simple-row {
+        cursor: pointer;
+        padding: 5px 8px;
+        border-radius: 4px;
+        transition: background-color 0.15s ease;
+        line-height: 1.8;
+    }
+    .variable-simple-row:hover {
+        background-color: #f0fdf4;
+    }
+    .variable-tag-text {
+        color: #0d9488;
+        font-family: inherit;
+        font-weight: 600;
+        direction: ltr;
+        display: inline-block;
+    }
+    .variable-desc-text {
+        color: #1e293b;
+        font-weight: 500;
+    }
+</style>
+@endsection
+
 @section('content')
 <!-- Page Header -->
 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
@@ -76,8 +128,9 @@
                         <!-- Arabic Tab Content -->
                         <div class="tab-pane fade show active" id="tab-ar" role="tabpanel">
                             <div class="mb-3">
-                                <label class="form-label font-13 fw-semibold">{{ __('Template Name (Arabic)') }} <span class="text-danger">*</span></label>
-                                <input type="text" name="name_ar" class="form-control" value="{{ old('name_ar', $template->name_ar) }}" required>
+                                <label class="form-label font-13 fw-semibold">{{ __('Template Name (Arabic)') }}</label>
+                                <input type="text" name="name_ar" class="form-control bg-light" value="{{ old('name_ar', $template->name_ar) }}" readonly>
+                                <div class="form-text font-11 text-muted">{{ __('System defined name tied to business logic.') }}</div>
                             </div>
 
                             <div class="mb-3">
@@ -91,21 +144,25 @@
 
                             <div class="mb-3">
                                 <div class="d-flex align-items-center justify-content-between mb-1">
-                                    <label class="form-label font-13 fw-semibold mb-0">{{ __('Email Body (Arabic - HTML Supported)') }} <span class="text-danger">*</span></label>
-                                    <span class="badge bg-label-info font-11">{{ __('HTML / Cairo Font') }}</span>
+                                    <label class="form-label font-13 fw-semibold mb-0">{{ __('Email Body (Arabic)') }} <span class="text-danger">*</span></label>
+                                    <span class="badge bg-label-primary font-11">{{ __('Rich Text Editor / محرر منسق') }}</span>
                                 </div>
-                                <textarea name="body_ar" id="body_ar" class="form-control font-13" rows="12" style="font-family: monospace; direction: rtl;" required>{{ old('body_ar', $template->body_ar) }}</textarea>
-                                <div class="form-text font-11 text-muted">{{ __('Basic HTML tags like &lt;p&gt;, &lt;strong&gt;, &lt;br&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;div&gt; are fully supported.') }}</div>
+                                <!-- Hidden input to hold HTML content on form submit -->
+                                <input type="hidden" name="body_ar" id="body_ar" value="{{ old('body_ar', $template->body_ar) }}">
+                                <div id="quill_editor_ar" style="min-height: 250px; background: #fff; font-size: 15px; direction: rtl; text-align: right;">
+                                    {!! old('body_ar', $template->body_ar) !!}
+                                </div>
+                                <div class="form-text font-11 text-muted">{{ __('You can format text, align, insert lists, bold, colors, links, or click dynamic variables to insert them.') }}</div>
                             </div>
 
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label font-13 fw-semibold">{{ __('Call-to-Action Button Text (Arabic)') }}</label>
-                                    <input type="text" name="action_button_text_ar" id="action_button_text_ar" class="form-control" value="{{ old('action_button_text_ar', $template->action_button_text_ar) }}" placeholder="مثال: عرض المهمة الآن">
+                                    <input type="text" name="action_button_text_ar" id="action_button_text_ar" class="form-control" value="{{ old('action_button_text_ar', $template->action_button_text_ar) }}" placeholder="مثال: عرض التفاصيل">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label font-13 fw-semibold">{{ __('Button Target URL Variable') }}</label>
-                                    <input type="text" name="action_url_variable" class="form-control" value="{{ old('action_url_variable', $template->action_url_variable) }}" placeholder="مثال: {task_url}">
+                                    <input type="text" name="action_url_variable" class="form-control" value="{{ old('action_url_variable', $template->action_url_variable) }}" placeholder="مثال: {action_url}">
                                 </div>
                             </div>
                         </div>
@@ -114,25 +171,32 @@
                         <div class="tab-pane fade" id="tab-en" role="tabpanel">
                             <div class="mb-3">
                                 <label class="form-label font-13 fw-semibold">{{ __('Template Name (English)') }}</label>
-                                <input type="text" name="name" class="form-control" value="{{ old('name', $template->name) }}">
+                                <input type="text" name="name" class="form-control bg-light" value="{{ old('name', $template->name) }}" readonly>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label font-13 fw-semibold">{{ __('Email Subject (English)') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="icon-base bx bx-comment-detail"></i></span>
-                                    <input type="text" name="subject_en" id="subject_en" class="form-control" value="{{ old('subject_en', $template->subject_en) }}" placeholder="e.g. New Task Assigned: {task_title}">
+                                    <input type="text" name="subject_en" id="subject_en" class="form-control" value="{{ old('subject_en', $template->subject_en) }}" placeholder="e.g. Notification: {task_title}">
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label font-13 fw-semibold">{{ __('Email Body (English - HTML Supported)') }}</label>
-                                <textarea name="body_en" id="body_en" class="form-control font-13" rows="12" style="font-family: monospace; direction: ltr;">{{ old('body_en', $template->body_en) }}</textarea>
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <label class="form-label font-13 fw-semibold mb-0">{{ __('Email Body (English)') }}</label>
+                                    <span class="badge bg-label-primary font-11">{{ __('Rich Text Editor') }}</span>
+                                </div>
+                                <!-- Hidden input to hold HTML content on form submit -->
+                                <input type="hidden" name="body_en" id="body_en" value="{{ old('body_en', $template->body_en) }}">
+                                <div id="quill_editor_en" style="min-height: 250px; background: #fff; font-size: 15px; direction: ltr; text-align: left;">
+                                    {!! old('body_en', $template->body_en) !!}
+                                </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label font-13 fw-semibold">{{ __('Call-to-Action Button Text (English)') }}</label>
-                                <input type="text" name="action_button_text_en" id="action_button_text_en" class="form-control" value="{{ old('action_button_text_en', $template->action_button_text_en) }}" placeholder="e.g. View Task Now">
+                                <input type="text" name="action_button_text_en" id="action_button_text_en" class="form-control" value="{{ old('action_button_text_en', $template->action_button_text_en) }}" placeholder="e.g. View Details">
                             </div>
                         </div>
                     </div>
@@ -159,42 +223,25 @@
 
     <!-- Right Sidebar: Variables & Helpers -->
     <div class="col-xl-4 col-lg-5">
-        <!-- Dynamic Placeholders Card -->
+        <!-- Dynamic Placeholders Card (Simple ERP Style) -->
         <div class="card shadow-sm border-0 mb-4 sticky-top" style="top: 20px; z-index: 10;">
-            <div class="card-header bg-light py-3 border-bottom d-flex align-items-center justify-content-between">
-                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2">
-                    <i class="icon-base bx bx-code-alt text-primary font-18"></i>
-                    <span>{{ __('Available Dynamic Variables') }}</span>
-                </h6>
-                <span class="badge bg-label-primary font-11">{{ count($template->normalized_variables) }} {{ __('Tags') }}</span>
-            </div>
-            <div class="card-body p-3">
-                <p class="text-muted font-12 mb-3">
-                    {{ __('Click any variable to copy it to clipboard, then paste it inside the email body or subject.') }}
-                </p>
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-4 text-end" style="color: #0f172a;">
+                    {{ __('المتغيرات') }}
+                </h5>
 
-                <div class="d-flex flex-column gap-2" style="max-height: 480px; overflow-y: auto;">
+                <div class="d-flex flex-column gap-2 text-end" style="max-height: 540px; overflow-y: auto;">
                     @forelse($template->normalized_variables as $tag => $label)
-                        <div class="variable-item p-2 border rounded bg-light d-flex align-items-center justify-content-between transition-all" style="cursor: pointer;" onclick="copyVariable('{{ $tag }}', this)" title="{{ __('Click to copy') }}">
-                            <div>
-                                <code class="fw-bold text-primary font-12">{{ $tag }}</code>
-                                <div class="text-muted font-11 mt-1">{{ is_string($label) ? $label : $tag }}</div>
-                            </div>
-                            <button type="button" class="btn btn-xs btn-outline-secondary copy-btn">
-                                <i class="icon-base bx bx-copy font-14"></i>
-                            </button>
+                        <div class="variable-simple-row d-flex align-items-center justify-content-end gap-1" onclick="copyVariable('{{ $tag }}', this)" title="{{ __('اضغط للإدراج في المحرر أو النسخ') }}">
+                            <span class="variable-tag-text font-14">{{ $tag }}</span>
+                            <span class="text-muted font-14">:</span>
+                            <span class="variable-desc-text font-14">{{ is_string($label) ? $label : $tag }}</span>
                         </div>
                     @empty
-                        <div class="text-muted font-12 text-center py-3">
-                            {{ __('No specific variables configured.') }}
+                        <div class="text-muted font-12 text-center py-4">
+                            {{ __('لا توجد متغيرات محددة') }}
                         </div>
                     @endforelse
-                </div>
-            </div>
-            <div class="card-footer bg-light py-2 border-top">
-                <div class="d-flex align-items-center gap-1 text-muted font-11">
-                    <i class="icon-base bx bx-bulb text-warning font-14"></i>
-                    <span>{{ __('Brand colors and header/footer logos are applied automatically.') }}</span>
                 </div>
             </div>
         </div>
@@ -279,23 +326,88 @@
 @endsection
 
 @section('page-script')
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
 let currentLocale = 'ar';
+let quillAr = null;
+let quillEn = null;
 
 function copyVariable(tag, el) {
+    // 1. Copy to clipboard
     navigator.clipboard.writeText(tag).then(() => {
-        const btn = el.querySelector('.copy-btn');
-        const origHtml = btn.innerHTML;
-        btn.innerHTML = '<i class="icon-base bx bx-check text-success font-14"></i>';
-        el.classList.add('border-primary');
+        el.style.backgroundColor = '#dcfce7';
         setTimeout(() => {
-            btn.innerHTML = origHtml;
-            el.classList.remove('border-primary');
-        }, 1500);
+            el.style.backgroundColor = '';
+        }, 500);
     });
+
+    // 2. Also insert directly into active Quill editor at cursor!
+    const activeQuill = currentLocale === 'ar' ? quillAr : quillEn;
+    if (activeQuill) {
+        const range = activeQuill.getSelection(true);
+        activeQuill.insertText(range.index, tag, 'user');
+        activeQuill.setSelection(range.index + tag.length);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Setup Quill Editor Toolbar Options
+    const toolbarOptions = [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['link', 'clean']
+    ];
+
+    // Initialize Arabic Editor
+    const editorArEl = document.getElementById('quill_editor_ar');
+    if (editorArEl) {
+        quillAr = new Quill('#quill_editor_ar', {
+            theme: 'snow',
+            placeholder: 'اكتب محتوى القالب هنا...',
+            modules: { toolbar: toolbarOptions }
+        });
+
+        quillAr.on('text-change', function() {
+            document.getElementById('body_ar').value = quillAr.root.innerHTML;
+        });
+    }
+
+    // Initialize English Editor
+    const editorEnEl = document.getElementById('quill_editor_en');
+    if (editorEnEl) {
+        quillEn = new Quill('#quill_editor_en', {
+            theme: 'snow',
+            placeholder: 'Type template content here...',
+            modules: { toolbar: toolbarOptions }
+        });
+
+        quillEn.on('text-change', function() {
+            document.getElementById('body_en').value = quillEn.root.innerHTML;
+        });
+    }
+
+    // Tab Switch Listener
+    const tabArBtn = document.getElementById('tab-ar-btn');
+    const tabEnBtn = document.getElementById('tab-en-btn');
+    if (tabArBtn) {
+        tabArBtn.addEventListener('shown.bs.tab', () => { currentLocale = 'ar'; });
+    }
+    if (tabEnBtn) {
+        tabEnBtn.addEventListener('shown.bs.tab', () => { currentLocale = 'en'; });
+    }
+
+    // Ensure hidden inputs are populated on form submit
+    const templateForm = document.getElementById('templateEditForm');
+    if (templateForm) {
+        templateForm.addEventListener('submit', function() {
+            if (quillAr) document.getElementById('body_ar').value = quillAr.root.innerHTML;
+            if (quillEn) document.getElementById('body_en').value = quillEn.root.innerHTML;
+        });
+    }
+
     const previewModalEl = document.getElementById('previewModal');
     const previewModal = new bootstrap.Modal(previewModalEl);
     const testModalEl = document.getElementById('testEmailModal');

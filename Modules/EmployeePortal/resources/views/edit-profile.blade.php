@@ -2,464 +2,6 @@
 
 @section('title', __('Edit Personal Information'))
 
-@push('styles')
-
-<style>
-    .edit-profile-container {
-        padding-bottom: 28px;
-    }
-
-    /* Top Page Header with Back Button */
-    .edit-profile-nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 14px;
-        position: relative;
-    }
-
-    .edit-profile-back-btn {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        background: #ffffff;
-        border: 1px solid rgba(0, 51, 75, 0.08);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #00334B;
-        font-size: 20px;
-        text-decoration: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        transition: all 0.2s ease;
-    }
-
-    .edit-profile-back-btn:active {
-        background: #EEF5F8;
-        transform: scale(0.95);
-    }
-
-    .edit-profile-title {
-        font-size: 17px;
-        font-weight: 800;
-        color: #00334B;
-        margin: 0;
-        text-align: center;
-        flex: 1;
-    }
-
-    .edit-profile-nav-placeholder {
-        width: 38px;
-    }
-
-    /* 1. Top Hero Card - Exactly matching Figma Spec */
-    .edit-hero-card {
-        width: 100%;
-        min-height: 229px;
-        margin: 0 0 16px 0;
-        background: linear-gradient(135deg, #00334B 0%, #004B6B 50%, #00334B 100%);
-        border-radius: 16px;
-        padding: 24px 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: #ffffff;
-        position: relative;
-        box-shadow: 0 8px 24px rgba(0, 51, 75, 0.15);
-        box-sizing: border-box;
-    }
-
-    .edit-avatar-wrapper {
-        position: relative;
-        width: 88px;
-        height: 88px;
-        margin-bottom: 12px;
-    }
-
-    .edit-avatar-img {
-        width: 88px;
-        height: 88px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #FDBB22;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-        display: block;
-    }
-
-    .edit-camera-btn {
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: #FDBB22;
-        color: #00334B;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        border: 2.5px solid #00334B;
-        cursor: pointer;
-        transition: transform 0.2s;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-    }
-
-    [dir="ltr"] .edit-camera-btn {
-        left: auto;
-        right: 0px;
-    }
-
-    .edit-camera-btn:hover {
-        transform: scale(1.1);
-    }
-
-    .edit-hero-name-row {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        margin-bottom: 8px;
-    }
-
-    .edit-hero-name {
-        font-size: 19px;
-        font-weight: 800;
-        color: #FFFFFF;
-        margin: 0;
-        letter-spacing: -0.2px;
-    }
-
-    .edit-hero-badge-check {
-        color: #FDBB22;
-        font-size: 18px;
-    }
-
-    .edit-hero-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: 5px 14px;
-        border-radius: 20px;
-        font-size: 11.5px;
-        color: #E2E8F0;
-        font-weight: 600;
-    }
-
-    .edit-hero-pill .pill-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #FDBB22;
-    }
-
-    /* 2. Form Section Card */
-    .edit-section-card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 20px 18px;
-        margin-bottom: 16px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(0, 51, 75, 0.05);
-    }
-
-    .edit-section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 18px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #F1F5F9;
-    }
-
-    .edit-section-title {
-        font-size: 15px;
-        font-weight: 800;
-        color: #00334B;
-        margin: 0;
-    }
-
-    .edit-section-tag {
-        font-size: 11px;
-        color: #94A3B8;
-        font-weight: 600;
-    }
-
-    .portal-form-group {
-        margin-bottom: 16px;
-    }
-
-    .portal-label-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 6px;
-    }
-
-    .portal-input-label {
-        font-size: 12px;
-        font-weight: 700;
-        color: #00334B;
-        margin: 0;
-    }
-
-    .portal-verified-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        background: #FFF7ED;
-        color: #C2410C;
-        border: 1px solid #FFEDD5;
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 10.5px;
-        font-weight: 700;
-    }
-
-    .portal-input-box {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    .portal-input-box i {
-        position: absolute;
-        right: 14px;
-        font-size: 18px;
-        color: #94A3B8;
-        pointer-events: none;
-    }
-
-    [dir="ltr"] .portal-input-box i {
-        right: auto;
-        left: 14px;
-    }
-
-    .portal-form-control {
-        width: 100%;
-        height: 48px;
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        padding: 0 42px 0 14px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #1E293B;
-        font-family: inherit;
-        transition: all 0.2s ease;
-        outline: none;
-    }
-
-    [dir="ltr"] .portal-form-control {
-        padding: 0 14px 0 42px;
-    }
-
-    .portal-form-control:focus {
-        background: #ffffff;
-        border-color: #00334B;
-        box-shadow: none;
-    }
-
-    .portal-form-control:disabled, .portal-form-control[readonly] {
-        background: #F1F5F9;
-        color: #64748B;
-        cursor: not-allowed;
-    }
-
-    .portal-input-helper {
-        font-size: 10.5px;
-        color: #94A3B8;
-        margin-top: 5px;
-        line-height: 1.4;
-    }
-
-    .portal-row-2col {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-
-    .portal-select {
-        appearance: none;
-        -webkit-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2364748B' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: left 12px center;
-        background-size: 18px;
-    }
-
-    [dir="ltr"] .portal-select {
-        background-position: right 12px center;
-    }
-
-    /* intl-tel-input Custom Overrides in Edit Profile */
-    .portal-phone-field-wrapper {
-        direction: ltr !important;
-        text-align: left !important;
-        width: 100%;
-        position: relative;
-    }
-
-    .iti {
-        width: 100% !important;
-        position: relative !important;
-        display: block !important;
-        direction: ltr !important;
-    }
-
-    [dir="rtl"] .iti--separate-dial-code .iti__flag-container,
-    [dir="rtl"] .iti--allow-dropdown .iti__flag-container,
-    .iti--separate-dial-code .iti__flag-container,
-    .iti__flag-container {
-        left: 0 !important;
-        right: auto !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        position: absolute !important;
-        z-index: 2 !important;
-        direction: ltr !important;
-    }
-
-    .iti--separate-dial-code .iti__selected-flag {
-        background-color: #F8FAFC !important;
-        border-radius: 12px 0 0 12px !important;
-        padding: 0 10px 0 12px !important;
-        border-right: 1px solid #E2E8F0 !important;
-        border-left: none !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        position: relative !important;
-        direction: ltr !important;
-    }
-
-    .iti--separate-dial-code .iti__selected-dial-code {
-        font-size: 13.5px !important;
-        font-weight: 600 !important;
-        color: #0F172A !important;
-        direction: ltr !important;
-        unicode-bidi: embed !important;
-    }
-
-    [dir="rtl"] .iti--separate-dial-code input[type="tel"],
-    .iti--separate-dial-code input[type="tel"].portal-phone-input,
-    .iti--separate-dial-code input[type="tel"] {
-        padding-left: 98px !important;
-        padding-right: 14px !important;
-        direction: ltr !important;
-        text-align: left !important;
-        width: 100% !important;
-        height: 48px !important;
-        font-size: 14.5px !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.5px !important;
-    }
-
-    [dir="rtl"] .iti__country-list,
-    .iti__country-list {
-        z-index: 1060 !important;
-        font-family: inherit !important;
-        font-size: 13px !important;
-        border-radius: 12px !important;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
-        border: 1px solid #E2E8F0 !important;
-        max-height: 220px !important;
-        direction: ltr !important;
-        text-align: left !important;
-        list-style: none !important;
-        padding: 4px 0 !important;
-        margin: 4px 0 0 0 !important;
-        left: 0 !important;
-        right: auto !important;
-    }
-
-    .iti__country {
-        padding: 8px 12px !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        list-style: none !important;
-    }
-
-    .iti__country-name {
-        font-size: 13px !important;
-        color: #0F172A !important;
-    }
-
-    .iti__dial-code {
-        font-size: 12.5px !important;
-        color: #64748B !important;
-        font-weight: 600 !important;
-        margin-left: auto !important;
-    }
-
-    /* 3. Bottom Action Buttons matching exact user dimensions */
-    .edit-profile-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 20px;
-    }
-
-    /* زر الحفظ */
-    .btn-save-custom {
-        width: 100%;
-        height: 56px;
-        border-radius: 16px;
-        background: #002A44;
-        color: #FEAE2C;
-        border: none;
-        font-size: 15.5px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(0, 42, 68, 0.25);
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-
-    .btn-save-custom:active {
-        transform: scale(0.98);
-        background: #001f33;
-    }
-
-    /* زر الإلغاء */
-    .btn-cancel-custom {
-        width: 100%;
-        height: 56px;
-        border-radius: 16px;
-        background: #FEAE2C;
-        color: #002A44;
-        border: none;
-        font-size: 15.5px;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(254, 174, 44, 0.25);
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-
-    .btn-cancel-custom:active {
-        transform: scale(0.98);
-        opacity: 0.92;
-    }
-</style>
-@endpush
-
 @section('content')
 <div class="edit-profile-container">
     <!-- Top Navigation Header -->
@@ -471,7 +13,24 @@
         <div class="edit-profile-nav-placeholder"></div>
     </div>
 
-    <form action="{{ route('portal.profile.update') }}" method="POST" enctype="multipart/form-data" id="editProfileForm">
+    <!-- Server-Side Error Alert Banner -->
+    @if(session('error'))
+        <div class="portal-form-alert-banner">
+            <div class="alert-icon"><i class="bx bx-error"></i></div>
+            <div class="alert-text">{{ session('error') }}</div>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="portal-form-alert-banner">
+            <div class="alert-icon"><i class="bx bx-error-circle"></i></div>
+            <div class="alert-text">
+                {{ __('Please correct the highlighted errors before saving changes.') }}
+            </div>
+        </div>
+    @endif
+
+    <form action="{{ route('portal.profile.update') }}" method="POST" enctype="multipart/form-data" id="editProfileForm" novalidate onsubmit="return validateProfileForm(event)">
         @csrf
 
         <!-- 1. Hero Card - Figma Custom Spec -->
@@ -498,6 +57,9 @@
                 <span class="pill-dot"></span>
                 <span><i class="bx bx-map-pin"></i> {{ $employee?->primaryBranch?->name ?? __('Kaifan Branch') }}</span>
             </div>
+            <div class="portal-invalid-feedback text-center mt-2" id="avatarError">
+                @error('avatar') {{ $message }} @enderror
+            </div>
         </div>
 
         <!-- 2. Personal & Basic Information Card -->
@@ -510,22 +72,40 @@
             <!-- Full Arabic Name -->
             <div class="portal-form-group">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('Full Name (Civil ID)') }}</label>
+                    <label class="portal-input-label" for="profileNameArInput">{{ __('Full Name (Civil ID)') }} <span class="text-danger">*</span></label>
                 </div>
                 <div class="portal-input-box">
-                    <input type="text" name="name_ar" class="portal-form-control" value="{{ $employee?->translate('ar')?->name ?? ($employee?->name ?? auth()->user()?->name) }}" placeholder="{{ __('Full Arabic Name') }}" />
+                    <input type="text"
+                           id="profileNameArInput"
+                           name="name_ar"
+                           class="portal-form-control @error('name_ar') is-invalid @enderror"
+                           value="{{ old('name_ar', $employee?->translate('ar')?->name ?? ($employee?->name ?? auth()->user()?->name)) }}"
+                           placeholder="{{ __('Full Arabic Name') }}"
+                           required />
                     <i class="bx bx-edit-alt"></i>
+                </div>
+                <div class="portal-invalid-feedback" id="nameArError">
+                    @error('name_ar') {{ $message }} @enderror
                 </div>
             </div>
 
             <!-- Full English Name -->
             <div class="portal-form-group">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('Full English Name') }}</label>
+                    <label class="portal-input-label" for="profileNameEnInput">{{ __('Full English Name') }}</label>
                 </div>
                 <div class="portal-input-box">
-                    <input type="text" name="name_en" class="portal-form-control" value="{{ $employee?->translate('en')?->name ?? '' }}" placeholder="Full English Name" dir="ltr" />
+                    <input type="text"
+                           id="profileNameEnInput"
+                           name="name_en"
+                           class="portal-form-control @error('name_en') is-invalid @enderror"
+                           value="{{ old('name_en', $employee?->translate('en')?->name ?? '') }}"
+                           placeholder="Full English Name"
+                           dir="ltr" />
                     <i class="bx bx-user"></i>
+                </div>
+                <div class="portal-invalid-feedback" id="nameEnError">
+                    @error('name_en') {{ $message }} @enderror
                 </div>
             </div>
 
@@ -550,14 +130,17 @@
                     <label class="portal-input-label">{{ __('Primary Branch') }}</label>
                 </div>
                 <div class="portal-input-box">
-                    <select name="primary_branch_id" class="portal-form-control portal-select">
+                    <select name="primary_branch_id" class="portal-form-control portal-select @error('primary_branch_id') is-invalid @enderror">
                         <option value="">{{ __('Select Primary Branch...') }}</option>
                         @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ ($employee?->primary_branch_id == $branch->id) ? 'selected' : '' }}>
+                            <option value="{{ $branch->id }}" {{ (old('primary_branch_id', $employee?->primary_branch_id) == $branch->id) ? 'selected' : '' }}>
                                 {{ $branch->name }}
                             </option>
                         @endforeach
                     </select>
+                </div>
+                <div class="portal-invalid-feedback" id="branchError">
+                    @error('primary_branch_id') {{ $message }} @enderror
                 </div>
             </div>
 
@@ -566,7 +149,14 @@
                 <div class="portal-form-group">
                     <label class="portal-input-label mb-1">{{ __('Date of Birth') }}</label>
                     <div class="portal-input-box">
-                        <input type="date" name="date_of_birth" class="portal-form-control" style="padding: 0 10px;" value="{{ $employee?->date_of_birth ? \Carbon\Carbon::parse($employee->date_of_birth)->format('Y-m-d') : '1994-08-15' }}" />
+                        <input type="date"
+                               name="date_of_birth"
+                               class="portal-form-control @error('date_of_birth') is-invalid @enderror"
+                               style="padding: 0 10px;"
+                               value="{{ old('date_of_birth', $employee?->date_of_birth ? \Carbon\Carbon::parse($employee->date_of_birth)->format('Y-m-d') : '1994-08-15') }}" />
+                    </div>
+                    <div class="portal-invalid-feedback" id="dobError">
+                        @error('date_of_birth') {{ $message }} @enderror
                     </div>
                 </div>
 
@@ -574,16 +164,16 @@
                     <label class="portal-input-label mb-1">{{ __('Nationality') }}</label>
                     <div class="portal-input-box">
                         <select name="nationality" class="portal-form-control portal-select">
-                            <option value="Kuwaiti" {{ ($employee?->nationality == 'Kuwaiti' || $employee?->nationality == 'كويتية' || !$employee?->nationality) ? 'selected' : '' }}>{{ __('Kuwaiti') }}</option>
-                            <option value="Saudi" {{ ($employee?->nationality == 'Saudi' || $employee?->nationality == 'سعودية') ? 'selected' : '' }}>{{ __('Saudi') }}</option>
-                            <option value="Emirati" {{ ($employee?->nationality == 'Emirati' || $employee?->nationality == 'إماراتية') ? 'selected' : '' }}>{{ __('Emirati') }}</option>
-                            <option value="Bahraini" {{ ($employee?->nationality == 'Bahraini' || $employee?->nationality == 'بحرينية') ? 'selected' : '' }}>{{ __('Bahraini') }}</option>
-                            <option value="Qatari" {{ ($employee?->nationality == 'Qatari' || $employee?->nationality == 'قطرية') ? 'selected' : '' }}>{{ __('Qatari') }}</option>
-                            <option value="Omani" {{ ($employee?->nationality == 'Omani' || $employee?->nationality == 'عمانية') ? 'selected' : '' }}>{{ __('Omani') }}</option>
-                            <option value="Egyptian" {{ ($employee?->nationality == 'Egyptian' || $employee?->nationality == 'مصرية') ? 'selected' : '' }}>{{ __('Egyptian') }}</option>
-                            <option value="Jordanian" {{ ($employee?->nationality == 'Jordanian' || $employee?->nationality == 'أردنية') ? 'selected' : '' }}>{{ __('Jordanian') }}</option>
-                            <option value="Lebanese" {{ ($employee?->nationality == 'Lebanese' || $employee?->nationality == 'لبنانية') ? 'selected' : '' }}>{{ __('Lebanese') }}</option>
-                            <option value="Other" {{ ($employee?->nationality == 'Other' || $employee?->nationality == 'أخرى') ? 'selected' : '' }}>{{ __('Other') }}</option>
+                            <option value="Kuwaiti" {{ (old('nationality', $employee?->nationality) == 'Kuwaiti' || old('nationality', $employee?->nationality) == 'كويتية' || !$employee?->nationality) ? 'selected' : '' }}>{{ __('Kuwaiti') }}</option>
+                            <option value="Saudi" {{ (old('nationality', $employee?->nationality) == 'Saudi' || old('nationality', $employee?->nationality) == 'سعودية') ? 'selected' : '' }}>{{ __('Saudi') }}</option>
+                            <option value="Emirati" {{ (old('nationality', $employee?->nationality) == 'Emirati' || old('nationality', $employee?->nationality) == 'إماراتية') ? 'selected' : '' }}>{{ __('Emirati') }}</option>
+                            <option value="Bahraini" {{ (old('nationality', $employee?->nationality) == 'Bahraini' || old('nationality', $employee?->nationality) == 'بحرينية') ? 'selected' : '' }}>{{ __('Bahraini') }}</option>
+                            <option value="Qatari" {{ (old('nationality', $employee?->nationality) == 'Qatari' || old('nationality', $employee?->nationality) == 'قطرية') ? 'selected' : '' }}>{{ __('Qatari') }}</option>
+                            <option value="Omani" {{ (old('nationality', $employee?->nationality) == 'Omani' || old('nationality', $employee?->nationality) == 'عمانية') ? 'selected' : '' }}>{{ __('Omani') }}</option>
+                            <option value="Egyptian" {{ (old('nationality', $employee?->nationality) == 'Egyptian' || old('nationality', $employee?->nationality) == 'مصرية') ? 'selected' : '' }}>{{ __('Egyptian') }}</option>
+                            <option value="Jordanian" {{ (old('nationality', $employee?->nationality) == 'Jordanian' || old('nationality', $employee?->nationality) == 'أردنية') ? 'selected' : '' }}>{{ __('Jordanian') }}</option>
+                            <option value="Lebanese" {{ (old('nationality', $employee?->nationality) == 'Lebanese' || old('nationality', $employee?->nationality) == 'لبنانية') ? 'selected' : '' }}>{{ __('Lebanese') }}</option>
+                            <option value="Other" {{ (old('nationality', $employee?->nationality) == 'Other' || old('nationality', $employee?->nationality) == 'أخرى') ? 'selected' : '' }}>{{ __('Other') }}</option>
                         </select>
                     </div>
                 </div>
@@ -597,10 +187,10 @@
                         $currentMarital = is_object($employee?->marital_status) ? ($employee->marital_status->value ?? '') : (string)($employee?->marital_status ?? 'married');
                     @endphp
                     <select name="marital_status" class="portal-form-control portal-select">
-                        <option value="married" {{ $currentMarital === 'married' ? 'selected' : '' }}>{{ __('Married') }}</option>
-                        <option value="single" {{ $currentMarital === 'single' ? 'selected' : '' }}>{{ __('Single') }}</option>
-                        <option value="divorced" {{ $currentMarital === 'divorced' ? 'selected' : '' }}>{{ __('Divorced') }}</option>
-                        <option value="widowed" {{ $currentMarital === 'widowed' ? 'selected' : '' }}>{{ __('Widowed') }}</option>
+                        <option value="married" {{ old('marital_status', $currentMarital) === 'married' ? 'selected' : '' }}>{{ __('Married') }}</option>
+                        <option value="single" {{ old('marital_status', $currentMarital) === 'single' ? 'selected' : '' }}>{{ __('Single') }}</option>
+                        <option value="divorced" {{ old('marital_status', $currentMarital) === 'divorced' ? 'selected' : '' }}>{{ __('Divorced') }}</option>
+                        <option value="widowed" {{ old('marital_status', $currentMarital) === 'widowed' ? 'selected' : '' }}>{{ __('Widowed') }}</option>
                     </select>
                 </div>
             </div>
@@ -615,37 +205,69 @@
             <!-- Phone with International Country Picker -->
             <div class="portal-form-group">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('Primary Phone Number') }}</label>
+                    <label class="portal-input-label" for="portalPhoneInput">{{ __('Primary Phone Number') }} <span class="text-danger">*</span></label>
                 </div>
-                <div class="portal-phone-field-wrapper" dir="ltr">
+                <div class="portal-iti-wrapper" dir="ltr">
                     @php
-                        $rawPortalPhone = $employee?->phone ?? '99112233';
+                        $rawPortalPhone = old('phone', $employee?->phone ?? '99112233');
                         $cleanedPortalPhone = preg_replace('/^\+965/', '', $rawPortalPhone);
                     @endphp
-                    <input type="tel" id="portalPhoneInput" name="phone" class="portal-form-control portal-phone-input" value="{{ $cleanedPortalPhone }}" dir="ltr" />
+                    <input type="tel" id="portalPhoneInput" name="phone" class="portal-phone-input @error('phone') is-invalid @enderror" value="{{ $cleanedPortalPhone }}" dir="ltr" required />
+                    <div class="portal-invalid-feedback" id="profilePhoneError">
+                        @error('phone') {{ $message }} @enderror
+                    </div>
                 </div>
             </div>
 
             <!-- Email -->
             <div class="portal-form-group">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('Email Address') }}</label>
+                    <label class="portal-input-label" for="profileEmailInput">{{ __('Email Address') }} <span class="text-danger">*</span></label>
                 </div>
                 <div class="portal-input-box">
-                    <input type="email" name="email" class="portal-form-control" value="{{ $employee?->email ?? (auth()->user()?->email ?? 'nour@astroleaders.com') }}" placeholder="name@example.com" dir="ltr" />
+                    <input type="email"
+                           id="profileEmailInput"
+                           name="email"
+                           class="portal-form-control @error('email') is-invalid @enderror"
+                           value="{{ old('email', $employee?->email ?? (auth()->user()?->email ?? 'nour@astroleaders.com')) }}"
+                           placeholder="name@example.com"
+                           dir="ltr"
+                           required />
                     <i class="bx bx-envelope"></i>
+                </div>
+                <div class="portal-invalid-feedback" id="profileEmailError">
+                    @error('email') {{ $message }} @enderror
                 </div>
             </div>
 
             <!-- Emergency Contact -->
             <div class="portal-row-2col">
                 <div class="portal-form-group">
-                    <label class="portal-input-label mb-1">{{ __('Emergency Contact Name') }}</label>
-                    <input type="text" name="emergency_contact_name" class="portal-form-control" style="padding: 0 12px;" value="{{ $employee?->emergency_contact_name ?? '' }}" placeholder="{{ __('Name') }}" />
+                    <label class="portal-input-label mb-1" for="profileEmergNameInput">{{ __('Emergency Contact Name') }}</label>
+                    <input type="text"
+                           id="profileEmergNameInput"
+                           name="emergency_contact_name"
+                           class="portal-form-control @error('emergency_contact_name') is-invalid @enderror"
+                           style="padding: 0 12px;"
+                           value="{{ old('emergency_contact_name', $employee?->emergency_contact_name ?? '') }}"
+                           placeholder="{{ __('Name') }}" />
+                    <div class="portal-invalid-feedback" id="emergNameError">
+                        @error('emergency_contact_name') {{ $message }} @enderror
+                    </div>
                 </div>
                 <div class="portal-form-group">
-                    <label class="portal-input-label mb-1">{{ __('Emergency Contact Phone') }}</label>
-                    <input type="tel" name="emergency_contact_phone" class="portal-form-control" style="padding: 0 12px;" value="{{ $employee?->emergency_contact_phone ?? '' }}" placeholder="+965XXXXXXXX" dir="ltr" />
+                    <label class="portal-input-label mb-1" for="profileEmergPhoneInput">{{ __('Emergency Contact Phone') }}</label>
+                    <input type="tel"
+                           id="profileEmergPhoneInput"
+                           name="emergency_contact_phone"
+                           class="portal-form-control @error('emergency_contact_phone') is-invalid @enderror"
+                           style="padding: 0 12px;"
+                           value="{{ old('emergency_contact_phone', $employee?->emergency_contact_phone ?? '') }}"
+                           placeholder="+965XXXXXXXX"
+                           dir="ltr" />
+                    <div class="portal-invalid-feedback" id="emergPhoneError">
+                        @error('emergency_contact_phone') {{ $message }} @enderror
+                    </div>
                 </div>
             </div>
         </div>
@@ -659,24 +281,40 @@
 
             <div class="portal-form-group">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('New Password') }}</label>
+                    <label class="portal-input-label" for="profilePasswordInput">{{ __('New Password') }}</label>
                 </div>
                 <div class="portal-input-box">
-                    <input type="password" name="password" class="portal-form-control" placeholder="••••••••" autocomplete="new-password" />
+                    <input type="password"
+                           id="profilePasswordInput"
+                           name="password"
+                           class="portal-form-control @error('password') is-invalid @enderror"
+                           placeholder="••••••••"
+                           autocomplete="new-password" />
                     <i class="bx bx-lock-alt"></i>
                 </div>
+                <div class="portal-invalid-feedback" id="passwordError">
+                    @error('password') {{ $message }} @enderror
+                </div>
                 <div class="portal-input-helper">
-                    {{ __('Leave blank if you do not wish to change your password.') }}
+                    {{ __('Leave blank if you do not wish to change your password. Must be at least 6 characters.') }}
                 </div>
             </div>
 
             <div class="portal-form-group mb-0">
                 <div class="portal-label-row">
-                    <label class="portal-input-label">{{ __('Confirm New Password') }}</label>
+                    <label class="portal-input-label" for="profilePasswordConfirmInput">{{ __('Confirm New Password') }}</label>
                 </div>
                 <div class="portal-input-box">
-                    <input type="password" name="password_confirmation" class="portal-form-control" placeholder="••••••••" autocomplete="new-password" />
+                    <input type="password"
+                           id="profilePasswordConfirmInput"
+                           name="password_confirmation"
+                           class="portal-form-control @error('password_confirmation') is-invalid @enderror"
+                           placeholder="••••••••"
+                           autocomplete="new-password" />
                     <i class="bx bx-check-shield"></i>
+                </div>
+                <div class="portal-invalid-feedback" id="passwordConfirmError">
+                    @error('password_confirmation') {{ $message }} @enderror
                 </div>
             </div>
         </div>
@@ -684,8 +322,9 @@
         <!-- 5. Exact Custom Action Buttons -->
         <div class="edit-profile-actions">
             <!-- Save Button -->
-            <button type="submit" class="btn-save-custom">
+            <button type="submit" class="btn-save-custom" id="btnSaveProfile">
                 <span>{{ __('Save Changes') }}</span>
+                <i class="bx bx-check-circle fs-5"></i>
             </button>
 
             <!-- Cancel Button -->
@@ -702,17 +341,154 @@
     document.addEventListener("DOMContentLoaded", function () {
         const phoneInputField = document.querySelector("#portalPhoneInput");
         if (phoneInputField) {
-            window.intlTelInput(phoneInputField, {
+            const itiInstance = window.intlTelInput(phoneInputField, {
                 initialCountry: "kw",
                 preferredCountries: ["kw", "sa", "ae", "qa", "bh", "om", "eg"],
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
-                separateDialCode: true
+                separateDialCode: true,
+                autoPlaceholder: "polite"
+            });
+
+            const adjustPhonePadding = () => {
+                const selectedFlag = phoneInputField.closest('.iti')?.querySelector('.iti__selected-flag');
+                if (selectedFlag) {
+                    const width = selectedFlag.offsetWidth;
+                    if (width > 0) {
+                        phoneInputField.style.setProperty('padding-left', (width + 8) + 'px', 'important');
+                    }
+                }
+            };
+
+            setTimeout(adjustPhonePadding, 50);
+            phoneInputField.addEventListener('countrychange', adjustPhonePadding);
+
+            phoneInputField.addEventListener('input', function() {
+                clearFieldError('portalPhoneInput', 'profilePhoneError');
             });
         }
+
+        // Live input error clearing
+        const inputsToListen = [
+            { id: 'profileNameArInput', err: 'nameArError' },
+            { id: 'profileEmailInput', err: 'profileEmailError' },
+            { id: 'profilePasswordInput', err: 'passwordError' },
+            { id: 'profilePasswordConfirmInput', err: 'passwordConfirmError' }
+        ];
+
+        inputsToListen.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (el) {
+                el.addEventListener('input', () => clearFieldError(item.id, item.err));
+            }
+        });
     });
 
+    function setFieldError(fieldId, errorId, message) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) field.classList.add('is-invalid');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.classList.add('d-block');
+        }
+    }
+
+    function clearFieldError(fieldId, errorId) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (field) {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+        }
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.remove('d-block');
+        }
+    }
+
+    function validateProfileForm(e) {
+        let hasError = false;
+
+        const nameAr = document.getElementById('profileNameArInput');
+        const phone = document.getElementById('portalPhoneInput');
+        const email = document.getElementById('profileEmailInput');
+        const password = document.getElementById('profilePasswordInput');
+        const passwordConfirm = document.getElementById('profilePasswordConfirmInput');
+
+        // 1. Validate Arabic Name
+        if (nameAr && !nameAr.value.trim()) {
+            setFieldError('profileNameArInput', 'nameArError', "{{ __('Please enter your full name as in Civil ID.') }}");
+            hasError = true;
+        } else if (nameAr) {
+            clearFieldError('profileNameArInput', 'nameArError');
+        }
+
+        // 2. Validate Phone
+        if (phone && !phone.value.trim()) {
+            setFieldError('portalPhoneInput', 'profilePhoneError', "{{ __('Primary phone number is required.') }}");
+            hasError = true;
+        } else if (phone) {
+            clearFieldError('portalPhoneInput', 'profilePhoneError');
+        }
+
+        // 3. Validate Email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email && (!email.value.trim() || !emailPattern.test(email.value.trim()))) {
+            setFieldError('profileEmailInput', 'profileEmailError', "{{ __('Please enter a valid email address.') }}");
+            hasError = true;
+        } else if (email) {
+            clearFieldError('profileEmailInput', 'profileEmailError');
+        }
+
+        // 4. Validate Password & Confirmation (if entered)
+        if (password && password.value) {
+            if (password.value.length < 6) {
+                setFieldError('profilePasswordInput', 'passwordError', "{{ __('Password must be at least 6 characters.') }}");
+                hasError = true;
+            } else {
+                clearFieldError('profilePasswordInput', 'passwordError');
+            }
+
+            if (passwordConfirm && password.value !== passwordConfirm.value) {
+                setFieldError('profilePasswordConfirmInput', 'passwordConfirmError', "{{ __('Passwords do not match.') }}");
+                hasError = true;
+            } else if (passwordConfirm) {
+                clearFieldError('profilePasswordConfirmInput', 'passwordConfirmError');
+            }
+        } else {
+            if (password) clearFieldError('profilePasswordInput', 'passwordError');
+            if (passwordConfirm) clearFieldError('profilePasswordConfirmInput', 'passwordConfirmError');
+        }
+
+        if (hasError) {
+            e.preventDefault();
+            if (typeof showPortalToast === 'function') {
+                showPortalToast('error', "{{ __('Validation Error') }}", "{{ __('Please correct the highlighted fields before saving.') }}");
+            }
+            return false;
+        }
+
+        // Disable button to prevent double-submit
+        const submitBtn = document.getElementById('btnSaveProfile');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>{{ __('Saving...') }}</span> <i class="bx bx-loader-alt bx-spin fs-5"></i>`;
+        }
+
+        return true;
+    }
+
     function previewSelectedAvatar(input) {
+        clearFieldError('previewAvatarImg', 'avatarError');
         if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const maxBytes = 4 * 1024 * 1024; // 4MB
+            if (file.size > maxBytes) {
+                setFieldError('previewAvatarImg', 'avatarError', "{{ __('Image size exceeds 4MB limit!') }}");
+                input.value = '';
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = document.getElementById('previewAvatarImg');
@@ -720,7 +496,7 @@
                     preview.src = e.target.result;
                 }
             };
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         }
     }
 </script>

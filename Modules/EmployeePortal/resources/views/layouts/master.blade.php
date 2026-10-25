@@ -8,24 +8,32 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title', __('Attendance Portal')) | {{ __('ALA ORBIT') }}</title>
 
-    <!-- PWA Primary Meta Tags -->
+    <!-- PWA Primary Meta Tags (Android & Chrome) -->
     <meta name="theme-color" content="#00334B" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="ALA ORBIT" />
+    <link rel="manifest" href="{{ route('portal.manifest') }}" />
+
+    <!-- iOS Safari & Web App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="ALA ORBIT" />
-    <meta name="application-name" content="ALA ORBIT" />
-    <link rel="manifest" href="{{ route('portal.manifest') }}" />
+    <link rel="apple-touch-icon" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/portal/icon-192.png') }}" />
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
+
+    <!-- Microsoft Tiles & Standard Favicons -->
+    <meta name="msapplication-TileColor" content="#00334B" />
+    <meta name="msapplication-TileImage" content="{{ asset('assets/portal/icon-512.png') }}" />
     <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
     <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
 
-    <!-- Google Fonts (Tajawal & Inter) -->
+    <!-- Google Fonts (Almarai) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet" />
 
     <!-- Boxicons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" />
@@ -47,111 +55,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" />
 
-    <style>
-        .notification-bell-btn {
-            position: relative;
-        }
-        .bell-badge-count {
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 4px;
-            border-radius: 9px;
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-            color: #ffffff;
-            font-size: 10px;
-            font-weight: 700;
-            line-height: 18px;
-            text-align: center;
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-            border: 2px solid #ffffff;
-            pointer-events: none;
-            animation: portalBellPulse 2s infinite ease-in-out;
-        }
-        [dir="rtl"] .bell-badge-count {
-            right: auto;
-            left: -3px;
-        }
-        @keyframes portalBellPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-    </style>
-
 @stack('styles')
-
-    <!-- Universal Tablet & iPad Responsive Overrides (Ensures all pages adapt to tablet width) -->
-    <style>
-        @media (min-width: 640px) {
-            .portal-app-wrapper {
-                max-width: 720px !important;
-                padding-left: 20px !important;
-                padding-right: 20px !important;
-            }
-            .portal-bottom-nav {
-                max-width: 620px !important;
-                width: calc(100% - 40px) !important;
-                bottom: 14px !important;
-                height: 72px !important;
-                border-radius: 28px !important;
-            }
-            /* Unclamp EVERY page container in the portal */
-            main#portalMainContent > div,
-            .policies-page-container,
-            .salary-page-container,
-            .rewards-page-container,
-            .terms-page-container,
-            .privacy-page-container,
-            .notif-page-container,
-            .security-page-container,
-            .portal-profile-container,
-            .edit-profile-container,
-            .portal-notif-container,
-            .portal-docs-container,
-            .portal-create-doc-container,
-            .loan-details-page-container,
-            .loans-history-page-container,
-            .loan-page-container,
-            .requests-page-container,
-            .leave-page-container,
-            .perm-history-page-container,
-            .perm-page-container,
-            .portal-dashboard-container {
-                max-width: 100% !important;
-                width: 100% !important;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .portal-app-wrapper {
-                max-width: 860px !important;
-                padding-left: 24px !important;
-                padding-right: 24px !important;
-                padding-top: calc(env(safe-area-inset-top, 0px) + 16px) !important;
-            }
-            .portal-bottom-nav {
-                max-width: 680px !important;
-                bottom: 18px !important;
-                height: 74px !important;
-                border-radius: 30px !important;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .portal-app-wrapper {
-                max-width: 980px !important;
-                padding-left: 32px !important;
-                padding-right: 32px !important;
-            }
-            .portal-bottom-nav {
-                max-width: 760px !important;
-                height: 76px !important;
-                border-radius: 32px !important;
-            }
-        }
-    </style>
 </head>
 
 <body>
