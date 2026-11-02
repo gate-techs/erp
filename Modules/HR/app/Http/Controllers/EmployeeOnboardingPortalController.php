@@ -91,7 +91,7 @@ class EmployeeOnboardingPortalController extends Controller
                 'nationality'                 => $validated['nationality'] ?? null,
                 'blood_type'                  => $validated['blood_type'] ?? null,
                 'hire_date'                   => now()->toDateString(),
-                'status'                      => 'probation',
+                'status'                      => 'active',
                 'employment_type'             => 'full_time',
                 'phone'                       => $validated['phone'],
                 'alternate_phone'             => $validated['alternate_phone'] ?? null,
