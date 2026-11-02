@@ -25,15 +25,15 @@
             <!-- Share Onboarding Link on WhatsApp Button -->
             @php
                 $publicJoinUrl = route('hr.onboarding.portal.public.create');
-                $waMsg = urlencode(__('Hello! Welcome to our company. Please click on the link below to enter your employee profile and submit your documents directly:') . "\n\n" . $publicJoinUrl);
+                $waMsg = urlencode(__('مرحباً! نرحب بانضمامك لشركتنا. يرجى الضغط على الرابط التالي لاستكمال ملفك الوظيفي ورفع مستنداتك مباشرة:') . "\n\n" . $publicJoinUrl);
                 $whatsappShareUrl = 'https://api.whatsapp.com/send?text=' . $waMsg;
             @endphp
             <div class="btn-group btn-group-sm">
-                <a href="{{ $whatsappShareUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm" title="{{ __('Share Registration Link on WhatsApp') }}">
+                <a href="{{ $whatsappShareUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm" title="{{ __('مشاركة رابط التسجيل عبر واتساب') }}">
                     <i class="icon-base bx bxl-whatsapp font-18 text-success"></i>
-                    <span>{{ __('Send Onboarding Link (WhatsApp)') }}</span>
+                    <span>{{ __('إرسال رابط التسجيل (واتساب)') }}</span>
                 </a>
-                <button type="button" class="btn btn-outline-secondary btn-sm px-2" id="btnCopyPublicOnboardingLink" data-link="{{ $publicJoinUrl }}" title="{{ __('Copy Registration Link') }}">
+                <button type="button" class="btn btn-outline-secondary btn-sm px-2" id="btnCopyPublicOnboardingLink" data-link="{{ $publicJoinUrl }}" title="{{ __('نسخ رابط التسجيل') }}">
                     <i class="bx bx-copy font-16"></i>
                 </button>
             </div>
@@ -489,6 +489,12 @@
                         const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send email.") }}';
                         alert(msg);
                     },
+                    complete: function () {
+                        btn.prop('disabled', false).removeClass('opacity-50');
+                    }
+                });
+            });
+
             // 6. Copy Public Registration Link
             $('#btnCopyPublicOnboardingLink').on('click', function () {
                 const link = $(this).data('link');
