@@ -205,6 +205,28 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            @if(!$isEdit)
+                                <!-- Modern Onboarding Invite Banner -->
+                                <div class="col-12 mt-3">
+                                    <div class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-white border border-primary-subtle shadow-xs">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="avatar avatar-sm flex-shrink-0">
+                                                <span class="avatar-initial rounded-circle bg-label-primary">
+                                                    <i class="bx bx-envelope-open font-18"></i>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span class="fw-semibold text-heading d-block small">إرسال رابط استكمال البيانات للموظف عبر الإيميل</span>
+                                                <span class="text-muted font-11">سيتم إرسال بريد إلكتروني ترحيبي تلقائياً للموظف برابط مباشر لإدخال بياناته ورفع وثائقه فور الحفظ.</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-check form-switch m-0 ms-3">
+                                            <input class="form-check-input" type="checkbox" id="sendOnboardingEmailSwitch" name="send_onboarding_email" value="1" {{ old('send_onboarding_email', 1) ? 'checked' : '' }} style="cursor: pointer; width: 2.2em; height: 1.2em;">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

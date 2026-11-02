@@ -84,6 +84,8 @@ class Employee extends Model implements TranslatableContract
         'probation_end_date',
         'contract_end_date',
         'status',
+        'onboarding_token',
+        'onboarding_completed_at',
         'phone',
         'alternate_phone',
         'email',
@@ -112,6 +114,7 @@ class Employee extends Model implements TranslatableContract
      */
     protected $casts = [
         'is_teacher'                  => 'boolean',
+        'onboarding_completed_at'     => 'datetime',
         'gender'                      => Gender::class,
         'employment_type'             => EmploymentType::class,
         'status'                      => EmployeeStatus::class,

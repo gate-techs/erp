@@ -100,6 +100,7 @@ class StoreEmployeeRequest extends FormRequest
             'user_id'                     => ['nullable', 'integer', 'exists:users,id'],
             'user_password'               => ['nullable', 'string', 'min:6'],
             'role'                        => ['nullable', 'string', 'exists:roles,name'],
+            'send_onboarding_email'       => ['nullable', 'boolean'],
 
             // 7. Allowances
             'allowances'                  => ['nullable', 'array'],

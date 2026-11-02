@@ -23,6 +23,7 @@ use Modules\HR\Http\Controllers\JobApplicationController;
 use Modules\HR\Http\Controllers\InterviewController;
 use Modules\HR\Http\Controllers\JobOfferController;
 use Modules\HR\Http\Controllers\OnboardingController;
+use Modules\HR\Http\Controllers\EmployeeOnboardingPortalController;
 use Modules\HR\Http\Controllers\HRDashboardController;
 use Modules\HR\Http\Controllers\AttendanceReportController;
 use Modules\HR\Http\Controllers\LeaveReportController;
@@ -125,6 +126,7 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
     Route::get('employees/deleted', [EmployeeController::class, 'deleted'])->name('employees.deleted');
     Route::patch('employees/{id}/restore', [EmployeeController::class, 'restore'])->name('employees.restore');
     Route::get('employees/{id}/print-profile', [EmployeeController::class, 'printProfile'])->name('employees.print-profile');
+    Route::post('employees/{id}/send-onboarding', [EmployeeController::class, 'sendOnboardingEmail'])->name('employees.send-onboarding');
     Route::resource('employees', EmployeeController::class);
 
     // Workforce Planning (تخطيط القوى العاملة)
@@ -267,3 +269,10 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
         Route::post('policies/reset', [WorkPolicyController::class, 'resetDefaults'])->name('policies.reset');
     });
 });
+
+// Employee Public Self-Onboarding Portal (بوابة استكمال بيانات الموظف الجديد)
+Route::prefix('hr/onboarding')->name('hr.onboarding.portal.')->group(function () {
+    Route::get('join/{token}', [EmployeeOnboardingPortalController::class, 'show'])->name('show');
+    Route::put('join/{token}', [EmployeeOnboardingPortalController::class, 'update'])->name('update');
+});
+

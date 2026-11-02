@@ -12,6 +12,8 @@ use Modules\HR\Http\Requests\StoreEmployeeRequest;
 use Modules\HR\Http\Requests\UpdateEmployeeRequest;
 use Modules\HR\Models\Employee;
 use Modules\HR\Services\EmployeeService;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Modules\Settings\Models\PrintTemplate;
 use Modules\Settings\Models\Setting;
 use Yajra\DataTables\Facades\DataTables;
@@ -281,6 +283,17 @@ class EmployeeController extends Controller
                     $buttons .= '<a href="' . route('hr.employees.edit', $item->id) . '" class="btn btn-icon btn-sm btn-outline-primary" title="' . __('Edit') . '">
                         <i class="icon-base bx bx-edit-alt"></i>
                     </a> ';
+
+                    // Send Onboarding Email Action
+                    if ($item->email) {
+                        $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-warning btn-send-onboarding" 
+                            data-id="' . $item->id . '" 
+                            data-email="' . e($item->email) . '" 
+                            data-name="' . $name . '" 
+                            title="' . __('Send Onboarding Link to Employee Email') . '">
+                            <i class="icon-base bx bx-mail-send font-18"></i>
+                        </button> ';
+                    }
                 }
                 if ($canDelete) {
                     $buttons .= '<button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-employee" 
@@ -335,6 +348,11 @@ class EmployeeController extends Controller
 
         try {
             $employee = $this->employeeService->createEmployee($request->validated(), auth()->id());
+
+            // Handle automatic onboarding email dispatch if requested and email exists
+            if (!empty($request->send_onboarding_email) && !empty($employee->email)) {
+                $this->dispatchOnboardingEmail($employee);
+            }
 
             if ($request->wantsJson()) {
                 return response()->json([
@@ -520,5 +538,60 @@ class EmployeeController extends Controller
             return redirect()->route('hr.employees.index')
                 ->with('error', __('An error occurred while deleting the employee: ') . $e->getMessage());
         }
+    }
+
+    /**
+     * Send onboarding self-service link via email to the employee.
+     */
+    public function sendOnboardingEmail(Request $request, int $id): JsonResponse
+    {
+        abort_if(! auth()->user()->can('hr.employees.edit'), 403);
+
+        $employee = Employee::findOrFail($id);
+
+        if (empty($employee->email)) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Employee does not have an email registered.'),
+            ], 422);
+        }
+
+        try {
+            $this->dispatchOnboardingEmail($employee);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Onboarding link has been sent successfully to :email', ['email' => $employee->email]),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Failed to send email: ') . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Internal helper to ensure token exists and send onboarding email.
+     */
+    protected function dispatchOnboardingEmail(Employee $employee): void
+    {
+        if (empty($employee->onboarding_token)) {
+            $employee->onboarding_token = Str::random(40);
+            $employee->save();
+        }
+
+        $onboardingUrl = route('hr.onboarding.portal.show', $employee->onboarding_token);
+        $employeeName = $employee->translate('ar')?->name ?? $employee->translate('en')?->name ?? __('Valued Employee');
+
+        Mail::send('hr::emails.employee_onboarding', [
+            'employee'      => $employee,
+            'employeeName'  => $employeeName,
+            'employeeCode'  => $employee->employee_code,
+            'onboardingUrl' => $onboardingUrl,
+        ], function ($message) use ($employee, $employeeName) {
+            $message->to($employee->email, $employeeName)
+                    ->subject(__('Employee Self-Onboarding - Complete Your Profile'));
+        });
     }
 }

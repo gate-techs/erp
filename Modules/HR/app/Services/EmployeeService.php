@@ -228,6 +228,7 @@ class EmployeeService
                     'daily_working_hours'         => (float) ($validated['daily_working_hours'] ?? 8.0),
                     'social_insurance_number'     => $validated['social_insurance_number'] ?? null,
                     'social_insurance_percentage' => (float) ($validated['social_insurance_percentage'] ?? 0),
+                    'onboarding_token'            => \Illuminate\Support\Str::random(40),
                     'created_by'                  => $authUserId,
                 ]
             );

@@ -438,6 +438,46 @@
                     deleteModal.show();
                 }
             });
+
+            // 5. Send Onboarding Link via Email Action
+            $(document).on('click', '.btn-send-onboarding', function () {
+                const btn = $(this);
+                const id = btn.data('id');
+                const name = btn.data('name');
+                const email = btn.data('email');
+
+                if (!confirm('{{ __("Are you sure you want to send the self-onboarding link to:") }}\n' + name + ' (' + email + ')?')) {
+                    return;
+                }
+
+                btn.prop('disabled', true).addClass('opacity-50');
+
+                $.ajax({
+                    url: baseUrl + '/' + id + '/send-onboarding',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success(res.message);
+                            } else {
+                                alert(res.message);
+                            }
+                        } else {
+                            alert(res.message || 'Error occurred.');
+                        }
+                    },
+                    error: function (xhr) {
+                        const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send email.") }}';
+                        alert(msg);
+                    },
+                    complete: function () {
+                        btn.prop('disabled', false).removeClass('opacity-50');
+                    }
+                });
+            });
         });
     </script>
 @endsection
