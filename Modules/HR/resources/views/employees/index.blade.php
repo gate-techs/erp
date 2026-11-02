@@ -21,7 +21,23 @@
             </div>
         </div>
 
-        <div class="mt-3 mt-md-0 d-flex gap-2">
+        <div class="mt-3 mt-md-0 d-flex flex-wrap gap-2">
+            <!-- Share Onboarding Link on WhatsApp Button -->
+            @php
+                $publicJoinUrl = route('hr.onboarding.portal.public.create');
+                $waMsg = urlencode(__('Hello! Welcome to our company. Please click on the link below to enter your employee profile and submit your documents directly:') . "\n\n" . $publicJoinUrl);
+                $whatsappShareUrl = 'https://api.whatsapp.com/send?text=' . $waMsg;
+            @endphp
+            <div class="btn-group btn-group-sm">
+                <a href="{{ $whatsappShareUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm" title="{{ __('Share Registration Link on WhatsApp') }}">
+                    <i class="icon-base bx bxl-whatsapp font-18 text-success"></i>
+                    <span>{{ __('Send Onboarding Link (WhatsApp)') }}</span>
+                </a>
+                <button type="button" class="btn btn-outline-secondary btn-sm px-2" id="btnCopyPublicOnboardingLink" data-link="{{ $publicJoinUrl }}" title="{{ __('Copy Registration Link') }}">
+                    <i class="bx bx-copy font-16"></i>
+                </button>
+            </div>
+
             @can('hr.employees.delete')
             <a href="{{ route('hr.employees.deleted') }}" class="btn btn-outline-secondary btn-sm employee-page-btn d-flex align-items-center gap-2 shadow-sm">
                 <i class="icon-base bx bx-trash font-18"></i>
@@ -473,9 +489,17 @@
                         const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to send email.") }}';
                         alert(msg);
                     },
-                    complete: function () {
-                        btn.prop('disabled', false).removeClass('opacity-50');
+            // 6. Copy Public Registration Link
+            $('#btnCopyPublicOnboardingLink').on('click', function () {
+                const link = $(this).data('link');
+                navigator.clipboard.writeText(link).then(() => {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success('{{ __("Registration link copied to clipboard!") }}');
+                    } else {
+                        alert('{{ __("Registration link copied to clipboard!") }}');
                     }
+                }).catch(() => {
+                    prompt('{{ __("Copy this link:") }}', link);
                 });
             });
         });

@@ -18,6 +18,8 @@
 @php
     $currentLocale = session('locale', 'en');
     $isRtl = $currentLocale === 'ar';
+    $isPublicForm = !empty($isPublic) || empty($employee->id);
+    $formAction = $isPublicForm ? route('hr.onboarding.portal.public.store') : route('hr.onboarding.portal.update', $employee->onboarding_token);
 @endphp
 
 <div class="container-xxl py-4 py-md-5" dir="{{ $isRtl ? 'rtl' : 'ltr' }}">
@@ -58,9 +60,15 @@
                             </div>
                         </div>
                         <div class="text-end">
-                            <span class="badge bg-white text-primary px-3 py-2 fw-bold fs-6 shadow-xs rounded-pill">
-                                <i class="bx bx-id-card me-1"></i> {{ $employee->employee_code }}
-                            </span>
+                            @if(!empty($employee->employee_code))
+                                <span class="badge bg-white text-primary px-3 py-2 fw-bold fs-6 shadow-xs rounded-pill">
+                                    <i class="bx bx-id-card me-1"></i> {{ $employee->employee_code }}
+                                </span>
+                            @else
+                                <span class="badge bg-white text-primary px-3 py-2 fw-bold fs-6 shadow-xs rounded-pill">
+                                    <i class="bx bx-user-plus me-1"></i> {{ __('New Employee Registration') }}
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -91,9 +99,11 @@
             @endif
 
             <!-- Form -->
-            <form action="{{ route('hr.onboarding.portal.update', $employee->onboarding_token) }}" method="POST" enctype="multipart/form-data" id="onboardingPortalForm">
+            <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data" id="onboardingPortalForm">
                 @csrf
-                @method('PUT')
+                @if(!$isPublicForm)
+                    @method('PUT')
+                @endif
 
                 <!-- 1. Personal & Civil Info -->
                 <div class="card shadow-sm border-0 mb-4 rounded-4">

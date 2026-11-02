@@ -272,6 +272,8 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
 
 // Employee Public Self-Onboarding Portal (بوابة استكمال بيانات الموظف الجديد)
 Route::prefix('hr/onboarding')->name('hr.onboarding.portal.')->group(function () {
+    Route::get('join', [EmployeeOnboardingPortalController::class, 'createPublic'])->name('public.create');
+    Route::post('join', [EmployeeOnboardingPortalController::class, 'storePublic'])->name('public.store');
     Route::get('join/{token}', [EmployeeOnboardingPortalController::class, 'show'])->name('show');
     Route::put('join/{token}', [EmployeeOnboardingPortalController::class, 'update'])->name('update');
 });
