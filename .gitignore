@@ -24,5 +24,10 @@ yarn-error.log
 
 !/public/assets
 !/public/assets/*
+*.jks
+*.keystore
+key.properties
+*.properties
+*.aab
 /public/css
 /public/js
