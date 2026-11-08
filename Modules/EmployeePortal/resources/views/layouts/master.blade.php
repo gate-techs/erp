@@ -18,17 +18,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="ALA ORBIT" />
-    <link rel="apple-touch-icon" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}" />
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/portal/icon-192.png') }}" />
-    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
+    <link rel="apple-touch-icon" href="{{ asset('assets/portal/apple-touch-icon.png') }}?v={{ filemtime(public_path('assets/portal/apple-touch-icon.png')) }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/portal/apple-touch-icon.png') }}?v={{ filemtime(public_path('assets/portal/apple-touch-icon.png')) }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('assets/portal/icon-192.png') }}?v={{ filemtime(public_path('assets/portal/icon-192.png')) }}" />
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}?v={{ filemtime(public_path('assets/portal/icon-192.png')) }}" />
 
     <!-- Microsoft Tiles & Standard Favicons -->
     <meta name="msapplication-TileColor" content="#00334B" />
-    <meta name="msapplication-TileImage" content="{{ asset('assets/portal/icon-512.png') }}" />
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}" />
-    <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}" />
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}" />
+    <meta name="msapplication-TileImage" content="{{ asset('assets/portal/icon-512.png') }}?v={{ filemtime(public_path('assets/portal/icon-512.png')) }}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('assets/portal/icon-192.png') }}?v={{ filemtime(public_path('assets/portal/icon-192.png')) }}" />
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('assets/portal/icon-512.png') }}?v={{ filemtime(public_path('assets/portal/icon-512.png')) }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/portal/icon-192.png') }}?v={{ filemtime(public_path('assets/portal/icon-192.png')) }}" />
 
     <!-- Google Fonts (Almarai) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

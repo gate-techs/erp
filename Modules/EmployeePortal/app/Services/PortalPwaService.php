@@ -63,7 +63,7 @@ class PortalPwaService implements PortalPwaServiceInterface
     public function getServiceWorkerScript(): string
     {
         return <<<'JS'
-const CACHE_NAME = 'astro-portal-v6';
+const CACHE_NAME = 'astro-portal-v7';
 const OFFLINE_URL = '/portal/offline';
 
 const PRECACHE_ASSETS = [
