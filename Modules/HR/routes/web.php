@@ -29,6 +29,7 @@ use Modules\HR\Http\Controllers\AttendanceReportController;
 use Modules\HR\Http\Controllers\LeaveReportController;
 use Modules\HR\Http\Controllers\PayrollReportController;
 use Modules\HR\Http\Controllers\EmployeeReportController;
+use Modules\HR\Http\Controllers\ExitClearanceController;
 
 Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(function () {
     // Dashboard & Command Center (الرئيسية ولوحة تحكم الموارد البشرية)
@@ -104,6 +105,13 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
     Route::post('permissions/{id}/approve', [PermissionRequestController::class, 'approve'])->name('permissions.approve');
     Route::post('permissions/{id}/reject', [PermissionRequestController::class, 'reject'])->name('permissions.reject');
     Route::resource('permissions', PermissionRequestController::class)->except(['create', 'edit']);
+
+    // Exit Clearances (إخلاء الطرف ونهاية الخدمة)
+    Route::get('exit-clearances/data', [ExitClearanceController::class, 'data'])->name('exit-clearances.data');
+    Route::get('exit-clearances/{id}/print', [ExitClearanceController::class, 'print'])->name('exit-clearances.print');
+    Route::post('exit-clearances/approvals/{approvalId}', [ExitClearanceController::class, 'updateApproval'])->name('exit-clearances.approvals.update');
+    Route::post('exit-clearances/{id}/finalize', [ExitClearanceController::class, 'finalize'])->name('exit-clearances.finalize');
+    Route::resource('exit-clearances', ExitClearanceController::class)->except(['create', 'edit']);
 
     // Leave Requests Management (إدارة طلبات الإجازات)
     Route::get('leaves/data', [LeaveRequestController::class, 'data'])->name('leaves.data');

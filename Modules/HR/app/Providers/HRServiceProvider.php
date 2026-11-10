@@ -180,6 +180,11 @@ class HRServiceProvider extends ModuleServiceProvider
             \Modules\HR\Repositories\Contracts\EmployeeReportRepositoryInterface::class,
             \Modules\HR\Repositories\EmployeeReportRepository::class
         );
+
+        $this->app->bind(
+            \Modules\HR\Repositories\Contracts\ExitClearanceRepositoryInterface::class,
+            \Modules\HR\Repositories\ExitClearanceRepository::class
+        );
     }
 
     //======================

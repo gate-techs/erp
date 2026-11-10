@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('hr_work_policies', function (Blueprint $table) {
             $table->id();
-            $table->string('group', 50)->index(); // leaves, absence, notice_and_eos, permissions
+            $table->string('group', 50)->index(); // leaves, absence, notice_and_eos, permissions, loans, clearance
             $table->string('key', 100)->unique();
             $table->text('value')->nullable();
             $table->string('type', 30)->default('string'); // number, boolean, string, select

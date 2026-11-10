@@ -159,6 +159,12 @@
                         <span>{{ __('Loan & Advance Policies') }}</span>
                     </button>
                 </li>
+                <li class="nav-item text-nowrap" role="presentation">
+                    <button class="nav-link d-flex align-items-center gap-2" id="clearance-tab" data-bs-toggle="pill" data-bs-target="#tab-clearance" type="button" role="tab" aria-controls="tab-clearance" aria-selected="false">
+                        <i class="bx bx-user-check font-18"></i>
+                        <span>{{ __('Exit Clearance Policies') }}</span>
+                    </button>
+                </li>
             </ul>
 
             <!-- Tabs Content -->
@@ -879,6 +885,162 @@
                                             {{ __('Bank Cheque') }}
                                         </option>
                                     </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================================= -->
+                <!-- 7. TAB: EXIT CLEARANCE POLICIES -->
+                <!-- ======================================================= -->
+                <div class="tab-pane fade" id="tab-clearance" role="tabpanel" aria-labelledby="clearance-tab">
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body p-4">
+
+                            <!-- Section 1: Workflow & Execution Mode -->
+                            <div class="section-title d-flex align-items-center gap-2">
+                                <i class="bx bx-git-repo-forked text-primary font-20"></i>
+                                <span>{{ __('Approval Workflow & Execution Route') }}</span>
+                            </div>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold text-heading d-flex align-items-center justify-content-between mb-1">
+                                        <span>{{ __('Clearance Approval Workflow') }}</span>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Defines the required hierarchy and departments involved in the clearance process.') }}"></i>
+                                    </label>
+                                    <select class="form-select" name="policies[clearance_approval_workflow]">
+                                        <option value="manager_it_finance_hr" {{ ($policies['clearance']['clearance_approval_workflow'] ?? '') == 'manager_it_finance_hr' ? 'selected' : '' }}>
+                                            {{ __('Full Cycle (Direct Manager + IT + Finance + HR) - Recommended') }}
+                                        </option>
+                                        <option value="manager_finance_hr" {{ ($policies['clearance']['clearance_approval_workflow'] ?? '') == 'manager_finance_hr' ? 'selected' : '' }}>
+                                            {{ __('Administrative & Finance (Direct Manager + Finance + HR)') }}
+                                        </option>
+                                        <option value="manager_hr" {{ ($policies['clearance']['clearance_approval_workflow'] ?? '') == 'manager_hr' ? 'selected' : '' }}>
+                                            {{ __('Direct Workflow (Direct Manager + HR)') }}
+                                        </option>
+                                        <option value="hr_only" {{ ($policies['clearance']['clearance_approval_workflow'] ?? '') == 'hr_only' ? 'selected' : '' }}>
+                                            {{ __('HR Administration Only') }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold text-heading d-flex align-items-center justify-content-between mb-1">
+                                        <span>{{ __('Department Approvals Execution Mode') }}</span>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Parallel sends clearance checklists to all departments simultaneously. Sequential routes sequentially.') }}"></i>
+                                    </label>
+                                    <select class="form-select" name="policies[clearance_workflow_mode]">
+                                        <option value="parallel" {{ ($policies['clearance']['clearance_workflow_mode'] ?? '') == 'parallel' ? 'selected' : '' }}>
+                                            {{ __('Parallel (All departments review simultaneously for faster clearance)') }}
+                                        </option>
+                                        <option value="sequential" {{ ($policies['clearance']['clearance_workflow_mode'] ?? '') == 'sequential' ? 'selected' : '' }}>
+                                            {{ __('Sequential (Manager first, then IT & Finance, then HR)') }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Timeframe & Permissions -->
+                            <div class="section-title d-flex align-items-center gap-2">
+                                <i class="bx bx-time-five text-info font-20"></i>
+                                <span>{{ __('Timeframe, SLA & Request Permissions') }}</span>
+                            </div>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold text-heading d-flex align-items-center justify-content-between mb-1">
+                                        <span>{{ __('Approval SLA per Department') }}</span>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Maximum business days permitted for each department to sign-off and clear pending assets/custody.') }}"></i>
+                                    </label>
+                                    <div class="position-relative">
+                                        <input type="number" step="1" min="1" max="30" class="form-control input-with-unit" name="policies[clearance_sla_days]" value="{{ $policies['clearance']['clearance_sla_days'] ?? 3 }}" required>
+                                        <span class="unit-badge">{{ __('Days') }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold text-heading d-flex align-items-center justify-content-between mb-1">
+                                        <span>{{ __('Allowed Request Initiators') }}</span>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Specifies who is authorized to initiate an exit clearance request.') }}"></i>
+                                    </label>
+                                    <select class="form-select" name="policies[clearance_initiator_role]">
+                                        <option value="employee_and_hr" {{ ($policies['clearance']['clearance_initiator_role'] ?? '') == 'employee_and_hr' ? 'selected' : '' }}>
+                                            {{ __('Employee (from Self-Service Portal) or HR Administration') }}
+                                        </option>
+                                        <option value="hr_only" {{ ($policies['clearance']['clearance_initiator_role'] ?? '') == 'hr_only' ? 'selected' : '' }}>
+                                            {{ __('HR Administration Only') }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Automation & Security Rules -->
+                            <div class="section-title d-flex align-items-center gap-2">
+                                <i class="bx bx-shield-quarter text-warning font-20"></i>
+                                <span>{{ __('Security, Settlements & Automated Actions') }}</span>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="form-label fw-semibold text-heading mb-0" for="clearance_auto_deactivate_user">
+                                            {{ __('Auto-Deactivate User Account') }}
+                                        </label>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Automatically revoke system login and deactivate the employee user account once clearance is finalized.') }}"></i>
+                                    </div>
+                                    <div class="form-check form-switch mt-2">
+                                        <input type="hidden" name="policies[clearance_auto_deactivate_user]" value="0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="clearance_auto_deactivate_user" name="policies[clearance_auto_deactivate_user]" value="1" {{ !empty($policies['clearance']['clearance_auto_deactivate_user']) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="clearance_auto_deactivate_user">
+                                            {{ __('Suspend ERP access immediately upon final clearance sign-off') }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="form-label fw-semibold text-heading mb-0" for="clearance_auto_settle_loans">
+                                            {{ __('Auto-Settle Outstanding Loans') }}
+                                        </label>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Automatically deduct remaining unpaid loan and advance balances from the final end-of-service settlement.') }}"></i>
+                                    </div>
+                                    <div class="form-check form-switch mt-2">
+                                        <input type="hidden" name="policies[clearance_auto_settle_loans]" value="0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="clearance_auto_settle_loans" name="policies[clearance_auto_settle_loans]" value="1" {{ !empty($policies['clearance']['clearance_auto_settle_loans']) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="clearance_auto_settle_loans">
+                                            {{ __('Deduct pending loan balances from final settlement calculation') }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="form-label fw-semibold text-heading mb-0" for="clearance_block_certificate_before_clear">
+                                            {{ __('Block Certificate Before 100% Cleared') }}
+                                        </label>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Prevent generating or printing the Experience Certificate until all department clearances are officially approved.') }}"></i>
+                                    </div>
+                                    <div class="form-check form-switch mt-2">
+                                        <input type="hidden" name="policies[clearance_block_certificate_before_clear]" value="0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="clearance_block_certificate_before_clear" name="policies[clearance_block_certificate_before_clear]" value="1" {{ !empty($policies['clearance']['clearance_block_certificate_before_clear']) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="clearance_block_certificate_before_clear">
+                                            {{ __('Block issuing official experience certificate until full clearance') }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <label class="form-label fw-semibold text-heading mb-0" for="clearance_require_exit_interview">
+                                            {{ __('Require Exit Interview') }}
+                                        </label>
+                                        <i class="bx bx-info-circle info-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Mandate the completion of an exit interview evaluation questionnaire before finalizing the clearance file.') }}"></i>
+                                    </div>
+                                    <div class="form-check form-switch mt-2">
+                                        <input type="hidden" name="policies[clearance_require_exit_interview]" value="0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="clearance_require_exit_interview" name="policies[clearance_require_exit_interview]" value="1" {{ !empty($policies['clearance']['clearance_require_exit_interview']) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="clearance_require_exit_interview">
+                                            {{ __('Enforce Exit Interview submission prior to final approval') }}
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

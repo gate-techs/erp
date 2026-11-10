@@ -497,6 +497,12 @@
                             "slug": "hr.permissions.index",
                             "url": "/hr/permissions",
                             "permission": "hr.permissions.view"
+                        },
+                        {
+                            "name": "Exit Clearances",
+                            "slug": "hr.exit-clearances.index",
+                            "url": "/hr/exit-clearances",
+                            "permission": "hr.leaves.view"
                         }
                     ]
                 },

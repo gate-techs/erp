@@ -7,10 +7,10 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "kw.astroleaders.alaorbit"
+    namespace = "com.gtaps.alaorbit"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "kw.astroleaders.alaorbit"
+        applicationId "com.gtaps.alaorbit"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
