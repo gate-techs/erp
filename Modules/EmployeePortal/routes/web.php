@@ -97,6 +97,12 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::get('documents/create', [EmployeePortalController::class, 'createDocument'])->name('documents.create');
         Route::post('documents/upload', [EmployeePortalController::class, 'uploadDocument'])->name('documents.upload');
 
+        // Exit Clearance & End of Service (إخلاء الطرف ونهاية الخدمة)
+        Route::get('clearances', [EmployeePortalController::class, 'exitClearancesHistory'])->name('clearances.index');
+        Route::get('clearances/create', [EmployeePortalController::class, 'createExitClearance'])->name('clearances.create');
+        Route::post('clearances/store', [EmployeePortalController::class, 'storeExitClearance'])->name('clearances.store');
+        Route::get('clearances/{id}', [EmployeePortalController::class, 'showExitClearance'])->name('clearances.show');
+
         Route::post('push-subscriptions', [PortalPushSubscriptionController::class, 'store'])->name('push.subscribe');
         Route::delete('push-subscriptions', [PortalPushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
     });

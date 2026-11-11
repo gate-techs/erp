@@ -135,6 +135,17 @@ class NotificationService implements NotificationServiceInterface
                 'color'      => 'danger',
                 'action_url' => '/portal/requests',
             ],
+            'exit_clearance_submitted' => [
+                'name_ar'    => 'تقديم طلب إخلاء طرف ونهاية خدمة',
+                'name_en'    => 'Exit Clearance Request Submitted',
+                'title_ar'   => 'طلب إخلاء طرف جديد',
+                'title_en'   => 'New Exit Clearance Request',
+                'message_ar' => 'تم تقديم طلب إخلاء طرف جديد من الموظف {employee_name} ({employee_code}) - آخر يوم عمل: {last_working_day}.',
+                'message_en' => 'A new exit clearance request was submitted by {employee_name} ({employee_code}) - Last day: {last_working_day}.',
+                'icon'       => 'bx-log-out-circle',
+                'color'      => 'warning',
+                'action_url' => '/hr/exit-clearances',
+            ],
         ];
 
         $template = null;

@@ -107,6 +107,11 @@ class EmployeePortalServiceProvider extends ModuleServiceProvider
             \Modules\EmployeePortal\Services\Contracts\PortalNotificationServiceInterface::class,
             \Modules\EmployeePortal\Services\PortalNotificationService::class
         );
+
+        $this->app->bind(
+            \Modules\EmployeePortal\Services\Contracts\PortalExitClearanceServiceInterface::class,
+            \Modules\EmployeePortal\Services\PortalExitClearanceService::class
+        );
     }
 
     /**

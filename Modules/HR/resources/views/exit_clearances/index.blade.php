@@ -163,9 +163,10 @@
                     <th class="text-center" style="width: 50px;">#</th>
                     <th>{{ __('Code') }}</th>
                     <th>{{ __('Employee') }}</th>
-                    <th>{{ __('Departure Dates') }}</th>
+                    <th>{{ __('Department') }}</th>
+                    <th>{{ __('Last Working Day') }}</th>
+                    <th>{{ __('Notice Date') }}</th>
                     <th>{{ __('Reason') }}</th>
-                    <th>{{ __('Clearance Progress') }}</th>
                     <th class="text-center">{{ __('Status') }}</th>
                     <th class="text-center" style="width: 120px;">{{ __('Actions') }}</th>
                 </tr>
@@ -271,6 +272,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const table = $(tableId).DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        pagingType: 'simple_numbers',
         ajax: {
             url: "{{ route('hr.exit-clearances.data') }}",
             data: function (d) {
@@ -283,17 +287,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
-            { data: 'clearance_code_badge', name: 'clearance_code' },
-            { data: 'employee_info', name: 'employee_info' },
-            { data: 'dates_info', name: 'last_working_day' },
-            { data: 'reason_badge', name: 'leaving_reason' },
-            { data: 'progress_bar', name: 'progress_bar', orderable: false, searchable: false },
-            { data: 'status_badge', name: 'status', className: 'text-center' },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center' }
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center align-middle' },
+            { data: 'clearance_code_badge', name: 'clearance_code', className: 'align-middle' },
+            { data: 'employee_name', name: 'employee.translations.name', className: 'align-middle' },
+            { data: 'department_name', name: 'department.translations.name', className: 'align-middle' },
+            { data: 'last_working_day_col', name: 'last_working_day', className: 'align-middle' },
+            { data: 'notice_date_col', name: 'resignation_date', className: 'align-middle' },
+            { data: 'reason_badge', name: 'leaving_reason', className: 'align-middle' },
+            { data: 'status_badge', name: 'status', className: 'text-center align-middle' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false, className: 'text-center align-middle' }
         ],
         order: [[1, 'desc']],
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        dom: '<"row mx-2 py-3"<"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-start"l><"col-sm-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end"f>>t<"row mx-2 py-3"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        language: {
+            search: "",
+            searchPlaceholder: "{{ __('Search clearances...') }}",
+            lengthMenu: "_MENU_",
+            emptyTable: '<div class="text-center p-4"><div class="avatar avatar-md bg-label-secondary mx-auto mb-3"><i class="icon-base bx bx-user-check font-24"></i></div><h6 class="fw-semibold mb-1">{{ __("No clearance records found") }}</h6><p class="text-muted small mb-0">{{ __("Try adjusting your filters or search query.") }}</p></div>'
+        },
         drawCallback: function () {
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('#exitClearancesTable [data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -302,19 +313,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 2. Filter Triggers
+    // 2. Filter Triggers with reload guard
+    let isResetting = false;
+
     $('#filter_branch_id, #filter_department_id, #filter_employee_id, #filter_status, #filter_date_from, #filter_date_to').on('change', function () {
-        table.draw();
+        if (isResetting) return;
+        table.ajax.reload();
     });
 
     $('#btnResetFilters').on('click', function () {
+        isResetting = true;
         $('#filter_branch_id').val('').trigger('change');
         $('#filter_department_id').val('').trigger('change');
         $('#filter_employee_id').val('').trigger('change');
         $('#filter_status').val('').trigger('change');
         $('#filter_date_from').val('');
         $('#filter_date_to').val('');
-        table.draw();
+        isResetting = false;
+        table.ajax.reload();
     });
 
     // 3. Form Submit with AJAX

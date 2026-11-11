@@ -62,7 +62,22 @@ class WorkPolicyRepository implements WorkPolicyRepositoryInterface
                     $valStr = (string)$value;
                 }
 
-                HrWorkPolicy::where('key', $key)->update(['value' => $valStr]);
+                $updated = HrWorkPolicy::where('key', $key)->update(['value' => $valStr]);
+
+                // If record does not exist in DB yet, create it
+                if ($updated === 0) {
+                    HrWorkPolicy::firstOrCreate(
+                        ['key' => $key],
+                        [
+                            'group'      => str_starts_with($key, 'clearance_') ? 'clearance' : 'general',
+                            'value'      => $valStr,
+                            'type'       => is_numeric($valStr) ? 'number' : (in_array($valStr, ['0', '1'], true) ? 'boolean' : 'string'),
+                            'label_ar'   => $key,
+                            'label_en'   => $key,
+                            'sort_order' => 99,
+                        ]
+                    );
+                }
             }
         });
     }
@@ -173,7 +188,7 @@ class WorkPolicyRepository implements WorkPolicyRepositoryInterface
 
     protected function ensureDefaultPoliciesExist(bool $force = false): void
     {
-        if (!$force && HrWorkPolicy::where('group', 'loans')->exists()) {
+        if (!$force && HrWorkPolicy::where('group', 'clearance')->exists()) {
             return;
         }
 

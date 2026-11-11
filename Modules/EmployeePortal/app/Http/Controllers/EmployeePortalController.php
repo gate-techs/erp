@@ -14,6 +14,7 @@ use Modules\EmployeePortal\Http\Requests\PortalPunchRequest;
 use Modules\EmployeePortal\Services\Contracts\PortalAttendanceServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalAuthServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalDocumentServiceInterface;
+use Modules\EmployeePortal\Services\Contracts\PortalExitClearanceServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalLeaveServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalLoanServiceInterface;
 use Modules\EmployeePortal\Services\Contracts\PortalPermissionServiceInterface;
@@ -33,7 +34,8 @@ class EmployeePortalController extends Controller
         protected PortalLeaveServiceInterface $leaveService,
         protected PortalPermissionServiceInterface $permissionService,
         protected PortalDocumentServiceInterface $documentService,
-        protected PortalLoanServiceInterface $loanService
+        protected PortalLoanServiceInterface $loanService,
+        protected PortalExitClearanceServiceInterface $exitClearanceService
     ) {}
 
     //==========================================================================
@@ -686,5 +688,69 @@ class EmployeePortalController extends Controller
             'message'      => __('Your account deletion request has been submitted successfully to HR Administration. Your session has been ended.'),
             'redirect_url' => route('portal.login'),
         ]);
+    }
+
+    //==========================================================================
+    // 8. Exit Clearance & End of Service Requests (إخلاء الطرف ونهاية الخدمة)
+    //==========================================================================
+
+    /**
+     * Display employee exit clearance requests history.
+     */
+    public function exitClearancesHistory(Request $request): View
+    {
+        $context = $this->exitClearanceService->getEmployeeClearanceHistory(Auth::user(), $request->all());
+
+        return view('employeeportal::clearances.index', $context);
+    }
+
+    /**
+     * Show form to submit a new exit clearance request.
+     */
+    public function createExitClearance(): View
+    {
+        $context = $this->exitClearanceService->getFormContext(Auth::user());
+
+        return view('employeeportal::clearances.create', $context);
+    }
+
+    /**
+     * Store new exit clearance request.
+     */
+    public function storeExitClearance(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'resignation_date'   => 'nullable|date',
+            'last_working_day'   => 'required|date|after_or_equal:today',
+            'leaving_reason'     => 'required|string|in:resignation,contract_expiry,retirement,other',
+            'reason_details'     => 'nullable|string|max:1000',
+            'leave_balance_days' => 'nullable|numeric|min:0',
+        ]);
+
+        $result = $this->exitClearanceService->storeClearanceRequest(Auth::user(), $validated);
+
+        if ($result['success']) {
+            return redirect()->route('portal.clearances.show', $result['clearance']->id)
+                ->with('success', $result['message']);
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->with('error', $result['message']);
+    }
+
+    /**
+     * View details of an exit clearance request.
+     */
+    public function showExitClearance(int $id): View|RedirectResponse
+    {
+        $clearance = $this->exitClearanceService->getClearanceDetails(Auth::user(), $id);
+
+        if (!$clearance) {
+            return redirect()->route('portal.clearances.index')
+                ->with('error', __('Clearance request not found.'));
+        }
+
+        return view('employeeportal::clearances.show', compact('clearance'));
     }
 }

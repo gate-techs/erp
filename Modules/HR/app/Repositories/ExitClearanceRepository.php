@@ -51,17 +51,18 @@ class ExitClearanceRepository implements ExitClearanceRepositoryInterface
             $query->whereDate('last_working_day', '<=', $filters['date_to']);
         }
 
+        $searchTerm = null;
         if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('clearance_code', 'like', "%{$search}%")
-                  ->orWhereHas('employee', function ($eq) use ($search) {
-                      $eq->where('employee_code', 'like', "%{$search}%")
-                         ->orWhere('phone', 'like', "%{$search}%")
-                         ->orWhereHas('translations', function ($tq) use ($search) {
-                             $tq->where('first_name', 'like', "%{$search}%")
-                                ->orWhere('last_name', 'like', "%{$search}%");
-                         });
+            $searchTerm = is_array($filters['search']) ? ($filters['search']['value'] ?? null) : $filters['search'];
+        }
+
+        if (!empty($searchTerm) && is_string($searchTerm)) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('clearance_code', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('employee', function ($eq) use ($searchTerm) {
+                      $eq->where('employee_code', 'like', "%{$searchTerm}%")
+                         ->orWhere('phone', 'like', "%{$searchTerm}%")
+                         ->orWhereTranslationLike('name', "%{$searchTerm}%");
                   });
             });
         }
@@ -113,7 +114,8 @@ class ExitClearanceRepository implements ExitClearanceRepositoryInterface
         $year = date('Y');
         $prefix = "CLR-{$year}-";
 
-        $last = ExitClearance::where('clearance_code', 'like', "{$prefix}%")
+        $last = ExitClearance::withTrashed()
+            ->where('clearance_code', 'like', "{$prefix}%")
             ->orderByDesc('id')
             ->value('clearance_code');
 
@@ -121,6 +123,11 @@ class ExitClearanceRepository implements ExitClearanceRepositoryInterface
             $nextNumber = str_pad((int) $matches[1] + 1, 4, '0', STR_PAD_LEFT);
         } else {
             $nextNumber = '0001';
+        }
+
+        // Ensure uniqueness even in case of gaps or manual entries
+        while (ExitClearance::withTrashed()->where('clearance_code', $prefix . $nextNumber)->exists()) {
+            $nextNumber = str_pad((int) $nextNumber + 1, 4, '0', STR_PAD_LEFT);
         }
 
         return $prefix . $nextNumber;

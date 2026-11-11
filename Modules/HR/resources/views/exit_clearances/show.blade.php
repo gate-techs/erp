@@ -74,7 +74,16 @@
                     </li>
                     <li class="d-flex justify-content-between">
                         <span class="text-muted">{{ __('Leaving Reason') }}:</span>
-                        <span class="badge bg-label-info">{{ __(ucfirst($clearance->leaving_reason)) }}</span>
+                        @php
+                            $reasonsMap = [
+                                'resignation'     => __('Resignation'),
+                                'contract_expiry' => __('Contract Expiry'),
+                                'termination'     => __('Employer Termination'),
+                                'retirement'      => __('Retirement'),
+                                'other'           => __('Other'),
+                            ];
+                        @endphp
+                        <span class="badge bg-label-info">{{ $reasonsMap[$clearance->leaving_reason] ?? __($clearance->leaving_reason) }}</span>
                     </li>
                 </ul>
             </div>
@@ -159,7 +168,7 @@
                                     <small class="fw-semibold text-muted d-block mb-1">{{ __('Required Verification Checklist') }}:</small>
                                     <ul class="mb-0 ps-3 small text-muted">
                                         @foreach($approval->items_checklist as $chk)
-                                            <li>{{ $chk }}</li>
+                                            <li>{{ __($chk) }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -243,12 +252,6 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">{{ __('Final HR Sign-off Notes') }}</label>
                         <textarea name="final_notes" class="form-control" rows="3" placeholder="{{ __('Settlement check numbers, certificate issuance notes, etc.') }}"></textarea>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="force_override" value="1" id="overrideCheck">
-                        <label class="form-check-label small" for="overrideCheck">
-                            {{ __('Force approve even if some department checklists have dues (Emergency Override)') }}
-                        </label>
                     </div>
                 </div>
                 <div class="modal-footer">

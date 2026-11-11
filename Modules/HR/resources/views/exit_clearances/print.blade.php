@@ -94,45 +94,22 @@
         </tr>
         <tr>
             <th>{{ __('Leaving Reason') }}</th>
-            <td colspan="3">{{ __(ucfirst($clearance->leaving_reason)) }} ({{ $clearance->reason_details ?? '-' }})</td>
+            @php
+                $reasonsMap = [
+                    'resignation'     => __('Resignation'),
+                    'contract_expiry' => __('Contract Expiry'),
+                    'termination'     => __('Employer Termination'),
+                    'retirement'      => __('Retirement'),
+                    'other'           => __('Other'),
+                ];
+                $reasonLabel = $reasonsMap[$clearance->leaving_reason] ?? __($clearance->leaving_reason);
+            @endphp
+            <td colspan="3">{{ $reasonLabel }} ({{ $clearance->reason_details ?? '-' }})</td>
         </tr>
     </table>
 
-    <!-- Department Checklists -->
-    <div class="section-title">{{ __('2. Departmental Clearances & Handover') }}</div>
-    <table>
-        <thead>
-            <tr>
-                <th width="25%">{{ __('Department') }}</th>
-                <th width="15%">{{ __('Status') }}</th>
-                <th width="35%">{{ __('Notes / Assets Returned') }}</th>
-                <th width="25%">{{ __('Verified By & Date') }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($clearance->approvals as $appr)
-                <tr>
-                    <td><strong>{{ $appr->department_name }}</strong></td>
-                    <td>{{ $appr->status?->label() ?? $appr->status }}</td>
-                    <td>
-                        {{ $appr->notes ?? '-' }}
-                        @if($appr->dues_amount > 0)
-                            <br><small style="color: red;"><strong>{{ __('Pending Dues') }}:</strong> {{ number_format($appr->dues_amount, 2) }}</small>
-                        @endif
-                    </td>
-                    <td>
-                        {{ $appr->approver?->name ?? 'Pending' }}
-                        @if($appr->approved_at)
-                            <br><small>{{ $appr->approved_at->format('Y-m-d') }}</small>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-
     <!-- Financial Settlement -->
-    <div class="section-title">{{ __('3. Financial Settlements & End of Service') }}</div>
+    <div class="section-title">{{ __('2. Financial Settlements & End of Service') }}</div>
     <table>
         <tr>
             <th width="30%">{{ __('End of Service Pay') }}</th>
@@ -149,7 +126,7 @@
     </table>
 
     <!-- Signatures -->
-    <div class="section-title">{{ __('4. Final Approvals & Acknowledgement') }}</div>
+    <div class="section-title">{{ __('3. Final Approvals & Acknowledgement') }}</div>
     <table class="signatures">
         <tr>
             <td width="33%">

@@ -89,6 +89,28 @@
                 <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-left-arrow-alt' : 'bx-right-arrow-alt' }} request-arrow-icon"></i>
             </div>
         </a>
+
+        <!-- 5. إخلاء طرف ونهاية خدمة (Exit Clearance) -->
+        <a href="{{ route('portal.clearances.create') }}" class="request-item-card request-card-orange" style="grid-column: 1 / -1;">
+            <div class="d-flex align-items-start gap-3">
+                <div class="request-card-icon-box" style="background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; margin-bottom: 0;">
+                    <i class="bx bx-user-x"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h3 class="request-card-title text-danger">{{ __('Exit Clearance & End of Service') }}</h3>
+                    <p class="request-card-desc mb-0">
+                        {{ __('Submit resignation, hand over company assets, and track end-of-service departmental clearances') }}
+                    </p>
+                </div>
+            </div>
+            <div class="request-card-footer mt-3">
+                <span class="request-tag-text text-danger">{{ __('HR & Department Handover') }}</span>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="small text-muted">{{ __('Track Journey') }}</span>
+                    <i class="bx {{ app()->getLocale() === 'ar' ? 'bx-left-arrow-alt' : 'bx-right-arrow-alt' }} request-arrow-icon"></i>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 @endsection

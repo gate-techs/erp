@@ -49,54 +49,49 @@ class ExitClearanceController extends Controller
             ->addColumn('clearance_code_badge', function (ExitClearance $item) {
                 return '<a href="' . route('hr.exit-clearances.show', $item->id) . '" class="fw-bold text-primary">' . e($item->clearance_code) . '</a>';
             })
-            ->addColumn('employee_info', function (ExitClearance $item) {
+            ->addColumn('employee_name', function (ExitClearance $item) {
                 $emp = $item->employee;
                 if (!$emp) {
                     return '<span class="text-muted">' . __('Unknown Employee') . '</span>';
                 }
 
                 $avatarUrl = $emp->avatar ? asset('storage/' . $emp->avatar) : asset('assets/img/avatars/1.png');
-                $deptName  = $emp->department?->name ?? '-';
-                $code      = $emp->employee_code ?? '-';
+                $code      = $emp->employee_code ?? '';
 
                 return '
                     <div class="d-flex align-items-center gap-2">
                         <div class="avatar avatar-sm flex-shrink-0">
                             <img src="' . $avatarUrl . '" alt="Avatar" class="rounded-circle">
                         </div>
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold text-heading text-truncate">' . e($emp->name) . '</span>
-                            <small class="text-muted">' . e($code) . ' • ' . e($deptName) . '</small>
+                        <div class="d-inline-flex align-items-center gap-2">
+                            <span class="fw-bold text-heading">' . e($emp->name) . '</span>
+                            ' . ($code ? '<span class="badge bg-label-secondary font-11 py-0 px-1">' . e($code) . '</span>' : '') . '
                         </div>
                     </div>
                 ';
             })
-            ->addColumn('dates_info', function (ExitClearance $item) {
+            ->addColumn('department_name', function (ExitClearance $item) {
+                $deptName = $item->department?->name ?? $item->employee?->department?->name ?? '-';
+                return '<span class="text-heading">' . e($deptName) . '</span>';
+            })
+            ->addColumn('last_working_day_col', function (ExitClearance $item) {
                 $lastDay = $item->last_working_day ? $item->last_working_day->format('Y-m-d') : '-';
+                return '<span class="text-danger fw-bold"><i class="icon-base bx bx-calendar-x font-14 me-1"></i>' . $lastDay . '</span>';
+            })
+            ->addColumn('notice_date_col', function (ExitClearance $item) {
                 $resDate = $item->resignation_date ? $item->resignation_date->format('Y-m-d') : '-';
-
-                return '<div class="d-flex flex-column small">
-                            <span class="text-danger fw-bold"><i class="bx bx-calendar-x font-14 me-1"></i>' . $lastDay . '</span>
-                            <span class="text-muted">' . __('Notice') . ': ' . $resDate . '</span>
-                        </div>';
+                return '<span class="text-muted"><i class="icon-base bx bx-calendar font-14 me-1"></i>' . $resDate . '</span>';
             })
             ->addColumn('reason_badge', function (ExitClearance $item) {
-                return '<span class="badge bg-label-secondary fw-semibold">' . __(ucfirst($item->leaving_reason)) . '</span>';
-            })
-            ->addColumn('progress_bar', function (ExitClearance $item) {
-                $totalApprovals = $item->approvals->count();
-                $clearedApprovals = $item->approvals->where('status', ClearanceApprovalStatus::CLEARED)->count();
-                $pct = $totalApprovals > 0 ? round(($clearedApprovals / $totalApprovals) * 100) : 0;
-                $color = $pct == 100 ? 'success' : 'primary';
-
-                return '
-                    <div class="d-flex align-items-center gap-2" style="min-width: 130px;">
-                        <div class="progress w-100" style="height: 6px;">
-                            <div class="progress-bar bg-' . $color . '" role="progressbar" style="width: ' . $pct . '%" aria-valuenow="' . $pct . '" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <span class="fw-bold small text-heading">' . $clearedApprovals . '/' . $totalApprovals . '</span>
-                    </div>
-                ';
+                $reasonsMap = [
+                    'resignation'     => __('Resignation'),
+                    'contract_expiry' => __('Contract Expiry'),
+                    'termination'     => __('Employer Termination'),
+                    'retirement'      => __('Retirement'),
+                    'other'           => __('Other'),
+                ];
+                $label = $reasonsMap[$item->leaving_reason] ?? __($item->leaving_reason);
+                return '<span class="badge bg-label-secondary fw-semibold">' . e($label) . '</span>';
             })
             ->addColumn('status_badge', function (ExitClearance $item) {
                 $status = $item->status;
@@ -114,20 +109,20 @@ class ExitClearanceController extends Controller
                 $printUrl = route('hr.exit-clearances.print', $item->id);
 
                 return '
-                    <div class="d-inline-block text-nowrap">
-                        <a href="' . $showUrl . '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" title="' . __('View Checklists') . '">
-                            <i class="bx bx-show font-18 text-primary"></i>
+                    <div class="d-inline-flex gap-1">
+                        <a href="' . $showUrl . '" class="btn btn-icon btn-sm btn-outline-info" title="' . __('View Details') . '" data-bs-toggle="tooltip">
+                            <i class="icon-base bx bx-show font-16"></i>
                         </a>
-                        <a href="' . $printUrl . '" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill" title="' . __('Print Form') . '">
-                            <i class="bx bx-printer font-18 text-info"></i>
+                        <a href="' . $printUrl . '" target="_blank" class="btn btn-icon btn-sm btn-outline-secondary" title="' . __('Print Form') . '" data-bs-toggle="tooltip">
+                            <i class="icon-base bx bx-printer font-16"></i>
                         </a>
-                        <button type="button" class="btn btn-sm btn-icon btn-text-danger rounded-pill btn-delete-clearance" data-id="' . $item->id . '" title="' . __('Delete') . '">
-                            <i class="bx bx-trash font-18 text-danger"></i>
+                        <button type="button" class="btn btn-icon btn-sm btn-outline-danger btn-delete-clearance" data-id="' . $item->id . '" title="' . __('Delete') . '" data-bs-toggle="tooltip">
+                            <i class="icon-base bx bx-trash font-16"></i>
                         </button>
                     </div>
                 ';
             })
-            ->rawColumns(['clearance_code_badge', 'employee_info', 'dates_info', 'reason_badge', 'progress_bar', 'status_badge', 'actions'])
+            ->rawColumns(['clearance_code_badge', 'employee_name', 'department_name', 'last_working_day_col', 'notice_date_col', 'reason_badge', 'status_badge', 'actions'])
             ->make(true);
     }
 
