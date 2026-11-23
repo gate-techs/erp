@@ -43,6 +43,55 @@
 
             <!-- Actions -->
             <div class="d-flex flex-wrap align-items-center gap-2 mt-3 mt-md-0">
+                @if(!empty($employee->onboarding_token))
+                    @php
+                        $selfUpdateUrl = route('hr.onboarding.portal.show', $employee->onboarding_token);
+                        $empName = $displayName;
+                        $rawPhone = preg_replace('/[^0-9]/', '', $employee->phone ?? '');
+                        // Prepare friendly WhatsApp message
+                        $waMsg = "مرحباً {$empName}،\nيرجى الدخول على الرابط التالي لمراجعة وتحديث مستنداتك وبياناتك الشخصية والبنكية في النظام:\n{$selfUpdateUrl}\nشكراً لتعاونكم.";
+                        $waUrl = "https://api.whatsapp.com/send?phone={$rawPhone}&text=" . urlencode($waMsg);
+                    @endphp
+
+                    <!-- WhatsApp Share Dropdown -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-success employee-page-btn d-flex align-items-center gap-2 px-3 shadow-none rounded-3" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bxl-whatsapp font-20"></i>
+                            <span>{{ __('Send Update Link to Employee') }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="min-width: 280px;">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-2" href="{{ $waUrl }}" target="_blank">
+                                    <i class="bx bxl-whatsapp text-success font-20"></i>
+                                    <div>
+                                        <div class="fw-bold">{{ __('Direct WhatsApp Message') }}</div>
+                                        <small class="text-muted">{{ $employee->phone ?: __('No Phone Number') }}</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-2" href="javascript:void(0);" onclick="copySelfUpdateLink('{{ $selfUpdateUrl }}')">
+                                    <i class="bx bx-copy text-primary font-18"></i>
+                                    <div>
+                                        <div class="fw-bold">{{ __('Copy Update Link') }}</div>
+                                        <small class="text-muted">{{ __('Copy link to share manually') }}</small>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 rounded-2" href="{{ $selfUpdateUrl }}" target="_blank">
+                                    <i class="bx bx-link-external text-info font-18"></i>
+                                    <div>
+                                        <div class="fw-bold">{{ __('Preview Update Page') }}</div>
+                                        <small class="text-muted">{{ __('Open link as seen by employee') }}</small>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
+
                 <a href="{{ route('hr.employees.index') }}" class="btn btn-outline-secondary employee-page-btn px-4 rounded-3">
                     {{ __('Cancel') }}
                 </a>
@@ -379,5 +428,27 @@
                     }
                 });
             });
+
+            function copySelfUpdateLink(url) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(url).then(function() {
+                        alert("{{ __('تم نسخ رابط تعديل البيانات بنجاح!') }}");
+                    }).catch(function() {
+                        fallbackCopyText(url);
+                    });
+                } else {
+                    fallbackCopyText(url);
+                }
+            }
+
+            function fallbackCopyText(text) {
+                const tempInput = document.createElement("input");
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                alert("{{ __('تم نسخ رابط تعديل البيانات بنجاح!') }}");
+            }
         </script>
     @endsection

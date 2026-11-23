@@ -124,6 +124,24 @@
                                 <input type="text" name="name_en" class="form-control" value="{{ old('name_en', $employee->translate('en')?->name) }}" dir="ltr">
                             </div>
 
+                            <!-- Branch Selection (فرع العمل) -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label small fw-semibold">{{ __('Work Branch') }} <span class="text-danger">*</span></label>
+                                <select name="primary_branch_id" class="form-select select2" data-control="select2" data-placeholder="{{ __('Select Branch...') }}" required>
+                                    <option value=""></option>
+                                    @if(isset($branches))
+                                        @foreach($branches as $branch)
+                                            @php
+                                                $branchName = $branch->translate($currentLocale)?->name ?? $branch->translate('ar')?->name ?? $branch->translate('en')?->name ?? $branch->name;
+                                            @endphp
+                                            <option value="{{ $branch->id }}" {{ old('primary_branch_id', $employee->primary_branch_id) == $branch->id ? 'selected' : '' }}>
+                                                {{ $branchName }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
                             <!-- Gender Select -->
                             <div class="col-12 col-md-4">
                                 <label class="form-label small fw-semibold">{{ __('Gender') }} <span class="text-danger">*</span></label>
@@ -221,6 +239,22 @@
                             <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">{{ __('Alternate Phone') }}</label>
                                 <input type="text" name="alternate_phone" class="form-control" value="{{ old('alternate_phone', $employee->alternate_phone) }}" dir="ltr">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label small fw-semibold d-flex justify-content-between align-items-center">
+                                    <span>{{ __('Work Email (Official)') }}</span>
+                                    <span class="badge bg-label-info font-11 py-1 px-2">{{ __('Auto-Generated') }}</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-primary"><i class="bx bx-envelope"></i></span>
+                                    <input type="text" id="auto_generated_email" class="form-control bg-light text-muted fw-semibold" 
+                                           value="{{ old('email', $employee->email) ?: 'firstname.secondname@astroleaderskw.com' }}" 
+                                           readonly dir="ltr" 
+                                           title="{{ __('Corporate email automatically created from your name') }}">
+                                </div>
+                                <div class="form-text small text-muted">
+                                    <i class="bx bx-info-circle me-1"></i>{{ __('Generated automatically: firstname.secondname@astroleaderskw.com') }}
+                                </div>
                             </div>
 
                             <!-- Governorate / City Select -->
@@ -345,25 +379,68 @@
                         </div>
                     </div>
                     <div class="card-body p-4">
-                        <div class="row g-3">
+                        <div class="row g-4">
+                            <!-- Personal Photo (Avatar) -->
                             <div class="col-12 col-md-6">
                                 <label class="form-label small fw-semibold">{{ __('Personal Photo') }} (Avatar)</label>
                                 <input type="file" name="avatar" class="form-control" accept="image/jpeg,image/png,image/jpg,image/webp">
                                 <span class="text-muted font-11">{{ __('Accepted: JPG, PNG, WEBP (Max 2MB)') }}</span>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label small fw-semibold">{{ __('National ID / Passport Copy') }}</label>
-                                <input type="file" name="doc_national_id" class="form-control" accept=".pdf,image/jpeg,image/png">
-                                <span class="text-muted font-11">{{ __('Accepted: PDF, JPG, PNG (Max 5MB)') }}</span>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label small fw-semibold">{{ __('Graduation Certificate / Degree') }}</label>
-                                <input type="file" name="doc_certificate" class="form-control" accept=".pdf,image/jpeg,image/png">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label small fw-semibold">{{ __('Resume / CV or Bank Document') }}</label>
-                                <input type="file" name="doc_other" class="form-control" accept=".pdf,image/jpeg,image/png">
-                            </div>
+
+                            <!-- Dynamic Document Types from HR Settings -->
+                            @if(isset($documentTypes) && $documentTypes->isNotEmpty())
+                                @foreach($documentTypes as $idx => $dt)
+                                    @php
+                                        $enTrans = $dt->translations->firstWhere('locale', 'en')?->name;
+                                        $arTrans = $dt->translations->firstWhere('locale', 'ar')?->name;
+                                        // Hardcoded dictionary fallback for core document types
+                                        $fallbackNames = [
+                                            5 => ['en' => 'Civil ID / Residence', 'ar' => 'الهوية / الإقامة'],
+                                            6 => ['en' => 'Passport', 'ar' => 'جواز السفر'],
+                                            7 => ['en' => 'Employment Contract', 'ar' => 'عقد العمل'],
+                                            8 => ['en' => 'Qualification Certificate', 'ar' => 'شهادة المؤهل'],
+                                        ];
+                                        if ($currentLocale === 'ar') {
+                                            $dtName = $arTrans ?: ($fallbackNames[$dt->id]['ar'] ?? ($dt->name ?: 'مستند'));
+                                        } else {
+                                            $dtName = $enTrans ?: ($fallbackNames[$dt->id]['en'] ?? ($dt->name ?: 'Document'));
+                                        }
+                                        $existingDoc = !empty($employee->id) ? $employee->documents->where('document_type_id', $dt->id)->first() : null;
+                                    @endphp
+                                    <div class="col-12 col-md-6">
+                                        <div class="p-3 border rounded-3 bg-light-subtle h-100">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <label class="form-label small fw-bold text-dark mb-0">
+                                                    <i class="bx bx-file-blank text-primary me-1"></i> {{ $dtName }}
+                                                </label>
+                                                @if($existingDoc)
+                                                    <span class="badge bg-label-success font-11 py-1 px-2">
+                                                        <i class="bx bx-check me-1"></i> {{ __('Uploaded') }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <input type="file" name="documents[{{ $dt->id }}][file]" class="form-control" accept=".pdf,image/jpeg,image/png">
+                                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                                <span class="text-muted font-11">{{ __('Accepted: PDF, JPG, PNG (Max 5MB)') }}</span>
+                                                @if($existingDoc)
+                                                    <a href="{{ asset('storage/' . $existingDoc->file_path) }}" target="_blank" class="small text-primary text-decoration-none">
+                                                        <i class="bx bx-show me-1"></i> {{ __('View current file') }}
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label small fw-semibold">{{ __('National ID / Passport Copy') }}</label>
+                                    <input type="file" name="doc_national_id" class="form-control" accept=".pdf,image/jpeg,image/png">
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label small fw-semibold">{{ __('Graduation Certificate / Degree') }}</label>
+                                    <input type="file" name="doc_certificate" class="form-control" accept=".pdf,image/jpeg,image/png">
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -392,19 +469,60 @@
 <script>
     window.addEventListener('load', function () {
         const $ = window.jQuery || window.$;
-        if (!$ || !$.fn.select2) return;
+        if ($ && $.fn.select2) {
+            const isRtl = $('html').attr('dir') === 'rtl';
 
-        const isRtl = $('html').attr('dir') === 'rtl';
-
-        $('.select2, [data-control="select2"]').each(function () {
-            $(this).select2({
-                theme: 'bootstrap-5',
-                placeholder: $(this).data('placeholder') || '',
-                allowClear: true,
-                dir: isRtl ? 'rtl' : 'ltr',
-                width: '100%'
+            $('.select2, [data-control="select2"]').each(function () {
+                $(this).select2({
+                    theme: 'bootstrap-5',
+                    placeholder: $(this).data('placeholder') || '',
+                    allowClear: true,
+                    dir: isRtl ? 'rtl' : 'ltr',
+                    width: '100%'
+                });
             });
-        });
+        }
+
+        // Live preview of auto-generated email
+        const inputNameEn = document.querySelector('input[name="name_en"]');
+        const inputNameAr = document.querySelector('input[name="name_ar"]');
+        const previewEmail = document.getElementById('auto_generated_email');
+
+        function updateEmailPreview() {
+            if (!previewEmail) return;
+            const enVal = (inputNameEn ? inputNameEn.value : '').trim();
+            const arVal = (inputNameAr ? inputNameAr.value : '').trim();
+
+            let first = '';
+            let second = '';
+
+            if (enVal) {
+                const enParts = enVal.replace(/[^a-zA-Z\s]/g, '').trim().split(/\s+/).filter(Boolean);
+                if (enParts.length >= 2) {
+                    first = enParts[0].toLowerCase();
+                    second = enParts[1].toLowerCase();
+                } else if (enParts.length === 1) {
+                    first = enParts[0].toLowerCase();
+                    second = 'team';
+                }
+            }
+
+            if (!first) {
+                if (arVal) {
+                    const arParts = arVal.trim().split(/\s+/).filter(Boolean);
+                    first = 'firstname';
+                    second = arParts.length > 1 ? 'secondname' : 'team';
+                } else {
+                    first = 'firstname';
+                    second = 'secondname';
+                }
+            }
+
+            previewEmail.value = `${first}.${second}@astroleaderskw.com`;
+        }
+
+        if (inputNameEn) inputNameEn.addEventListener('input', updateEmailPreview);
+        if (inputNameAr) inputNameAr.addEventListener('input', updateEmailPreview);
     });
 </script>
 @endsection

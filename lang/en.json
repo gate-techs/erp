@@ -2814,5 +2814,21 @@
     "Monthly Attendance Sheet": "Monthly Attendance Sheet",
     "Monthly Period:": "Monthly Period:",
     "Employees Count:": "Employees Count:",
-    "Attendance Legend:": "Attendance Legend:"
+    "Attendance Legend:": "Attendance Legend:",
+    "Send Update Link to Employee": "Send Update Link to Employee",
+    "Direct WhatsApp Message": "Direct WhatsApp Message",
+    "No Phone Number": "No Phone Number",
+    "Copy Update Link": "Copy Update Link",
+    "Copy link to share manually": "Copy link to share manually",
+    "Preview Update Page": "Preview Update Page",
+    "Open link as seen by employee": "Open link as seen by employee",
+    "Update link copied successfully!": "Update link copied successfully!",
+    "Work Branch": "Work Branch",
+    "Select Branch...": "Select Branch...",
+    "Work Email (Official)": "Work Email (Official)",
+    "Auto-Generated": "Auto-Generated",
+    "Corporate email automatically created from your name": "Corporate email automatically created from your name",
+    "Generated automatically: firstname.secondname@astroleaderskw.com": "Generated automatically: firstname.secondname@astroleaderskw.com",
+    "Official Email:": "Official Email:",
+    "Default Password:": "Default Password:"
 }

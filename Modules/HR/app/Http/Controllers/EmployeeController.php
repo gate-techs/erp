@@ -451,6 +451,11 @@ class EmployeeController extends Controller
                 ->with('error', __('Employee not found.'));
         }
 
+        // Ensure employee has an active onboarding token for self-update
+        if (empty($employee->onboarding_token)) {
+            $employee->update(['onboarding_token' => \Illuminate\Support\Str::random(40)]);
+        }
+
         $formData = $this->employeeService->getFormData();
         $formData['employee'] = $employee;
 

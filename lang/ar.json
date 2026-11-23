@@ -5179,5 +5179,20 @@
     "Monthly Attendance Sheet": "كشف الحضور والإنصراف الشهري",
     "Monthly Period:": "الفترة الشهرية:",
     "Employees Count:": "عدد الموظفين:",
-    "Attendance Legend:": "دليل رموز الحضور:"
+    "Attendance Legend:": "دليل رموز الحضور:",
+    "Send Update Link to Employee": "إرسال رابط التعديل للموظف",
+    "Direct WhatsApp Message": "إرسال واتساب مباشر",
+    "No Phone Number": "رقم الهاتف غير مسجل",
+    "Copy Update Link": "نسخ رابط التعديل",
+    "Copy link to share manually": "نسخ الرابط لمشاركته يدوياً",
+    "Preview Update Page": "معاينة صفحة التعديل",
+    "Open link as seen by employee": "فتح الرابط كما يراه الموظف",
+    "Update link copied successfully!": "تم نسخ رابط تعديل البيانات بنجاح!",
+    "Work Branch": "فرع العمل",
+    "Work Email (Official)": "البريد الرسمي (العمل)",
+    "Auto-Generated": "توليد تلقائي",
+    "Corporate email automatically created from your name": "البريد المؤسسي يتم إنشاؤه تلقائياً من اسمك",
+    "Generated automatically: firstname.secondname@astroleaderskw.com": "يتم إنشاؤه تلقائياً: firstname.secondname@astroleaderskw.com",
+    "Official Email:": "البريد الرسمي:",
+    "Default Password:": "كلمة المرور الافتراضية:"
 }

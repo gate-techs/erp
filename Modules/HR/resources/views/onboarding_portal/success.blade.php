@@ -24,9 +24,19 @@
                             <i class="bx bx-id-card text-primary font-18"></i>
                             <span>{{ __('Employee Code:') }} <strong>{{ $employee->employee_code }}</strong></span>
                         </div>
-                        <div class="d-flex align-items-center gap-2 text-muted small">
+                        @if($employee->primaryBranch)
+                        <div class="d-flex align-items-center gap-2 text-muted small mb-1">
+                            <i class="bx bx-git-branch text-primary font-18"></i>
+                            <span>{{ __('Branch:') }} <strong>{{ $employee->primaryBranch->name }}</strong></span>
+                        </div>
+                        @endif
+                        <div class="d-flex align-items-center gap-2 text-muted small mb-1">
                             <i class="bx bx-envelope text-primary font-18"></i>
-                            <span>{{ __('Email:') }} <strong>{{ $employee->email }}</strong></span>
+                            <span>{{ __('Official Email:') }} <strong>{{ $employee->email }}</strong></span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-muted small">
+                            <i class="bx bx-key text-success font-18"></i>
+                            <span>{{ __('Default Password:') }} <code class="fw-bold text-dark">astro@123</code></span>
                         </div>
                     </div>
 
