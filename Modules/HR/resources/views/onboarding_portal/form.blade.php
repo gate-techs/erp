@@ -222,10 +222,6 @@
                                 <label class="form-label small fw-semibold">{{ __('Alternate Phone') }}</label>
                                 <input type="text" name="alternate_phone" class="form-control" value="{{ old('alternate_phone', $employee->alternate_phone) }}" dir="ltr">
                             </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label small fw-semibold">{{ __('Personal Email') }} <span class="text-danger">*</span></label>
-                                <input type="email" name="email" class="form-control" value="{{ old('email', $employee->email) }}" required dir="ltr">
-                            </div>
 
                             <!-- Governorate / City Select -->
                             <div class="col-12 col-md-6">

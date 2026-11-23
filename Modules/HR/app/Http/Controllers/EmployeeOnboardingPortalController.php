@@ -52,7 +52,7 @@ class EmployeeOnboardingPortalController extends Controller
             'blood_type'               => ['nullable', 'string', 'max:5'],
             'phone'                    => ['required', 'string', 'max:30'],
             'alternate_phone'          => ['nullable', 'string', 'max:30'],
-            'email'                    => ['required', 'email', 'max:100', 'unique:employees,email'],
+            'email'                    => ['nullable', 'email', 'max:100', 'unique:employees,email'],
             'governorate_id'           => ['nullable', 'integer'],
             'city'                     => ['nullable', 'string', 'max:100'],
             'address_1_ar'             => ['nullable', 'string', 'max:255'],
@@ -95,7 +95,7 @@ class EmployeeOnboardingPortalController extends Controller
                 'employment_type'             => 'full_time',
                 'phone'                       => $validated['phone'],
                 'alternate_phone'             => $validated['alternate_phone'] ?? null,
-                'email'                       => $validated['email'],
+                'email'                       => $validated['email'] ?? null,
                 'governorate_id'              => !empty($validated['governorate_id']) ? (int) $validated['governorate_id'] : null,
                 'city'                        => $validated['city'] ?? null,
                 'emergency_contact_name'      => $validated['emergency_contact_name'] ?? null,
@@ -182,7 +182,7 @@ class EmployeeOnboardingPortalController extends Controller
             'blood_type'               => ['nullable', 'string', 'max:5'],
             'phone'                    => ['required', 'string', 'max:30'],
             'alternate_phone'          => ['nullable', 'string', 'max:30'],
-            'email'                    => ['required', 'email', 'max:100'],
+            'email'                    => ['nullable', 'email', 'max:100'],
             'city'                     => ['nullable', 'string', 'max:100'],
             'address_1_ar'             => ['nullable', 'string', 'max:255'],
             'emergency_contact_name'   => ['nullable', 'string', 'max:100'],
@@ -204,7 +204,7 @@ class EmployeeOnboardingPortalController extends Controller
             }
 
             // Sync User email if employee has linked user
-            if ($employee->user) {
+            if ($employee->user && !empty($validated['email'])) {
                 $employee->user->update([
                     'name'  => $validated['name_ar'],
                     'email' => $validated['email'],
@@ -223,7 +223,7 @@ class EmployeeOnboardingPortalController extends Controller
                 'blood_type'                 => $validated['blood_type'] ?? null,
                 'phone'                      => $validated['phone'],
                 'alternate_phone'            => $validated['alternate_phone'] ?? null,
-                'email'                      => $validated['email'],
+                'email'                      => $validated['email'] ?? $employee->email,
                 'city'                       => $validated['city'] ?? null,
                 'emergency_contact_name'     => $validated['emergency_contact_name'] ?? null,
                 'emergency_contact_relation' => $validated['emergency_contact_relation'] ?? null,
