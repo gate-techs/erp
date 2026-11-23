@@ -20,6 +20,7 @@ use Modules\HR\Models\Department;
 use Modules\HR\Models\Employee;
 use Modules\HR\Services\AttendanceService;
 use Modules\Nursery\Models\NurseryBranch;
+use Modules\Settings\Models\PrintTemplate;
 use Yajra\DataTables\Facades\DataTables;
 
 class AttendanceController extends Controller
@@ -406,5 +407,58 @@ class AttendanceController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Print the Attendance Matrix / Sheet using System Printable Template.
+     */
+    public function print(Request $request): View
+    {
+        abort_if(! auth()->user()->can('hr.attendances.view'), 403);
+
+        $selectedYear = (int)($request->get('year', now()->year));
+        $selectedMonth = (int)($request->get('month', now()->month));
+        $selectedEmployee = $request->get('employee_id');
+        $selectedBranch = $request->get('branch_id');
+        $selectedDepartment = $request->get('department_id');
+
+        $filters = [
+            'year'          => $selectedYear,
+            'month'         => $selectedMonth,
+            'employee_id'   => $selectedEmployee,
+            'branch_id'     => $selectedBranch,
+            'department_id' => $selectedDepartment,
+        ];
+
+        $matrixData = $this->attendanceService->getMonthlyMatrixData($filters);
+
+        $branchModel = $selectedBranch ? NurseryBranch::find($selectedBranch) : null;
+        $departmentModel = $selectedDepartment ? Department::find($selectedDepartment) : null;
+        $employeeModel = $selectedEmployee ? Employee::find($selectedEmployee) : null;
+
+        $availableTemplates = PrintTemplate::where('is_active', true)->get();
+        $template = null;
+        if ($request->filled('template_id')) {
+            $template = $availableTemplates->where('id', (int) $request->template_id)->first();
+        }
+        if (!$template) {
+            $template = $availableTemplates->where('is_default', true)->first() ?? $availableTemplates->first();
+        }
+
+        // Force landscape orientation for 31-day attendance matrix table
+        if ($template) {
+            $template->orientation = 'landscape';
+        }
+
+        return view('hr::attendances.print', compact(
+            'matrixData',
+            'selectedYear',
+            'selectedMonth',
+            'branchModel',
+            'departmentModel',
+            'employeeModel',
+            'template',
+            'availableTemplates'
+        ));
     }
 }

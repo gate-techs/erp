@@ -5168,5 +5168,16 @@
     "Clearance request not found.": "طلب إخلاء الطرف غير موجود.",
     "Department Checklists": "فحوصات الأقسام",
     "Official Cause": "السبب الرسمي",
-    "Submitted At": "تاريخ التقديم"
+    "Submitted At": "تاريخ التقديم",
+    "Print Options": "خيارات الطباعة",
+    "Direct Print for Current Table": "طباعة مباشرة للجدول الحالي",
+    "Instant print matching the current view": "طباعة فورية بنفس طريقة العرض الحالية",
+    "Monthly Attendance Sheet (A4 Landscape)": "كشف شهري احترافي (A4 بالعرض)",
+    "Official attendance sheet with header and signatures": "شيت حضور رسمي مع الترويسة والتوقيعات",
+    "Advanced Attendance Reports": "تقارير الحضور المتقدمة والمسير",
+    "Detailed lateness, absence, and summary reports": "كشوفات مفصلة للتأخير والغياب والملخص",
+    "Monthly Attendance Sheet": "كشف الحضور والإنصراف الشهري",
+    "Monthly Period:": "الفترة الشهرية:",
+    "Employees Count:": "عدد الموظفين:",
+    "Attendance Legend:": "دليل رموز الحضور:"
 }

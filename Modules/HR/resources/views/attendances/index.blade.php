@@ -3,6 +3,215 @@
 @section('title', __('Attendance & Absence') . ' - ' . config('variables.templateName'))
 
 @section('page-style')
+<style>
+    /* ========================================================================= */
+    /* Professional Print Styles for Attendance Matrix                          */
+    /* ========================================================================= */
+    @media print {
+        @page {
+            size: A4 landscape !important;
+            margin: 6mm 6mm 6mm 6mm !important;
+        }
+
+        /* 1. Hide System Navigation, Sidebars, Modals & Controls */
+        .layout-menu,
+        .layout-navbar,
+        .footer,
+        .content-backdrop,
+        .attendance-page-header,
+        .card:has(#attendanceFilterForm),
+        #attendanceTrackerContainer,
+        .attendance-page-btn,
+        .btn-group,
+        .btn-close,
+        .modal,
+        .offcanvas,
+        .layout-menu-toggle {
+            display: none !important;
+        }
+
+        /* 2. Reset Layout Wrappers for Clean Canvas */
+        body,
+        html,
+        .layout-wrapper,
+        .layout-container,
+        .layout-page,
+        .content-wrapper,
+        .container-fluid,
+        .container-xxl,
+        .container-p-y {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            width: 100% !important;
+            min-height: auto !important;
+        }
+
+        .attendance-page-root {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+
+        /* 3. Keep Legend Card Clean and Professional */
+        .attendance-legend-card {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            background: #f8fafc !important;
+            border: 1px solid #94a3b8 !important;
+            border-radius: 4px !important;
+            padding: 6px 12px !important;
+            margin-bottom: 8px !important;
+            font-size: 10px !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .legend-report-title {
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            color: #0b284e !important;
+        }
+        .legend-badge-item {
+            font-size: 9.5px !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+        }
+
+        /* 4. Matrix Scroll Box expands to full printed width without scrolling */
+        #gridMatrixBox {
+            display: block !important;
+            width: 100% !important;
+        }
+        .attendance-matrix-scroll-box {
+            overflow: visible !important;
+            border: none !important;
+            box-shadow: none !important;
+            width: 100% !important;
+        }
+
+        /* 5. Matrix Table Print Layout */
+        table.matrix-attendance-table {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-collapse: collapse !important;
+            table-layout: fixed !important;
+            font-size: 8.5px !important;
+            background: #ffffff !important;
+            page-break-inside: auto;
+        }
+        table.matrix-attendance-table tr {
+            page-break-inside: avoid !important;
+            page-break-after: auto !important;
+        }
+        table.matrix-attendance-table thead {
+            display: table-header-group !important;
+        }
+        table.matrix-attendance-table th,
+        table.matrix-attendance-table td {
+            border: 1px solid #94a3b8 !important;
+            padding: 2px 0 !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Headers */
+        table.matrix-attendance-table thead tr:first-child th {
+            background-color: #0b284e !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 9px !important;
+            height: 20px !important;
+        }
+        table.matrix-attendance-table thead tr:nth-child(2) th {
+            background-color: #f1f5f9 !important;
+            color: #334155 !important;
+            font-weight: 600 !important;
+            font-size: 7.5px !important;
+            height: 18px !important;
+        }
+
+        /* Employee Sticky Column becomes static and appropriately sized */
+        table.matrix-attendance-table th.col-sticky-emp,
+        table.matrix-attendance-table td.col-sticky-emp {
+            position: static !important;
+            width: 130px !important;
+            min-width: 130px !important;
+            max-width: 130px !important;
+            background: #ffffff !important;
+            border: 1px solid #94a3b8 !important;
+            padding: 3px 6px !important;
+            text-align: right !important;
+        }
+        .emp-card-layout {
+            gap: 4px !important;
+        }
+        .emp-avatar-badge {
+            display: none !important; /* Hide circular avatars to save horizontal space */
+        }
+        .emp-card-name {
+            font-size: 9px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .emp-card-sub {
+            font-size: 7px !important;
+            color: #64748b !important;
+        }
+
+        /* Day Cells */
+        table.matrix-attendance-table th.col-matrix-day,
+        table.matrix-attendance-table td.col-matrix-day {
+            width: auto !important;
+            min-width: 16px !important;
+            max-width: auto !important;
+            height: 22px !important;
+        }
+
+        /* Icons & Colors preservation */
+        .sym-present-check {
+            color: #15803d !important;
+            font-size: 11px !important;
+            font-weight: 900 !important;
+        }
+        .sym-absent-cross {
+            color: #b91c1c !important;
+            font-size: 11px !important;
+            font-weight: 900 !important;
+        }
+        .sym-restday-box .ico {
+            font-size: 9px !important;
+            color: #64748b !important;
+        }
+        .sym-restday-box .txt {
+            font-size: 6.5px !important;
+            color: #64748b !important;
+        }
+
+        /* If List View is currently active, make sure its table prints nicely too */
+        #listTableViewBox {
+            width: 100% !important;
+        }
+        .attendance-index-table-wrapper {
+            box-shadow: none !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        #attendancesDataTable {
+            width: 100% !important;
+            font-size: 10px !important;
+        }
+        #attendancesDataTable th:last-child,
+        #attendancesDataTable td:last-child {
+            display: none !important; /* Hide Actions column on print */
+        }
+    }
+</style>
 @endsection
 
 @section('content')
@@ -45,6 +254,47 @@
                 <span>{{ __('استيراد إكسيل') }}</span>
             </button>
             @endcan
+
+            <!-- Smart Print Options (Direct Print & Professional Template) -->
+            <div class="btn-group shadow-sm" role="group">
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-1 attendance-page-btn" onclick="triggerAttendancePrint()">
+                    <i class="icon-base bx bx-printer font-18"></i>
+                    <span>{{ __('Print') }}</span>
+                </button>
+                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">{{ __('Print Options') }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:void(0);" onclick="triggerAttendancePrint()">
+                            <i class="bx bx-printer text-primary font-18"></i>
+                            <div>
+                                <div class="fw-semibold">{{ __('Direct Print for Current Table') }}</div>
+                                <small class="text-muted">{{ __('Instant print matching the current view') }}</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-2" id="btnProPrintLandscape" href="{{ route('hr.attendances.print', request()->all()) }}" target="_blank">
+                            <i class="bx bx-file text-success font-18"></i>
+                            <div>
+                                <div class="fw-semibold">{{ __('Monthly Attendance Sheet (A4 Landscape)') }}</div>
+                                <small class="text-muted">{{ __('Official attendance sheet with header and signatures') }}</small>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="{{ route('hr.reports.attendance.index') }}" target="_blank">
+                            <i class="bx bx-chart text-info font-18"></i>
+                            <div>
+                                <div class="fw-semibold">{{ __('Advanced Attendance Reports') }}</div>
+                                <small class="text-muted">{{ __('Detailed lateness, absence, and summary reports') }}</small>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
             <!-- Segmented Switcher -->
             <div class="btn-group shadow-sm" role="group">
@@ -691,6 +941,10 @@
 <script>
     let dataTableInstance = null;
     let currentAttendanceId = null;
+
+    function triggerAttendancePrint() {
+        window.print();
+    }
 
     function switchAttendanceTab(view) {
         const gridBtn = document.getElementById('btnTabGrid');
