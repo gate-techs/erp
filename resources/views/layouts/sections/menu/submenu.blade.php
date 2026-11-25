@@ -19,8 +19,10 @@ if (isset($menu)) {
             if ($currentRouteName === $slug) {
                 $score = 10000 + strlen($slug);
             } else {
-                $prefix = str_ends_with($slug, '.index') ? substr($slug, 0, -5) : $slug . '.';
-                if (str_starts_with($currentRouteName, $prefix)) {
+                // If slug ends with .index (e.g. settings.roles.index or settings.index), match subroutes (settings.roles.create, etc.)
+                // But avoid broad matching where settings.index matches settings.roles.*!
+                $prefix = str_ends_with($slug, '.index') ? substr($slug, 0, -5) : $slug;
+                if ($prefix !== '' && (str_starts_with($currentRouteName, $prefix . '.') || $currentRouteName === $prefix)) {
                     $score = 1000 + strlen($prefix);
                 }
             }

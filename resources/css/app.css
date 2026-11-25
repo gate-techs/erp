@@ -186,6 +186,42 @@ div.dt-length select:focus,
     outline: 0 !important;
 }
 
+/* Select2 styling for DataTables length selector */
+div.dt-length .select2-container--bootstrap-5,
+.dataTables_wrapper .dataTables_length .select2-container--bootstrap-5 {
+    min-width: 76px !important;
+    width: auto !important;
+    font-size: 0.875rem !important;
+}
+div.dt-length .select2-container--bootstrap-5 .select2-selection,
+.dataTables_wrapper .dataTables_length .select2-container--bootstrap-5 .select2-selection {
+    min-height: 42px !important;
+    height: 42px !important;
+    border-radius: 8px !important;
+    border: 1px solid #d9dee3 !important;
+    display: flex !important;
+    align-items: center !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+div.dt-length .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered,
+.dataTables_wrapper .dataTables_length .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+}
+div.dt-length .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+div.dt-length .select2-container--bootstrap-5.select2-container--open .select2-selection,
+.dataTables_wrapper .dataTables_length .select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.dataTables_wrapper .dataTables_length .select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.15) !important;
+}
+.dt-length-select2-dropdown .select2-results__option {
+    text-align: center !important;
+    padding: 0.4rem 0.65rem !important;
+    font-size: 0.875rem !important;
+}
+
 /* 2. Top Header Controls Row (DT1 & DT2) */
 .card-datatable .dt-container>.row:first-child,
 .card-datatable .dataTables_wrapper>.row:first-child {
@@ -237,9 +273,22 @@ div.dataTables_wrapper div.dataTables_filter input,
     padding: 0.5rem 1.25rem !important;
     border-radius: 8px !important;
     border: 1px solid #d9dee3 !important;
+    background-color: var(--bs-paper-bg, #ffffff) !important;
+    color: var(--bs-body-color, #4b5563) !important;
     margin: 0 !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
     transition: all 0.15s ease-in-out !important;
+}
+
+[data-bs-theme="dark"] div.dt-search input,
+[data-bs-theme="dark"] div.dt-search input.dt-input,
+[data-bs-theme="dark"] #dt-search-0,
+[data-bs-theme="dark"] div.dataTables_wrapper div.dataTables_filter input,
+[data-bs-theme="dark"] .dataTables_wrapper .dataTables_filter input,
+[data-bs-theme="dark"] .card-datatable .dataTables_filter input {
+    background-color: #1e222d !important;
+    border-color: #363d4f !important;
+    color: #e2e8f0 !important;
 }
 
 @media (min-width: 768px) {
@@ -437,12 +486,12 @@ div.dt-paging button.dt-paging-button:not(.current):not(.disabled):hover,
     color: #111827 !important;
 }
 
-/* Active page button (Dark Navy #0b284e) */
+/* Active page button (Dynamic Primary Color) */
 div.dt-paging .pagination .page-item.active .page-link,
 div.dt-paging button.dt-paging-button.current,
 .dataTables_wrapper .pagination .page-item.active .page-link,
 .card-datatable .pagination .page-item.active .page-link {
-    background-color: #0b284e !important;
+    background-color: var(--bs-primary) !important;
     color: #ffffff !important;
     font-weight: 700 !important;
     border-radius: 6px !important;
@@ -1239,6 +1288,52 @@ html[lang^="ar"] .theme-customizer-toggle {
 .color-bg-theme label { background: var(--bs-paper-bg, #fff); border: 1px solid var(--bs-border-color); }
 .color-bg-theme input[type="radio"]:checked + label::after { color: var(--bs-heading-color); }
 
+/* ==========================================================================
+   Primary Color Swatches (Customizer)
+   ========================================================================== */
+.customizer-primary-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border: 1px solid transparent;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+.customizer-primary-swatch:hover {
+    transform: scale(1.12);
+}
+.customizer-primary-swatch.active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 1px var(--bs-body-bg, #fff), 0 0 0 3px currentColor;
+}
+.customizer-primary-swatch.active::after {
+    content: '\eb84';
+    font-family: boxicons !important;
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+/* Rainbow / custom picker swatch */
+.customizer-primary-custom {
+    overflow: visible;
+}
+.customizer-primary-custom input[type="color"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+}
+
 .theme-customizer-backdrop {
     position: fixed;
     top: 0;
@@ -1909,7 +2004,7 @@ html[dir="rtl"] .pagination .bx-chevrons-right {
 .layout-menu .menu-icon {
     font-size: 1.25rem !important; /* ~20px */
     width: 1.25rem !important;
-    margin-inline-end: 0.75rem !important;
+    margin-inline: 0.75rem !important;
 }
 
 /* --- 3. Active Parent (Hierarchy Fix) --- */
@@ -1967,7 +2062,7 @@ html[dir="ltr"] .layout-menu .menu-sub .menu-item {
 }
 .global-navbar-search-input {
     height: 40px !important;
-    background-color: var(--bs-body-bg, #f8f9fa) !important;
+    /* background-color: var(--bs-body-bg, #f8f9fa) !important; */
     color: var(--bs-heading-color) !important;
     border: 1px solid var(--bs-border-color, #e0e0e0) !important;
     border-radius: 0.6rem !important;
@@ -3540,7 +3635,7 @@ html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
 }
 .btn-create-task-main,
 .btn-primary-dark {
-    background: #0d2847 !important;
+    background: var(--bs-primary) !important;
     color: #ffffff !important;
     border-radius: 8px;
     font-weight: 600;
@@ -3553,7 +3648,7 @@ html.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page {
 }
 .btn-create-task-main:hover,
 .btn-primary-dark:hover {
-    background: #163e6c !important;
+    background: var(--astro-primary-hover, var(--bs-primary)) !important;
 }
 .filter-select {
     border-radius: 8px;
@@ -3878,51 +3973,56 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
 
 /* Primary Add Event Button */
 .fc .fc-addEventButton-button {
-    background-color: #0b3252 !important;
-    border-color: #0b3252 !important;
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
     padding: 0.45rem 1.25rem !important;
     border-radius: 0.375rem !important;
     font-size: 0.9rem !important;
-    box-shadow: 0 2px 4px rgba(11, 50, 82, 0.2);
+    box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.2);
     transition: all 0.2s ease;
     margin-inline-end: 10px !important;
 }
 
 .fc .fc-addEventButton-button:hover {
-    background-color: #08253d !important;
-    border-color: #08253d !important;
+    background-color: var(--astro-primary-hover, var(--bs-primary)) !important;
+    border-color: var(--astro-primary-hover, var(--bs-primary)) !important;
 }
 
 /* Views Buttons Group (Month, Week, Day, List) */
 .fc .fc-button-group {
     border-radius: 0.375rem;
     overflow: hidden;
-    border: 1px solid #d9dee3;
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.22);
 }
 
 .fc .fc-button-group > .fc-button:not(.fc-prev-button):not(.fc-next-button) {
-    background-color: #b5c7d6 !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
     border: none !important;
-    color: #2b435b !important;
+    color: var(--bs-primary) !important;
     font-weight: 500 !important;
     font-size: 0.85rem !important;
     padding: 0.45rem 0.9rem !important;
     text-transform: capitalize;
     border-radius: 0 !important;
     box-shadow: none !important;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .fc .fc-button-group > .fc-button:not(.fc-prev-button):not(.fc-next-button):not(:last-child) {
-    border-inline-end: 1px solid #9eb3c4 !important;
+    border-inline-end: 1px solid rgba(var(--bs-primary-rgb), 0.2) !important;
 }
 
-.fc .fc-button-group > .fc-button:not(.fc-prev-button):not(.fc-next-button).fc-button-active,
 .fc .fc-button-group > .fc-button:not(.fc-prev-button):not(.fc-next-button):hover {
-    background-color: #9ab4c7 !important;
-    color: #172d42 !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.22) !important;
+    color: var(--bs-primary) !important;
+    font-weight: 600 !important;
+}
+
+.fc .fc-button-group > .fc-button:not(.fc-prev-button):not(.fc-next-button).fc-button-active {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
     font-weight: 600 !important;
 }
 
@@ -3935,7 +4035,7 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
 }
 
 .fc .fc-day-today {
-    background-color: rgba(105, 108, 255, 0.04) !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.06) !important;
 }
 
 .fc .fc-daygrid-day-top {
@@ -4068,4 +4168,226 @@ form .row:not([class*="g-0"]):not([class*="gy-"]) {
     .report-filter-actions > .btn {
         flex: 1 1 0;
     }
+}
+
+/* ==========================================================================
+   Dynamic Primary Color Bindings (Theme Customizer)
+   Ensures all primary-colored components react immediately to --bs-primary
+   ========================================================================== */
+
+/* 1. Sidemenu Active Items (top-level & submenu, light & dark) */
+.bg-menu-theme .menu-inner > .menu-item.active:not(.open) > .menu-link,
+.layout-menu .menu-inner > .menu-item.active:not(.open) > .menu-link,
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle),
+.layout-menu .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle),
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle),
+.layout-menu .menu-inner .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle),
+.layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link:not(.menu-toggle) {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+.bg-menu-theme .menu-inner > .menu-item.active:not(.open) > .menu-link .menu-icon,
+.bg-menu-theme .menu-inner > .menu-item.active:not(.open) > .menu-link i,
+.bg-menu-theme .menu-inner > .menu-item.active:not(.open) > .menu-link div,
+.layout-menu .menu-inner > .menu-item.active:not(.open) > .menu-link .menu-icon,
+.layout-menu .menu-inner > .menu-item.active:not(.open) > .menu-link i,
+.layout-menu .menu-inner > .menu-item.active:not(.open) > .menu-link div,
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) .menu-icon,
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) i,
+.bg-menu-theme .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) div,
+.layout-menu .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) .menu-icon,
+.layout-menu .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) i,
+.layout-menu .menu-inner > .menu-item.active > .menu-link:not(.menu-toggle) div,
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle) .menu-icon,
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle) i,
+.bg-menu-theme .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle) div,
+.layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link:not(.menu-toggle) .menu-icon,
+.layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link:not(.menu-toggle) i,
+.layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link:not(.menu-toggle) div {
+    color: #ffffff !important;
+}
+
+.layout-menu .menu-inner > .menu-item.active:not(.open) > .menu-link.menu-toggle::after {
+    border-color: #ffffff !important;
+}
+
+.layout-menu .menu-inner > .menu-item.active.open > .menu-link i,
+.layout-menu .menu-inner > .menu-item.active.open > .menu-link .menu-icon {
+    color: var(--bs-primary) !important;
+}
+
+/* 2. Buttons */
+.btn-primary {
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--astro-primary-hover, var(--bs-primary));
+    --bs-btn-hover-border-color: var(--astro-primary-hover, var(--bs-primary));
+    --bs-btn-active-bg: var(--astro-primary-active, var(--bs-primary));
+    --bs-btn-active-border-color: var(--astro-primary-active, var(--bs-primary));
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    background-color: var(--astro-primary-hover, var(--bs-primary)) !important;
+    border-color: var(--astro-primary-hover, var(--bs-primary)) !important;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--astro-primary-active, var(--bs-primary)) !important;
+    border-color: var(--astro-primary-active, var(--bs-primary)) !important;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary.active {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+.btn-label-primary,
+.bg-label-primary {
+    background-color: rgba(var(--bs-primary-rgb), 0.16) !important;
+    color: var(--bs-primary) !important;
+}
+
+.btn-label-primary:hover {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+/* 3. Form Controls (Switches, Checkboxes, Radios, Focus) */
+.form-check-input:checked,
+.form-switch .form-check-input:checked {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: var(--bs-primary) !important;
+}
+
+/* 4. Utilities, Badges, Navs, Tabs, Progress & Pagination */
+.bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.bg-primary-subtle {
+    background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
+    color: var(--bs-primary) !important;
+}
+
+.text-primary {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+}
+
+.border-primary {
+    --bs-border-opacity: 1;
+    border-color: rgba(var(--bs-primary-rgb), var(--bs-border-opacity)) !important;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--bs-primary) !important;
+    border-bottom-color: var(--bs-primary) !important;
+}
+
+.page-item.active .page-link,
+.pagination .page-item.active .page-link {
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+.progress-bar {
+    background-color: var(--bs-primary) !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+/* 5. Select2 Dynamic Primary Color */
+.select2-container--bootstrap-5 .select2-search--dropdown .select2-search__field:focus,
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.15) !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--bs-primary) !important;
+    color: #ffffff !important;
+}
+
+.select2-container--bootstrap-5 .select2-results__option--selected,
+.select2-container--default .select2-results__option--selected {
+    background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
+    color: var(--bs-primary) !important;
+}
+
+.select2-container--bootstrap-5.select2-container--focus .select2-selection,
+.select2-container--bootstrap-5.select2-container--open .select2-selection {
+    border-color: var(--bs-primary) !important;
+}
+
+/* 6. Unified Borderless Filter Reset Button across the entire system */
+#btnResetFilters,
+#btn_reset_filters,
+#resetFilters,
+#reset_filters,
+#btn-reset,
+#btn-reset-filters,
+.btn-reset-filters,
+button:has(> i.bx-reset):not(.btn-primary):not(.btn-danger):not(.btn-outline-danger) {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--bs-secondary-color, #64748b) !important;
+    font-weight: 500 !important;
+    padding-inline: 0.5rem !important;
+    width: auto !important;
+    transition: color 0.15s ease !important;
+}
+
+#btnResetFilters:hover,
+#btn_reset_filters:hover,
+#resetFilters:hover,
+#reset_filters:hover,
+#btn-reset:hover,
+#btn-reset-filters:hover,
+.btn-reset-filters:hover,
+button:has(> i.bx-reset):not(.btn-primary):not(.btn-danger):not(.btn-outline-danger):hover {
+    border: none !important;
+    background: transparent !important;
+    color: var(--bs-danger, #ff3e1d) !important;
 }

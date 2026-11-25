@@ -28,6 +28,49 @@
                 }
             } catch (e) {}
             document.documentElement.setAttribute('data-bs-theme', theme);
+
+            // Apply saved primary color immediately before first paint to prevent FOUC
+            try {
+                const savedPrimary = localStorage.getItem('astro_primary_color');
+                if (savedPrimary) {
+                    let hex = savedPrimary.replace('#', '');
+                    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+                    const bigint = parseInt(hex, 16);
+                    if (!isNaN(bigint)) {
+                        const rgb = [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255].join(', ');
+                        const shade = (h, pct) => {
+                            let r = Math.min(255, Math.max(0, Math.round(((bigint >> 16) & 255) * (1 + pct / 100))));
+                            let g = Math.min(255, Math.max(0, Math.round(((bigint >> 8) & 255) * (1 + pct / 100))));
+                            let b = Math.min(255, Math.max(0, Math.round((bigint & 255) * (1 + pct / 100))));
+                            return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                        };
+                        const hover = shade(hex, -10);
+                        const active = shade(hex, -15);
+                        const root = document.documentElement;
+                        root.style.setProperty('--bs-primary', savedPrimary);
+                        root.style.setProperty('--bs-primary-rgb', rgb);
+                        root.style.setProperty('--bs-primary-bg-subtle', 'rgba(' + rgb + ', 0.16)');
+                        root.style.setProperty('--bs-primary-border-subtle', 'rgba(' + rgb + ', 0.35)');
+                        root.style.setProperty('--bs-primary-text-emphasis', savedPrimary);
+                        root.style.setProperty('--bs-btn-bg', savedPrimary);
+                        root.style.setProperty('--bs-btn-border-color', savedPrimary);
+                        root.style.setProperty('--bs-btn-hover-bg', hover);
+                        root.style.setProperty('--bs-btn-hover-border-color', shade(hex, -12));
+                        root.style.setProperty('--bs-btn-active-bg', active);
+                        root.style.setProperty('--bs-link-color', savedPrimary);
+                        root.style.setProperty('--bs-link-color-rgb', rgb);
+                        root.style.setProperty('--bs-link-hover-color', shade(hex, -20));
+                        root.style.setProperty('--bs-primary-color', savedPrimary);
+                        root.style.setProperty('--bs-menu-active-bg', savedPrimary);
+                        root.style.setProperty('--bs-menu-active-color', '#ffffff');
+                        root.style.setProperty('--bs-menu-sub-active-bg', savedPrimary);
+                        root.style.setProperty('--bs-menu-sub-active-color', '#ffffff');
+                        root.style.setProperty('--bs-focus-ring-color', 'rgba(' + rgb + ', 0.25)');
+                        root.style.setProperty('--astro-primary-hover', hover);
+                        root.style.setProperty('--astro-primary-active', active);
+                    }
+                }
+            } catch (e) {}
         })();
     </script>
     <meta charset="utf-8" />
@@ -72,35 +115,50 @@
     @include('layouts/sections/styles')
 
     @if (!empty($primaryColor))
+    @php
+        $hexClean = ltrim($primaryColor, '#');
+        if (strlen($hexClean) === 3) {
+            $hexClean = $hexClean[0].$hexClean[0].$hexClean[1].$hexClean[1].$hexClean[2].$hexClean[2];
+        }
+        $primaryRgb = strlen($hexClean) === 6
+            ? hexdec(substr($hexClean, 0, 2)) . ', ' . hexdec(substr($hexClean, 2, 2)) . ', ' . hexdec(substr($hexClean, 4, 2))
+            : '11, 40, 78';
+    @endphp
     <style>
         :root, [data-bs-theme="light"], [data-bs-theme="dark"] {
             --bs-primary: {{ $primaryColor }};
+            --bs-primary-rgb: {{ $primaryRgb }};
             --bs-primary-border-subtle: {{ $primaryColor }}33;
             --bs-primary-bg-subtle: {{ $primaryColor }}15;
             --bs-link-color: {{ $primaryColor }};
             --bs-link-hover-color: {{ $primaryColor }};
         }
         .btn-primary {
-            background-color: {{ $primaryColor }} !important;
-            border-color: {{ $primaryColor }} !important;
+            background-color: var(--bs-primary, {{ $primaryColor }}) !important;
+            border-color: var(--bs-primary, {{ $primaryColor }}) !important;
         }
         .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-            background-color: {{ $primaryColor }} !important;
-            border-color: {{ $primaryColor }} !important;
-            filter: brightness(0.92);
+            background-color: var(--astro-primary-hover, var(--bs-primary, {{ $primaryColor }})) !important;
+            border-color: var(--astro-primary-hover, var(--bs-primary, {{ $primaryColor }})) !important;
         }
         .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-            background-color: {{ $primaryColor }} !important;
+            background-color: var(--bs-primary, {{ $primaryColor }}) !important;
             color: #ffffff !important;
         }
         .text-primary {
-            color: {{ $primaryColor }} !important;
+            --bs-text-opacity: 1;
+            color: rgba(var(--bs-primary-rgb, 11, 40, 78), var(--bs-text-opacity)) !important;
         }
         .bg-primary {
-            background-color: {{ $primaryColor }} !important;
+            --bs-bg-opacity: 1;
+            background-color: rgba(var(--bs-primary-rgb, 11, 40, 78), var(--bs-bg-opacity)) !important;
+        }
+        .bg-primary-subtle {
+            background-color: rgba(var(--bs-primary-rgb, 11, 40, 78), 0.12) !important;
+            color: var(--bs-primary, {{ $primaryColor }}) !important;
         }
         .menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) {
-            background-color: {{ $primaryColor }} !important;
+            background-color: var(--bs-primary, {{ $primaryColor }}) !important;
             color: #ffffff !important;
         }
         .menu-vertical .menu-item.active > .menu-link:not(.menu-toggle) .menu-icon,
@@ -124,12 +182,12 @@
             color: #f1f5f9 !important;
         }
         .form-check-input:checked {
-            background-color: {{ $primaryColor }} !important;
-            border-color: {{ $primaryColor }} !important;
+            background-color: var(--bs-primary, {{ $primaryColor }}) !important;
+            border-color: var(--bs-primary, {{ $primaryColor }}) !important;
         }
         .form-control:focus, .form-select:focus {
-            border-color: {{ $primaryColor }} !important;
-            box-shadow: 0 0 0 0.25rem {{ $primaryColor }}25 !important;
+            border-color: var(--bs-primary, {{ $primaryColor }}) !important;
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb, 11, 40, 78), 0.15) !important;
         }
         [dir="rtl"] .form-select {
             background-position: left 0.85rem center !important;

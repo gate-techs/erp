@@ -70,7 +70,7 @@ button,
         .menu-icon {
           font-size: 1.25rem !important;
           color: #8c9ba5 !important;
-          margin-inline-end: 0.75rem !important;
+          margin-inline: 0.75rem !important;
           transition: all 0.2s ease-in-out !important;
         }
 
@@ -203,14 +203,14 @@ button,
   align-items: center !important;
   justify-content: center !important;
   border-radius: 50% !important;
-  background-color: #f1f3f7 !important;
-  color: #5d6d7e !important;
+  background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
+  color: var(--bs-primary) !important;
   padding: 0 !important;
   transition: all 0.2s ease-in-out !important;
 
   &:hover {
-    background-color: #e2e8f0 !important;
-    color: #1e293b !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.16) !important;
+    color: var(--bs-primary) !important;
     transform: scale(1.05);
   }
 
@@ -332,7 +332,7 @@ html[dir="rtl"] {
 
       // Active Item in Dark Mode (only for non-toggle links)
       &.active>.menu-link:not(.menu-toggle) {
-        background-color: #004b87 !important;
+        background-color: var(--bs-primary) !important;
         color: #ffffff !important;
 
         .menu-icon,
@@ -398,7 +398,7 @@ html[dir="rtl"] {
 
       .menu-item.active>.menu-link {
         color: #ffffff !important;
-        background-color: #004b87 !important;
+        background-color: var(--bs-primary) !important;
 
         .menu-icon,
         i {
@@ -448,11 +448,11 @@ html[dir="rtl"] {
 
   // Navbar circle buttons in Dark Mode
   .btn-nav-circle {
-    background-color: #343c4e !important;
-    color: #cbd5e1 !important;
+    background-color: rgba(var(--bs-primary-rgb), 0.16) !important;
+    color: var(--bs-primary-text-emphasis, var(--bs-primary)) !important;
 
     &:hover {
-      background-color: #3e485c !important;
+      background-color: rgba(var(--bs-primary-rgb), 0.28) !important;
       color: #ffffff !important;
     }
   }
@@ -543,7 +543,7 @@ html[dir="rtl"] {
       }
 
       &.active {
-        background-color: #004b87 !important;
+        background-color: var(--bs-primary) !important;
         color: #ffffff !important;
       }
     }
@@ -570,13 +570,13 @@ html[dir="rtl"] {
 
   // Primary Buttons
   .btn-primary {
-    background-color: #005088 !important;
-    border-color: #005088 !important;
+    background-color: var(--bs-primary) !important;
+    border-color: var(--bs-primary) !important;
     color: #ffffff !important;
 
     &:hover {
-      background-color: #003e6b !important;
-      border-color: #003e6b !important;
+      background-color: var(--astro-primary-hover, var(--bs-primary)) !important;
+      border-color: var(--astro-primary-hover, var(--bs-primary)) !important;
     }
   }
 }
@@ -646,7 +646,7 @@ html[dir="rtl"] {
 
   &:hover {
     background-color: #e2e8f0;
-    color: #0b284e;
+    color: var(--bs-primary);
   }
 }
 

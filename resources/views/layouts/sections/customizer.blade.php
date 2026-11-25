@@ -36,6 +36,21 @@
                     </label>
                 </div>
             </div>
+
+            <!-- Primary Color -->
+            <label class="customizer-option-label mb-2 d-block mt-4">{{ __('Primary Color') }}</label>
+            <div class="d-flex flex-wrap gap-2" id="customizerPrimaryColors">
+                <div class="customizer-primary-swatch active" data-color="#0b284e" style="background:#0b284e;" title="Default"></div>
+                <div class="customizer-primary-swatch" data-color="#696cff" style="background:#696cff;" title="Purple"></div>
+                <div class="customizer-primary-swatch" data-color="#03c3ec" style="background:#03c3ec;" title="Info"></div>
+                <div class="customizer-primary-swatch" data-color="#71dd37" style="background:#71dd37;" title="Success"></div>
+                <div class="customizer-primary-swatch" data-color="#ff3e1d" style="background:#ff3e1d;" title="Danger"></div>
+                <div class="customizer-primary-swatch" data-color="#ffab00" style="background:#ffab00;" title="Warning"></div>
+                <div class="customizer-primary-swatch" data-color="#e83e8c" style="background:#e83e8c;" title="Pink"></div>
+                <div class="customizer-primary-swatch customizer-primary-custom" title="{{ __('Custom Color') }}" style="background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);">
+                    <input type="color" id="customizerCustomColor" title="{{ __('Pick a color') }}">
+                </div>
+            </div>
         </div>
         
         <hr class="my-4">
@@ -94,43 +109,6 @@
         <div class="customizer-section">
             <span class="customizer-section-title">{{ __('Navbar & Footer') }}</span>
 
-            <!-- Navbar Color -->
-            <label class="customizer-option-label mb-2 d-block">{{ __('Navbar Color') }}</label>
-            <div class="d-flex gap-2 mb-4 flex-wrap">
-                <div class="customizer-color-item color-bg-theme">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_theme" value="bg-navbar-theme" checked>
-                    <label for="navcolor_theme"></label>
-                </div>
-                <div class="customizer-color-item color-bg-primary">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_primary" value="bg-primary">
-                    <label for="navcolor_primary"></label>
-                </div>
-                <div class="customizer-color-item color-bg-secondary">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_secondary" value="bg-secondary">
-                    <label for="navcolor_secondary"></label>
-                </div>
-                <div class="customizer-color-item color-bg-success">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_success" value="bg-success">
-                    <label for="navcolor_success"></label>
-                </div>
-                <div class="customizer-color-item color-bg-danger">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_danger" value="bg-danger">
-                    <label for="navcolor_danger"></label>
-                </div>
-                <div class="customizer-color-item color-bg-warning">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_warning" value="bg-warning">
-                    <label for="navcolor_warning"></label>
-                </div>
-                <div class="customizer-color-item color-bg-info">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_info" value="bg-info">
-                    <label for="navcolor_info"></label>
-                </div>
-                <div class="customizer-color-item color-bg-dark">
-                    <input type="radio" name="customizer_navbar_color" id="navcolor_dark" value="bg-dark">
-                    <label for="navcolor_dark"></label>
-                </div>
-            </div>
-            
             <!-- Navbar Type -->
             <label class="customizer-option-label mb-2 d-block">{{ __('Navbar Type') }}</label>
             <div class="customizer-radio-group">

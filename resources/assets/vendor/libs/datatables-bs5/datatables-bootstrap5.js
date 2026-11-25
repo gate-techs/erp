@@ -89,8 +89,28 @@ if ($.fn && $.fn.dataTable) {
       $(table).wrap('<div class="table-responsive"></div>');
     }
   }
+  function enhanceLengthSelect(settings) {
+    if (typeof $.fn.select2 !== 'function') return;
+    const container = settings && (settings.tableWrapper || settings.nTableWrapper);
+    if (!container) return;
+
+    $(container)
+      .find('div.dt-length select, .dataTables_length select')
+      .each(function () {
+        const $select = $(this);
+        if ($select.hasClass('select2-hidden-accessible')) return;
+        $select.select2({
+          theme: 'bootstrap-5',
+          minimumResultsForSearch: Infinity,
+          width: '76px',
+          dropdownCssClass: 'dt-length-select2-dropdown'
+        });
+      });
+  }
+
   $(document).on('init.dt', function (e, settings) {
     ensureOwnTableScroller(settings);
+    enhanceLengthSelect(settings);
   });
 
   // Global listener: circular spinner shown in place of the table data while loading

@@ -6,7 +6,7 @@
 @vite('resources/assets/vendor/libs/apex-charts/apex-charts.scss')
 <style>
     :root {
-        --odoo-purple: #714B67;
+        --odoo-purple: var(--bs-primary);
         --odoo-teal: #00A09D;
         --odoo-dark: #1e293b;
         --odoo-border: #e2e8f0;
@@ -30,7 +30,7 @@
     }
     .border-top-accent-amber  { border-top: 3px solid #f59e0b !important; }
     .border-top-accent-teal   { border-top: 3px solid #00A09D !important; }
-    .border-top-accent-purple { border-top: 3px solid #714B67 !important; }
+    .border-top-accent-purple { border-top: 3px solid var(--bs-primary) !important; }
     .border-top-accent-green  { border-top: 3px solid #10b981 !important; }
     .border-top-accent-rose   { border-top: 3px solid #ef4444 !important; }
 
@@ -73,13 +73,13 @@
         background-color: #fff;
     }
     .btn-odoo-primary {
-        background-color: #714B67 !important;
-        border-color: #714B67 !important;
+        background-color: var(--bs-primary) !important;
+        border-color: var(--bs-primary) !important;
         color: #ffffff !important;
     }
     .btn-odoo-primary:hover {
-        background-color: #5c3c53 !important;
-        border-color: #5c3c53 !important;
+        background-color: var(--astro-primary-hover, var(--bs-primary)) !important;
+        border-color: var(--astro-primary-hover, var(--bs-primary)) !important;
         color: #ffffff !important;
     }
 
@@ -167,13 +167,13 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap flex-lg-nowrap gap-3">
         <!-- Title & Subtitle on One Line -->
         <div class="d-flex align-items-center gap-3">
-            <div class="avatar avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="background-color: #f5eff3; color: #714B67;">
+            <div class="avatar avatar-sm rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary);">
                 <i class="bx bx-home-circle font-22"></i>
             </div>
             <div>
                 <div class="d-flex align-items-center flex-wrap gap-2">
                     <h4 class="fw-bold text-heading mb-0">{{ __('Dashboard') }}</h4>
-                    <span class="badge px-2 py-1 rounded-pill font-11" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">
+                    <span class="badge px-2 py-1 rounded-pill font-11" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">
                         {{ __('HR Operations') }}
                     </span>
                 </div>
@@ -252,15 +252,15 @@
             <div class="d-flex align-items-start justify-content-between mb-2">
                 <div>
                     <span class="text-muted small fw-semibold d-block mb-1">{{ __('Job Requisitions') }}</span>
-                    <h3 class="fw-bold mb-0" style="color: #714B67;">{{ $requisitionMetrics['total'] }}</h3>
+                    <h3 class="fw-bold mb-0" style="color: var(--bs-primary);">{{ $requisitionMetrics['total'] }}</h3>
                 </div>
-                <div class="stat-icon-wrapper" style="background-color: #f5eff3; color: #714B67;">
+                <div class="stat-icon-wrapper" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary);">
                     <i class="bx bx-briefcase font-22"></i>
                 </div>
             </div>
             <div class="pt-2 border-top d-flex align-items-center justify-content-between small text-muted">
                 <span>{{ __('Pending Approval') }}: <strong class="text-warning">{{ $requisitionMetrics['pending_approval'] }}</strong></span>
-                <span>{{ __('In Recruitment') }}: <strong style="color: #714B67;">{{ $requisitionMetrics['in_recruitment'] }}</strong></span>
+                <span>{{ __('In Recruitment') }}: <strong style="color: var(--bs-primary);">{{ $requisitionMetrics['in_recruitment'] }}</strong></span>
             </div>
         </div>
     </div>
@@ -312,7 +312,7 @@
 <div class="card hr-odoo-card border-0 shadow-sm mb-4 rounded-3">
     <div class="card-header bg-transparent border-bottom py-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <div class="d-flex align-items-center gap-2">
-            <div class="stat-icon-wrapper" style="background-color: #f5eff3; color: #714B67;">
+            <div class="stat-icon-wrapper" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary);">
                 <i class="bx bx-briefcase font-20"></i>
             </div>
             <div>
@@ -324,7 +324,7 @@
         <div class="d-flex flex-wrap align-items-center gap-2">
             <div class="d-flex align-items-center gap-1 border rounded-3 px-3 py-1 bg-light small">
                 <span class="text-muted">{{ __('Needed Headcount') }}:</span>
-                <strong style="color: #714B67;">{{ $requisitionMetrics['total_headcount'] }}</strong>
+                <strong style="color: var(--bs-primary);">{{ $requisitionMetrics['total_headcount'] }}</strong>
                 <span class="text-muted mx-1">|</span>
                 <span class="text-muted">{{ __('Hired') }}:</span>
                 <strong class="text-success">{{ $requisitionMetrics['total_hired'] }}</strong>
@@ -352,7 +352,7 @@
             <i class="bx bx-check font-14"></i>
             <span>{{ __('Approved') }}: {{ $requisitionMetrics['approved'] }}</span>
         </span>
-        <span class="badge px-3 py-2 rounded-pill d-flex align-items-center gap-1" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">
+        <span class="badge px-3 py-2 rounded-pill d-flex align-items-center gap-1" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">
             <i class="bx bx-user-voice font-14"></i>
             <span>{{ __('In Recruitment') }}: {{ $requisitionMetrics['in_recruitment'] }}</span>
         </span>
@@ -381,7 +381,7 @@
                 @forelse ($recentRequisitions as $req)
                     <tr>
                         <td>
-                            <a href="{{ route('hr.job-requisitions.show', $req->id) }}" class="fw-bold font-13 text-decoration-none" style="color: #714B67;">
+                            <a href="{{ route('hr.job-requisitions.show', $req->id) }}" class="fw-bold font-13 text-decoration-none" style="color: var(--bs-primary);">
                                 <i class="bx bx-file-blank me-1"></i>{{ $req->requisition_number }}
                             </a>
                         </td>
@@ -390,7 +390,7 @@
                             <small class="text-muted font-11">{{ $req->department?->name ?? '-' }}</small>
                         </td>
                         <td class="text-center">
-                            <span class="badge font-12 fw-bold" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">
+                            <span class="badge font-12 fw-bold" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">
                                 {{ $req->hired_count }} / {{ $req->headcount_needed }}
                             </span>
                         </td>
@@ -595,7 +595,7 @@
                                 <small class="text-muted font-11">{{ $leave->employee?->department?->name ?? '-' }}</small>
                             </td>
                             <td>
-                                <span class="badge font-11" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">
+                                <span class="badge font-11" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">
                                     {{ $leave->leave_type?->label() ?? __('Leave') }}
                                 </span>
                             </td>
@@ -651,7 +651,7 @@
                 <button class="nav-link active d-flex align-items-center gap-1" id="leaves-tab" data-bs-toggle="tab" data-bs-target="#tabLeaves" type="button" role="tab">
                     <i class="bx bx-calendar-exclamation font-16"></i>
                     <span>{{ __('Leave Requests') }}</span>
-                    <span class="badge rounded-pill font-11 ms-1 text-white" style="background-color: #714B67;">{{ $pendingActions['leaves']['count'] }}</span>
+                    <span class="badge rounded-pill font-11 ms-1 text-white" style="background-color: var(--bs-primary);">{{ $pendingActions['leaves']['count'] }}</span>
                 </button>
             </li>
             <li class="nav-item">
@@ -694,7 +694,7 @@
                                     <small class="text-muted font-11">{{ $pl->employee?->department?->name ?? '-' }}</small>
                                 </td>
                                 <td>
-                                    <span class="badge font-11" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">{{ $pl->leave_type?->label() ?? 'Leave' }}</span>
+                                    <span class="badge font-11" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">{{ $pl->leave_type?->label() ?? 'Leave' }}</span>
                                 </td>
                                 <td>
                                     <span class="font-12">{{ $pl->start_date?->format('Y-m-d') }} &rarr; {{ $pl->end_date?->format('Y-m-d') }}</span>
@@ -834,7 +834,7 @@
         <div class="card hr-odoo-card border-0 shadow-sm h-100 rounded-3">
             <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between py-3">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="stat-icon-wrapper" style="background-color: #f5eff3; color: #714B67;">
+                    <div class="stat-icon-wrapper" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary);">
                         <i class="bx bx-filter font-20"></i>
                     </div>
                     <div>
@@ -865,18 +865,18 @@
                         <small class="text-muted">{{ __('Staff allocation by department') }}</small>
                     </div>
                 </div>
-                <span class="badge font-11 rounded-pill" style="background-color: #f5eff3; color: #714B67; border: 1px solid #ebdbe5;">{{ $workforce['departments_count'] }} {{ __('Departments') }}</span>
+                <span class="badge font-11 rounded-pill" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); border: 1px solid #ebdbe5;">{{ $workforce['departments_count'] }} {{ __('Departments') }}</span>
             </div>
             <div class="card-body p-4 d-flex flex-column align-items-center justify-content-center">
                 <div id="departmentDonutChart" style="width: 100%; min-height: 240px;"></div>
                 
                 <div class="w-100 mt-3 pt-3 border-top">
                     <div class="d-flex justify-content-between small mb-1">
-                        <span><i class="bx bx-male" style="color: #714B67;"></i> {{ __('Male') }}: <strong>{{ $workforce['male_employees'] }}</strong> ({{ $maleRatio }}%)</span>
+                        <span><i class="bx bx-male" style="color: var(--bs-primary);"></i> {{ __('Male') }}: <strong>{{ $workforce['male_employees'] }}</strong> ({{ $maleRatio }}%)</span>
                         <span><i class="bx bx-female" style="color: #00A09D;"></i> {{ __('Female') }}: <strong>{{ $workforce['female_employees'] }}</strong> ({{ $femaleRatio }}%)</span>
                     </div>
                     <div class="progress" style="height: 6px;">
-                        <div class="progress-bar" role="progressbar" style="width: {{ $maleRatio }}%; background-color: #714B67;"></div>
+                        <div class="progress-bar" role="progressbar" style="width: {{ $maleRatio }}%; background-color: var(--bs-primary);"></div>
                         <div class="progress-bar" role="progressbar" style="width: {{ $femaleRatio }}%; background-color: #00A09D;"></div>
                     </div>
                 </div>
@@ -892,10 +892,10 @@
         <div class="card hr-odoo-card border-0 shadow-sm h-100 rounded-3">
             <div class="card-header bg-transparent border-bottom d-flex align-items-center justify-content-between py-3">
                 <div class="d-flex align-items-center gap-2">
-                    <i class="bx bx-calendar-check font-20" style="color: #714B67;"></i>
+                    <i class="bx bx-calendar-check font-20" style="color: var(--bs-primary);"></i>
                     <h6 class="mb-0 fw-bold">{{ __('Upcoming Scheduled Interviews') }}</h6>
                 </div>
-                <a href="{{ route('hr.interviews.index') }}" class="font-12 fw-semibold text-decoration-none" style="color: #714B67;">
+                <a href="{{ route('hr.interviews.index') }}" class="font-12 fw-semibold text-decoration-none" style="color: var(--bs-primary);">
                     {{ __('View All') }} &rarr;
                 </a>
             </div>
@@ -914,7 +914,7 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        <div class="avatar avatar-xs rounded-circle d-flex align-items-center justify-content-center" style="background-color: #f5eff3; color: #714B67;">
+                                        <div class="avatar avatar-xs rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary);">
                                             <span class="font-10 fw-bold">{{ $interview->candidate?->initials ?? 'C' }}</span>
                                         </div>
                                         <div>
@@ -1082,7 +1082,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     dataLabels: { position: 'bottom' }
                 }
             },
-            colors: ['#714B67', '#00A09D', '#f59e0b', '#10b981', '#2563eb'],
+            colors: [(getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim() || '#0b284e'), '#00A09D', '#f59e0b', '#10b981', '#2563eb'],
             series: [{
                 name: "{{ __('Candidates') }}",
                 data: @json($funnelData['series'])
@@ -1127,7 +1127,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             labels: @json($deptDistribution['labels']),
             series: @json($deptDistribution['series']),
-            colors: ['#714B67', '#00A09D', '#f59e0b', '#10b981', '#ef4444', '#64748b', '#0284c7', '#8b5cf6'],
+            colors: [(getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim() || '#0b284e'), '#00A09D', '#f59e0b', '#10b981', '#ef4444', '#64748b', '#0284c7', '#8b5cf6'],
             stroke: { width: 2, colors: ['#ffffff'] },
             dataLabels: { enabled: false },
             legend: {

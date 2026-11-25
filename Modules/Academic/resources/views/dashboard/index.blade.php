@@ -16,9 +16,9 @@
        Odoo-Inspired Executive Academic Structure & Curriculum Theme
        ======================================================== */
     :root {
-        --odoo-primary: #714B67;
-        --odoo-primary-dark: #56334d;
-        --odoo-primary-light: #f7f1f5;
+        --odoo-primary: var(--bs-primary);
+        --odoo-primary-dark: var(--astro-primary-hover, var(--bs-primary));
+        --odoo-primary-light: rgba(var(--bs-primary-rgb), 0.1);
         --odoo-teal: #017E84;
         --odoo-teal-dark: #005f63;
         --odoo-teal-light: #e6f5f5;
@@ -27,7 +27,7 @@
         --odoo-amber-light: #fff7ed;
         --odoo-green: #28A745;
         --odoo-green-light: #ecfdf5;
-        --odoo-card-border: #ede7ec;
+        --odoo-card-border: rgba(var(--bs-primary-rgb), 0.12);
     }
 
     .odoo-dashboard {
@@ -40,14 +40,14 @@
         border: 1px solid var(--odoo-card-border);
         border-radius: 12px;
         padding: 18px 24px;
-        box-shadow: 0 2px 10px rgba(113, 75, 103, 0.04);
+        box-shadow: 0 2px 10px rgba(var(--bs-primary-rgb), 0.04);
         margin-bottom: 24px;
     }
 
     .odoo-badge-year {
         background-color: var(--odoo-primary-light);
         color: var(--odoo-primary);
-        border: 1px solid rgba(113, 75, 103, 0.2);
+        border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
         font-weight: 600;
         padding: 6px 14px;
         border-radius: 20px;
@@ -69,7 +69,7 @@
         background-color: var(--odoo-primary-dark);
         border-color: var(--odoo-primary-dark);
         color: #ffffff;
-        box-shadow: 0 4px 12px rgba(113, 75, 103, 0.25);
+        box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb), 0.25);
     }
 
     .btn-odoo-outline {
@@ -92,7 +92,7 @@
         border: 1px solid var(--odoo-card-border);
         border-radius: 12px;
         padding: 20px;
-        box-shadow: 0 2px 10px rgba(113, 75, 103, 0.04);
+        box-shadow: 0 2px 10px rgba(var(--bs-primary-rgb), 0.04);
         position: relative;
         overflow: hidden;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -103,8 +103,8 @@
     }
     .odoo-kpi-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 22px rgba(113, 75, 103, 0.09);
-        border-color: rgba(113, 75, 103, 0.25);
+        box-shadow: 0 8px 22px rgba(var(--bs-primary-rgb), 0.09);
+        border-color: rgba(var(--bs-primary-rgb), 0.25);
     }
 
     .odoo-kpi-card::before {
@@ -156,7 +156,7 @@
         background: #ffffff;
         border: 1px solid var(--odoo-card-border);
         border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(113, 75, 103, 0.04);
+        box-shadow: 0 2px 10px rgba(var(--bs-primary-rgb), 0.04);
         transition: all 0.25s ease;
         height: 100%;
         overflow: hidden;
@@ -165,8 +165,8 @@
     }
     .odoo-app-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(113, 75, 103, 0.1);
-        border-color: rgba(113, 75, 103, 0.3);
+        box-shadow: 0 8px 24px rgba(var(--bs-primary-rgb), 0.1);
+        border-color: rgba(var(--bs-primary-rgb), 0.3);
     }
     .odoo-app-header {
         padding: 16px 20px;
@@ -191,7 +191,7 @@
         background: #ffffff;
         border: 1px solid var(--odoo-card-border);
         border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(113, 75, 103, 0.04);
+        box-shadow: 0 2px 10px rgba(var(--bs-primary-rgb), 0.04);
     }
     .odoo-card-header {
         padding: 18px 22px;
@@ -885,9 +885,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const isRtl = document.documentElement.dir === 'rtl';
 
-    // Odoo Signature Colors
+    // Odoo Signature Colors (plum dynamically inherits primary color)
     const odooColors = {
-        plum: '#714B67',
+        plum: getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim() || '#0b284e',
         teal: '#017E84',
         amber: '#e59866',
         green: '#28A745',

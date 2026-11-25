@@ -19,8 +19,8 @@
         transform: scale(1.15);
     }
     .color-radio.selected {
-        border-color: #0b3252;
-        box-shadow: 0 0 0 2px rgba(11, 50, 82, 0.35);
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.35);
     }
 
     /* Meeting Sidebar Styles */
@@ -36,7 +36,7 @@
         width: 48px;
         height: 48px;
         border-radius: 12px;
-        background-color: #eaf0f6;
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -64,13 +64,13 @@
     }
 
     .meeting-tab-btn:hover {
-        color: #0b3252;
+        color: var(--bs-primary);
     }
 
     .meeting-tab-btn.active {
-        color: #0b3252;
+        color: var(--bs-primary);
         font-weight: 700;
-        border-bottom: 3px solid #0b3252;
+        border-bottom: 3px solid var(--bs-primary);
     }
 
     .meeting-tab-body {
@@ -85,8 +85,8 @@
         width: 44px;
         height: 44px;
         border-radius: 12px;
-        background-color: #eaf0f6;
-        color: #1e3a58;
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
+        color: var(--bs-primary);
         font-weight: 700;
         font-size: 1.15rem;
         display: flex;
@@ -127,7 +127,7 @@
         width: 72px;
         height: 72px;
         border-radius: 50%;
-        background-color: #eaf0f6;
+        background-color: rgba(var(--bs-primary-rgb), 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -183,7 +183,7 @@
                     </span>
                 </div>
                 <div class="meeting-cal-box shadow-none">
-                    <i class="icon-base bx bx-calendar fs-3" style="color: #24496d;"></i>
+                    <i class="icon-base bx bx-calendar fs-3" style="color: var(--bs-primary);"></i>
                 </div>
             </div>
 
@@ -207,7 +207,7 @@
                     <!-- Empty State for Today -->
                     <div id="todayMeetingsEmpty" class="meeting-empty-state d-none">
                         <div class="meeting-empty-icon">
-                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#255177" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--bs-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -228,7 +228,7 @@
                     <!-- Empty State for Upcoming -->
                     <div id="upcomingMeetingsEmpty" class="meeting-empty-state d-none">
                         <div class="meeting-empty-icon">
-                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#255177" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--bs-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                                 <line x1="16" y1="2" x2="16" y2="6"></line>
                                 <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -328,7 +328,7 @@
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">{{ __('Cancel') }}</button>
                     @canany(['academic.meeting-calendar.create', 'academic.meeting-calendar.edit'])
-                    <button type="submit" class="btn btn-primary" id="btnSaveMeeting" style="background-color: #0b3252; border-color: #0b3252;">
+                    <button type="submit" class="btn btn-primary" id="btnSaveMeeting">
                         <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
                         <span>{{ __('Save') }}</span>
                     </button>
@@ -608,7 +608,7 @@
                     <!-- Right in RTL: Time with Clock Icon -->
                     <div class="d-flex align-items-center gap-1" style="min-width: 130px;">
                         <i class="icon-base bx bx-time fs-5 text-primary"></i>
-                        <span class="fw-bold font-13" style="color: #1e3a58;">
+                        <span class="fw-bold font-13" style="color: var(--bs-primary);">
                             ${m.time_range || m.start_time}
                         </span>
                     </div>

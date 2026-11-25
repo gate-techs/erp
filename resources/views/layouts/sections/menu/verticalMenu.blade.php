@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
     <div class="app-brand demo">
         <a href="{{url('/')}}" class="app-brand-link">
             <span class="app-brand-logo demo">
-                <img src="{{ $globalSetting?->favicon_url ?? asset('assets/img/favicon/favicon.ico') }}" alt="{{ $globalSetting?->site_name ?? config('variables.templateName') }}" style="max-height: 60px; max-width: 60px; object-fit: contain;">
+                <img src="{{ $globalSetting?->logo_url ?? $globalSetting?->favicon_url ?? asset('assets/img/logo.svg') }}" alt="{{ $globalSetting?->site_name ?? config('variables.templateName') }}" style="max-height: 48px; max-width: 48px; object-fit: contain;">
             </span>
             <span class="app-brand-text demo menu-text fw-bold ms-2">{{ $globalSetting?->site_name ?? config('variables.templateName') }}</span>
         </a>
@@ -39,21 +39,27 @@ use Illuminate\Support\Facades\Route;
         $currentRouteName = Route::currentRouteName() ?? '';
 
         if ($currentRouteName === $menu->slug) {
-        $activeClass = 'active';
+            $activeClass = 'active';
         }
         elseif (isset($menu->submenu)) {
-        if (gettype($menu->slug) === 'array') {
-        foreach($menu->slug as $slug){
-        if (str_contains($currentRouteName,$slug) and strpos($currentRouteName,$slug) === 0) {
-        $activeClass = 'active open';
+            $slugs = is_array($menu->slug) ? $menu->slug : [$menu->slug];
+            foreach ($slugs as $slug) {
+                if ($currentRouteName === $slug || str_starts_with($currentRouteName, $slug . '.')) {
+                    $activeClass = 'active open';
+                    break;
+                }
+            }
         }
+        elseif (is_array($menu->slug)) {
+            foreach ($menu->slug as $slug) {
+                if ($currentRouteName === $slug || str_starts_with($currentRouteName, $slug . '.')) {
+                    $activeClass = 'active';
+                    break;
+                }
+            }
         }
-        }
-        else{
-        if (str_contains($currentRouteName,$menu->slug) and strpos($currentRouteName,$menu->slug) === 0) {
-        $activeClass = 'active open';
-        }
-        }
+        elseif ($menu->slug && ($currentRouteName === $menu->slug || str_starts_with($currentRouteName, $menu->slug . '.'))) {
+            $activeClass = 'active';
         }
         @endphp
 

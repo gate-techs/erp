@@ -136,7 +136,7 @@
             <span>{{ __('Payroll Runs List') }}</span>
         </h5>
     </div>
-    <div class="table-responsive text-nowrap">
+    <div class="card-datatable table-responsive text-nowrap">
         <table class="table table-hover align-middle mb-0" id="payrollsTable" style="width: 100%;">
             <thead class="table-light">
                 <tr>

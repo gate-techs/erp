@@ -166,8 +166,8 @@
             width: 100% !important;
 
             &:focus {
-                border-color: #0b284e !important;
-                box-shadow: 0 0 0 0.15rem rgba(11, 40, 78, 0.12) !important;
+                border-color: var(--bs-primary) !important;
+                box-shadow: 0 0 0 0.15rem rgba(var(--bs-primary-rgb), 0.15) !important;
             }
         }
     }
@@ -188,13 +188,13 @@
         transition: background-color 0.12s ease-in-out, color 0.12s ease-in-out !important;
 
         &--highlighted[aria-selected] {
-            background-color: #0b284e !important;
+            background-color: var(--bs-primary) !important;
             color: #ffffff !important;
         }
 
         &--selected {
-            background-color: rgba(11, 40, 78, 0.08) !important;
-            color: #0b284e !important;
+            background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+            color: var(--bs-primary) !important;
             font-weight: 600 !important;
         }
     }
@@ -295,13 +295,13 @@ body[dir="rtl"] .select2-container--bootstrap-5 {
         color: #cfd3ec !important;
 
         &--highlighted[aria-selected] {
-            background-color: #4f5279 !important;
+            background-color: var(--bs-primary) !important;
             color: #ffffff !important;
         }
 
         &--selected {
-            background-color: rgba(110, 107, 240, 0.16) !important;
-            color: #a3a6e8 !important;
+            background-color: rgba(var(--bs-primary-rgb), 0.16) !important;
+            color: var(--bs-primary) !important;
         }
     }
 }
