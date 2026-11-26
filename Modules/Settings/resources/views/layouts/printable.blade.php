@@ -332,7 +332,7 @@
                                 @if(!empty($globalSetting->logo) && file_exists(public_path('storage/' . $globalSetting->logo)))
                                     <img src="{{ asset('storage/' . $globalSetting->logo) }}" style="max-height: 58px;" alt="Logo">
                                 @else
-                                    <img src="{{ asset('assets/img/branding/logo-dark.png') }}" style="max-height: 58px;" alt="Logo" onerror="this.outerHTML='<div style=\'font-weight:900;font-size:18px;color:#0b284e;\'>' + '{{ $globalSetting->site_name ?? 'GATE TECH' }}' + '</div>'">
+                                    <img src="{{ asset('assets/img/illustrations/astro-logo.png') }}" style="max-height: 58px;" alt="Logo" onerror="this.outerHTML='<div style=\'font-weight:900;font-size:18px;color:#0b284e;\'>' + '{{ $globalSetting->site_name ?? 'GATE TECH' }}' + '</div>'">
                                 @endif
                             </div>
                         @endif
