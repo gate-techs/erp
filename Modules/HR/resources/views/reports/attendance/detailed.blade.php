@@ -104,16 +104,20 @@
         }
         table.matrix-attendance-table th,
         table.matrix-attendance-table td {
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #edf2f7;
             border-inline-end: 1px solid #f1f5f9;
-            padding: 6px 4px;
+            padding: 8px 6px;
             text-align: center;
             vertical-align: middle;
+        }
+        table.matrix-attendance-table tbody tr:hover td {
+            background-color: #f8fafc;
         }
         table.matrix-attendance-table thead th {
             background: #f8fafc;
             font-weight: 700;
             color: #334155;
+            padding: 8px 6px;
         }
         table.matrix-attendance-table th.col-sticky-emp,
         table.matrix-attendance-table td.col-sticky-emp {
@@ -121,11 +125,11 @@
             inset-inline-start: 0;
             z-index: 2;
             background: #fff;
-            min-width: 240px;
-            max-width: 260px;
+            min-width: 260px;
+            max-width: 280px;
             text-align: start;
-            padding: 8px 12px;
-            border-inline-end: 2px solid #cbd5e1;
+            padding: 10px 14px;
+            border-inline-end: 2px solid #e2e8f0;
         }
         table.matrix-attendance-table thead th.col-sticky-emp {
             z-index: 3;
@@ -133,7 +137,41 @@
         }
         table.matrix-attendance-table th.col-matrix-day,
         table.matrix-attendance-table td.col-matrix-day {
-            min-width: 68px;
+            min-width: 62px;
+            padding: 5px 4px;
+        }
+        table.matrix-attendance-table td.cell-rest-day {
+            background-color: #f8fafc;
+        }
+        table.matrix-attendance-table td.cell-absent {
+            background-color: #fef2f2;
+        }
+        table.matrix-attendance-table td.cell-present {
+            background-color: #f0fdf4;
+        }
+        table.matrix-attendance-table td.cell-late {
+            background-color: #fffbeb;
+        }
+        table.matrix-attendance-table td.cell-leave {
+            background-color: #eff6ff;
+        }
+        .time-pill {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            font-size: 10.5px;
+            line-height: 1.25;
+            font-variant-numeric: tabular-nums;
+        }
+        .time-pill .t-in {
+            color: #15803d;
+            font-weight: 700;
+        }
+        .time-pill .t-out {
+            color: #475569;
+            font-weight: 500;
         }
         table.matrix-attendance-table th.today-highlight {
             background: #fef3c7 !important;
@@ -250,17 +288,15 @@
                                             @endif
                                         </div>
                                         <div class="emp-card-info" style="overflow: hidden; flex: 1;">
-                                            <div class="d-flex align-items-center justify-content-between gap-1">
-                                                <div class="emp-card-name" title="{{ $row['employee_name'] }}">
-                                                    {{ $row['employee_name'] }}
-                                                </div>
-                                                <div class="d-flex align-items-center gap-1 flex-shrink-0">
-                                                    <span class="badge bg-label-success" style="font-size: 10px; padding: 2px 5px;" title="{{ __('Present Days') }}">{{ __('P') }}: {{ $presentCount }}</span>
-                                                    <span class="badge bg-label-danger" style="font-size: 10px; padding: 2px 5px;" title="{{ __('Absent Days') }}">{{ __('A') }}: {{ $absentCount }}</span>
-                                                </div>
+                                            <div class="emp-card-name" title="{{ $row['employee_name'] }}">
+                                                {{ $row['employee_name'] }}
                                             </div>
-                                            <div class="emp-card-sub">
-                                                {{ $row['employee_code'] }} • {{ $row['department'] ?? '-' }}
+                                            <div class="d-flex align-items-center justify-content-between gap-2 mt-1">
+                                                <span class="emp-card-sub">{{ $row['employee_code'] }}</span>
+                                                <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                                    <span class="badge bg-label-success" style="font-size: 10px; padding: 2px 6px;" title="{{ __('Present Days') }}">{{ __('P') }}: {{ $presentCount }}</span>
+                                                    <span class="badge bg-label-danger" style="font-size: 10px; padding: 2px 6px;" title="{{ __('Absent Days') }}">{{ __('A') }}: {{ $absentCount }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -273,17 +309,31 @@
                                         $isToday = $d['is_today'];
                                         $checkIn = $cell['check_in'] ?? null;
                                         $checkOut = $cell['check_out'] ?? null;
+                                        $cellClass = match($status) {
+                                            'present' => 'cell-present',
+                                            'absent' => 'cell-absent',
+                                            'rest_day' => 'cell-rest-day',
+                                            'late' => 'cell-late',
+                                            'on_leave' => 'cell-leave',
+                                            default => '',
+                                        };
                                     @endphp
-                                    <td class="col-matrix-day {{ $isToday ? 'bg-warning-subtle' : '' }}">
-                                        @if ($status === 'present')
+                                    <td class="col-matrix-day {{ $isToday ? 'bg-warning-subtle' : $cellClass }}">
+                                        @if ($checkIn || $checkOut)
+                                            <div class="time-pill">
+                                                @if ($checkIn)
+                                                    <span class="t-in" title="{{ __('Check In') }}">{{ date('H:i', strtotime($checkIn)) }}</span>
+                                                @endif
+                                                @if ($checkOut)
+                                                    <span class="t-out" title="{{ __('Check Out') }}">{{ date('H:i', strtotime($checkOut)) }}</span>
+                                                @endif
+                                            </div>
+                                        @elseif ($status === 'present')
                                             <span class="sym-present-check">✓</span>
                                         @elseif ($status === 'absent')
                                             <span class="sym-absent-cross">✕</span>
                                         @elseif ($status === 'rest_day')
-                                            <div class="sym-restday-box">
-                                                <span class="ico">⃠</span>
-                                                <span class="txt d-block">{{ __('Rest Day') }}</span>
-                                            </div>
+                                            <span class="sym-restday-box">—</span>
                                         @elseif ($status === 'holiday')
                                             <span class="sym-holiday-star">⭐</span>
                                         @elseif ($status === 'late')
@@ -294,17 +344,6 @@
                                             <span class="sym-leave-flag">🚩</span>
                                         @else
                                             <span class="sym-future-dash">-</span>
-                                        @endif
-
-                                        @if ($checkIn || $checkOut)
-                                            <div class="cell-times">
-                                                @if ($checkIn)
-                                                    <span class="cell-time-in" title="{{ __('Check In') }}">{{ $checkIn }}</span>
-                                                @endif
-                                                @if ($checkOut)
-                                                    <span class="cell-time-out" title="{{ __('Check Out') }}">{{ $checkOut }}</span>
-                                                @endif
-                                            </div>
                                         @endif
                                     </td>
                                 @endforeach
