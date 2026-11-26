@@ -269,14 +269,31 @@
                             $status = $cell['status'] ?? 'future';
                             $checkIn = $cell['check_in'] ?? null;
                             $checkOut = $cell['check_out'] ?? null;
+                            $cellBg = match($status) {
+                                'present' => 'background-color: #f0fdf4;',
+                                'absent' => 'background-color: #fef2f2;',
+                                'rest_day' => 'background-color: #f8fafc;',
+                                'late' => 'background-color: #fffbeb;',
+                                'on_leave' => 'background-color: #eff6ff;',
+                                default => '',
+                            };
                         @endphp
-                        <td class="col-day-cell {{ $status === 'rest_day' ? 'bg-print-weekend' : '' }}">
-                            @if ($status === 'present')
+                        <td class="col-day-cell" style="{{ $cellBg }}">
+                            @if ($checkIn || $checkOut)
+                                <div style="display: flex; flex-direction: column; align-items: center; font-size: 6px; line-height: 1.15; white-space: nowrap; font-variant-numeric: tabular-nums;">
+                                    @if ($checkIn)
+                                        <span style="color: #15803d; font-weight: 700;">{{ date('H:i', strtotime($checkIn)) }}</span>
+                                    @endif
+                                    @if ($checkOut)
+                                        <span style="color: #475569; font-weight: 500;">{{ date('H:i', strtotime($checkOut)) }}</span>
+                                    @endif
+                                </div>
+                            @elseif ($status === 'present')
                                 <span class="print-sym-present">✓</span>
                             @elseif ($status === 'absent')
                                 <span class="print-sym-absent">✕</span>
                             @elseif ($status === 'rest_day')
-                                <span class="print-sym-rest">⃠</span>
+                                <span class="print-sym-rest">—</span>
                             @elseif ($status === 'holiday')
                                 <span class="print-sym-holiday">⭐</span>
                             @elseif ($status === 'late')
@@ -285,21 +302,8 @@
                                 <span class="print-sym-half">½</span>
                             @elseif ($status === 'on_leave')
                                 <span class="print-sym-leave">🚩</span>
-                            @elseif ($status === 'future')
-                                <span class="print-sym-future">-</span>
                             @else
                                 <span class="print-sym-future">-</span>
-                            @endif
-
-                            @if ($checkIn || $checkOut)
-                                <div style="display: flex; flex-direction: column; font-size: 5.5px; line-height: 1.05; margin-top: 1px; white-space: nowrap;">
-                                    @if ($checkIn)
-                                        <span style="color: #15803d; font-weight: 600;">{{ $checkIn }}</span>
-                                    @endif
-                                    @if ($checkOut)
-                                        <span style="color: #1d4ed8; font-weight: 600;">{{ $checkOut }}</span>
-                                    @endif
-                                </div>
                             @endif
                         </td>
                     @endforeach
