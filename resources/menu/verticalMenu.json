@@ -623,6 +623,12 @@
                             "permission": "hr.reports.attendance.view"
                         },
                         {
+                            "name": "Detailed Attendance Report",
+                            "slug": "hr.reports.attendance.detailed",
+                            "url": "/hr/reports/attendance/detailed",
+                            "permission": "hr.reports.attendance.view"
+                        },
+                        {
                             "name": "Leave & Permission Reports",
                             "slug": "hr.reports.leaves.index",
                             "url": "/hr/reports/leaves",

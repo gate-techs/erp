@@ -411,7 +411,18 @@ class AttendanceReportService
 
         $kpis = $this->reportRepository->getSummaryKPIs($filters);
 
-        if ($reportType === 'monthly_summary') {
+        $matrixData = null;
+        if ($reportType === 'detailed') {
+            $matrixFilters = [
+                'year'          => $filters['year'] ?? (!empty($filters['date_from']) ? Carbon::parse($filters['date_from'])->year : now()->year),
+                'month'         => $filters['month'] ?? (!empty($filters['date_from']) ? Carbon::parse($filters['date_from'])->month : now()->month),
+                'branch_id'     => $filters['branch_id'] ?? null,
+                'department_id' => $filters['department_id'] ?? null,
+                'employee_id'   => $filters['employee_id'] ?? null,
+            ];
+            $matrixData = app(AttendanceService::class)->getMonthlyMatrixData($matrixFilters);
+            $attendances = collect();
+        } elseif ($reportType === 'monthly_summary') {
             $attendances = $this->reportRepository->getMonthlySummaryPaginated($filters, $perPage);
         } else {
             $attendances = $this->reportRepository->getPaginatedRecords($filters, $perPage);
@@ -431,6 +442,7 @@ class AttendanceReportService
         return compact(
             'reportType',
             'attendances',
+            'matrixData',
             'kpis',
             'availableColumns',
             'selectedColumns',
@@ -482,6 +494,7 @@ class AttendanceReportService
         return compact(
             'reportType',
             'attendances',
+            'matrixData',
             'kpis',
             'availableColumns',
             'selectedColumns',

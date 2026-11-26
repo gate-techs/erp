@@ -237,13 +237,29 @@
         </thead>
         <tbody>
             @forelse ($matrixData['matrix_rows'] as $row)
+                @php
+                    $presentCount = 0;
+                    $absentCount = 0;
+                    foreach ($row['days'] as $dayCell) {
+                        $st = $dayCell['status'] ?? 'future';
+                        if (in_array($st, ['present', 'late', 'half_day'], true)) {
+                            $presentCount++;
+                        } elseif ($st === 'absent') {
+                            $absentCount++;
+                        }
+                    }
+                @endphp
                 <tr>
                     <td class="col-emp-name">
                         <div class="emp-print-title" title="{{ $row['employee_name'] }}">
                             {{ $row['employee_name'] }}
                         </div>
-                        <div class="emp-print-sub">
-                            {{ $row['employee_code'] }} @if(!empty($row['department'])) • {{ $row['department'] }} @endif
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; margin-top: 2px;">
+                            <span class="emp-print-sub">{{ $row['employee_code'] }}</span>
+                            <div style="display: flex; gap: 3px; flex-shrink: 0; font-size: 6.5px; font-weight: 700;">
+                                <span style="color: #15803d; background: #dcfce7; padding: 1px 4px; border-radius: 2px;">{{ __('P') }}: {{ $presentCount }}</span>
+                                <span style="color: #b91c1c; background: #fee2e2; padding: 1px 4px; border-radius: 2px;">{{ __('A') }}: {{ $absentCount }}</span>
+                            </div>
                         </div>
                     </td>
 
@@ -251,6 +267,8 @@
                         @php
                             $cell = $row['days'][$d['day']] ?? null;
                             $status = $cell['status'] ?? 'future';
+                            $checkIn = $cell['check_in'] ?? null;
+                            $checkOut = $cell['check_out'] ?? null;
                         @endphp
                         <td class="col-day-cell {{ $status === 'rest_day' ? 'bg-print-weekend' : '' }}">
                             @if ($status === 'present')
@@ -271,6 +289,17 @@
                                 <span class="print-sym-future">-</span>
                             @else
                                 <span class="print-sym-future">-</span>
+                            @endif
+
+                            @if ($checkIn || $checkOut)
+                                <div style="display: flex; flex-direction: column; font-size: 5.5px; line-height: 1.05; margin-top: 1px; white-space: nowrap;">
+                                    @if ($checkIn)
+                                        <span style="color: #15803d; font-weight: 600;">{{ $checkIn }}</span>
+                                    @endif
+                                    @if ($checkOut)
+                                        <span style="color: #1d4ed8; font-weight: 600;">{{ $checkOut }}</span>
+                                    @endif
+                                </div>
                             @endif
                         </td>
                     @endforeach

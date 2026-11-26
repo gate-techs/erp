@@ -29,6 +29,21 @@ class AttendanceReportController extends Controller
     }
 
     /**
+     * Display the standalone Detailed Attendance Matrix report.
+     */
+    public function detailed(Request $request)
+    {
+        $this->authorizePermission('hr.reports.attendance.view');
+
+        $filters = $request->all();
+        $filters['report_type'] = 'detailed';
+
+        $data = $this->reportService->getReportData($filters);
+
+        return view('hr::reports.attendance.detailed', $data);
+    }
+
+    /**
      * Render the printable version using the selected PrintTemplate.
      */
     public function print(Request $request)

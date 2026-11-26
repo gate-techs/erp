@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->prefix('hr')->name('hr.')->group(functi
     Route::prefix('reports')->name('reports.')->group(function () {
         // 1. Attendance & Time Tracking Reports (تقارير الحضور والدوام)
         Route::get('attendance', [AttendanceReportController::class, 'index'])->name('attendance.index');
+        Route::get('attendance/detailed', [AttendanceReportController::class, 'detailed'])->name('attendance.detailed');
         Route::get('attendance/print', [AttendanceReportController::class, 'print'])->name('attendance.print');
         Route::get('attendance/export', [AttendanceReportController::class, 'export'])->name('attendance.export');
 
